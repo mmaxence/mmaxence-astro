@@ -348,7 +348,7 @@ function isActive(url: string): boolean {
     // Update FAB overlay color on initialization
     updateFABOverlay();
 
-    // Get or create backdrop
+    // Get or create backdrop - ensure it exists before menu operations
     let backdrop = document.getElementById('mobile-menu-backdrop');
     if (!backdrop) {
       backdrop = document.createElement('div');
@@ -358,6 +358,13 @@ function isActive(url: string): boolean {
     }
 
     function openMenu() {
+      // Ensure backdrop exists
+      if (!backdrop || !document.getElementById('mobile-menu-backdrop')) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'mobile-menu-backdrop';
+        backdrop.className = 'mobile-menu-backdrop';
+        document.body.appendChild(backdrop);
+      }
       bottomsheet.classList.add('sheet-open');
       backdrop.classList.add('backdrop-visible');
       fab.setAttribute('aria-expanded', 'true');
