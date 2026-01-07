@@ -325,6 +325,9 @@ function isActive(url: string): boolean {
       backdrop.className = 'mobile-menu-backdrop';
       document.body.appendChild(backdrop);
     }
+    
+    // Ensure backdrop is visible when needed
+    backdrop.style.display = 'block';
 
     function openMenu() {
       bottomsheet.classList.add('sheet-open');
