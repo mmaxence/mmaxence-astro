@@ -354,7 +354,7 @@ function isActive(url: string): boolean {
     // Update FAB overlay color on initialization
     updateFABOverlay();
 
-    // Create backdrop
+    // Get or create backdrop
     let backdrop = document.getElementById('mobile-menu-backdrop');
     if (!backdrop) {
       backdrop = document.createElement('div');
@@ -362,9 +362,6 @@ function isActive(url: string): boolean {
       backdrop.className = 'mobile-menu-backdrop';
       document.body.appendChild(backdrop);
     }
-    
-    // Ensure backdrop is visible when needed
-    backdrop.style.display = 'block';
 
     function openMenu() {
       bottomsheet.classList.add('sheet-open');
