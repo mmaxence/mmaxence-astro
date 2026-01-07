@@ -291,27 +291,21 @@ function isActive(url: string): boolean {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.45s cubic-bezier(0.32, 1.2, 0.6, 1);
+    transition: opacity 0.45s cubic-bezier(0.32, 1.2, 0.6, 1),
+                visibility 0.45s cubic-bezier(0.32, 1.2, 0.6, 1);
     z-index: 999;
-    will-change: opacity;
-    display: block !important;
-  }
-
-  /* Theme-aware backdrop - use theme text color if available, otherwise black */
-  [data-theme] .mobile-menu-backdrop {
-    background-color: var(--theme-text);
   }
 
   .mobile-menu-backdrop.backdrop-visible {
-    opacity: 0.4 !important;
-    pointer-events: all !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
   }
 </style>
 
