@@ -188,7 +188,7 @@ function isActive(url: string): boolean {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: var(--fab-overlay-color, rgba(255, 255, 255, 0.4));
     pointer-events: none;
     z-index: 1;
   }
@@ -428,5 +428,23 @@ function isActive(url: string): boolean {
   // Re-initialize on page transitions
   document.addEventListener('astro:page-load', () => {
     setTimeout(initMobileMenu, 50);
+    setTimeout(updateFABOverlay, 50);
   });
+
+  // Update FAB overlay when theme changes
+  document.addEventListener('theme-change', () => {
+    setTimeout(updateFABOverlay, 50);
+  });
+
+  // Also listen for random theme events
+  document.addEventListener('random-theme-applied', () => {
+    setTimeout(updateFABOverlay, 50);
+  });
+
+  // Initial update
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateFABOverlay);
+  } else {
+    updateFABOverlay();
+  }
 </script>
