@@ -109,31 +109,40 @@ export function AnimatedPatterns() {
   };
 
   return (
-    <div className="flex items-center justify-center relative w-full" data-name="patterns" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+    <div className="flex items-center justify-center relative w-full" data-name="patterns" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', minHeight: '86.4px' }}>
       {/* Container that scales to fit available width while maintaining aspect ratio */}
       <div 
         className="relative origin-center shapes-container-responsive" 
-        style={{ 
-          width: '448px',
-          height: '144px',
-          margin: '0 auto',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
         onMouseEnter={handleShapeHover}
       >
         <style>{`
           .shapes-container-responsive {
-            transform: scale(0.6);
-            transform-origin: center center;
+            width: 268.8px;
+            height: 86.4px;
+            position: relative;
+            margin: 0 auto;
           }
           
           @media (max-width: 768px) {
             .shapes-container-responsive {
-              transform: scale(0.4);
-              width: 100%;
-              max-width: 100vw;
+              width: 179.2px;
+              height: 57.6px;
+            }
+          }
+          
+          .shapes-inner-container {
+            width: 448px;
+            height: 144px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.6);
+            transform-origin: center center;
+          }
+          
+          @media (max-width: 768px) {
+            .shapes-inner-container {
+              transform: translate(-50%, -50%) scale(0.4);
             }
           }
           
@@ -160,29 +169,31 @@ export function AnimatedPatterns() {
           }
         `}</style>
         
-        {SHAPES.map((shape, shapeIndex) => {
-          // Find which slot (0, 1, or 2) this shape is currently assigned to
-          const slotIndex = order.indexOf(shapeIndex);
-          
-          // Calculate X position: slotIndex * (144 + 8)
-          const translateX = slotIndex * 152;
-          
-          const Component = shape.component;
-          
-          return (
-            <div
-              key={shape.id}
-              className={`absolute top-0 left-0 spring-move shape-clickable ${isMoving ? 'blur-active' : ''}`}
-              style={{
-                transform: `translateX(${translateX}px)`,
-              }}
-              onClick={handleShapeClick}
-              title="Random Theme"
-            >
-              <Component />
-            </div>
-          );
-        })}
+        <div className="shapes-inner-container" style={{ position: 'relative' }}>
+          {SHAPES.map((shape, shapeIndex) => {
+            // Find which slot (0, 1, or 2) this shape is currently assigned to
+            const slotIndex = order.indexOf(shapeIndex);
+            
+            // Calculate X position: slotIndex * (144 + 8)
+            const translateX = slotIndex * 152;
+            
+            const Component = shape.component;
+            
+            return (
+              <div
+                key={shape.id}
+                className={`absolute top-0 left-0 spring-move shape-clickable ${isMoving ? 'blur-active' : ''}`}
+                style={{
+                  transform: `translateX(${translateX}px)`,
+                }}
+                onClick={handleShapeClick}
+                title="Random Theme"
+              >
+                <Component />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
