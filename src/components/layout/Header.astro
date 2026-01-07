@@ -103,7 +103,7 @@ function isActive(url: string): boolean {
             <li>
               <a
                 class={`mobile-menu-item prefetch-link ${isActive('/') ? 'nav-active' : ''}`}
-                style={isActive('/') ? "color: var(--theme-text); font-weight: 600;" : "color: var(--theme-text);"}
+                style={isActive('/') ? "color: var(--theme-text);" : "color: var(--theme-text);"}
                 href="/"
                 title="Home page"
                 data-prefetch="true"
@@ -118,7 +118,7 @@ function isActive(url: string): boolean {
                 <li>
                   <a
                     class={`mobile-menu-item prefetch-link ${active ? 'nav-active' : ''}`}
-                    style={active ? "color: var(--theme-text); font-weight: 600;" : "color: var(--theme-text);"}
+                    style={active ? "color: var(--theme-text);" : "color: var(--theme-text);"}
                     href={item.url}
                     title={`${item.name} page`}
                     data-prefetch="true"
