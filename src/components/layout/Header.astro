@@ -286,6 +286,28 @@ function isActive(url: string): boolean {
     background-color: var(--theme-border);
   }
 
+  /* Backdrop - must be defined before bottomsheet */
+  .mobile-menu-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(0.32, 1.2, 0.6, 1),
+                visibility 0.45s cubic-bezier(0.32, 1.2, 0.6, 1);
+    z-index: 999 !important;
+  }
+
+  .mobile-menu-backdrop.backdrop-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: all !important;
+  }
+
 </style>
 
 <script>
