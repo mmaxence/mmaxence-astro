@@ -1,0 +1,16 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`graph_pattern text-center mx-auto px-3 md:px-0 my-6 ${className}`}>
+  <svg class="mx-auto w-48 md:w-64 my-6" viewBox="0 0 448 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path id="rect" d="M0 72L72 -9.07293e-07L144 72L72 144L0 72Z" fill="black"/>
+    <path id="poly" d="M224 0L286.354 36V108L224 144L161.646 108L161.646 36L224 0Z" fill="black"/>
+    <rect id="circle" x="304" y="0" width="144" height="144" rx="72" fill="black"/>
+  </svg>
+</div>
+

@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import TimelineEntry from '../../components/timeline/TimelineEntry.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { timelineEntries } from '../../data/timeline'; // Import data from TypeScript file
+---
+
+<BaseLayout title="Experience & Impact | Maxence Mauduit" description="A decade of scaling product & design from a 24-person startup to a $100M+ revenue organization preparing for IPO.">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <div class="mb-12">
+          <h1 class="text-4xl md:text-5xl font-mono font-light mb-4" style="color: var(--theme-text);">
+            Experience
+          </h1>
+          <h2 class="text-2xl md:text-3xl font-mono font-light mb-4" style="color: var(--theme-text);">
+            From early product formation to platform-scale execution.
+          </h2>
+          <p class="text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+            From a 20+ person startup to a $100M+ revenue organization preparing for IPO, my work has centered on navigating pivotal business moments, shaping early product decisions, and building execution systems that scale without creating long-term dependency.
+          </p>
+        </div>
+      </AnimatedContent>
+
+      <div class="space-y-12">
+        {timelineEntries.map((entry, index) => (
+          <AnimatedContent delay={index * 50}>
+            <TimelineEntry
+              title={entry.title}
+              date={entry.date}
+              description={entry.description}
+              tags={entry.tags}
+              content={entry.content}
+            />
+          </AnimatedContent>
+        ))}
+      </div>
+      
+      <AnimatedContent delay={timelineEntries.length * 50}>
+        <div class="mt-16 pt-8 border-t" style="border-color: var(--theme-border);">
+          <h2 class="font-mono text-2xl font-normal mb-4" style="color: var(--theme-text);">The Stack</h2>
+          <p class="text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+            The 2026 Tech Stack: Figma (Org), Cursor, LLMs (GPT-4o/Gemini Pro), Midjourney, and an unrelenting focus on code-parity.
+          </p>
+        </div>
+      </AnimatedContent>
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>

@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const books = await getCollection('library');
+  return books
+    .filter((book) => !book.data.draft)
+    .map((book) => ({
+      params: { slug: book.slug.replace('-review', '') },
+      props: { book },
+    }));
+}
+
+interface Props {
+  book: CollectionEntry<'library'>;
+}
+
+const { book } = Astro.props;
+const { Content } = await book.render();
+const featuredImage = book.data.featured_image?.startsWith('/') 
+  ? book.data.featured_image 
+  : `/images/${book.data.featured_image}`;
+---
+
+<BaseLayout
+  title={book.data.title}
+  description={book.data.description || book.data.title}
+>
+      <Header />
+      <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+        <article class="max-w-3xl mx-auto px-3 md:px-6 py-12">
+      <div class="book-header border-b border-gray-200 pb-8 mb-8">
+        <div class="flex flex-col md:flex-row gap-6 items-start">
+          {book.data.featured_image && (
+            <img 
+              src={featuredImage} 
+              alt={book.data.title}
+              class="book-cover w-48 h-64 object-cover shadow-lg"
+              style="border-radius: var(--radius-card-image);"
+            />
+          )}
+          <div>
+            <h1 class="book-title text-4xl md:text-5xl font-mono font-light mb-4">
+              {book.data.title}
+            </h1>
+            {book.data.book_author && (
+                  <h2 class="book-author text-xl mb-2" style="color: var(--theme-text-muted);">
+                by {book.data.book_author}
+              </h2>
+            )}
+                <div class="book-meta text-sm space-y-1" style="color: var(--theme-text-muted);">
+              {book.data.book_category && (
+                <p>Category: {book.data.book_category}</p>
+              )}
+              {book.data.book_year && (
+                <p>Year: {book.data.book_year}</p>
+              )}
+            </div>
+            {book.data.amazon_link && (
+              <a 
+                href={book.data.amazon_link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="amazon-button inline-block mt-4 px-4 py-2 rounded-lg transition-colors" style="background-color: var(--theme-accent); color: var(--theme-bg);"
+              >
+                Buy on Amazon
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      <div class="book-content prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text);">
+        <Content />
+      </div>
+        </article>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>
+
+<style>
+  .amazon-button:hover {
+    opacity: 0.9;
+  }
+</style>
+

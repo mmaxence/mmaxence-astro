@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PageContent from '../components/ui/PageContent.astro';
+import AnimatedContent from '../components/ui/AnimatedContent.astro';
+import CardGrid from '../components/ui/CardGrid.astro';
+import BlogCard from '../components/blog/BlogCard.astro';
+import ThemeToast from '../components/ui/ThemeToast.astro';
+import HeroShapes from '../components/home/HeroShapes.astro';
+import { getCollection } from 'astro:content';
+
+const blogPosts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3); // Get latest 3 posts for homepage
+---
+
+<BaseLayout title="Systemic Design for High-Growth Products | Maxence Mauduit" description="Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.">
+  <Header />
+  <!-- Hero Section - Full Viewport -->
+  <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0" style="margin-top: -8rem;">
+    <div class="w-full max-w-2xl mx-auto text-center">
+      <AnimatedContent delay="0">
+        <HeroShapes />
+      </AnimatedContent>
+      <AnimatedContent delay="100">
+        <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading" style="font-weight: 400; color: var(--theme-text);">
+          Turning early product decisions into scalable platforms.
+        </h1>
+      </AnimatedContent>
+      <AnimatedContent delay="200">
+        <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4" style="color: var(--theme-text);">
+          Product & experience executive with 11+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.<br />Still hands-on where it matters.
+        </p>
+      </AnimatedContent>
+    </div>
+  </section>
+  
+  <!-- Main Content Sections -->
+  <PageContent class="flex flex-col">
+    {/* WHAT I DO */}
+    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <AnimatedContent delay="0">
+          <article class="w-full index-content-section">
+            <h1 class="text-4xl md:text-5xl font-mono font-light">WHAT I DO</h1>
+            <p class="mt-4">I work at the intersection of product definition, interaction design, and execution systems.</p>
+            <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Sometimes that means leading. Sometimes that means designing the first version myself and stepping away once the direction is clear.</p>
+            <p class="mt-4">I'm comfortable operating as an executive, and I remain effective as an individual contributor when the work requires depth, speed, and judgment.</p>
+          </article>
+        </AnimatedContent>
+      </div>
+    </section>
+    
+    {/* EXPERIENCE SNAPSHOT */}
+    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <AnimatedContent delay="50">
+          <article class="w-full index-content-section">
+            <h1 class="text-4xl md:text-5xl font-mono font-light">EXPERIENCE SNAPSHOT</h1>
+            
+            <div class="mt-8">
+              <h2 class="text-2xl md:text-3xl font-mono font-light">Buzzvil — Product & Experience Executive</h2>
+              <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Seoul · 2014–Present</p>
+              
+              <ul class="mt-6 space-y-2 list-none pl-0">
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Shaped first iterations of nearly every major product and monetization model</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Led the company through a major pivot from consumer products to B2B Ads and SDK platforms</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Built and scaled a high-retention design team with strong product ownership</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="mt-12">
+              <h2 class="text-2xl md:text-3xl font-mono font-light">CMS Group — UX Design Lead</h2>
+              <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Paris · 2011–2014</p>
+              
+              <ul class="mt-6 space-y-2 list-none pl-0">
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Led UX for enterprise and SaaS products</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Co-published research on co-design validation methods</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+                  <span>Built an education SaaS bridging design intent and production code</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="mt-8">
+              <p class="text-base">For more details, see my <a href="/timeline" class="content-link">full experience timeline</a>.</p>
+            </div>
+          </article>
+        </AnimatedContent>
+      </div>
+    </section>
+    
+    {/* HOW I WORK */}
+    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <AnimatedContent delay="100">
+          <article class="w-full index-content-section">
+            <h1 class="text-4xl md:text-5xl font-mono font-light">HOW I WORK</h1>
+            
+            <div class="mt-6 space-y-6">
+              <div>
+                <h2 class="text-2xl md:text-3xl font-mono font-light">Deliberate thinking, fast execution</h2>
+                <p>I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
+              </div>
+              
+              <div>
+                <h2 class="text-2xl md:text-3xl font-mono font-light">Systems over screens</h2>
+                <p>I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
+              </div>
+              
+              <div>
+                <h2 class="text-2xl md:text-3xl font-mono font-light">Product ownership mindset</h2>
+                <p>Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
+              </div>
+            </div>
+          </article>
+        </AnimatedContent>
+      </div>
+    </section>
+    
+    {/* LEADERSHIP THAT SCALES */}
+    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <AnimatedContent delay="150">
+          <article class="w-full index-content-section">
+            <h1 class="text-4xl md:text-5xl font-mono font-light">LEADERSHIP THAT SCALES</h1>
+            <p class="mt-4">I build small, senior teams designed to operate without constant oversight.</p>
+            <p class="mt-4">When I lead, my goal is to remove ambiguity early and make myself unnecessary over time.</p>
+            <p class="mt-4">When I contribute individually, it's usually at the beginning of new initiatives, where clarity does not exist yet and decisions are expensive.</p>
+            <p class="mt-4">If execution depends on me long-term, the system is wrong.</p>
+          </article>
+        </AnimatedContent>
+      </div>
+    </section>
+    
+    {/* BEYOND THE ROLE */}
+    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <AnimatedContent delay="200">
+          <article class="w-full index-content-section">
+            <h1 class="text-4xl md:text-5xl font-mono font-light">BEYOND THE ROLE</h1>
+            <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
+            <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology.</p>
+          </article>
+        </AnimatedContent>
+      </div>
+    </section>
+    
+    {/* Blog Posts */}
+    {blogPosts.length > 0 && (
+      <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+        <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+          <AnimatedContent delay="350">
+            <div class="w-full">
+              <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">Latest Insights on Systems & Leadership</h1>
+              <CardGrid columns={3}>
+                {blogPosts.map((post, index) => (
+                  <AnimatedContent delay={400 + (index * 50)}>
+                    <BlogCard post={post} />
+                  </AnimatedContent>
+                ))}
+              </CardGrid>
+            </div>
+          </AnimatedContent>
+        </div>
+      </section>
+    )}
+    
+  </PageContent>
+      <Footer />
+      <ThemeToast />
+    </BaseLayout>
+
+<style>
+  /* Prevent hover effects on index content sections containing SVG images */
+  .index-content-section {
+    pointer-events: auto;
+  }
+  
+  /* Remove hover effects from principle card divs containing SVG images */
+  .index-content-section > div > div.my-8 {
+    transition: none !important;
+  }
+  
+  .index-content-section > div > div.my-8:hover {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+</style>
+

@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+
+const techStack = [
+  {
+    category: "Framework & Build",
+    items: [
+      { name: "Astro", description: "Static site generator with component islands architecture", link: "https://astro.build/" },
+      { name: "View Transitions", description: "Native browser API for smooth page transitions", link: "https://docs.astro.build/en/guides/view-transitions/" },
+    ]
+  },
+  {
+    category: "Styling",
+    items: [
+      { name: "TailwindCSS v4", description: "Utility-first CSS framework with PostCSS", link: "https://tailwindcss.com/" },
+      { name: "Space Mono", description: "Monospace font for headings and highlights", link: "https://fonts.google.com/specimen/Space+Mono" },
+      { name: "Plus Jakarta Sans", description: "Sans-serif font for body text", link: "https://fonts.google.com/specimen/Plus+Jakarta+Sans" },
+    ]
+  },
+  {
+    category: "Content & Data",
+    items: [
+      { name: "Astro Content Collections", description: "Type-safe content management with Markdown", link: "https://docs.astro.build/en/guides/content-collections/" },
+      { name: "TypeScript", description: "Type-safe data structures for timeline and structured content", link: "https://www.typescriptlang.org/" },
+    ]
+  },
+  {
+    category: "Performance & UX",
+    items: [
+      { name: "Link Pre-fetching", description: "Hover-based pre-fetching for instant navigation", link: null },
+      { name: "Intersection Observer", description: "Scroll-triggered animations for content sections", link: "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" },
+      { name: "CSS Animations", description: "Smooth fade-in and transition effects", link: null },
+    ]
+  },
+  {
+    category: "Development",
+    items: [
+      { name: "PostCSS", description: "CSS processing and optimization", link: "https://postcss.org/" },
+      { name: "Vite", description: "Fast build tool and dev server (via Astro)", link: "https://vitejs.dev/" },
+    ]
+  }
+];
+---
+
+<BaseLayout title="About" description="About this website and its tech stack">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">About This Website</h1>
+        <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed mb-12" style="color: var(--theme-text);">
+          <p>This website is built with modern web technologies, focusing on performance, accessibility, and a delightful user experience. It's a showcase of how to build a fast, beautiful portfolio/blog using cutting-edge static site generation.</p>
+          
+          <p class="mt-6 p-4 bg-gray-50 rounded" style="border-left: 4px solid var(--theme-accent);">
+            <strong class="font-mono">✨ Open Source:</strong> This entire project is available as a <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="prefetch-link" data-prefetch="false">public repository on GitHub</a>. Feel free to use it as a starting point for your own portfolio, blog, or website. Fork it, customize it, and make it your own!
+          </p>
+        </div>
+      </AnimatedContent>
+
+      <div class="space-y-12">
+        {techStack.map((category, categoryIndex) => (
+          <AnimatedContent delay={categoryIndex * 100}>
+            <div class="mb-8">
+              <h2 class="text-2xl md:text-3xl font-mono font-light mb-6">{category.category}</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {category.items.map((item, itemIndex) => (
+                  <div class="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                    <h3 class="font-mono text-xl font-normal mb-2">
+                      {item.link ? (
+                        <a 
+                          href={item.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          class="transition-colors" style="color: var(--theme-text);" onmouseover="this.style.color='var(--theme-accent)'" onmouseout="this.style.color='var(--theme-text)'"
+                        >
+                          {item.name}
+                        </a>
+                      ) : (
+                        item.name
+                      )}
+                    </h3>
+                    <p class="text-[1.125rem] leading-relaxed" style="color: var(--theme-text-muted);">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AnimatedContent>
+        ))}
+      </div>
+
+      <AnimatedContent delay={techStack.length * 100}>
+        <div class="mt-16 p-6 bg-gray-50 rounded-lg border border-gray-200">
+          <h2 class="text-2xl font-mono font-light mb-4">Design Philosophy</h2>
+          <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+            <p>This website embodies several key principles:</p>
+            <ul class="list-disc pl-6 space-y-2 mt-4">
+              <li><strong>Performance First:</strong> Static generation, minimal JavaScript, and optimized assets ensure fast load times and smooth interactions.</li>
+              <li><strong>Design System:</strong> Consistent typography, spacing, and colors defined through CSS variables and Tailwind utilities.</li>
+              <li><strong>Accessibility:</strong> Semantic HTML, proper ARIA labels, and keyboard navigation support.</li>
+              <li><strong>Progressive Enhancement:</strong> Core content works without JavaScript, with enhancements for modern browsers.</li>
+              <li><strong>Developer Experience:</strong> Type-safe content collections, component-based architecture, and clear code organization.</li>
+            </ul>
+          </div>
+        </div>
+      </AnimatedContent>
+
+      <AnimatedContent delay={(techStack.length + 1) * 100}>
+        <div class="mt-16 p-6 bg-gray-50 rounded-lg border border-gray-200">
+          <h2 class="text-2xl font-mono font-light mb-4">Random Theme System</h2>
+          <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+            <p>This website features a hidden random theme system that can be activated by clicking on the hero shapes on the homepage. Here's how it works:</p>
+            
+            <h3 class="text-xl font-mono font-normal mt-6 mb-3">How It Works</h3>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><strong>Activation:</strong> Click any of the three animated shapes (diamond, circle, hexagon) in the hero section to generate and apply a random theme.</li>
+              <li><strong>Theme Generation:</strong> The system uses a curated pool of WCAG AA compliant color combinations, ensuring all themes meet accessibility standards with a minimum contrast ratio of 4.5:1 for text.</li>
+              <li><strong>Theme Persistence:</strong> Random themes persist across page navigation using Astro View Transitions, allowing you to browse the site while maintaining your selected theme.</li>
+              <li><strong>Reset Options:</strong> 
+                <ul class="list-disc pl-6 mt-2 space-y-1">
+                  <li><strong>Desktop:</strong> A toast notification appears in the bottom-right corner with a "Reset" button to return to the default theme.</li>
+                  <li><strong>Mobile:</strong> Use the "Reset Theme" option in the mobile menu (FAB menu) to return to default.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3 class="text-xl font-mono font-normal mt-6 mb-3">Technical Implementation</h3>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><strong>Color System:</strong> Themes are generated using CSS custom properties (CSS variables) that cascade throughout the entire site, affecting backgrounds, text, borders, shadows, and UI elements.</li>
+              <li><strong>Accessibility:</strong> Each theme combination is validated using WCAG luminance and contrast ratio calculations to ensure readability. The system uses the relative luminance formula: <code class="bg-gray-200 px-1 rounded">L = 0.2126 × R + 0.7152 × G + 0.0722 × B</code></li>
+              <li><strong>Dynamic Toast Colors:</strong> The toast notification itself adapts to each theme, with background and text colors calculated to contrast with the page background while maintaining accessibility standards.</li>
+              <li><strong>Theme Storage:</strong> Themes are stored in <code class="bg-gray-200 px-1 rounded">localStorage</code> to persist across page refreshes and navigation.</li>
+              <li><strong>SVG Color Updates:</strong> Hero shapes and logo SVGs dynamically update their fill colors to match the current theme using CSS custom properties.</li>
+            </ul>
+
+            <h3 class="text-xl font-mono font-normal mt-6 mb-3">Theme Pool</h3>
+            <p>The system includes a diverse collection of accessible color palettes:</p>
+            <ul class="list-disc pl-6 space-y-2 mt-2">
+              <li>Dark themes with light text (various shades of navy, charcoal, and deep blues)</li>
+              <li>Light themes with dark text (soft grays, creams, and whites)</li>
+              <li>Warm tones (yellows, purples, greens with appropriate contrast)</li>
+              <li>Cool tones (blues, teals, mint greens)</li>
+            </ul>
+            <p class="mt-4">Each theme maintains consistent typography, spacing, and design system variables while providing a unique visual experience.</p>
+          </div>
+        </div>
+      </AnimatedContent>
+
+      <AnimatedContent delay={(techStack.length + 2) * 100}>
+        <div class="mt-12 text-center">
+          <p class="text-[1.125rem] text-gray-700 mb-4">
+            Built with ❤️ using Astro and modern web standards
+          </p>
+          <div class="flex gap-4 justify-center">
+            <a 
+              href="https://github.com/mmaxence/mmaxence-astro" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-mono"
+            >
+              View on GitHub
+            </a>
+            <a 
+              href="https://astro.build/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="px-6 py-3 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-colors font-mono"
+            >
+              Learn Astro
+            </a>
+          </div>
+        </div>
+      </AnimatedContent>
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>
+
+<style>
+  .tech-link:hover {
+    color: var(--theme-accent);
+  }
+</style>

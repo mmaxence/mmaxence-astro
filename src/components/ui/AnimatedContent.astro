@@ -1,0 +1,338 @@
+---
+// Component for animating content sections with scroll-triggered animations
+interface Props {
+  class?: string;
+  delay?: number;
+}
+
+const { class: className = '', delay = 0 } = Astro.props;
+const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
+---
+
+<div class={`animated-content ${className}`} data-delay={delayMs}>
+  <slot />
+</div>
+
+<style>
+  /* Default: content is visible (progressive enhancement) */
+  .animated-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Only hide if JavaScript has initialized (has .js-ready class on body) */
+  body.js-ready .animated-content:not(.visible) {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body.js-ready .animated-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Fallback: show content immediately if JS fails or is disabled */
+  @media (prefers-reduced-motion: reduce) {
+    .animated-content {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    'use strict';
+    
+    // Mark that JavaScript is ready (progressive enhancement)
+    // This allows CSS to hide content only if JS is running
+    function markJSReady() {
+      if (document.body) {
+        document.body.classList.add('js-ready');
+      } else {
+        // Wait for body to exist
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', markJSReady);
+        } else {
+          setTimeout(markJSReady, 10);
+        }
+      }
+    }
+    
+    markJSReady();
+    
+    let observer = null;
+    
+    function createObserver() {
+      if (observer) {
+        observer.disconnect();
+      }
+      
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = parseInt(entry.target.getAttribute('data-delay') || '0');
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, delay);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.01,
+        rootMargin: '0px 0px -20px 0px'
+      });
+      
+      return observer;
+    }
+    
+    function initAnimatedContent() {
+      // Get all elements first
+      const allElements = document.querySelectorAll('.animated-content');
+      
+      if (allElements.length === 0) {
+        // No elements found yet - try again later
+        return false;
+      }
+      
+      // Check if this is first load (no observed elements yet)
+      const isFirstLoad = !document.querySelector('.animated-content.observed');
+      
+      if (!isFirstLoad) {
+        // Reset on subsequent loads (page transitions)
+        allElements.forEach((el) => {
+          el.classList.remove('visible', 'observed');
+          // Force reflow
+          void el.offsetWidth;
+        });
+      }
+      
+      // On first load, show all elements with their delays
+      // This ensures content appears right away with smooth animations
+      if (isFirstLoad && allElements.length > 0) {
+        // Mark as observed to prevent re-running
+        allElements.forEach((el) => {
+          el.classList.add('observed');
+        });
+        
+        // Show all elements with their delays for smooth staggered animation
+        allElements.forEach((el) => {
+          const delay = parseInt(el.getAttribute('data-delay') || '0');
+          setTimeout(() => {
+            el.classList.add('visible');
+            
+            // Also add visible to child elements that might need it
+            const childElements = el.querySelectorAll('.principle-card, .book-item, .qualification-item');
+            childElements.forEach((child) => {
+              child.classList.add('visible');
+            });
+          }, delay);
+        });
+        
+        return true; // Successfully initialized
+      }
+      
+      // For page transitions, show elements with delays based on viewport
+      if (!isFirstLoad && allElements.length > 0) {
+        const newObserver = createObserver();
+        
+        // Function to check and show visible elements
+        function checkAndShowVisible() {
+          allElements.forEach((el) => {
+            if (!el.classList.contains('visible')) {
+              const rect = el.getBoundingClientRect();
+              // More generous viewport check - include elements above and well below viewport
+              const isVisible = rect.top < window.innerHeight + 1000 && rect.bottom > -500;
+              if (isVisible) {
+                const delay = parseInt(el.getAttribute('data-delay') || '0');
+                setTimeout(() => {
+                  el.classList.add('visible');
+                }, delay);
+                if (newObserver) {
+                  newObserver.unobserve(el);
+                }
+              } else if (!el.classList.contains('observed')) {
+                el.classList.add('observed');
+                if (newObserver) {
+                  newObserver.observe(el);
+                }
+              }
+            }
+          });
+        }
+        
+        // Check immediately for above-the-fold content
+        checkAndShowVisible();
+        
+        // Check again after layout is complete (multiple fallbacks)
+        requestAnimationFrame(() => {
+          checkAndShowVisible();
+        });
+        
+        setTimeout(() => {
+          checkAndShowVisible();
+        }, 10);
+        
+        setTimeout(() => {
+          checkAndShowVisible();
+        }, 50);
+        
+        // Ultimate fallback: show all after 100ms if still not visible
+        setTimeout(() => {
+          allElements.forEach((el) => {
+            if (!el.classList.contains('visible')) {
+              const delay = parseInt(el.getAttribute('data-delay') || '0');
+              setTimeout(() => {
+                el.classList.add('visible');
+              }, delay);
+              if (newObserver) {
+                newObserver.unobserve(el);
+              }
+            }
+          });
+        }, 100);
+        
+        return true;
+      }
+      
+      return false; // No elements or already handled
+    }
+    
+    // Initialize with multiple strategies to ensure content shows
+    let initialized = false;
+    let mutationObserver = null;
+    
+    function runInit() {
+      // Try to initialize
+      const success = initAnimatedContent();
+      
+      if (success) {
+        initialized = true;
+        // Stop mutation observer once initialized
+        if (mutationObserver) {
+          mutationObserver.disconnect();
+          mutationObserver = null;
+        }
+      }
+      
+      return success;
+    }
+    
+    // Strategy 1: Run immediately if DOM is ready
+    if (document.readyState !== 'loading') {
+      runInit();
+    }
+    
+    // Strategy 2: Run on DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        runInit();
+      });
+    }
+    
+    // Strategy 3: Run after window load (ensures all resources loaded)
+    window.addEventListener('load', () => {
+      setTimeout(runInit, 0);
+    });
+    
+    // Strategy 4: Use MutationObserver to watch for elements being added
+    function setupMutationObserver() {
+      if (initialized || typeof MutationObserver === 'undefined') {
+        return;
+      }
+      
+      const body = document.body || document.documentElement;
+      if (!body) {
+        // Body doesn't exist yet, try again later
+        setTimeout(setupMutationObserver, 10);
+        return;
+      }
+      
+      mutationObserver = new MutationObserver(() => {
+        if (!initialized) {
+          runInit();
+        }
+      });
+      
+      mutationObserver.observe(body, {
+        childList: true,
+        subtree: true
+      });
+    }
+    
+    // Set up mutation observer
+    if (document.body) {
+      setupMutationObserver();
+    } else {
+      // Wait for body to exist
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupMutationObserver);
+      } else {
+        setTimeout(setupMutationObserver, 10);
+      }
+    }
+    
+    // Strategy 5: Run after multiple delays to catch late elements
+    setTimeout(() => {
+      if (!initialized) runInit();
+    }, 10);
+    
+    setTimeout(() => {
+      if (!initialized) runInit();
+    }, 50);
+    
+    setTimeout(() => {
+      if (!initialized) runInit();
+    }, 100);
+    
+    setTimeout(() => {
+      if (!initialized) runInit();
+    }, 200);
+    
+    setTimeout(() => {
+      if (!initialized) runInit();
+    }, 500);
+    
+    // Ultimate fallback: force initialization after 1 second
+    setTimeout(() => {
+      if (!initialized) {
+        const allElements = document.querySelectorAll('.animated-content');
+        if (allElements.length > 0) {
+          allElements.forEach((el) => {
+            if (!el.classList.contains('visible')) {
+              el.classList.add('visible', 'observed');
+            }
+          });
+          initialized = true;
+        }
+      }
+    }, 1000);
+    
+    // Re-initialize on Astro page transitions
+    document.addEventListener('astro:page-load', () => {
+      // Use requestAnimationFrame to ensure DOM is fully ready
+      requestAnimationFrame(() => {
+        setTimeout(initAnimatedContent, 10);
+      });
+    });
+    
+    // Also listen for after-swap as backup
+    document.addEventListener('astro:after-swap', () => {
+      requestAnimationFrame(() => {
+        setTimeout(initAnimatedContent, 10);
+      });
+    });
+    
+    // Also listen for view transition end as backup
+    if (document.startViewTransition) {
+      document.addEventListener('astro:after-swap', () => {
+        requestAnimationFrame(() => {
+          setTimeout(initAnimatedContent, 10);
+        });
+      });
+    }
+  })();
+</script>

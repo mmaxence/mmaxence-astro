@@ -1,0 +1,41 @@
+---
+// Component for pre-fetching links on hover
+interface Props {
+  href: string;
+  class?: string;
+  prefetch?: boolean;
+}
+
+const { href, class: className = '', prefetch = true } = Astro.props;
+---
+
+<a 
+  href={href} 
+  class={`prefetch-link ${className}`}
+  data-prefetch={prefetch}
+>
+  <slot />
+</a>
+
+<script>
+  // Pre-fetch links on hover
+  document.addEventListener('DOMContentLoaded', () => {
+    const prefetchLinks = document.querySelectorAll('.prefetch-link[data-prefetch="true"]');
+    
+    prefetchLinks.forEach((link) => {
+      let prefetched = false;
+      
+      link.addEventListener('mouseenter', () => {
+        if (!prefetched && link.href) {
+          // Use Astro's built-in prefetch or fetch
+          const linkElement = document.createElement('link');
+          linkElement.rel = 'prefetch';
+          linkElement.href = link.href;
+          document.head.appendChild(linkElement);
+          prefetched = true;
+        }
+      }, { once: true });
+    });
+  });
+</script>
+

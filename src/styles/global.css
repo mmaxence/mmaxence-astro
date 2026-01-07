@@ -1,0 +1,662 @@
+/* TailwindCSS imports */
+@import "tailwindcss";
+
+/* ============================================
+   DESIGN SYSTEM - CSS VARIABLES
+   ============================================ */
+
+:root {
+  /* Theme variables - defaults (current theme) */
+  --theme-bg: #ffffff;
+  --theme-text: #1f1f1f;
+  --theme-text-muted: rgba(31, 31, 31, 0.6);
+  --theme-accent: #000000;
+  --theme-border: #e5e7eb;
+  --theme-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --theme-radius: 0.5rem;
+  --theme-spacing: 1rem;
+  
+  /* Card Radius System */
+  --radius-card: 1rem; /* 16px - Main card container radius */
+  --radius-card-image: 0.875rem; /* 14px - Images inside cards, slightly smaller for visual hierarchy */
+  --radius-card-inner: 0.75rem; /* 12px - Inner elements with spacing from card edge */
+  --theme-font-heading: 'Anonymous Pro', monospace;
+  --theme-font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* Typography - Anonymous Pro (bold) + Plus Jakarta Sans */
+  --font-body: var(--theme-font-body);
+  --font-heading: var(--theme-font-heading);
+  
+  /* Font Sizes */
+  --text-base: 1.125rem; /* 18px - body text */
+  --text-sm: 0.875rem; /* 14px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
+  --text-6xl: 3.75rem; /* 60px */
+  
+  /* Colors - use theme variables */
+  --color-text: var(--theme-text);
+  --color-text-muted: var(--theme-text-muted);
+  --color-text-light: var(--theme-text-muted);
+  --color-bg: var(--theme-bg);
+  --color-bg-muted: var(--theme-bg);
+  --color-accent: var(--theme-accent);
+  --color-accent-hover: var(--theme-accent);
+  --color-highlight: var(--theme-highlight, #FBF1A9);
+  --color-border: var(--theme-border);
+  --color-border-light: var(--theme-border);
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease-out;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Shadows */
+  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   CARD RADIUS SYSTEM
+   ============================================ */
+
+/* Card containers - wider radius for polished look */
+.blog-card,
+.book-card {
+  border-radius: var(--radius-card);
+}
+
+/* Images inside cards - slightly smaller radius for visual hierarchy */
+.blog-card-image,
+.book-cover {
+  border-radius: var(--radius-card-image);
+}
+
+
+/* ============================================
+   BASE TYPOGRAPHY
+   ============================================ */
+
+body {
+  font-family: var(--theme-font-body);
+  font-size: var(--text-base);
+  color: var(--theme-text) !important;
+  background-color: var(--theme-bg);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply line-height and font-size-scale only when theme variables are set */
+[data-theme="ide"] body,
+[data-theme="pixel"] body {
+  line-height: var(--line-height-body);
+  font-size: calc(var(--text-base) * var(--font-size-scale, 1));
+}
+
+/* Force theme colors on all text elements */
+p, span, div, article, section, li {
+  color: var(--theme-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--theme-font-heading);
+  font-weight: 700; /* Anonymous Pro bold for all headings */
+  line-height: normal;
+  color: var(--theme-text);
+  transition: font-family 0.3s ease, color 0.3s ease;
+}
+
+/* Apply line-height only for IDE theme headings (no font-size scaling) */
+[data-theme="ide"] h1,
+[data-theme="ide"] h2,
+[data-theme="ide"] h3,
+[data-theme="ide"] h4,
+[data-theme="ide"] h5,
+[data-theme="ide"] h6 {
+  line-height: var(--line-height-heading, normal);
+}
+
+[data-theme="pixel"] h1,
+[data-theme="pixel"] h2,
+[data-theme="pixel"] h3,
+[data-theme="pixel"] h4,
+[data-theme="pixel"] h5,
+[data-theme="pixel"] h6 {
+  line-height: var(--line-height-heading);
+  font-size: calc(1em * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+}
+
+/* H1 and H2 headings need more bottom margin for better spacing */
+h1 {
+  margin-bottom: 2rem; /* More space after H1 headings */
+}
+
+h2 {
+  margin-bottom: 2rem; /* More space after H2 headings */
+}
+
+em {
+  font-family: var(--font-heading);
+  font-size: 0.7em;
+  color: var(--color-text-light);
+}
+
+/* Links - base styles only, hover handled by interactions */
+a, a:visited {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-highlight);
+}
+
+::-moz-selection {
+  background: var(--color-highlight);
+}
+
+/* Mark/highlight - complex gradient that can't be done with Tailwind */
+mark, .mark {
+  font-family: var(--font-body); /* Keep body font for mark tags */
+  background-color: transparent;
+  background-image: linear-gradient(
+    transparent 0%,
+    transparent calc(50% - 8px),
+    var(--color-highlight) calc(50% - 8px),
+    var(--color-highlight) 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 0;
+}
+
+/* HR */
+hr {
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* ============================================
+   PROSE STYLES FOR BLOG POSTS
+   ============================================ */
+
+.prose {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: 1.75;
+  opacity: 0.9;
+}
+
+/* Apply line-height and font-size-scale only when theme variables are set */
+[data-theme="ide"] .prose,
+[data-theme="pixel"] .prose {
+  line-height: var(--line-height-body);
+  font-size: calc(var(--text-base) * var(--font-size-scale, 1));
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-family: var(--font-heading);
+  font-weight: 700; /* Anonymous Pro bold for prose headings */
+  line-height: normal;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+/* Apply line-height only when theme variables are set */
+[data-theme="ide"] .prose h1,
+[data-theme="ide"] .prose h2,
+[data-theme="ide"] .prose h3,
+[data-theme="ide"] .prose h4,
+[data-theme="ide"] .prose h5,
+[data-theme="ide"] .prose h6 {
+  line-height: var(--line-height-heading, normal);
+}
+
+[data-theme="pixel"] .prose h1,
+[data-theme="pixel"] .prose h2,
+[data-theme="pixel"] .prose h3,
+[data-theme="pixel"] .prose h4,
+[data-theme="pixel"] .prose h5,
+[data-theme="pixel"] .prose h6 {
+  line-height: var(--line-height-heading);
+}
+
+/* H1 and H2 headings need more bottom margin for better spacing */
+.prose h1 {
+  margin-bottom: 2rem; /* More space after H1 headings */
+}
+
+.prose h2 {
+  margin-bottom: 2rem; /* More space after H2 headings */
+}
+
+.prose h1 {
+  font-size: var(--text-3xl);
+}
+
+.prose h2 {
+  font-size: var(--text-2xl);
+}
+
+.prose h3 {
+  font-size: var(--text-xl);
+}
+
+.prose p {
+  font-size: var(--text-base);
+  margin-bottom: 1rem;
+}
+
+/* IDE theme prose headings use normal sizes (no scaling) */
+[data-theme="ide"] .prose h1,
+[data-theme="ide"] .prose h2,
+[data-theme="ide"] .prose h3 {
+  /* Use default sizes - no font-size scaling for IDE headings */
+}
+
+[data-theme="pixel"] .prose h1 {
+  font-size: calc(var(--text-3xl) * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+}
+
+[data-theme="pixel"] .prose h2 {
+  font-size: calc(var(--text-2xl) * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+}
+
+[data-theme="pixel"] .prose h3 {
+  font-size: calc(var(--text-xl) * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+}
+
+[data-theme="ide"] .prose p,
+[data-theme="pixel"] .prose p {
+  font-size: calc(var(--text-base) * var(--font-size-scale, 1));
+}
+
+.prose img {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--theme-radius);
+  box-shadow: var(--theme-shadow);
+  transition: border-radius 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prose a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.prose a:hover {
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Theme-aware link underlines */
+[data-theme="ide"] .prose a {
+  border-bottom-color: rgba(192, 202, 245, 0.3);
+}
+
+[data-theme="ide"] .prose a:hover {
+  border-bottom-color: rgba(192, 202, 245, 0.6);
+}
+
+[data-theme="pixel"] .prose a {
+  border-bottom-color: rgba(45, 80, 22, 0.3);
+}
+
+[data-theme="pixel"] .prose a:hover {
+  border-bottom-color: rgba(45, 80, 22, 0.6);
+}
+
+.prose mark,
+.prose .mark {
+  font-family: var(--font-body); /* Keep body font for mark tags in prose */
+  background-color: transparent;
+  background-image: linear-gradient(
+    transparent 0%,
+    transparent calc(50% - 8px),
+    var(--color-highlight) calc(50% - 8px),
+    var(--color-highlight) 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 0;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   CONTENT LINKS - SUBTLE UNDERLINE STYLE
+   ============================================ */
+
+.content-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.content-link:hover {
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Theme-aware link underlines */
+[data-theme="ide"] .content-link {
+  border-bottom-color: rgba(192, 202, 245, 0.3);
+}
+
+[data-theme="ide"] .content-link:hover {
+  border-bottom-color: rgba(192, 202, 245, 0.6);
+}
+
+[data-theme="pixel"] .content-link {
+  border-bottom-color: rgba(45, 80, 22, 0.3);
+}
+
+[data-theme="pixel"] .content-link:hover {
+  border-bottom-color: rgba(45, 80, 22, 0.6);
+}
+
+/* ============================================
+   INDEX PAGE SPECIFIC STYLES
+   ============================================ */
+
+.index h1, .index h2, .index h5 {
+  font-family: var(--font-heading);
+  font-weight: 700; /* Anonymous Pro bold */
+}
+
+.index h2 {
+  font-weight: 700; /* Anonymous Pro bold */
+}
+
+.index h4 {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.index h5 {
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   SHAPE ANIMATIONS (CSS-based shapes)
+   ============================================ */
+
+/* Shapes use CSS clip-path and are styled in index.astro */
+
+/* ============================================
+   FOOTER SPECIFIC OVERRIDES
+   ============================================ */
+
+footer a.link {
+  border: none;
+}
+
+footer .social > a:hover {
+  background-color: transparent;
+}
+
+/* ============================================
+   CREDENTIAL LINKS
+   ============================================ */
+
+a.credential {
+  border: none;
+  outline: none;
+  font-size: var(--text-sm);
+  color: silver;
+}
+
+a.credential:hover {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+/* ============================================
+   INTERACTIONS & ANIMATIONS
+   ============================================ */
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reading Progress Bar - can't be done with Tailwind */
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #000000, #333333);
+  z-index: 9999;
+  transition: width 0.1s ease-out;
+}
+
+/* Page Transition System - using Tailwind classes in components */
+.page-transition {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+}
+
+.page-transition.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Page Content Animation - consistent across all pages */
+.page-content {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: pageContentFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes pageContentFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* View Transitions - Astro View Transitions API */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth page transitions */
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* Ensure page content is visible after view transition */
+::view-transition-new(root) .page-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Navigation link underline animation - pseudo-element can't be done with Tailwind */
+nav ul li {
+  position: relative;
+  overflow: visible;
+}
+
+nav ul li::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width var(--transition-smooth);
+  z-index: 1;
+}
+
+nav ul li:hover::after {
+  width: 100%;
+}
+
+/* Text link underline animation - for content links */
+.prose a:not(.no-underline) {
+  position: relative;
+  color: var(--color-text);
+  text-decoration: none;
+  padding-bottom: 2px;
+}
+
+.prose a:not(.no-underline)::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width var(--transition-smooth);
+  z-index: 2;
+}
+
+.prose a:not(.no-underline):hover {
+  color: var(--color-accent);
+}
+
+.prose a:not(.no-underline):hover::after {
+  width: 100%;
+}
+
+/* General links - blue on hover, underline animation */
+/* Exclude blog-card-link and book-item to prevent conflicts with their custom hover effects */
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item) {
+  position: relative;
+  color: var(--color-text);
+  text-decoration: none;
+  padding-bottom: 2px;
+}
+
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item)::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width var(--transition-smooth);
+  z-index: 2;
+}
+
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item):hover {
+  color: var(--color-accent);
+}
+
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item):hover::after {
+  width: 100%;
+}
+
+/* Scroll-triggered animations - using Intersection Observer in JS */
+/* These are now handled by AnimatedContent component, but keep for backward compatibility */
+
+/* If inside AnimatedContent, always visible (progressive enhancement) */
+.animated-content .principle-card,
+.animated-content .book-item,
+.animated-content .qualification-item {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Default: hide elements that are NOT inside AnimatedContent */
+.principle-card,
+.book-item,
+.qualification-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+}
+
+.principle-card.visible,
+.book-item.visible,
+.qualification-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Accessibility - respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .page-transition,
+  .principle-card,
+  .book-item,
+  .qualification-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================
+   THEME GLITCH TRANSITION EFFECT
+   ============================================ */
+
+.theme-glitch {
+  animation: themeGlitch 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes themeGlitch {
+  0% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+  50% {
+    filter: blur(2px);
+    opacity: 0.98;
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+}

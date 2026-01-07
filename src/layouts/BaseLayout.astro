@@ -1,0 +1,209 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "Product Designer, CDO at buzzvil", description = "Product Manager, Head of Design at buzzvil" } = Astro.props;
+const siteTitle = "Product Designer, CDO at buzzvil";
+const author = "Maxence Mauduit";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Anonymous+Pro:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <meta name="generator" content={Astro.generator} />
+    <title>{title === siteTitle ? title : `${title} | ${siteTitle}`}</title>
+    <ViewTransitions />
+    <script is:inline>
+      // Initialize theme immediately to prevent flash
+      // Also re-apply on page transitions
+      (function() {
+        const themes = {
+          default: {
+            '--theme-bg': '#ffffff',
+            '--theme-text': '#1a1a1a',
+            '--theme-text-muted': 'rgba(26, 26, 26, 0.6)',
+            '--theme-accent': '#000000',
+            '--theme-border': '#e5e7eb',
+            '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+            '--theme-highlight': '#FBF1A9',
+            '--theme-radius': '0.5rem',
+            '--theme-spacing': '1rem',
+            '--theme-font-heading': "'Anonymous Pro', monospace",
+            '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
+          },
+          ide: {
+            // Tokyo Midnight theme - refined dark IDE colors
+            '--theme-bg': '#1a1b26',
+            '--theme-text': '#c0caf5',
+            '--theme-text-muted': '#565f89',
+            '--theme-accent': '#7aa2f7',
+            '--theme-border': '#2f3549',
+            '--theme-shadow': '0 4px 12px rgba(0, 0, 0, 0.6)',
+            '--theme-highlight': '#2ac3de',
+            '--theme-radius': '0',
+            '--theme-spacing': '0.75rem',
+            '--theme-font-heading': "'Courier New', monospace",
+            '--theme-font-body': "'Consolas', 'Monaco', 'Courier New', monospace",
+          },
+          pixel: {
+            // Refined retro game theme - subtle Game Boy inspired palette
+            '--theme-bg': '#e8e8d3',
+            '--theme-text': '#2d5016',
+            '--theme-text-muted': '#5a7c42',
+            '--theme-accent': '#8b956d',
+            '--theme-border': '#87986a',
+            '--theme-shadow': '2px 2px 0px #87986a, 4px 4px 0px #6b7a52',
+            '--theme-highlight': '#c4d5a1',
+            '--theme-radius': '0',
+            '--theme-spacing': '1rem',
+            '--theme-font-heading': "'Press Start 2P', cursive",
+            '--theme-font-body': "'Courier New', 'Courier', monospace",
+          }
+        };
+        
+        function applyTheme(themeName) {
+          try {
+            const root = document.documentElement;
+            
+            // Handle random theme
+            if (themeName === 'random') {
+              const savedThemeData = localStorage.getItem('random-theme-data');
+              if (savedThemeData) {
+                try {
+                  const themeObj = JSON.parse(savedThemeData);
+                  Object.keys(themeObj).forEach(key => {
+                    root.style.setProperty(key, themeObj[key]);
+                  });
+                  root.setAttribute('data-theme', 'random');
+                  return;
+                } catch (e) {
+                  // If parsing fails, fall through to default
+                }
+              }
+            }
+            
+            // Apply predefined theme or default
+            const theme = themes[themeName] || themes.default;
+            Object.keys(theme).forEach(key => {
+              root.style.setProperty(key, theme[key]);
+            });
+            root.setAttribute('data-theme', themeName || 'default');
+          } catch (e) {
+            // Fallback to default theme
+            const root = document.documentElement;
+            Object.keys(themes.default).forEach(key => {
+              root.style.setProperty(key, themes.default[key]);
+            });
+            root.setAttribute('data-theme', 'default');
+          }
+        }
+        
+        // Apply theme immediately
+        try {
+          const savedTheme = localStorage.getItem('theme') || 'default';
+          applyTheme(savedTheme);
+        } catch (e) {
+          applyTheme('default');
+        }
+        
+        // Re-apply theme on page transitions (Astro View Transitions)
+        // Don't use glitch on page load, only on manual theme changes
+        document.addEventListener('astro:page-load', () => {
+          try {
+            const savedTheme = localStorage.getItem('theme') || 'default';
+            applyTheme(savedTheme);
+          } catch (e) {
+            applyTheme('default');
+          }
+        });
+        
+        // Also listen for astro:after-swap (for compatibility)
+        document.addEventListener('astro:after-swap', () => {
+          try {
+            const savedTheme = localStorage.getItem('theme') || 'default';
+            applyTheme(savedTheme);
+          } catch (e) {
+            applyTheme('default');
+          }
+        });
+      })();
+    </script>
+    <script src="/js/interactions.js" defer></script>
+    <script>
+      // Inline prefetch script for immediate execution
+      (function() {
+        'use strict';
+        document.addEventListener('DOMContentLoaded', () => {
+          const prefetchLinks = document.querySelectorAll('.prefetch-link[data-prefetch="true"]');
+          const prefetchedUrls = new Set();
+
+          prefetchLinks.forEach((link) => {
+            link.addEventListener('mouseenter', () => {
+              const url = link.href || link.getAttribute('href');
+              
+              if (url && !prefetchedUrls.has(url)) {
+                const prefetchLink = document.createElement('link');
+                prefetchLink.rel = 'prefetch';
+                prefetchLink.href = url;
+                prefetchLink.as = 'document';
+                document.head.appendChild(prefetchLink);
+                prefetchedUrls.add(url);
+              }
+            }, { once: true });
+          });
+        });
+      })();
+    </script>
+    <script>
+      // SVG hover effects
+      document.addEventListener('DOMContentLoaded', () => {
+        const rect = document.getElementById('rect');
+        const poly = document.getElementById('poly');
+        const circle = document.getElementById('circle');
+
+        if (rect) {
+          rect.addEventListener('mouseenter', () => {
+            rect.setAttribute('fill', '#FF4136');
+          });
+          rect.addEventListener('mouseleave', () => {
+            rect.setAttribute('fill', 'black');
+          });
+        }
+
+        if (poly) {
+          poly.addEventListener('mouseenter', () => {
+            poly.setAttribute('fill', '#19A974');
+          });
+          poly.addEventListener('mouseleave', () => {
+            poly.setAttribute('fill', 'black');
+          });
+        }
+
+        if (circle) {
+          circle.addEventListener('mouseenter', () => {
+            circle.setAttribute('fill', '#357EDD');
+          });
+          circle.addEventListener('mouseleave', () => {
+            circle.setAttribute('fill', 'black');
+          });
+        }
+      });
+    </script>
+  </head>
+      <body style="background-color: var(--theme-bg); transition: background-color 0.3s ease;">
+        <slot />
+      </body>
+</html>
+

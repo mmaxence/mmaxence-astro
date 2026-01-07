@@ -1,0 +1,96 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  book: CollectionEntry<'library'>;
+}
+
+const { book } = Astro.props;
+
+const slug = book.slug.replace('-review', '');
+const featuredImage = book.data.featured_image?.startsWith('/') 
+  ? book.data.featured_image 
+  : `/images/${book.data.featured_image}`;
+---
+
+<a 
+  href={`/library/${slug}`} 
+  class="book-item prefetch-link block no-underline hover:bg-transparent border-none book-card-disabled" 
+  data-prefetch="true"
+  onclick="return false;"
+>
+  <article class="book-card p-6 border shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:-translate-y-1" style="background-color: var(--theme-bg); border-color: var(--theme-border); border-radius: var(--radius-card); box-shadow: var(--theme-shadow);">
+    {book.data.featured_image && (
+      <img 
+        src={featuredImage} 
+        alt={book.data.title}
+        class="book-cover w-full h-64 object-cover mb-4"
+        style="border-radius: var(--radius-card-image);"
+      />
+    )}
+    <h2 class="book-title text-xl font-semibold mb-2" style="color: var(--theme-text);">
+      {book.data.title}
+    </h2>
+    {book.data.book_author && (
+      <h3 class="book-author font-body text-[1.125rem] mb-2" style="color: var(--theme-text-muted);">
+        by {book.data.book_author}
+      </h3>
+    )}
+    {book.data.book_category && (
+      <p class="book-description text-sm mb-3" style="color: var(--theme-text-muted);">
+        {book.data.book_category}
+      </p>
+    )}
+  </article>
+</a>
+
+<style>
+  .book-card {
+    border-color: var(--theme-border);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  .book-item:hover .book-card {
+    border-color: var(--theme-accent);
+  }
+
+  /* Block clicks on book cards - remove this class to enable clicks */
+  .book-card-disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .book-card-disabled:hover .book-card {
+    border-color: var(--theme-border);
+    transform: none;
+  }
+</style>
+
+<script>
+  // Function to block clicks on book cards
+  // To enable clicks, remove the 'book-card-disabled' class from the <a> tag
+  function blockBookCardClicks() {
+    const bookCards = document.querySelectorAll('.book-card-disabled');
+    bookCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', blockBookCardClicks);
+  } else {
+    blockBookCardClicks();
+  }
+
+  // Re-initialize on page transitions
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(blockBookCardClicks, 50);
+  });
+</script>
+

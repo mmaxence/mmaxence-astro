@@ -1,0 +1,404 @@
+---
+// Theme switcher component - appears after theme swap
+---
+
+<div id="theme-switcher" class="theme-switcher fixed bottom-4 right-4 z-50 hidden">
+  <div class="bg-white border border-gray-300 rounded-lg shadow-lg p-3" style="background-color: var(--theme-bg); border-color: var(--theme-border); box-shadow: var(--theme-shadow);">
+    <p class="text-xs mb-2 font-semibold" style="color: var(--theme-text); font-family: var(--theme-font-heading);">Theme</p>
+    <div class="flex gap-2">
+      <button
+        id="theme-default"
+        class="theme-btn w-8 h-8 rounded border-2 transition-all"
+        data-theme="default"
+        title="Default Theme"
+        style="background-color: #ffffff; border-color: var(--theme-accent);"
+      >
+        <span class="sr-only">Default</span>
+      </button>
+      <button
+        id="theme-ide"
+        class="theme-btn w-8 h-8 rounded border-2 transition-all"
+        data-theme="ide"
+        title="IDE Theme"
+        style="background-color: #1a1b26; border-color: var(--theme-accent);"
+      >
+        <span class="sr-only">IDE</span>
+      </button>
+      <button
+        id="theme-pixel"
+        class="theme-btn w-8 h-8 rounded border-2 transition-all"
+        data-theme="pixel"
+        title="Pixel Theme"
+        style="background-color: #e8e8d3; border-color: var(--theme-accent);"
+      >
+        <span class="sr-only">Pixel</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initThemeSwitcher() {
+    const switcher = document.getElementById('theme-switcher');
+    if (!switcher) {
+      // Switcher not on this page, try again later
+      setTimeout(initThemeSwitcher, 50);
+      return;
+    }
+    
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const root = document.documentElement;
+    
+    // Re-query buttons if they don't exist yet
+    if (themeButtons.length === 0) {
+      setTimeout(initThemeSwitcher, 50);
+      return;
+    }
+
+    const themes = {
+      default: {
+        '--theme-bg': '#ffffff',
+        '--theme-text': '#1a1a1a',
+        '--theme-text-muted': 'rgba(26, 26, 26, 0.6)',
+        '--theme-accent': '#000000',
+        '--theme-border': '#e5e7eb',
+        '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+        '--theme-highlight': '#FBF1A9',
+        '--theme-radius': '0.5rem',
+        '--theme-spacing': '1rem',
+        '--theme-font-heading': "'Anonymous Pro', monospace",
+        '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
+      },
+      ide: {
+        '--theme-bg': '#1a1b26',
+        '--theme-text': '#c0caf5',
+        '--theme-text-muted': '#565f89',
+        '--theme-accent': '#7aa2f7',
+        '--theme-border': '#2f3549',
+        '--theme-shadow': '0 4px 12px rgba(0, 0, 0, 0.6)',
+        '--theme-highlight': '#2ac3de',
+        '--theme-radius': '0',
+        '--theme-spacing': '0.75rem',
+        '--theme-font-heading': "'Courier New', monospace",
+        '--theme-font-body': "'Consolas', 'Monaco', 'Courier New', monospace",
+      },
+      pixel: {
+        '--theme-bg': '#e8e8d3',
+        '--theme-text': '#2d5016',
+        '--theme-text-muted': '#5a7c42',
+        '--theme-accent': '#8b956d',
+        '--theme-border': '#87986a',
+        '--theme-shadow': '2px 2px 0px #87986a, 4px 4px 0px #6b7a52',
+        '--theme-highlight': '#c4d5a1',
+        '--theme-radius': '0',
+        '--theme-spacing': '1rem',
+        '--theme-font-heading': "'Press Start 2P', cursive",
+        '--theme-font-body': "'Courier New', 'Courier', monospace",
+      }
+    };
+
+    function applyTheme(themeName, withGlitch = true) {
+      const theme = themes[themeName];
+      
+      // Add glitch effect
+      if (withGlitch) {
+        root.classList.add('theme-glitch');
+        setTimeout(() => {
+          root.classList.remove('theme-glitch');
+        }, 800);
+      }
+      
+      // Apply theme with slight delay for glitch effect
+      setTimeout(() => {
+        Object.keys(theme).forEach(key => {
+          root.style.setProperty(key, theme[key]);
+        });
+        root.setAttribute('data-theme', themeName);
+        localStorage.setItem('theme', themeName);
+        localStorage.setItem('theme-changed', 'true');
+        
+        // Update SVG shape colors to match theme
+        const svgs = document.querySelectorAll('.shape-svg');
+        svgs.forEach(svg => {
+          svg.style.color = theme['--theme-text'] || getComputedStyle(root).getPropertyValue('--theme-text') || '#1a1a1a';
+        });
+      }, withGlitch ? 50 : 0);
+      
+      // Show theme switcher after swap
+      if (switcher) {
+        switcher.classList.remove('hidden');
+      }
+      
+      // Update active button
+      themeButtons.forEach(btn => {
+        if (btn.dataset.theme === themeName) {
+          btn.style.borderWidth = '3px';
+          btn.style.transform = 'scale(1.1)';
+        } else {
+          btn.style.borderWidth = '2px';
+          btn.style.transform = 'scale(1)';
+        }
+      });
+    }
+
+    // Theme button clicks
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const themeName = btn.dataset.theme;
+        applyTheme(themeName, true); // Always use glitch on button click
+      });
+    });
+
+    // Load current theme - check if already initialized by BaseLayout
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    
+    // Always ensure theme is applied (in case BaseLayout didn't run)
+    // Don't use glitch on initial load
+    applyTheme(savedTheme, false);
+    
+    // Update shapes on initial load
+    const svgs = document.querySelectorAll('.shape-svg');
+    if (svgs.length > 0) {
+      const theme = themes[savedTheme];
+      if (theme) {
+        svgs.forEach(svg => {
+          svg.style.color = theme['--theme-text'] || getComputedStyle(root).getPropertyValue('--theme-text') || '#1a1a1a';
+        });
+      }
+    }
+    
+    // Update button states
+    themeButtons.forEach(btn => {
+      if (btn.dataset.theme === savedTheme) {
+        btn.style.borderWidth = '3px';
+        btn.style.transform = 'scale(1.1)';
+      } else {
+        btn.style.borderWidth = '2px';
+        btn.style.transform = 'scale(1)';
+      }
+    });
+    
+    // Show switcher based on visibility logic
+    updateSwitcherVisibility(savedTheme);
+    
+    // Also check on after-swap for immediate visibility update
+    document.addEventListener('astro:after-swap', () => {
+      const currentTheme = localStorage.getItem('theme') || 'default';
+      updateSwitcherVisibility(currentTheme);
+    });
+    
+    // Re-apply theme on page transitions (no glitch on page load)
+    document.addEventListener('astro:page-load', () => {
+      const currentTheme = localStorage.getItem('theme') || 'default';
+      applyTheme(currentTheme, false); // No glitch on page load
+      
+      // Update button states
+      themeButtons.forEach(btn => {
+        if (btn.dataset.theme === currentTheme) {
+          btn.style.borderWidth = '3px';
+          btn.style.transform = 'scale(1.1)';
+        } else {
+          btn.style.borderWidth = '2px';
+          btn.style.transform = 'scale(1)';
+        }
+      });
+      
+      // Update switcher visibility
+      updateSwitcherVisibility(currentTheme);
+    });
+    
+    // Also update visibility on after-swap
+    document.addEventListener('astro:after-swap', () => {
+      const currentTheme = localStorage.getItem('theme') || 'default';
+      updateSwitcherVisibility(currentTheme);
+    });
+    
+    function updateSwitcherVisibility(theme) {
+      if (switcher) {
+        // Always show if user has changed theme at least once
+        const hasChangedTheme = localStorage.getItem('theme-changed') === 'true';
+        if (hasChangedTheme) {
+          switcher.classList.remove('hidden');
+        } else {
+          // Hide if default theme and never changed
+          if (theme === 'default') {
+            switcher.classList.add('hidden');
+          } else {
+            switcher.classList.remove('hidden');
+          }
+        }
+      }
+    }
+    
+    // Mark that theme has been changed and update visibility
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        localStorage.setItem('theme-changed', 'true');
+        updateSwitcherVisibility(btn.dataset.theme);
+      });
+    });
+    
+    // Listen for theme changes from shape clicks (only register once globally)
+    if (!window.themeChangeListenerAdded) {
+      document.addEventListener('theme-change', (e) => {
+        const { theme, withGlitch } = e.detail;
+        // Re-query elements in case they changed
+        const currentSwitcher = document.getElementById('theme-switcher');
+        const currentButtons = document.querySelectorAll('.theme-btn');
+        const currentRoot = document.documentElement;
+        
+        if (currentSwitcher && currentButtons.length > 0) {
+          // Use the same applyTheme logic
+          const themes = {
+            default: {
+              '--theme-bg': '#ffffff',
+              '--theme-text': '#1a1a1a',
+              '--theme-text-muted': 'rgba(26, 26, 26, 0.6)',
+              '--theme-accent': '#000000',
+              '--theme-border': '#e5e7eb',
+              '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+              '--theme-highlight': '#FBF1A9',
+              '--theme-radius': '0.5rem',
+              '--theme-spacing': '1rem',
+              '--theme-font-heading': "'Anonymous Pro', monospace",
+              '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
+            },
+            ide: {
+              '--theme-bg': '#1a1b26',
+              '--theme-text': '#c0caf5',
+              '--theme-text-muted': '#565f89',
+              '--theme-accent': '#7aa2f7',
+              '--theme-border': '#2f3549',
+              '--theme-shadow': '0 4px 12px rgba(0, 0, 0, 0.6)',
+              '--theme-highlight': '#2ac3de',
+              '--theme-radius': '0',
+              '--theme-spacing': '0.75rem',
+              '--theme-font-heading': "'Courier New', monospace",
+              '--theme-font-body': "'Consolas', 'Monaco', 'Courier New', monospace",
+            },
+            pixel: {
+              '--theme-bg': '#e8e8d3',
+              '--theme-text': '#2d5016',
+              '--theme-text-muted': '#5a7c42',
+              '--theme-accent': '#8b956d',
+              '--theme-border': '#87986a',
+              '--theme-shadow': '2px 2px 0px #87986a, 4px 4px 0px #6b7a52',
+              '--theme-highlight': '#c4d5a1',
+              '--theme-radius': '0',
+              '--theme-spacing': '1rem',
+              '--theme-font-heading': "'Press Start 2P', cursive",
+              '--theme-font-body': "'Courier New', 'Courier', monospace",
+            }
+          };
+          
+          const theme = themes[theme];
+          if (theme) {
+            if (withGlitch) {
+              currentRoot.classList.add('theme-glitch');
+              setTimeout(() => {
+                currentRoot.classList.remove('theme-glitch');
+              }, 800);
+            }
+            
+            setTimeout(() => {
+              Object.keys(theme).forEach(key => {
+                currentRoot.style.setProperty(key, theme[key]);
+              });
+              currentRoot.setAttribute('data-theme', theme);
+              localStorage.setItem('theme', theme);
+              localStorage.setItem('theme-changed', 'true');
+              
+              // Update SVG shape colors to match theme
+              const svgs = document.querySelectorAll('.shape-svg');
+              svgs.forEach(svg => {
+                svg.style.color = theme['--theme-text'] || getComputedStyle(currentRoot).getPropertyValue('--theme-text') || '#1a1a1a';
+              });
+            }, withGlitch ? 50 : 0);
+            
+            currentSwitcher.classList.remove('hidden');
+            
+            currentButtons.forEach(btn => {
+              if (btn.dataset.theme === theme) {
+                btn.style.borderWidth = '3px';
+                btn.style.transform = 'scale(1.1)';
+              } else {
+                btn.style.borderWidth = '2px';
+                btn.style.transform = 'scale(1)';
+              }
+            });
+            
+            // Update visibility
+            const hasChangedTheme = localStorage.getItem('theme-changed') === 'true';
+            if (hasChangedTheme) {
+              currentSwitcher.classList.remove('hidden');
+            } else {
+              if (theme === 'default') {
+                currentSwitcher.classList.add('hidden');
+              } else {
+                currentSwitcher.classList.remove('hidden');
+              }
+            }
+          }
+        }
+      });
+      window.themeChangeListenerAdded = true;
+    }
+  }
+  
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeSwitcher);
+  } else {
+    initThemeSwitcher();
+  }
+  
+  // Re-initialize on page transitions
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(initThemeSwitcher, 50);
+  });
+</script>
+
+<style>
+  .theme-switcher {
+    animation: slideInUp 0.3s ease-out;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .theme-btn {
+    cursor: pointer;
+  }
+
+  .theme-btn:hover {
+    transform: scale(1.15);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    .theme-switcher {
+      bottom: 1rem;
+      right: 1rem;
+    }
+  }
+</style>
+

@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+  image: string;
+  imageAlt: string;
+  children: any;
+}
+
+const { title, image, imageAlt, children } = Astro.props;
+---
+
+<div class="my-8 transition-all duration-[250ms] hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+  <h2 class="font-mono text-2xl font-extralight">{title}</h2>
+  <img class="my-4" src={image} alt={imageAlt} title={imageAlt} />
+  <slot />
+</div>
+

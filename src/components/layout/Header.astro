@@ -1,0 +1,404 @@
+---
+import { Fragment } from 'astro/jsx-runtime';
+
+const menuItems = [
+  { name: "Experience", url: "/timeline/" },
+  { name: "Blog", url: "/blog/" },
+  { name: "Shelf", url: "/library/" },
+  { name: "About", url: "/about/" },
+];
+
+// Desktop menu items (without About)
+const desktopMenuItems = menuItems.filter(item => item.name !== "About");
+
+const author = "Maxence Mauduit";
+const subtitleParts = ["Product Experience Executive", "Monetization & Platforms"];
+
+// Get current pathname
+const currentPath = Astro.url.pathname;
+
+// Function to check if a menu item is active
+function isActive(url: string): boolean {
+  // Handle exact matches and sub-paths
+  if (url === '/') {
+    return currentPath === '/';
+  }
+  // Check if current path starts with the menu item URL
+  return currentPath.startsWith(url);
+}
+---
+
+<header>
+  <nav class="pt-6 md:pt-16 pb-4 px-4 md:px-4" role="navigation">
+    <div class="flex flex-col md:flex-row items-start md:items-baseline justify-between max-w-screen-xl mx-auto gap-3 md:gap-6">
+      <a href="/" class="header-logo-link flex flex-col mb-0 pl-0 md:pl-2 grow md:mr-3 no-underline hover:bg-transparent border-none group">
+        <svg class="header-logo-svg mb-1.5 flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="512" height="512" rx="256" style="fill: var(--theme-bg);"/>
+          <path d="M256 58.5142L427.028 157.257V354.743L256 453.486L84.9725 354.743V157.257L256 58.5142Z" style="fill: var(--theme-text);"/>
+          <rect x="173.248" y="256" width="117.029" height="117.029" transform="rotate(-45 173.248 256)" style="fill: var(--theme-bg);"/>
+        </svg>
+        <p class="text-base md:text-[1.125rem] leading-tight transition-colors duration-300 mb-1" style="color: var(--theme-text);">
+          {author}
+        </p>
+        <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-0.5">
+          {subtitleParts.map((part, index) => (
+            <>
+              <span class="text-xs md:text-base font-body font-normal transition-colors duration-300 leading-tight" style="color: var(--theme-text-muted);">
+                {part}
+              </span>
+              {index < subtitleParts.length - 1 && (
+                <span class="text-xs md:text-base font-body font-normal leading-tight" style="color: var(--theme-text-muted); opacity: 0.4;">
+                  ·
+                </span>
+              )}
+            </>
+          ))}
+        </div>
+      </a>
+      {/* Desktop Navigation */}
+      <div class="hidden md:flex items-center self-baseline">
+        {desktopMenuItems.length > 0 && (
+          <ul class="flex gap-3 list-none p-0 m-0">
+            {desktopMenuItems.map((item) => {
+              const active = isActive(item.url);
+              return (
+              <li class="text-[1.125rem] font-normal inline-block relative transition-all duration-150">
+                    <a
+                      class={`prefetch-link px-1 py-1 transition-colors duration-300 ${active ? 'nav-active' : ''}`}
+                      style={active ? "color: var(--theme-accent);" : "color: var(--theme-text);"}
+                      href={item.url}
+                      title={`${item.name} page`}
+                      data-prefetch="true"
+                      aria-current={active ? "page" : undefined}
+                    >
+                  {item.name}
+                </a>
+              </li>
+            );
+            })}
+          </ul>
+        )}
+      </div>
+
+      {/* Mobile FAB Menu - Fixed at bottom right */}
+      <button
+        id="mobile-menu-fab"
+        class="mobile-menu-fab md:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="5" r="1.5" fill="currentColor"/>
+          <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+          <circle cx="10" cy="15" r="1.5" fill="currentColor"/>
+        </svg>
+      </button>
+
+      {/* Mobile Bottom Sheet */}
+      <div id="mobile-menu-bottomsheet" class="mobile-menu-bottomsheet">
+        <div class="mobile-menu-content">
+          <ul class="mobile-menu-list">
+            <li>
+              <a
+                class={`mobile-menu-item prefetch-link ${isActive('/') ? 'mobile-menu-active' : ''}`}
+                style={isActive('/') ? "color: var(--theme-accent);" : "color: var(--theme-text);"}
+                href="/"
+                title="Home page"
+                data-prefetch="true"
+                aria-current={isActive('/') ? "page" : undefined}
+              >
+                Home
+              </a>
+            </li>
+            {menuItems.map((item) => {
+              const active = isActive(item.url);
+              return (
+                <li>
+                  <a
+                    class={`mobile-menu-item prefetch-link ${active ? 'mobile-menu-active' : ''}`}
+                    style={active ? "color: var(--theme-accent);" : "color: var(--theme-text);"}
+                    href={item.url}
+                    title={`${item.name} page`}
+                    data-prefetch="true"
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              );
+            })}
+            <li>
+              <button
+                id="mobile-reset-theme-btn"
+                class="mobile-menu-item mobile-reset-theme-btn"
+                style="color: var(--theme-text);"
+                aria-label="Reset to default theme"
+              >
+                Reset Theme
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .header-logo-link {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .header-logo-link:hover {
+    transform: translateX(4px);
+  }
+  
+  /* Active navigation item styles */
+  .nav-active {
+    font-weight: 600;
+  }
+  
+  .nav-active:hover {
+    opacity: 0.8;
+  }
+
+  /* Mobile FAB Menu - Fixed at bottom right */
+  .mobile-menu-fab {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--theme-bg);
+    border: none;
+    color: var(--theme-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--theme-shadow);
+    z-index: 1001;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Hide FAB on desktop */
+  @media (min-width: 768px) {
+    .mobile-menu-fab {
+      display: none !important;
+    }
+  }
+
+  .mobile-menu-fab:active {
+    transform: scale(0.9);
+  }
+
+  .mobile-menu-fab[aria-expanded="true"] {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Mobile Bottom Sheet */
+  .mobile-menu-bottomsheet {
+    position: fixed;
+    bottom: -24px; /* Extend 24px below viewport to hide bottom edge */
+    left: 0;
+    right: 0;
+    background-color: var(--theme-bg);
+    border-top-left-radius: calc(var(--theme-radius, 0.5rem) * 2);
+    border-top-right-radius: calc(var(--theme-radius, 0.5rem) * 2);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1000;
+    max-height: calc(70vh + 24px); /* Add extra height to account for bottom extension */
+    overflow-y: auto;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom)); /* Extra padding at bottom */
+    will-change: transform;
+  }
+
+  .mobile-menu-bottomsheet.sheet-open {
+    transform: translateY(0);
+  }
+
+  .mobile-menu-content {
+    padding: var(--theme-spacing, 1rem);
+    padding-top: calc(var(--theme-spacing, 1rem) + 0.5rem);
+  }
+
+  .mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile-menu-item {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    font-size: 1.125rem;
+    font-weight: 400;
+    border-radius: var(--theme-radius, 0.5rem);
+    transition: background-color 0.2s ease,
+                color 0.2s ease;
+  }
+
+  .mobile-menu-item:hover,
+  .mobile-menu-item:focus {
+    background-color: var(--theme-border);
+  }
+
+  .mobile-menu-active {
+    font-weight: 600;
+  }
+
+  .mobile-reset-theme-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .mobile-reset-theme-btn:hover,
+  .mobile-reset-theme-btn:focus {
+    background-color: var(--theme-border);
+  }
+
+  /* Backdrop */
+  .mobile-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+  }
+
+  .mobile-menu-backdrop.backdrop-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+</style>
+
+<script>
+  function initMobileMenu() {
+    const fab = document.getElementById('mobile-menu-fab');
+    const bottomsheet = document.getElementById('mobile-menu-bottomsheet');
+    
+    if (!fab || !bottomsheet) {
+      setTimeout(initMobileMenu, 50);
+      return;
+    }
+
+    // Create backdrop
+    let backdrop = document.getElementById('mobile-menu-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.id = 'mobile-menu-backdrop';
+      backdrop.className = 'mobile-menu-backdrop';
+      document.body.appendChild(backdrop);
+    }
+
+    function openMenu() {
+      bottomsheet.classList.add('sheet-open');
+      backdrop.classList.add('backdrop-visible');
+      fab.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      bottomsheet.classList.remove('sheet-open');
+      backdrop.classList.remove('backdrop-visible');
+      fab.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    function toggleMenu() {
+      const isOpen = bottomsheet.classList.contains('sheet-open');
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    // Remove existing listeners by cloning
+    const newFab = fab.cloneNode(true);
+    fab.parentNode.replaceChild(newFab, fab);
+    const newFabElement = document.getElementById('mobile-menu-fab');
+
+    // FAB click handler
+    newFabElement.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    // Close on backdrop click
+    backdrop.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeMenu();
+    });
+
+    // Close on click outside bottomsheet (handles clicks on backdrop and anywhere outside)
+    document.addEventListener('click', (e) => {
+      if (bottomsheet.classList.contains('sheet-open')) {
+        const target = e.target as HTMLElement;
+        // Close if clicking outside bottomsheet and FAB
+        if (!bottomsheet.contains(target) && !fab.contains(target)) {
+          closeMenu();
+        }
+      }
+    });
+
+    // Close on menu item click (but not reset theme button)
+    const menuItems = bottomsheet.querySelectorAll('.mobile-menu-item:not(.mobile-reset-theme-btn)');
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        setTimeout(closeMenu, 150); // Small delay for navigation
+      });
+    });
+
+    // Reset theme button handler
+    const resetThemeBtn = document.getElementById('mobile-reset-theme-btn');
+    if (resetThemeBtn) {
+      resetThemeBtn.addEventListener('click', () => {
+        // Call the reset function from ThemeToast if available
+        if (typeof window !== 'undefined' && (window as any).resetThemeToDefault) {
+          (window as any).resetThemeToDefault();
+        }
+        setTimeout(closeMenu, 150);
+      });
+    }
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && bottomsheet.classList.contains('sheet-open')) {
+        closeMenu();
+      }
+    });
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+
+  // Re-initialize on page transitions
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(initMobileMenu, 50);
+  });
+</script>

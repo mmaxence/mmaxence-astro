@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import BookCard from '../../components/library/BookCard.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { getCollection } from 'astro:content';
+
+// Strategic category order: Foundation > Strategic Operations > Human Leadership > Systemic Design
+const categoryOrder: Record<string, number> = {
+  'foundation': 1,
+  'strategic-operations': 2,
+  'human-leadership': 3,
+  'systemic-design': 4,
+};
+
+const categoryTitles: Record<string, string> = {
+  'foundation': 'The Foundation: Decision Science & Strategic Thinking',
+  'strategic-operations': 'Strategic Operations & Scalability',
+  'human-leadership': 'Human-Centric Leadership & Culture',
+  'systemic-design': 'Systemic Design & Quality',
+};
+
+const allBooks = (await getCollection('library'))
+  .filter((book) => !book.data.draft);
+
+// Group books by category
+const booksByCategory: Record<string, typeof allBooks> = {};
+allBooks.forEach(book => {
+  const category = (book.data.book_category || 'other').toLowerCase();
+  if (!booksByCategory[category]) {
+    booksByCategory[category] = [];
+  }
+  booksByCategory[category].push(book);
+});
+
+// Sort books within each category by date (most recent first)
+Object.keys(booksByCategory).forEach(category => {
+  booksByCategory[category].sort((a, b) => {
+    const dateA = a.data.date?.getTime() || 0;
+    const dateB = b.data.date?.getTime() || 0;
+    return dateB - dateA;
+  });
+});
+---
+
+<BaseLayout title="Shelf" description="Library of books and resources">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <PageHeader 
+          title="Shelf" 
+          description="My Library is my Blueprint. These works have shaped my 'Think Slow, Do Fast' philosophy, bridging the gap between cognitive science, business operations, and systemic design." 
+        />
+      </AnimatedContent>
+      
+      {Object.keys(categoryOrder)
+        .sort((a, b) => categoryOrder[a] - categoryOrder[b])
+        .map((categoryKey, categoryIndex) => {
+          const books = booksByCategory[categoryKey] || [];
+          if (books.length === 0) return null;
+          
+          return (
+            <div key={categoryKey} class="mb-16">
+              <AnimatedContent delay={categoryIndex * 100}>
+                <h3 class="text-2xl md:text-3xl font-mono font-light mb-8" style="color: var(--theme-text);">
+                  {categoryTitles[categoryKey] || categoryKey}
+                </h3>
+              </AnimatedContent>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {books.map((book, bookIndex) => (
+                  <AnimatedContent delay={categoryIndex * 100 + (bookIndex * 50)}>
+                    <BookCard book={book} />
+                  </AnimatedContent>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>
+

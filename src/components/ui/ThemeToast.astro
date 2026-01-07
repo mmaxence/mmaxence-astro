@@ -1,0 +1,542 @@
+---
+// Toast notification that appears when random themes are applied
+// Allows users to reset to default theme
+---
+
+<div id="theme-toast" class="theme-toast fixed bottom-4 right-4 z-50 hidden md:block">
+  <div class="toast-content rounded-lg shadow-lg px-4 py-3 flex items-center gap-3" style="background-color: var(--toast-bg); box-shadow: var(--toast-shadow);">
+    <div class="toast-icon">🎨</div>
+    <div class="flex flex-col">
+      <span class="toast-message text-sm font-semibold" style="color: var(--toast-text);">Hidden Feature Unlocked!</span>
+      <span class="toast-subtitle text-xs" style="color: var(--toast-text); opacity: 0.8;">Random theme applied</span>
+    </div>
+    <button
+      id="reset-theme-btn"
+      class="reset-btn text-xs font-semibold px-3 py-1.5 rounded transition-all duration-200"
+      style="background-color: var(--toast-button-bg); color: var(--toast-button-text);"
+      onmouseover="this.style.transform='scale(1.05)'"
+      onmouseout="this.style.transform='scale(1)'"
+      aria-label="Reset to default theme"
+    >
+      Reset
+    </button>
+  </div>
+  <div class="toast-particles"></div>
+</div>
+
+<script>
+  function initThemeToast() {
+    const toast = document.getElementById('theme-toast');
+    const resetBtn = document.getElementById('reset-theme-btn');
+    const root = document.documentElement;
+    
+    if (!toast || !resetBtn) {
+      setTimeout(initThemeToast, 50);
+      return;
+    }
+
+    // Default theme definition
+    const defaultTheme = {
+      '--theme-bg': '#ffffff',
+      '--theme-text': '#1f1f1f',
+      '--theme-text-muted': 'rgba(31, 31, 31, 0.6)',
+      '--theme-accent': '#000000',
+      '--theme-border': '#e5e7eb',
+      '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+      '--theme-highlight': '#FBF1A9',
+      '--theme-radius': '0.5rem',
+      '--theme-spacing': '1rem',
+      '--theme-font-heading': "'Anonymous Pro', monospace",
+      '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
+    };
+
+    // Calculate contrast ratio between two colors
+    function getContrastRatio(color1, color2) {
+      const getLuminance = (hex) => {
+        const rgb = hexToRgb(hex);
+        if (!rgb) return 0;
+        const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(val => {
+          val = val / 255;
+          return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+
+      const lum1 = getLuminance(color1);
+      const lum2 = getLuminance(color2);
+      const lighter = Math.max(lum1, lum2);
+      const darker = Math.min(lum1, lum2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+
+    // Generate accessible random theme
+    function generateRandomTheme() {
+      // Pool of accessible color combinations (background, text)
+      // All combinations meet WCAG AA contrast ratio (4.5:1 minimum)
+      const accessibleThemes = [
+        // Dark backgrounds with light text
+        { bg: '#1a1a2e', text: '#eaeaea', muted: '#b8b8b8', accent: '#0f3460', border: '#16213e' },
+        { bg: '#0f3460', text: '#eaeaea', muted: '#b8b8b8', accent: '#533483', border: '#16213e' },
+        { bg: '#16213e', text: '#eaeaea', muted: '#b8b8b8', accent: '#0f3460', border: '#1a1a2e' },
+        { bg: '#2d3436', text: '#dfe6e9', muted: '#b2bec3', accent: '#636e72', border: '#636e72' },
+        { bg: '#2c2c54', text: '#ecf0f1', muted: '#bdc3c7', accent: '#40407a', border: '#706fd3' },
+        { bg: '#1e272e', text: '#f1f2f6', muted: '#d2dae2', accent: '#485460', border: '#808e9b' },
+        // Light backgrounds with dark text
+        { bg: '#f8f9fa', text: '#212529', muted: '#495057', accent: '#343a40', border: '#dee2e6' },
+        { bg: '#fff5f5', text: '#2d3748', muted: '#4a5568', accent: '#1a202c', border: '#e2e8f0' },
+        { bg: '#f0f4f8', text: '#2c3e50', muted: '#5a6c7d', accent: '#1a252f', border: '#cbd5e0' },
+        { bg: '#f7fafc', text: '#2d3748', muted: '#4a5568', accent: '#1a202c', border: '#e2e8f0' },
+        { bg: '#fefefe', text: '#1a1a1a', muted: '#4a4a4a', accent: '#000000', border: '#e0e0e0' },
+        // Warm tones
+        { bg: '#fff8e1', text: '#3e2723', muted: '#5d4037', accent: '#1b0000', border: '#d7ccc8' },
+        { bg: '#f3e5f5', text: '#4a148c', muted: '#6a1b9a', accent: '#12005e', border: '#e1bee7' },
+        { bg: '#e8f5e9', text: '#1b5e20', muted: '#2e7d32', accent: '#0d2818', border: '#c8e6c9' },
+        // Cool tones
+        { bg: '#e3f2fd', text: '#0d47a1', muted: '#1565c0', accent: '#01579b', border: '#bbdefb' },
+        { bg: '#e0f2f1', text: '#004d40', muted: '#00695c', accent: '#00251a', border: '#b2dfdb' },
+        { bg: '#f1f8e9', text: '#33691e', muted: '#558b2f', accent: '#1b5e20', border: '#dcedc8' },
+      ];
+
+      // Randomly select a theme
+      const selected = accessibleThemes[Math.floor(Math.random() * accessibleThemes.length)];
+      
+      // Verify contrast ratio (should be >= 4.5 for AA compliance)
+      const contrast = getContrastRatio(selected.bg, selected.text);
+      
+      // Generate theme object
+      const theme = {
+        '--theme-bg': selected.bg,
+        '--theme-text': selected.text,
+        '--theme-text-muted': selected.muted,
+        '--theme-accent': selected.accent,
+        '--theme-border': selected.border,
+        '--theme-shadow': selected.bg.startsWith('#') && parseInt(selected.bg.slice(1, 3), 16) < 128 
+          ? '0 4px 12px rgba(0, 0, 0, 0.6)' 
+          : '0 2px 8px rgba(0, 0, 0, 0.08)',
+        '--theme-highlight': selected.bg.startsWith('#') && parseInt(selected.bg.slice(1, 3), 16) < 128
+          ? '#2ac3de'
+          : '#FBF1A9',
+        '--theme-radius': '0.5rem',
+        '--theme-spacing': '1rem',
+        '--theme-font-heading': "'Anonymous Pro', monospace",
+        '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
+      };
+
+      return { theme, contrast };
+    }
+
+    // Calculate relative luminance (WCAG formula)
+    function getLuminance(r, g, b) {
+      const [rs, gs, bs] = [r, g, b].map(val => {
+        val = val / 255;
+        return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+
+    // Calculate contrast ratio between two colors
+    function calculateContrast(rgb1, rgb2) {
+      const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+      const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+      const lighter = Math.max(lum1, lum2);
+      const darker = Math.min(lum1, lum2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    // Convert RGB to hex
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('');
+    }
+
+    // Generate a contrasting color for toast background
+    function generateContrastingBg(pageBgRgb) {
+      const pageLum = getLuminance(pageBgRgb.r, pageBgRgb.g, pageBgRgb.b);
+      
+      // If page is dark, make toast lighter; if page is light, make toast darker
+      // But we want a noticeable contrast, not just black/white
+      let toastRgb;
+      
+      if (pageLum < 0.3) {
+        // Very dark page - use a light toast (but not pure white)
+        toastRgb = {
+          r: Math.min(255, pageBgRgb.r + 200),
+          g: Math.min(255, pageBgRgb.g + 200),
+          b: Math.min(255, pageBgRgb.b + 200)
+        };
+      } else if (pageLum < 0.5) {
+        // Medium-dark page - use a lighter toast
+        toastRgb = {
+          r: Math.min(255, pageBgRgb.r + 150),
+          g: Math.min(255, pageBgRgb.g + 150),
+          b: Math.min(255, pageBgRgb.b + 150)
+        };
+      } else if (pageLum < 0.7) {
+        // Medium-light page - use a darker toast
+        toastRgb = {
+          r: Math.max(0, pageBgRgb.r - 100),
+          g: Math.max(0, pageBgRgb.g - 100),
+          b: Math.max(0, pageBgRgb.b - 100)
+        };
+      } else {
+        // Very light page - use a dark toast (but not pure black)
+        toastRgb = {
+          r: Math.max(0, pageBgRgb.r - 180),
+          g: Math.max(0, pageBgRgb.g - 180),
+          b: Math.max(0, pageBgRgb.b - 180)
+        };
+      }
+
+      // Ensure minimum contrast of 3.0:1
+      const contrast = calculateContrast(pageBgRgb, toastRgb);
+      if (contrast < 3.0) {
+        // Adjust to meet minimum contrast
+        if (pageLum < 0.5) {
+          // Make toast even lighter
+          toastRgb = {
+            r: Math.min(255, toastRgb.r + 50),
+            g: Math.min(255, toastRgb.g + 50),
+            b: Math.min(255, toastRgb.b + 50)
+          };
+        } else {
+          // Make toast even darker
+          toastRgb = {
+            r: Math.max(0, toastRgb.r - 50),
+            g: Math.max(0, toastRgb.g - 50),
+            b: Math.max(0, toastRgb.b - 50)
+          };
+        }
+      }
+
+      return toastRgb;
+    }
+
+    // Calculate toast colors with proper contrast against theme background
+    function getToastColors(themeBg, themeText) {
+      const bgRgb = hexToRgb(themeBg);
+      if (!bgRgb) {
+        // Fallback
+        return { bg: '#000000', text: '#ffffff', buttonBg: '#ffffff', buttonText: '#000000', shadow: '0 4px 12px rgba(0, 0, 0, 0.3)' };
+      }
+
+      // Generate contrasting toast background
+      const toastBgRgb = generateContrastingBg(bgRgb);
+      const toastBgHex = rgbToHex(toastBgRgb.r, toastBgRgb.g, toastBgRgb.b);
+
+      // Use page background color directly for toast text
+      // Since toast background contrasts with page background,
+      // using page background color for text ensures text contrasts with toast background
+      const toastTextHex = themeBg;
+
+      // Generate button colors - use toast text color (page bg) as button background
+      // and toast background as button text for maximum contrast
+      const buttonBgHex = toastTextHex;
+      const buttonTextHex = toastBgHex;
+
+      // Determine shadow based on toast brightness
+      const toastLum = getLuminance(toastBgRgb.r, toastBgRgb.g, toastBgRgb.b);
+      const shadow = toastLum < 0.5 
+        ? '0 4px 12px rgba(0, 0, 0, 0.3)'
+        : '0 4px 12px rgba(0, 0, 0, 0.15)';
+
+      return {
+        bg: toastBgHex,
+        text: toastTextHex, // Same as page background color
+        buttonBg: buttonBgHex,
+        buttonText: buttonTextHex,
+        shadow: shadow
+      };
+    }
+
+    // Initialize toast colors for current theme
+    function initializeToastColors() {
+      const currentBg = getComputedStyle(root).getPropertyValue('--theme-bg') || '#ffffff';
+      const currentText = getComputedStyle(root).getPropertyValue('--theme-text') || '#1f1f1f';
+      const toastColors = getToastColors(currentBg, currentText);
+      root.style.setProperty('--toast-bg', toastColors.bg);
+      root.style.setProperty('--toast-text', toastColors.text);
+      root.style.setProperty('--toast-button-bg', toastColors.buttonBg);
+      root.style.setProperty('--toast-button-text', toastColors.buttonText);
+      root.style.setProperty('--toast-shadow', toastColors.shadow);
+    }
+
+    function applyTheme(themeObj, withGlitch = true, isRandomTheme = false) {
+      if (withGlitch) {
+        root.classList.add('theme-glitch');
+        setTimeout(() => {
+          root.classList.remove('theme-glitch');
+        }, 300); // Reduced from 800ms to 300ms
+      }
+
+      setTimeout(() => {
+        Object.keys(themeObj).forEach(key => {
+          root.style.setProperty(key, themeObj[key]);
+        });
+        
+        // Calculate and apply toast colors using theme background and text
+        const toastColors = getToastColors(themeObj['--theme-bg'], themeObj['--theme-text']);
+        root.style.setProperty('--toast-bg', toastColors.bg);
+        root.style.setProperty('--toast-text', toastColors.text);
+        root.style.setProperty('--toast-button-bg', toastColors.buttonBg);
+        root.style.setProperty('--toast-button-text', toastColors.buttonText);
+        root.style.setProperty('--toast-shadow', toastColors.shadow);
+        
+        if (isRandomTheme) {
+          root.setAttribute('data-theme', 'random');
+          localStorage.setItem('theme', 'random');
+          localStorage.setItem('random-theme-data', JSON.stringify(themeObj));
+        } else {
+          root.setAttribute('data-theme', 'default');
+          localStorage.setItem('theme', 'default');
+          localStorage.removeItem('random-theme-data');
+        }
+        
+        // Update SVG shape colors to match theme
+        const svgs = document.querySelectorAll('.shape-svg');
+        svgs.forEach(svg => {
+          svg.style.color = themeObj['--theme-text'] || '#1a1a1a';
+        });
+      }, withGlitch ? 20 : 0); // Reduced delay from 50ms to 20ms
+    }
+
+    function resetToDefault() {
+      applyTheme(defaultTheme, true, false);
+      hideToast();
+    }
+
+    // Export reset function for use in mobile menu
+    window.resetThemeToDefault = resetToDefault;
+
+    function showToast() {
+      if (toast) {
+        // Only show toast on desktop (md and above)
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        if (!isMobile) {
+          toast.classList.remove('hidden');
+          toast.classList.add('toast-visible');
+        }
+      }
+    }
+
+    function hideToast() {
+      if (toast) {
+        toast.classList.add('hidden');
+        toast.classList.remove('toast-visible');
+      }
+    }
+
+    // Reset button click handler
+    resetBtn.addEventListener('click', resetToDefault);
+
+    // Listen for random theme application
+    document.addEventListener('random-theme-applied', () => {
+      showToast();
+    });
+
+
+    // Check if we're on a random theme on load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'random') {
+      const savedThemeData = localStorage.getItem('random-theme-data');
+      if (savedThemeData) {
+        try {
+          const themeObj = JSON.parse(savedThemeData);
+          applyTheme(themeObj, false, true);
+          showToast();
+        } catch (e) {
+          // If parsing fails, reset to default
+          resetToDefault();
+        }
+      } else {
+        // No saved random theme data, reset to default
+        resetToDefault();
+      }
+    } else {
+      // Apply default theme and ensure toast is hidden
+      applyTheme(defaultTheme, false, false);
+      hideToast();
+      initializeToastColors();
+    }
+
+    // Re-initialize on page transitions
+    document.addEventListener('astro:page-load', () => {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'random') {
+          const savedThemeData = localStorage.getItem('random-theme-data');
+          if (savedThemeData) {
+            try {
+              const themeObj = JSON.parse(savedThemeData);
+              applyTheme(themeObj, false, true);
+              showToast();
+            } catch (e) {
+              resetToDefault();
+            }
+          } else {
+            // No saved random theme data, reset to default
+            resetToDefault();
+          }
+        } else {
+          // Apply default theme and ensure toast is hidden
+          applyTheme(defaultTheme, false, false);
+          hideToast();
+          initializeToastColors();
+        }
+      }, 10);
+    });
+
+    // Export function to generate and apply random theme
+    window.applyRandomTheme = function() {
+      const { theme } = generateRandomTheme();
+      applyTheme(theme, true, true);
+      document.dispatchEvent(new CustomEvent('random-theme-applied'));
+    };
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToast);
+  } else {
+    initThemeToast();
+  }
+
+  // Re-initialize on page transitions
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(initThemeToast, 50);
+  });
+</script>
+
+<style>
+  .theme-toast {
+    animation: toastEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .theme-toast.hidden {
+    display: none;
+  }
+
+  .theme-toast.toast-visible {
+    display: block;
+  }
+
+  @keyframes toastEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.8);
+    }
+    50% {
+      transform: translateY(-5px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .toast-content {
+    min-width: 240px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .toast-icon {
+    font-size: 1.5rem;
+    animation: iconBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+  }
+
+  @keyframes iconBounce {
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+    }
+    25% {
+      transform: scale(1.2) rotate(-10deg);
+    }
+    75% {
+      transform: scale(1.2) rotate(10deg);
+    }
+  }
+
+  .toast-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+
+  .toast-particles::before,
+  .toast-particles::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+    animation: particleFloat 2s ease-in-out infinite;
+  }
+
+  .toast-particles::before {
+    top: 10px;
+    left: 20px;
+    animation-delay: 0s;
+  }
+
+  .toast-particles::after {
+    top: 15px;
+    right: 25px;
+    animation-delay: 0.5s;
+  }
+
+  @keyframes particleFloat {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-15px) scale(1.2);
+      opacity: 0.3;
+    }
+  }
+
+  .reset-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .reset-btn:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .reset-btn:focus {
+    outline: 2px solid var(--toast-text);
+    outline-offset: 2px;
+  }
+
+  .toast-subtitle {
+    margin-top: 2px;
+  }
+
+  /* Hide toast on mobile */
+  @media (max-width: 767px) {
+    .theme-toast {
+      display: none !important;
+    }
+  }
+</style>
+

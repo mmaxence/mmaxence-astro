@@ -1,0 +1,19 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  class?: string;
+}
+
+const { title, description, class: className = '' } = Astro.props;
+---
+
+<div class={`mb-8 ${className}`}>
+  <h1 class="text-4xl md:text-5xl font-mono font-light mb-4">
+    {title}
+  </h1>
+  {description && (
+    <p class="text-[1.125rem]" style="color: var(--theme-text);" set:html={description} />
+  )}
+</div>
+

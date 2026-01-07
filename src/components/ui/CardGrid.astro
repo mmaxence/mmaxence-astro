@@ -1,0 +1,56 @@
+---
+// Reusable 3-column card grid component
+// Can be used for blog posts, books, or any card-based content
+interface Props {
+  class?: string;
+  columns?: number; // Number of columns (default: 3)
+}
+
+const { class: className = '', columns = 3 } = Astro.props;
+---
+
+<div class={`card-grid ${className}`} data-columns={columns}>
+  <slot />
+</div>
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  
+  /* 2 columns on tablet */
+  @media (min-width: 768px) {
+    .card-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+  
+  /* 3 columns on desktop */
+  @media (min-width: 1024px) {
+    .card-grid[data-columns="3"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  /* Support for 2-column layout */
+  @media (min-width: 1024px) {
+    .card-grid[data-columns="2"] {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* Support for 4-column layout */
+  @media (min-width: 1280px) {
+    .card-grid[data-columns="4"] {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
+
+
+
+

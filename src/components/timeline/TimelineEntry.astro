@@ -1,0 +1,172 @@
+---
+import TagList from '../ui/TagList.astro';
+import { Fragment } from 'astro/jsx-runtime';
+
+interface Props {
+  title: string;
+  date: Date | string;
+  description?: string;
+  tags?: string[];
+  content: string;
+}
+
+const { title, date, description, tags, content } = Astro.props;
+
+// Handle both Date objects and period strings
+const period = typeof date === 'string' ? date : `${date.toLocaleDateString('en-US', { month: 'short' })} ${date.getFullYear()}`;
+
+// Simple markdown-like parser for content
+function parseContent(text: string) {
+  const lines = text.split('\n');
+  const elements: any[] = [];
+  let currentParagraph: string[] = [];
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    
+    if (trimmed.startsWith('####')) {
+      // Flush current paragraph if exists
+      if (currentParagraph.length > 0) {
+        elements.push({ type: 'p', content: currentParagraph.join(' ') });
+        currentParagraph = [];
+      }
+      const heading = trimmed.replace(/^####\s*/, '').trim();
+      elements.push({ type: 'h4', content: heading });
+    } else if (trimmed.startsWith('###')) {
+      // Flush current paragraph if exists
+      if (currentParagraph.length > 0) {
+        elements.push({ type: 'p', content: currentParagraph.join(' ') });
+        currentParagraph = [];
+      }
+      const heading = trimmed.replace(/^###\s*/, '').trim();
+      elements.push({ type: 'h3', content: heading });
+    } else if (trimmed.startsWith('•')) {
+      // Bullet point - add to current paragraph or create new one
+      const bulletText = trimmed.replace(/^•\s*/, '').trim();
+      if (currentParagraph.length > 0) {
+        elements.push({ type: 'p', content: currentParagraph.join(' ') });
+        currentParagraph = [];
+      }
+      elements.push({ type: 'li', content: bulletText });
+    } else if (trimmed === '') {
+      // Empty line - flush current paragraph
+      if (currentParagraph.length > 0) {
+        elements.push({ type: 'p', content: currentParagraph.join(' ') });
+        currentParagraph = [];
+      }
+    } else {
+      // Regular text - add to current paragraph
+      currentParagraph.push(trimmed);
+    }
+  }
+  
+  // Flush remaining paragraph
+  if (currentParagraph.length > 0) {
+    elements.push({ type: 'p', content: currentParagraph.join(' ') });
+  }
+  
+  return elements;
+}
+
+function parseParagraph(text: string) {
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts: any[] = [];
+  let lastIndex = 0;
+  let match;
+  
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', content: text.substring(lastIndex, match.index) });
+    }
+    parts.push({ type: 'link', text: match[1], url: match[2] });
+    lastIndex = match.index + match[0].length;
+  }
+  
+  if (lastIndex < text.length) {
+    parts.push({ type: 'text', content: text.substring(lastIndex) });
+  }
+  
+  return parts.length > 0 ? parts : [{ type: 'text', content: text }];
+}
+
+const parsedContent = parseContent(content);
+---
+
+<article class="flex flex-col md:flex-row gap-6 md:gap-8 pb-8 border-b border-gray-200 last:border-b-0">
+  <div class="w-full md:w-1/5">
+    <div class="text-[1.125rem] font-mono font-normal" style="color: var(--theme-text-muted);">
+      {period}
+    </div>
+  </div>
+  <div class="w-full md:w-4/5">
+    <h2 class="text-2xl md:text-3xl font-mono font-light mb-2" style="color: var(--theme-text);">
+      {title}
+    </h2>
+    {description && (
+      <p class="mb-4" style="color: var(--theme-text-muted);">{description}</p>
+    )}
+    <div class="prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text);">
+      {parsedContent.map((element, idx) => {
+        if (element.type === 'h4') {
+          return <h4 key={idx} class="font-mono text-xl font-normal mt-8 mb-4 first:mt-0">{element.content}</h4>;
+        }
+        if (element.type === 'h3') {
+          return <h3 key={idx} class="font-mono text-2xl font-normal mt-8 mb-4 first:mt-0">{element.content}</h3>;
+        }
+        if (element.type === 'li') {
+          const parts = parseParagraph(element.content);
+          return (
+            <div key={idx} class="mb-2 flex items-start">
+              <span class="mr-2 mt-1" style="color: var(--theme-text-muted);">•</span>
+              <span class="text-[1.125rem] flex-1">
+                {parts.map((part, i) => {
+                  if (part.type === 'link') {
+                    const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
+                    return (
+                      <a 
+                        key={i} 
+                        href={part.url} 
+                        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        class="content-link"
+                      >
+                        {part.text}
+                      </a>
+                    );
+                  }
+                  return <Fragment key={i}>{part.content}</Fragment>;
+                })}
+              </span>
+            </div>
+          );
+        }
+        if (element.type === 'p') {
+          const parts = parseParagraph(element.content);
+          return (
+            <p key={idx} class="mb-4 text-[1.125rem]">
+              {parts.map((part, i) => {
+                if (part.type === 'link') {
+                  const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
+                  return (
+                    <a 
+                      key={i} 
+                      href={part.url} 
+                      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      class="content-link"
+                    >
+                      {part.text}
+                    </a>
+                  );
+                }
+                return <Fragment key={i}>{part.content}</Fragment>;
+              })}
+            </p>
+          );
+        }
+        return null;
+      })}
+    </div>
+    {tags && tags.length > 0 && (
+      <TagList tags={tags} class="mt-4" />
+    )}
+  </div>
+</article>

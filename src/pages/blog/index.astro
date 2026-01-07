@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const blogPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Blog" description="Blog posts about design, product, and leadership">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <PageHeader 
+          title="Blog" 
+          description="Blog posts about design, product, and leadership" 
+        />
+      </AnimatedContent>
+      
+      <div class="space-y-12 md:space-y-16">
+        {blogPosts.map((post, index) => (
+          <AnimatedContent delay={index * 50}>
+            <BlogCard post={post} />
+          </AnimatedContent>
+        ))}
+      </div>
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>

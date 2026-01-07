@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import DateDisplay from '../ui/DateDisplay.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+
+const featuredImage = post.data.featured_image?.startsWith('/') 
+  ? post.data.featured_image 
+  : `/blog/${post.slug}/${post.data.featured_image}`;
+---
+
+<a href={`/blog/${post.slug}`} class="blog-card-link block prefetch-link" data-prefetch="true">
+  <article class="blog-card text-[1.125rem] leading-relaxed p-6 relative overflow-hidden" style="color: var(--theme-text); border: 1px solid var(--theme-border); box-shadow: var(--theme-shadow); border-radius: var(--radius-card);">
+    {post.data.featured_image && (
+      <div class="mb-4 overflow-hidden" style="border-radius: var(--radius-card-image);">
+        <img 
+          src={featuredImage} 
+          alt={post.data.title}
+          class="blog-card-image w-full h-auto transition-transform duration-300"
+          style="border-radius: var(--radius-card-image);"
+        />
+      </div>
+    )}
+    <DateDisplay date={post.data.date} class="block mb-2 text-sm" style="color: var(--theme-text-muted);" />
+    <h2 class="text-xl md:text-2xl font-mono font-light mt-0 md:mt-2 mb-2">
+      {post.data.title}
+    </h2>
+    <p class="text-[1.125rem] leading-relaxed">
+      {post.data.description || 'Read the full article to learn more.'}
+    </p>
+  </article>
+</a>
+
+<style>
+  .blog-card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .blog-card-link:hover {
+    text-decoration: none;
+  }
+  
+  /* Card hover effects - shadow and transform */
+  .blog-card {
+    position: relative;
+    transition: box-shadow var(--transition-smooth), transform var(--transition-smooth);
+  }
+  
+  .blog-card-link:hover .blog-card {
+    box-shadow: var(--theme-shadow-hover, 0 4px 16px rgba(0, 0, 0, 0.12));
+    transform: translateY(-2px);
+  }
+  
+  /* Image zoom effect on hover */
+  .blog-card-image {
+    transition: transform var(--transition-smooth);
+  }
+  
+  .blog-card-link:hover .blog-card-image {
+    transform: scale(1.05);
+  }
+  
+  /* Growing line at the bottom inside the card */
+  .blog-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 4px; /* Thicker line */
+    background: var(--theme-accent);
+    transition: width var(--transition-smooth);
+    z-index: 10; /* Higher z-index to ensure it's visible */
+  }
+  
+  .blog-card-link:hover .blog-card::after {
+    width: 100%;
+  }
+</style>

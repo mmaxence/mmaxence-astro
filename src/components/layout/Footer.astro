@@ -1,0 +1,49 @@
+---
+const menuItems = [
+  { name: "Experience", url: "/timeline/" },
+  { name: "Blog", url: "/blog/" },
+  { name: "Shelf", url: "/library/" },
+  { name: "About", url: "/about/" },
+];
+
+const currentYear = new Date().getFullYear();
+const author = "Maxence Mauduit";
+---
+
+<!-- Contact Banner Above Footer -->
+<div class="contact-banner w-full py-6 px-4 text-center text-base" style="background-color: #f5f5f5;">
+  <p class="m-0" style="color: var(--theme-text);">
+    I'm always open to conversations about early product decisions, execution at scale, and building systems that last.
+  </p>
+  <p class="m-0 mt-2" style="color: var(--theme-text);">
+    <a href="mailto:contact@mmaxence.me" class="underline" style="color: var(--theme-text);">contact@mmaxence.me</a>
+  </p>
+</div>
+
+<footer class="py-6 w-full" role="contentinfo">
+  <div class="flex flex-col md:flex-row justify-between items-center px-3 md:px-4 text-[1.125rem] max-w-screen-xl mx-auto">
+    <section class="py-4">
+      <a class="border-none hover:bg-transparent" href="/">
+        &copy; {currentYear} {author}
+      </a>
+    </section>
+    <section class="py-4">
+      {menuItems.length > 0 && (
+        <ul class="flex gap-4 list-none p-0 m-0">
+          {menuItems.map((item) => (
+            <li class="px-2">
+              <a
+                href={item.url}
+                title={`${item.name} page`}
+                class="border-2 border-transparent"
+              >
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </div>
+</footer>
+
