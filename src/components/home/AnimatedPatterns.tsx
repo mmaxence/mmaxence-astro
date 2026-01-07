@@ -109,15 +109,17 @@ export function AnimatedPatterns() {
   };
 
   return (
-    <div className="flex items-center justify-center relative w-full" data-name="patterns" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div className="flex items-center justify-center relative w-full" data-name="patterns" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
       {/* Container that scales to fit available width while maintaining aspect ratio */}
       <div 
         className="relative origin-center shapes-container-responsive" 
         style={{ 
           width: '448px',
           height: '144px',
-          maxWidth: '100%',
-          margin: '0 auto'
+          margin: '0 auto',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
         onMouseEnter={handleShapeHover}
       >
@@ -130,6 +132,8 @@ export function AnimatedPatterns() {
           @media (max-width: 768px) {
             .shapes-container-responsive {
               transform: scale(0.4);
+              width: 100%;
+              max-width: 100vw;
             }
           }
           
