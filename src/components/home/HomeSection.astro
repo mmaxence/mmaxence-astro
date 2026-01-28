@@ -41,17 +41,6 @@ const { title, delay = 0 } = Astro.props;
     padding-right: 0 !important;
   }
   
-  /* Center visuals on mobile */
-  @media (max-width: 768px) {
-    .index-content-section > div[class*="my-8"],
-    .index-content-section > * > div[class*="my-8"],
-    .index-content-section [class*="my-8"] {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-    }
-  }
-  
   /* Ensure SVGs inside visual components fill their containers and don't constrain parent */
   .index-content-section > div[class*="my-8"] > svg,
   .index-content-section > * > div[class*="my-8"] > svg,
@@ -65,12 +54,22 @@ const { title, delay = 0 } = Astro.props;
     height: auto !important;
   }
   
-  /* Timeline visual: more square ratio on mobile for better visibility */
+  /* Mobile optimizations: ensure visuals are full width and centered */
   @media (max-width: 768px) {
-    .index-content-section [class*="experience-visual-wrapper"] > svg {
-      aspect-ratio: 1 / 1 !important;
-      max-height: 80vh !important;
+    .index-content-section > div[class*="my-8"],
+    .index-content-section > * > div[class*="my-8"],
+    .index-content-section [class*="my-8"] {
       width: 100% !important;
+      max-width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+    
+    /* Timeline visual: ensure proper scaling on mobile */
+    .index-content-section [class*="experience-visual-wrapper"] > svg {
+      width: 100% !important;
+      height: auto !important;
     }
   }
 </style>

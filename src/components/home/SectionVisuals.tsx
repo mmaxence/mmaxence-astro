@@ -394,6 +394,11 @@ export function ExperienceSnapshotVisual() {
   const currentScrollOffset = useRef<number>(0);
   const targetScrollOffset = useRef<number>(0);
   
+  // Touch/swipe support for mobile
+  const touchStartX = useRef<number | null>(null);
+  const touchStartScroll = useRef<number>(0);
+  const isDragging = useRef(false);
+  
   // Use refs for hover state to avoid closure issues in animation loop
   const isHoveredRef = useRef(false);
   const mouseXRef = useRef<number | null>(null);
@@ -535,9 +540,10 @@ export function ExperienceSnapshotVisual() {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
       if (mobile) {
-        // Mobile: more square ratio (1:1) for better visibility
+        // Mobile: smaller, tighter viewBox so content fills more space
+        // Reduced from 800x800 to 600x400 for better content density
         setViewportWidth(600);
-        setViewportHeight(600);
+        setViewportHeight(400);
       } else {
         // Desktop: wide landscape ratio
         setViewportWidth(1400);
@@ -551,14 +557,17 @@ export function ExperienceSnapshotVisual() {
   }, []);
   
   // Scale factor for horizontal measurements and visual elements (fonts, strokes, etc.)
-  const scale = viewportWidth / 900; // ≈ 1.556 on desktop, ≈ 0.667 on mobile
-  const timelineY = isMobile ? 500 : 200; // Vertical position of timeline (floor level) - lower on mobile for square view
+  // On mobile, use a much larger scale multiplier to make content bigger relative to viewBox
+  const baseScale = viewportWidth / 900; // ≈ 1.556 on desktop, ≈ 0.667 on mobile (600/900)
+  const scale = isMobile ? baseScale * 2.2 : baseScale; // 2.2x multiplier on mobile = ~1.47 scale (much bigger!)
+  // Center timeline vertically on mobile (200 in 400px viewBox), keep desktop position
+  const timelineY = isMobile ? 200 : 200; // Vertical position of timeline (floor level) - centered in smaller viewBox
   const yearWidth = Math.round(55 * scale); // Pixels per year - scaled horizontally
   const monthWidth = yearWidth / 12; // Pixels per month (12 sections per year)
   const gapBetweenPeriods = Math.round(8 * scale); // Small gap between consecutive periods - scaled
   const cycleDuration = 30000; // 30 seconds for full cycle
-  // Scale fonts when viewBox is wider so text stays readable (accessibility)
-  const fontScale = scale;
+  // Scale fonts - use larger scale on mobile for better readability
+  const fontScale = isMobile ? scale * 1.1 : scale; // Slightly larger font scale on mobile
   const fontSizeYear = Math.round(13 * fontScale);
   const fontSizePeriod = Math.round(14 * fontScale);
   const fontSizeMilestone = Math.round(12 * fontScale);
@@ -666,11 +675,65 @@ export function ExperienceSnapshotVisual() {
     }));
   }, [timelineConfig, yearToX]);
 
-  // Calculate initial offset: center first content year in viewport
+  // Calculate initial offset: on mobile, start at beginning to show all content, desktop centers first year
   const initialOffset = useMemo(() => {
     const firstYearX = yearToX(contentStartYear);
-    return viewportWidth / 2 - firstYearX;
-  }, [viewportWidth, contentStartYear, yearToX]);
+    if (isMobile) {
+      // On mobile: start at the very beginning (yearDisplayStart = 2004) positioned at left edge
+      // This allows scrolling all the way to the end (2027)
+      const startX = yearToX(yearDisplayStart);
+      return 0 - startX; // Start at left edge (0) minus the start position
+    } else {
+      // Desktop: center first content year
+      return viewportWidth / 2 - firstYearX;
+    }
+  }, [viewportWidth, contentStartYear, yearToX, isMobile, yearDisplayStart]);
+
+  // Touch handlers for mobile swipe - defined after yearToX and other variables are available
+  const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
+    // Check mobile using window width directly to avoid stale closure
+    if (typeof window === 'undefined') return;
+    const mobile = window.innerWidth <= 768;
+    if (!mobile) return;
+    e.preventDefault(); // Prevent default scrolling
+    const touch = e.touches[0];
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    touchStartX.current = touch.clientX - rect.left;
+    touchStartScroll.current = currentScrollOffset.current;
+    isDragging.current = true;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
+    // Check mobile using window width directly
+    if (typeof window === 'undefined') return;
+    const mobile = window.innerWidth <= 768;
+    if (!mobile || !isDragging.current || touchStartX.current === null) return;
+    e.preventDefault(); // Prevent default scrolling
+    const touch = e.touches[0];
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const currentX = touch.clientX - rect.left;
+    const deltaX = currentX - touchStartX.current;
+    
+    // Use the latest yearToX function and values from the component scope
+    const startX = yearToX(yearDisplayStart);
+    const endX = yearToX(yearDisplayEnd);
+    const newScroll = touchStartScroll.current - deltaX; // Invert: swipe left moves timeline right
+    
+    // Clamp to bounds - ensure we can scroll to show 2026
+    const minScroll = 0 - startX;
+    const maxScroll = viewportWidth - endX;
+    currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
+  };
+
+  const handleTouchEnd = () => {
+    if (typeof window === 'undefined') return;
+    const mobile = window.innerWidth <= 768;
+    if (!mobile) return;
+    isDragging.current = false;
+    touchStartX.current = null;
+  };
   
   // iOS-like bounce easing function
   const bounceEase = (t: number): number => {
@@ -730,8 +793,8 @@ export function ExperienceSnapshotVisual() {
         const smoothing = justEnteredHoverRef.current ? 0.03 : 0.05; // Even slower on initial hover entry
         const diff = targetScrollOffset.current - currentScrollOffset.current;
         currentScrollOffset.current += diff * smoothing;
-      } else {
-        // Auto-scroll when not hovered - forward then rewind
+      } else if (!isDragging.current) {
+        // Auto-scroll when not hovered and not dragging - forward then rewind
         const elapsed = currentTime - startTime - pausedTime;
         const cycleProgress = elapsed % cycleDuration;
         const progress = cycleProgress / cycleDuration;
@@ -750,10 +813,29 @@ export function ExperienceSnapshotVisual() {
         }
         
         // Calculate scroll: start at initial position, scroll through timeline range
-        const scrollDistance = scrollProgress * timelineScrollRange;
-        const scrollX = initialOffset - scrollDistance;
-        currentScrollOffset.current = scrollX;
+        // On mobile, ensure we scroll through the full range to show all content including 2026
+        if (isMobile) {
+          // Mobile: scroll from start (yearDisplayStart) to end (yearDisplayEnd), ensuring 2026 is visible
+          // Calculate the scroll range needed to show from start to end
+          const startX = yearToX(yearDisplayStart);
+          const endX = yearToX(yearDisplayEnd);
+          const totalContentWidth = endX - startX;
+          // Scroll distance: from initial position (showing start at left) to position showing end at right
+          // We need to scroll enough so that the end (2027, which includes 2026) is visible at the right edge
+          // Maximum scroll distance = total content width - viewport width (so end aligns with right edge)
+          const maxScrollDistance = Math.max(0, totalContentWidth - viewportWidth);
+          const scrollDistance = scrollProgress * maxScrollDistance;
+          // Start at initialOffset (which positions startX at 0), then scroll right (negative offset)
+          const scrollX = initialOffset - scrollDistance;
+          currentScrollOffset.current = scrollX;
+        } else {
+          // Desktop: use normal scroll range
+          const scrollDistance = scrollProgress * timelineScrollRange;
+          const scrollX = initialOffset - scrollDistance;
+          currentScrollOffset.current = scrollX;
+        }
       }
+      // If dragging, currentScrollOffset is already set by touch handlers
 
       // Dot animation
       const centerX = viewportWidth / 2;
@@ -761,7 +843,7 @@ export function ExperienceSnapshotVisual() {
       const xDrift = Math.sin(elapsed * 0.0008) * 15 * scale + Math.cos(elapsed * 0.0012) * 8 * scale; // Scale horizontal drift
       const dotX = centerX + xDrift;
       const yOscillation = Math.sin(elapsed * 0.002) * 12 + Math.sin(elapsed * 0.0035) * 6; // Keep original vertical oscillation
-      const dotY = timelineY - (isMobile ? 80 : 60) + yOscillation; // Adjust vertical position for mobile square view
+      const dotY = timelineY - (isMobile ? 60 : 60) + yOscillation; // Dot position above timeline
 
       // Update trail
       trailHistory.push({ x: dotX, y: dotY, time: currentTime });
@@ -777,7 +859,7 @@ export function ExperienceSnapshotVisual() {
       if (dotGroup) {
         // Ensure valid numeric values to prevent rendering issues
         const safeX = isNaN(dotX) ? viewportWidth / 2 : dotX;
-        const safeY = isNaN(dotY) ? timelineY - (isMobile ? 80 : 60) : dotY;
+        const safeY = isNaN(dotY) ? timelineY - 60 : dotY;
         dotGroup.setAttribute('transform', `translate(${safeX}, ${safeY})`);
       }
 
@@ -803,7 +885,19 @@ export function ExperienceSnapshotVisual() {
       const timelineGroup = svgRef.current.querySelector('.timeline-group') as SVGGElement;
       if (timelineGroup) {
         // Timeline starts at hoverStartX (which is 0 in timeline coordinates)
-        timelineGroup.setAttribute('transform', `translate(${currentScrollOffset.current + hoverStartX}, 0)`);
+        let scrollX = currentScrollOffset.current + hoverStartX;
+        if (isMobile) {
+          // On mobile, clamp scroll to ensure all content is visible including 2026
+          // Calculate bounds: start position and end position (ensuring 2026/2027 is visible)
+          const startX = yearToX(yearDisplayStart);
+          const endX = yearToX(yearDisplayEnd);
+          // Minimum scroll: show start at left edge (startX should be at position 0)
+          const minScroll = 0 - startX;
+          // Maximum scroll: show end at right edge (endX should be at position viewportWidth)
+          const maxScroll = viewportWidth - endX;
+          scrollX = Math.max(minScroll, Math.min(maxScroll, scrollX));
+        }
+        timelineGroup.setAttribute('transform', `translate(${scrollX}, 0)`);
       }
 
       animationRef.current = requestAnimationFrame(animate);
@@ -837,7 +931,6 @@ export function ExperienceSnapshotVisual() {
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-auto cursor-pointer"
         style={{ 
-          minHeight: isMobile ? '600px' : '300px', 
           width: '100%', 
           maxWidth: '100%', 
           minWidth: 0,
@@ -847,13 +940,14 @@ export function ExperienceSnapshotVisual() {
           // Force SVG to scale to container, not constrain it
           // Remove any intrinsic width that might constrain parent
           flexShrink: 1,
-          flexGrow: 1,
-          // On mobile, use square aspect ratio
-          aspectRatio: isMobile ? '1 / 1' : 'auto'
+          flexGrow: 1
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <defs>
           {/* Gradient for timeline fade on left edge */}
@@ -954,7 +1048,7 @@ export function ExperienceSnapshotVisual() {
             {/* Year label on floor */}
             <text
               x={yearData.x}
-              y={timelineY - 12}
+              y={timelineY - (isMobile ? 18 : 12)}
               fontSize={fontSizeYear}
               fill={mutedColor}
               textAnchor="middle"
@@ -970,7 +1064,8 @@ export function ExperienceSnapshotVisual() {
 
         {/* Major period lines (below floor) - thicker with labels */}
         {positionedPeriods.map((period) => {
-          const periodLineY = timelineY + 30; // Keep original vertical position
+          // Adjust vertical spacing for mobile - use scaled spacing
+          const periodLineY = timelineY + (isMobile ? 40 : 30); // More space on mobile for readability
           const isCurrentPeriod = period.period === 'buzzvil' && period.end >= contentEndYear; // Check if this is the current/ongoing period
           const dashedExtensionLength = Math.round(25 * scale); // Shorter, more subtle extension for current period
           
@@ -1031,18 +1126,18 @@ export function ExperienceSnapshotVisual() {
                     // Even-numbered milestones (2nd, 4th, 6th = idx 1, 3, 5) are lower
                     const isOddNumbered = idx % 2 === 0; // 0-indexed: 0=1st (odd), 1=2nd (even), 2=3rd (odd)...
                     
-                    // Timeline line position - period line is at timelineY + 30 with stroke width STROKE_WIDTH * 12
-                    const timelineLineY = timelineY + 30; // Keep original vertical position
+                    // Timeline line position - period line is at timelineY + spacing with stroke width STROKE_WIDTH * 12
+                    const timelineLineY = timelineY + (isMobile ? 40 : 30); // Match period line Y
                     const periodLineStrokeWidth = STROKE_WIDTH * 12 * scale; // Thick period line - scale stroke width
                     const periodLineBottom = timelineLineY + (periodLineStrokeWidth / 2); // Bottom edge of period line
-                    // Markers start just below the period line with a gap
-                    const markerStartY = periodLineBottom + 4; // Keep original spacing
+                    // Markers start just below the period line with a gap - scaled for mobile
+                    const markerStartY = periodLineBottom + (isMobile ? 6 : 4); // More space on mobile
                     
-                    // Both extend downward, but odd-numbered are positioned higher (shorter line)
-                    const lineLength = isOddNumbered ? 12 : 50; // Increased gap: odd milestones higher, even milestones lower
+                    // Both extend downward, but odd-numbered are positioned higher (shorter line) - scaled for mobile
+                    const lineLength = isOddNumbered ? (isMobile ? 18 : 12) : (isMobile ? 60 : 50); // Longer lines on mobile
                     
-                    // Label Y position relative to marker start (since we translate to markerStartY)
-                    const labelYRelative = lineLength + 12; // Keep original spacing
+                    // Label Y position relative to marker start (since we translate to markerStartY) - scaled for mobile
+                    const labelYRelative = lineLength + (isMobile ? 16 : 12); // More space on mobile
                     
                     // Animation: fade in/out and grow from just below timeline line downward
                     const opacity = isHovered ? 1 : 0;
@@ -1755,6 +1850,9 @@ export function BeyondTheRoleVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const animationRef = useRef<number>();
+  const [isMobile, setIsMobile] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(600);
+  const [viewportHeight, setViewportHeight] = useState(200);
   
   // 4 balls for Newton's Cradle
   const numBalls = 4;
@@ -1770,6 +1868,27 @@ export function BeyondTheRoleVisual() {
     return () => observer.disconnect();
   }, []);
 
+  // Responsive viewport for mobile
+  useEffect(() => {
+    const updateViewport = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        // Mobile: larger viewBox for bigger, more visible pendulum
+        setViewportWidth(800);
+        setViewportHeight(300);
+      } else {
+        // Desktop: original size
+        setViewportWidth(600);
+        setViewportHeight(200);
+      }
+    };
+    
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    return () => window.removeEventListener('resize', updateViewport);
+  }, []);
+
   // Use theme colors hook that reacts to theme changes
   const { textColor, accentColor, mutedColor } = useThemeColors({
     text: 1.0,
@@ -1783,13 +1902,15 @@ export function BeyondTheRoleVisual() {
       return;
     }
 
-    // Newton's Cradle constants - deterministic animation (scaled 1.2x)
-    const scale = 1.2;
-    const pivotY = 30 * scale; // 36
-    const length = 80 * scale; // 96 - Wire length in pixels
-    const ballRadius = 10 * scale; // 12 - Bigger balls to match composition
-    const ballSpacing = ballRadius * 2; // Balls touch when at rest (24px)
-    const centerX = 200; // Center of viewBox
+    // Newton's Cradle constants - deterministic animation
+    // Scale up on mobile for better visibility
+    const baseScale = isMobile ? 1.8 : 1.2; // Bigger on mobile
+    const scale = baseScale;
+    const pivotY = 30 * scale; // Scaled pivot height
+    const length = 80 * scale; // Wire length in pixels
+    const ballRadius = 10 * scale; // Ball radius
+    const ballSpacing = ballRadius * 2; // Balls touch when at rest
+    const centerX = viewportWidth / 2; // Center of viewBox (responsive)
     const maxAngle = 30 * Math.PI / 180; // Maximum swing angle (30 degrees)
     const cycleDuration = 2000; // Full cycle duration in ms (2 seconds)
     
@@ -1894,10 +2015,10 @@ export function BeyondTheRoleVisual() {
         const root = document.documentElement;
         const currentAccentColor = getComputedStyle(root).getPropertyValue('--theme-accent').trim() || textColor;
         
-        // Base positions (initial x positions)
-        const workBaseX = 80;
-        const lifeBaseX = 320;
-        const movementAmount = 8; // Maximum movement in pixels
+        // Base positions (initial x positions) - responsive to viewport
+        const workBaseX = isMobile ? 100 : 80;
+        const lifeBaseX = isMobile ? viewportWidth - 100 : 320;
+        const movementAmount = isMobile ? 12 : 8; // Maximum movement in pixels (bigger on mobile)
         
         if (workLabel) {
           const baseOpacity = 0.4;
@@ -1934,7 +2055,7 @@ export function BeyondTheRoleVisual() {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isVisible, numBalls]);
+  }, [isVisible, numBalls, isMobile, viewportWidth, viewportHeight]);
 
   return (
     <div className="w-full my-8" style={{ 
@@ -1946,30 +2067,31 @@ export function BeyondTheRoleVisual() {
     }}>
       <svg
         ref={svgRef}
-        viewBox="0 0 600 200"
+        viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-auto"
-        style={{ minHeight: '200px', width: '100%', maxWidth: '100%', display: 'block' }}
+        style={{ minHeight: isMobile ? '300px' : '200px', width: '100%', maxWidth: '100%', display: 'block' }}
       >
-        {/* Pivot bar */}
+        {/* Pivot bar - centered in viewBox */}
         <line
-          x1="80"
-          y1={30 * 1.2}
-          x2="320"
-          y2={30 * 1.2}
+          x1={viewportWidth / 2 - (isMobile ? 160 : 120)}
+          y1={isMobile ? 54 : 36}
+          x2={viewportWidth / 2 + (isMobile ? 160 : 120)}
+          y2={isMobile ? 54 : 36}
           stroke={textColor}
-          strokeWidth={STROKE_WIDTH}
+          strokeWidth={STROKE_WIDTH * (isMobile ? 1.2 : 1)}
         />
 
         {/* Balls and strings */}
         {Array.from({ length: numBalls }).map((_, i) => {
-          // Match physics calculations: balls touch when at rest (scaled 1.2x)
-          const scale = 1.2;
-          const ballRadius = 10 * scale; // 12 - Bigger balls
-          const ballSpacing = ballRadius * 2; // 24px - balls touch
-          const pivotY = 30 * scale; // 36
-          const length = 80 * scale; // 96 - Shorter strings
-          const centerX = 200;
+          // Match physics calculations: scale up on mobile
+          const baseScale = isMobile ? 1.8 : 1.2;
+          const scale = baseScale;
+          const ballRadius = 10 * scale;
+          const ballSpacing = ballRadius * 2;
+          const pivotY = 30 * scale;
+          const length = 80 * scale;
+          const centerX = viewportWidth / 2; // Center of viewBox
           const totalWidth = (numBalls - 1) * ballSpacing;
           const startX = centerX - totalWidth / 2;
           const pivotX = startX + i * ballSpacing;
@@ -2008,9 +2130,9 @@ export function BeyondTheRoleVisual() {
         {/* Work label - left side */}
         <text
           className="work-label"
-          x="80"
-          y={30 * 1.2 + 80 * 1.2 + 30}
-          fontSize="14"
+          x={isMobile ? 100 : 80}
+          y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
+          fontSize={isMobile ? "18" : "14"}
           fill={textColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -2026,9 +2148,9 @@ export function BeyondTheRoleVisual() {
         {/* Life label - right side */}
         <text
           className="life-label"
-          x="320"
-          y={30 * 1.2 + 80 * 1.2 + 30}
-          fontSize="14"
+          x={isMobile ? viewportWidth - 100 : 320}
+          y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
+          fontSize={isMobile ? "18" : "14"}
           fill={textColor}
           textAnchor="end"
           dominantBaseline="middle"
