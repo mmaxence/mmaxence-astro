@@ -691,13 +691,17 @@ export function ExperienceSnapshotVisual() {
 
   // Touch handlers for mobile swipe - defined after yearToX and other variables are available
   const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
-    // Check mobile using window width directly to avoid stale closure
+    // Always allow touch on mobile - check window width directly
     if (typeof window === 'undefined') return;
     const mobile = window.innerWidth <= 768;
     if (!mobile) return;
-    e.preventDefault(); // Prevent default scrolling
+    
+    // Prevent default to stop page scrolling
+    e.preventDefault();
+    e.stopPropagation();
+    
     const touch = e.touches[0];
-    if (!svgRef.current) return;
+    if (!svgRef.current || !touch) return;
     const rect = svgRef.current.getBoundingClientRect();
     touchStartX.current = touch.clientX - rect.left;
     touchStartScroll.current = currentScrollOffset.current;
@@ -705,13 +709,17 @@ export function ExperienceSnapshotVisual() {
   };
 
   const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
-    // Check mobile using window width directly
+    // Always allow touch on mobile
     if (typeof window === 'undefined') return;
     const mobile = window.innerWidth <= 768;
     if (!mobile || !isDragging.current || touchStartX.current === null) return;
-    e.preventDefault(); // Prevent default scrolling
+    
+    // Prevent default to stop page scrolling
+    e.preventDefault();
+    e.stopPropagation();
+    
     const touch = e.touches[0];
-    if (!svgRef.current) return;
+    if (!svgRef.current || !touch) return;
     const rect = svgRef.current.getBoundingClientRect();
     const currentX = touch.clientX - rect.left;
     const deltaX = currentX - touchStartX.current;
@@ -727,13 +735,78 @@ export function ExperienceSnapshotVisual() {
     currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e: React.TouchEvent<SVGSVGElement>) => {
     if (typeof window === 'undefined') return;
     const mobile = window.innerWidth <= 768;
     if (!mobile) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
     isDragging.current = false;
     touchStartX.current = null;
   };
+
+  // Add native touch event listeners for better mobile support (React synthetic events may not work reliably)
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || typeof window === 'undefined') return;
+
+    const isMobileDevice = () => {
+      return window.innerWidth <= 768 || 'ontouchstart' in window;
+    };
+
+    const handleNativeTouchStart = (e: TouchEvent) => {
+      if (!isMobileDevice()) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const touch = e.touches[0];
+      if (!touch) return;
+      const rect = svg.getBoundingClientRect();
+      touchStartX.current = touch.clientX - rect.left;
+      touchStartScroll.current = currentScrollOffset.current;
+      isDragging.current = true;
+    };
+
+    const handleNativeTouchMove = (e: TouchEvent) => {
+      if (!isMobileDevice() || !isDragging.current || touchStartX.current === null) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const touch = e.touches[0];
+      if (!touch) return;
+      const rect = svg.getBoundingClientRect();
+      const currentX = touch.clientX - rect.left;
+      const deltaX = currentX - touchStartX.current;
+      
+      // Use latest values from closure
+      const startX = yearToX(yearDisplayStart);
+      const endX = yearToX(yearDisplayEnd);
+      const newScroll = touchStartScroll.current - deltaX;
+      
+      const minScroll = 0 - startX;
+      const maxScroll = viewportWidth - endX;
+      currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
+    };
+
+    const handleNativeTouchEnd = (e: TouchEvent) => {
+      if (!isMobileDevice()) return;
+      e.preventDefault();
+      e.stopPropagation();
+      isDragging.current = false;
+      touchStartX.current = null;
+    };
+
+    // Add native event listeners with passive: false to allow preventDefault
+    svg.addEventListener('touchstart', handleNativeTouchStart, { passive: false });
+    svg.addEventListener('touchmove', handleNativeTouchMove, { passive: false });
+    svg.addEventListener('touchend', handleNativeTouchEnd, { passive: false });
+
+    return () => {
+      svg.removeEventListener('touchstart', handleNativeTouchStart);
+      svg.removeEventListener('touchmove', handleNativeTouchMove);
+      svg.removeEventListener('touchend', handleNativeTouchEnd);
+    };
+  }, [yearToX, yearDisplayStart, yearDisplayEnd, viewportWidth]);
   
   // iOS-like bounce easing function
   const bounceEase = (t: number): number => {
@@ -940,7 +1013,12 @@ export function ExperienceSnapshotVisual() {
           // Force SVG to scale to container, not constrain it
           // Remove any intrinsic width that might constrain parent
           flexShrink: 1,
-          flexGrow: 1
+          flexGrow: 1,
+          // Enable touch scrolling on mobile
+          touchAction: isMobile ? 'pan-x' : 'auto',
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none'
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
