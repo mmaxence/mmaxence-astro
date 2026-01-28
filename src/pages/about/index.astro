@@ -35,6 +35,8 @@ const techStack = [
       { name: "Link Pre-fetching", description: "Hover-based pre-fetching for instant navigation", link: null },
       { name: "Intersection Observer", description: "Scroll-triggered animations for content sections", link: "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" },
       { name: "CSS Animations", description: "Smooth fade-in and transition effects", link: null },
+      { name: "React Components", description: "Interactive SVG visuals with React for homepage sections", link: "https://react.dev/" },
+      { name: "RequestAnimationFrame", description: "Smooth, performant animations for timeline and visual components", link: "https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame" },
     ]
   },
   {
@@ -54,7 +56,9 @@ const techStack = [
       <AnimatedContent delay="0">
         <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">About This Website</h1>
         <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed mb-12" style="color: var(--theme-text);">
-          <p>This website is built with modern web technologies, focusing on performance, accessibility, and a delightful user experience. It's a showcase of how to build a fast, beautiful portfolio/blog using cutting-edge static site generation.</p>
+          <p>This website is built with modern web technologies, focusing on performance, accessibility, and a delightful user experience. It features interactive SVG visuals, responsive design, and a unique random theme system. It's a showcase of how to build a fast, beautiful portfolio/blog using cutting-edge static site generation.</p>
+          
+          <p class="mt-4">The homepage includes five distinct interactive visual components that reinforce the mental models described in each section, all built with React and SVG for smooth, performant animations.</p>
           
           <p class="mt-6 p-4 bg-gray-50 rounded" style="border-left: 4px solid var(--theme-accent);">
             <strong class="font-mono">✨ Open Source:</strong> This entire project is available as a <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="prefetch-link" data-prefetch="false">public repository on GitHub</a>. Feel free to use it as a starting point for your own portfolio, blog, or website. Fork it, customize it, and make it your own!

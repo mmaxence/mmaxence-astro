@@ -312,7 +312,13 @@ export function WhatIDoVisual() {
   const { textColor, accentColor, mutedColor, bgColor } = useThemeColors();
 
   return (
-    <div ref={containerRef} className="w-full my-8" style={{ width: '100%', maxWidth: '100%' }}>
+    <div ref={containerRef} className="w-full my-8" style={{ 
+      width: '100%', 
+      maxWidth: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" className="w-full h-auto" style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block' }}>
         {/* Render layers: bottom first (behind), top last (on top) */}
         {layers.map((layer, index) => {
@@ -519,11 +525,34 @@ export function ExperienceSnapshotVisual() {
 
   // Timeline configuration - Month precision: One year = 12 months
   // Use a flexible viewBox that scales - viewBox width should not constrain container
-  const viewportWidth = 1400; // SVG viewBox width (for internal calculations only) - increased for full section width
-  const viewportHeight = 300; // SVG viewBox height - keep original, only scale width
+  // On mobile, use a more square ratio for better visibility
+  const [viewportWidth, setViewportWidth] = useState(1400);
+  const [viewportHeight, setViewportHeight] = useState(300);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const updateViewport = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        // Mobile: more square ratio (1:1) for better visibility
+        setViewportWidth(600);
+        setViewportHeight(600);
+      } else {
+        // Desktop: wide landscape ratio
+        setViewportWidth(1400);
+        setViewportHeight(300);
+      }
+    };
+    
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    return () => window.removeEventListener('resize', updateViewport);
+  }, []);
+  
   // Scale factor for horizontal measurements and visual elements (fonts, strokes, etc.)
-  const scale = viewportWidth / 900; // ≈ 1.556
-  const timelineY = 200; // Vertical position of timeline (floor level) - keep original, no vertical scaling needed
+  const scale = viewportWidth / 900; // ≈ 1.556 on desktop, ≈ 0.667 on mobile
+  const timelineY = isMobile ? 500 : 200; // Vertical position of timeline (floor level) - lower on mobile for square view
   const yearWidth = Math.round(55 * scale); // Pixels per year - scaled horizontally
   const monthWidth = yearWidth / 12; // Pixels per month (12 sections per year)
   const gapBetweenPeriods = Math.round(8 * scale); // Small gap between consecutive periods - scaled
@@ -537,9 +566,11 @@ export function ExperienceSnapshotVisual() {
   // Helper: Convert year (with optional month fraction) to X position
   // year can be integer (2005) or fractional (2005.916 = Nov 2005)
   // Base position on yearDisplayStart (2004) instead of timelineStartYear (2002)
-  const yearToX = (year: number): number => {
-    return (year - yearDisplayStart) * yearWidth;
-  };
+  const yearToX = useMemo(() => {
+    return (year: number): number => {
+      return (year - yearDisplayStart) * yearWidth;
+    };
+  }, [yearDisplayStart, yearWidth]);
   
   // Calculate year positions - FOUNDATION: Years are positioned at exact year positions
   const positionedYears = useMemo(() => {
@@ -547,7 +578,7 @@ export function ExperienceSnapshotVisual() {
       const x = yearToX(year);
       return { year, x };
     });
-  }, [allYears, yearDisplayStart, yearWidth]);
+  }, [allYears, yearToX]);
 
   // Calculate month positions - 12 months per year as small indicators
   const positionedMonths = useMemo(() => {
@@ -563,7 +594,7 @@ export function ExperienceSnapshotVisual() {
     });
     
     return months;
-  }, [allYears, yearDisplayStart, yearWidth]);
+  }, [allYears, yearToX]);
   
   // Calculate period positions - Using precise month-level dates
   // Gaps added between consecutive periods for visual separation
@@ -593,13 +624,13 @@ export function ExperienceSnapshotVisual() {
         centerX: (startX + endX) / 2,
       };
     });
-  }, [majorPeriods, yearDisplayStart, yearWidth, gapBetweenPeriods]);
+  }, [majorPeriods, yearToX, gapBetweenPeriods]);
   
   // Calculate total timeline width (last period end)
   const timelineWidth = useMemo(() => {
     const lastPeriod = positionedPeriods[positionedPeriods.length - 1];
     return lastPeriod ? lastPeriod.endX : yearToX(contentEndYear + 1);
-  }, [positionedPeriods, contentEndYear]);
+  }, [positionedPeriods, contentEndYear, yearToX]);
   
   // Calculate content width (from first period start to last period end) - for hover scroll optimization
   const contentWidth = useMemo(() => {
@@ -610,14 +641,14 @@ export function ExperienceSnapshotVisual() {
   }, [positionedPeriods]);
   
   // Active timeline range (content only, no buffers) for hover scroll
-  const activeStartX = yearToX(contentStartYear); // 2005 (actual content start)
-  const activeEndX = yearToX(contentEndYear); // 2026 (actual content end)
-  const activeRange = activeEndX - activeStartX;
+  const activeStartX = useMemo(() => yearToX(contentStartYear), [yearToX, contentStartYear]); // 2005 (actual content start)
+  const activeEndX = useMemo(() => yearToX(contentEndYear), [yearToX, contentEndYear]); // 2026 (actual content end)
+  const activeRange = useMemo(() => activeEndX - activeStartX, [activeStartX, activeEndX]);
   
   // Full timeline range for rendering (year display range: 2004 to 2027)
-  const hoverStartX = yearToX(yearDisplayStart); // 2004 (2005 - 1)
-  const hoverEndX = yearToX(yearDisplayEnd); // 2027 (2026 + 1)
-  const hoverRange = hoverEndX - hoverStartX;
+  const hoverStartX = useMemo(() => yearToX(yearDisplayStart), [yearToX, yearDisplayStart]); // 2004 (2005 - 1)
+  const hoverEndX = useMemo(() => yearToX(yearDisplayEnd), [yearToX, yearDisplayEnd]); // 2027 (2026 + 1)
+  const hoverRange = useMemo(() => hoverEndX - hoverStartX, [hoverStartX, hoverEndX]);
   
   // Timeline scroll range: from start to end of displayed years
   const timelineScrollRange = hoverRange; // Full timeline range from yearDisplayStart to yearDisplayEnd
@@ -633,11 +664,13 @@ export function ExperienceSnapshotVisual() {
         x: yearToX(m.year),
       })),
     }));
-  }, [timelineConfig, yearDisplayStart, yearWidth]);
+  }, [timelineConfig, yearToX]);
 
   // Calculate initial offset: center first content year in viewport
-  const firstYearX = yearToX(contentStartYear);
-  const initialOffset = viewportWidth / 2 - firstYearX;
+  const initialOffset = useMemo(() => {
+    const firstYearX = yearToX(contentStartYear);
+    return viewportWidth / 2 - firstYearX;
+  }, [viewportWidth, contentStartYear, yearToX]);
   
   // iOS-like bounce easing function
   const bounceEase = (t: number): number => {
@@ -728,7 +761,7 @@ export function ExperienceSnapshotVisual() {
       const xDrift = Math.sin(elapsed * 0.0008) * 15 * scale + Math.cos(elapsed * 0.0012) * 8 * scale; // Scale horizontal drift
       const dotX = centerX + xDrift;
       const yOscillation = Math.sin(elapsed * 0.002) * 12 + Math.sin(elapsed * 0.0035) * 6; // Keep original vertical oscillation
-      const dotY = timelineY - 60 + yOscillation; // Keep original vertical position
+      const dotY = timelineY - (isMobile ? 80 : 60) + yOscillation; // Adjust vertical position for mobile square view
 
       // Update trail
       trailHistory.push({ x: dotX, y: dotY, time: currentTime });
@@ -744,7 +777,7 @@ export function ExperienceSnapshotVisual() {
       if (dotGroup) {
         // Ensure valid numeric values to prevent rendering issues
         const safeX = isNaN(dotX) ? viewportWidth / 2 : dotX;
-        const safeY = isNaN(dotY) ? timelineY - 60 : dotY;
+        const safeY = isNaN(dotY) ? timelineY - (isMobile ? 80 : 60) : dotY;
         dotGroup.setAttribute('transform', `translate(${safeX}, ${safeY})`);
       }
 
@@ -780,7 +813,7 @@ export function ExperienceSnapshotVisual() {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isVisible, timelineY, cycleDuration, viewportWidth, timelineScrollRange, contentStartYear, accentColor, initialOffset, hoverStartX, hoverEndX, hoverRange, activeStartX, activeEndX, activeRange, yearDisplayStart, yearDisplayEnd]);
+  }, [isVisible, timelineY, cycleDuration, viewportWidth, viewportHeight, isMobile, timelineScrollRange, contentStartYear, accentColor, initialOffset, hoverStartX, hoverEndX, hoverRange, activeStartX, activeEndX, activeRange, yearDisplayStart, yearDisplayEnd, scale]);
 
   return (
     <div 
@@ -792,7 +825,10 @@ export function ExperienceSnapshotVisual() {
         gridTemplateColumns: 'minmax(0, 1fr)',
         boxSizing: 'border-box',
         // Force container to fill parent regardless of SVG size
-        contain: 'layout style'
+        contain: 'layout style',
+        // Center on mobile
+        justifyContent: 'center',
+        alignItems: 'center'
       }}
     >
       <svg
@@ -801,7 +837,7 @@ export function ExperienceSnapshotVisual() {
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-auto cursor-pointer"
         style={{ 
-          minHeight: '300px', 
+          minHeight: isMobile ? '600px' : '300px', 
           width: '100%', 
           maxWidth: '100%', 
           minWidth: 0,
@@ -811,7 +847,9 @@ export function ExperienceSnapshotVisual() {
           // Force SVG to scale to container, not constrain it
           // Remove any intrinsic width that might constrain parent
           flexShrink: 1,
-          flexGrow: 1
+          flexGrow: 1,
+          // On mobile, use square aspect ratio
+          aspectRatio: isMobile ? '1 / 1' : 'auto'
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -1227,7 +1265,13 @@ export function HowIWorkVisual() {
   }, [isVisible]);
 
   return (
-    <div className="w-full my-8" style={{ width: '100%', maxWidth: '100%' }}>
+    <div className="w-full my-8" style={{ 
+      width: '100%', 
+      maxWidth: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       <svg
         ref={svgRef}
         viewBox="0 0 600 300"
@@ -1546,7 +1590,14 @@ export function LeadershipScalesVisual() {
   const influenceLabelY = centerY + (states[4].outer + labelOffset) * Math.sin(influenceAngle);
 
   return (
-    <div className="w-full my-8" style={{ width: '100%', maxWidth: '100%', overflow: 'visible' }}>
+    <div className="w-full my-8" style={{ 
+      width: '100%', 
+      maxWidth: '100%', 
+      overflow: 'visible',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       <svg
         ref={svgRef}
         viewBox="0 0 500 180"
@@ -1886,7 +1937,13 @@ export function BeyondTheRoleVisual() {
   }, [isVisible, numBalls]);
 
   return (
-    <div className="w-full my-8" style={{ width: '100%', maxWidth: '100%' }}>
+    <div className="w-full my-8" style={{ 
+      width: '100%', 
+      maxWidth: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       <svg
         ref={svgRef}
         viewBox="0 0 600 200"

@@ -41,6 +41,17 @@ const { title, delay = 0 } = Astro.props;
     padding-right: 0 !important;
   }
   
+  /* Center visuals on mobile */
+  @media (max-width: 768px) {
+    .index-content-section > div[class*="my-8"],
+    .index-content-section > * > div[class*="my-8"],
+    .index-content-section [class*="my-8"] {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+  }
+  
   /* Ensure SVGs inside visual components fill their containers and don't constrain parent */
   .index-content-section > div[class*="my-8"] > svg,
   .index-content-section > * > div[class*="my-8"] > svg,
@@ -52,5 +63,14 @@ const { title, delay = 0 } = Astro.props;
     box-sizing: border-box !important;
     /* Prevent SVG from constraining parent width */
     height: auto !important;
+  }
+  
+  /* Timeline visual: more square ratio on mobile for better visibility */
+  @media (max-width: 768px) {
+    .index-content-section [class*="experience-visual-wrapper"] > svg {
+      aspect-ratio: 1 / 1 !important;
+      max-height: 80vh !important;
+      width: 100% !important;
+    }
   }
 </style>
