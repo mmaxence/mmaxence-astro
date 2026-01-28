@@ -1,9 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // SVG paths extracted from existing SVGs
 const svgPaths = {
   p8b33500: 'M6 72L72 6L138 72L72 138L6 72Z', // Diamond
   p9320100: 'M72 4L130.89 38V106L72 140L13.1103 106L13.1103 38L72 4Z', // Hexagon
+};
+
+// Theme colors from all themes - extracted for cursor color randomization
+const THEME_COLORS = [
+  // Default theme colors
+  '#000000', // accent
+  '#1a1a1a', // text
+  '#FBF1A9', // highlight
+  // IDE theme colors
+  '#7aa2f7', // accent
+  '#c0caf5', // text
+  '#2ac3de', // highlight
+  // Pixel theme colors
+  '#8b956d', // accent
+  '#2d5016', // text
+  '#c4d5a1', // highlight
+];
+
+// Generate a custom cursor SVG with a random color
+const generateCursorSVG = (color: string): string => {
+  // Create a visible colored circle cursor
+  // The hotspot is at 12,12 (center of the 24x24 viewBox)
+  const svg = `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="8" fill="${color}" opacity="0.85" stroke="white" stroke-width="1"/>
+    <circle cx="12" cy="12" r="4" fill="white" opacity="0.5"/>
+  </svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };
 
 // --- Components ---
@@ -58,6 +85,9 @@ export function AnimatedPatterns() {
   // So let's store `order` as an array where index = slot, value = shapeIndex.
   const [order, setOrder] = useState([0, 1, 2]);
   const [isMoving, setIsMoving] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastCursorUpdateRef = useRef<number>(0);
+  const CURSOR_UPDATE_THROTTLE = 100; // Update cursor color max once per 100ms
 
   // Shuffle logic function (reusable for both interval and hover)
   const shuffleShapes = () => {
@@ -108,12 +138,44 @@ export function AnimatedPatterns() {
     shuffleShapes();
   };
 
+  // Update cursor color randomly on mouse move
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const now = Date.now();
+    // Throttle cursor updates to avoid performance issues
+    if (now - lastCursorUpdateRef.current < CURSOR_UPDATE_THROTTLE) {
+      return;
+    }
+    lastCursorUpdateRef.current = now;
+
+    // Pick a random color from theme colors
+    const randomColor = THEME_COLORS[Math.floor(Math.random() * THEME_COLORS.length)];
+    
+    // Generate cursor SVG and apply it
+    const cursorSVG = generateCursorSVG(randomColor);
+    
+    // Apply custom cursor to the container
+    // The hotspot coordinates (12, 12) match the center of our 24x24 SVG
+    if (containerRef.current) {
+      containerRef.current.style.cursor = `url("${cursorSVG}") 12 12, pointer`;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    // Reset cursor to default when leaving the shapes area
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'auto';
+    }
+  };
+
   return (
     <div className="flex items-center justify-center relative w-full" data-name="patterns" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', minHeight: '86.4px' }}>
       {/* Container that scales to fit available width while maintaining aspect ratio */}
       <div 
+        ref={containerRef}
         className="relative origin-center shapes-container-responsive" 
         onMouseEnter={handleShapeHover}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
       >
         <style>{`
           .shapes-container-responsive {
@@ -154,7 +216,7 @@ export function AnimatedPatterns() {
             scale: 0.85;
           }
           .shape-clickable {
-            cursor: pointer;
+            cursor: inherit; /* Inherit the custom cursor from parent */
           }
           .shape-clickable:hover {
             opacity: 0.85;

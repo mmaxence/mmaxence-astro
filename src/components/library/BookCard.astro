@@ -79,18 +79,13 @@ const featuredImage = book.data.featured_image?.startsWith('/')
         return false;
       });
     });
-  }
-
-  // Initialize on page load
+  }  // Initialize on page load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', blockBookCardClicks);
   } else {
     blockBookCardClicks();
-  }
-
-  // Re-initialize on page transitions
+  }  // Re-initialize on page transitions
   document.addEventListener('astro:page-load', () => {
     setTimeout(blockBookCardClicks, 50);
   });
 </script>
-

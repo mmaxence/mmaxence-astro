@@ -1,0 +1,56 @@
+---
+// Reusable component for homepage sections with consistent layout
+import AnimatedContent from '../ui/AnimatedContent.astro';
+
+interface Props {
+  title: string;
+  delay?: number;
+}
+
+const { title, delay = 0 } = Astro.props;
+---
+
+<section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+  <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+    <AnimatedContent delay={delay}>
+      <article class="w-full index-content-section">
+        <h1 class="text-4xl md:text-5xl font-mono font-light">{title}</h1>
+        
+        <slot name="pre-visual" />
+        
+        <slot name="visual" />
+        
+        <slot name="post-visual" />
+      </article>
+    </AnimatedContent>
+  </div>
+</section>
+
+<style>
+  /* Ensure visual components fill full width - target all possible wrapper structures */
+  .index-content-section > div[class*="my-8"],
+  .index-content-section > * > div[class*="my-8"],
+  .index-content-section [class*="my-8"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Ensure SVGs inside visual components fill their containers and don't constrain parent */
+  .index-content-section > div[class*="my-8"] > svg,
+  .index-content-section > * > div[class*="my-8"] > svg,
+  .index-content-section [class*="my-8"] > svg {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    /* Prevent SVG from constraining parent width */
+    height: auto !important;
+  }
+</style>

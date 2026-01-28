@@ -1,0 +1,96 @@
+{
+  "startYear": 2005,
+  "endYear": 2026,
+  "periods": [
+    {
+      "id": "education",
+      "label": "Education",
+      "start": 2005.9166666666667,
+      "end": 2010.9166666666667,
+      "milestones": [
+        {
+          "year": 2010.8333333333333,
+          "label": "IxD Masters"
+        },
+        {
+          "year": 2010.9999999999999,
+          "label": "Research masters"
+        }
+      ]
+    },
+    {
+      "id": "cms",
+      "label": "CMS Group",
+      "start": 2011.25,
+      "end": 2014.4166666666667,
+      "milestones": [
+        {
+          "year": 2013.5833333333333,
+          "label": "ISDR"
+        },
+        {
+          "year": 2013.1666666666667,
+          "label": "Randstad - 1st Client"
+        }
+      ]
+    },
+    {
+      "id": "buzzvil",
+      "label": "Buzzvil",
+      "start": 2014.9166666666667,
+      "end": 2026,
+      "milestones": [
+        {
+          "year": 2015.5,
+          "label": "Honeyscreen release"
+        },
+        {
+          "year": 2016,
+          "label": "SDK release"
+        },
+        {
+          "year": 2018,
+          "label": "Pivot"
+        },
+        {
+          "year": 2022,
+          "label": "IPO prep"
+        }
+      ]
+    }
+  ],
+  "majorMilestones": [
+    {
+      "year": 2005,
+      "label": "Master's in IxD Design",
+      "period": "education"
+    },
+    {
+      "year": 2011,
+      "label": "CMS Group - Paris",
+      "sublabel": "EdTech",
+      "period": "cms"
+    },
+    {
+      "year": 2014,
+      "label": "Buzzvil Starts - Seoul",
+      "sublabel": "AdTech",
+      "period": "buzzvil"
+    },
+    {
+      "year": 2017,
+      "label": "From B2C to SDK",
+      "period": "buzzvil"
+    },
+    {
+      "year": 2019,
+      "label": "Major Company Pivot",
+      "period": "buzzvil"
+    },
+    {
+      "year": 2022,
+      "label": "IPO Prep",
+      "period": "buzzvil"
+    }
+  ]
+}

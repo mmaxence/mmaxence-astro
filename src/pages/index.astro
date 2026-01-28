@@ -8,6 +8,14 @@ import CardGrid from '../components/ui/CardGrid.astro';
 import BlogCard from '../components/blog/BlogCard.astro';
 import ThemeToast from '../components/ui/ThemeToast.astro';
 import HeroShapes from '../components/home/HeroShapes.astro';
+import { 
+  WhatIDoVisual, 
+  ExperienceSnapshotVisual, 
+  HowIWorkVisual, 
+  LeadershipScalesVisual, 
+  BeyondTheRoleVisual 
+} from '../components/home/SectionVisuals.tsx';
+import HomeSection from '../components/home/HomeSection.astro';
 import { getCollection } from 'astro:content';
 
 const blogPosts = (await getCollection('blog'))
@@ -40,133 +48,114 @@ const blogPosts = (await getCollection('blog'))
   <!-- Main Content Sections -->
   <PageContent class="flex flex-col">
     {/* WHAT I DO */}
-    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
-        <AnimatedContent delay="0">
-          <article class="w-full index-content-section">
-            <h1 class="text-4xl md:text-5xl font-mono font-light">WHAT I DO</h1>
-            <p class="mt-4">I work at the intersection of product definition, interaction design, and execution systems.</p>
-            <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Sometimes that means leading. Sometimes that means designing the first version myself and stepping away once the direction is clear.</p>
-            <p class="mt-4">I'm comfortable operating as an executive, and I remain effective as an individual contributor when the work requires depth, speed, and judgment.</p>
-          </article>
-        </AnimatedContent>
+    <HomeSection title="WHAT I DO" delay={0}>
+      <p slot="pre-visual" class="mt-4">I work at the intersection of product definition, interaction design, and execution systems.</p>
+      <WhatIDoVisual slot="visual" client:load />
+      <div slot="post-visual">
+        <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Sometimes that means leading. Sometimes that means designing the first version myself and stepping away once the direction is clear.</p>
+        <p class="mt-4">I'm comfortable operating as an executive, and I remain effective as an individual contributor when the work requires depth, speed, and judgment.</p>
+        <p class="mt-4">
+          <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="content-link">View my resume</a> for a detailed overview of my experience and impact.
+        </p>
       </div>
-    </section>
+    </HomeSection>
     
     {/* EXPERIENCE SNAPSHOT */}
-    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
-        <AnimatedContent delay="50">
-          <article class="w-full index-content-section">
-            <h1 class="text-4xl md:text-5xl font-mono font-light">EXPERIENCE SNAPSHOT</h1>
-            
-            <div class="mt-8">
-              <h2 class="text-2xl md:text-3xl font-mono font-light">Buzzvil — Product & Experience Executive</h2>
-              <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Seoul · 2014–Present</p>
-              
-              <ul class="mt-6 space-y-2 list-none pl-0">
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Shaped first iterations of nearly every major product and monetization model</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Led the company through a major pivot from consumer products to B2B Ads and SDK platforms</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Built and scaled a high-retention design team with strong product ownership</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div class="mt-12">
-              <h2 class="text-2xl md:text-3xl font-mono font-light">CMS Group — UX Design Lead</h2>
-              <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Paris · 2011–2014</p>
-              
-              <ul class="mt-6 space-y-2 list-none pl-0">
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Led UX for enterprise and SaaS products</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Co-published research on co-design validation methods</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
-                  <span>Built an education SaaS bridging design intent and production code</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div class="mt-8">
-              <p class="text-base">For more details, see my <a href="/timeline" class="content-link">full experience timeline</a>.</p>
-            </div>
-          </article>
-        </AnimatedContent>
+    <HomeSection title="EXPERIENCE SNAPSHOT" delay={50}>
+      <ExperienceSnapshotVisual slot="visual" client:load />
+      <div slot="post-visual">
+        <div class="mt-8">
+          <h2 class="text-2xl md:text-3xl font-mono font-light">Buzzvil — Product & Experience Executive</h2>
+          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Seoul · 2014–Present</p>
+          
+          <ul class="mt-6 space-y-2 list-none pl-0">
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Shaped first iterations of nearly every major product and monetization model</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Led the company through a major pivot from consumer products to B2B Ads and SDK platforms</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Built and scaled a high-retention design team with strong product ownership</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="mt-12">
+          <h2 class="text-2xl md:text-3xl font-mono font-light">CMS Group — UX Design Lead</h2>
+          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Paris · 2011–2014</p>
+          
+          <ul class="mt-6 space-y-2 list-none pl-0">
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Led UX for enterprise and SaaS products</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Co-published research on co-design validation methods</span>
+            </li>
+            <li class="flex items-start">
+              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span>Built an education SaaS bridging design intent and production code</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="mt-8">
+          <p class="text-base">For more details, see my <a href="/timeline" class="content-link">full experience timeline</a>.</p>
+        </div>
       </div>
-    </section>
+    </HomeSection>
     
     {/* HOW I WORK */}
-    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
-        <AnimatedContent delay="100">
-          <article class="w-full index-content-section">
-            <h1 class="text-4xl md:text-5xl font-mono font-light">HOW I WORK</h1>
-            
-            <div class="mt-6 space-y-6">
-              <div>
-                <h2 class="text-2xl md:text-3xl font-mono font-light">Deliberate thinking, fast execution</h2>
-                <p>I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
-              </div>
-              
-              <div>
-                <h2 class="text-2xl md:text-3xl font-mono font-light">Systems over screens</h2>
-                <p>I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
-              </div>
-              
-              <div>
-                <h2 class="text-2xl md:text-3xl font-mono font-light">Product ownership mindset</h2>
-                <p>Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
-              </div>
-            </div>
-          </article>
-        </AnimatedContent>
+    <HomeSection title="HOW I WORK" delay={100}>
+      <HowIWorkVisual slot="visual" client:load />
+      <div slot="post-visual">
+        <div class="mt-6 space-y-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-mono font-light">Deliberate thinking, fast execution</h2>
+            <p>I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
+          </div>
+          
+          <div>
+            <h2 class="text-2xl md:text-3xl font-mono font-light">Systems over screens</h2>
+            <p>I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
+          </div>
+          
+          <div>
+            <h2 class="text-2xl md:text-3xl font-mono font-light">Product ownership mindset</h2>
+            <p>Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
+          </div>
+        </div>
       </div>
-    </section>
+    </HomeSection>
     
     {/* LEADERSHIP THAT SCALES */}
-    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
-        <AnimatedContent delay="150">
-          <article class="w-full index-content-section">
-            <h1 class="text-4xl md:text-5xl font-mono font-light">LEADERSHIP THAT SCALES</h1>
-            <p class="mt-4">I build small, senior teams designed to operate without constant oversight.</p>
-            <p class="mt-4">When I lead, my goal is to remove ambiguity early and make myself unnecessary over time.</p>
-            <p class="mt-4">When I contribute individually, it's usually at the beginning of new initiatives, where clarity does not exist yet and decisions are expensive.</p>
-            <p class="mt-4">If execution depends on me long-term, the system is wrong.</p>
-          </article>
-        </AnimatedContent>
+    <HomeSection title="LEADERSHIP THAT SCALES" delay={150}>
+      <LeadershipScalesVisual slot="visual" client:load />
+      <div slot="post-visual">
+        <p class="mt-4">I build small, senior teams designed to operate without constant oversight.</p>
+        <p class="mt-4">When I lead, my goal is to remove ambiguity early and make myself unnecessary over time.</p>
+        <p class="mt-4">When I contribute individually, it's usually at the beginning of new initiatives, where clarity does not exist yet and decisions are expensive.</p>
+        <p class="mt-4">If execution depends on me long-term, the system is wrong.</p>
       </div>
-    </section>
+    </HomeSection>
     
     {/* BEYOND THE ROLE */}
-    <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-      <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
-        <AnimatedContent delay="200">
-          <article class="w-full index-content-section">
-            <h1 class="text-4xl md:text-5xl font-mono font-light">BEYOND THE ROLE</h1>
-            <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
-            <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology.</p>
-          </article>
-        </AnimatedContent>
+    <HomeSection title="BEYOND THE ROLE" delay={200}>
+      <BeyondTheRoleVisual slot="visual" client:load />
+      <div slot="post-visual">
+        <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
+        <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology.</p>
       </div>
-    </section>
+    </HomeSection>
     
     {/* Blog Posts */}
     {blogPosts.length > 0 && (
@@ -207,6 +196,61 @@ const blogPosts = (await getCollection('blog'))
   .index-content-section > div > div.my-8:hover {
     box-shadow: none !important;
     transform: none !important;
+  }
+
+  /* Section visuals styling */
+  .index-content-section svg {
+    display: block;
+    width: 100% !important;
+    height: auto;
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+  
+  /* Force visual wrapper divs to fill container width - prevent SVG from constraining */
+  .index-content-section > div[class*="my-8"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    /* Prevent child SVG from constraining parent */
+    overflow: visible !important;
+  }
+  
+  /* Specifically target Experience visual wrapper to force full width */
+  /* Use grid to prevent SVG from constraining parent */
+  .experience-visual-wrapper {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    /* Force container to fill parent regardless of SVG size */
+    contain: layout style !important;
+    /* Ensure container takes full article width */
+    position: relative !important;
+  }
+  
+  /* Specifically target Experience visual SVG to prevent it from constraining container */
+  .experience-visual-wrapper > svg {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: 1 !important;
+    /* Remove any intrinsic sizing that might constrain parent */
+    min-width: 0 !important;
+    /* Force SVG to scale to container - critical for preventing 900px constraint */
+    flex-shrink: 1 !important;
+    flex-grow: 1 !important;
+    /* Ensure SVG doesn't have intrinsic width */
+    box-sizing: border-box !important;
+  }
+
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .index-content-section svg * {
+      animation: none !important;
+      transition: opacity 0.3s ease !important;
+    }
   }
 
 </style>

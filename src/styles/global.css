@@ -158,27 +158,48 @@ a, a:visited {
   text-decoration: none;
 }
 
-/* Selection */
+/* Selection - use accent color with high contrast text */
+/* Default: white text (for dark accents like black) */
 ::selection {
-  background: var(--color-highlight);
+  background: var(--theme-accent);
+  color: #ffffff;
 }
 
 ::-moz-selection {
-  background: var(--color-highlight);
+  background: var(--theme-accent);
+  color: #ffffff;
 }
 
-/* Mark/highlight - complex gradient that can't be done with Tailwind */
+/* Theme-specific selection text colors for light accents */
+[data-theme="ide"] ::selection,
+[data-theme="ide"] ::-moz-selection {
+  color: #1a1b26; /* Dark text for light blue accent */
+}
+
+[data-theme="pixel"] ::selection,
+[data-theme="pixel"] ::-moz-selection {
+  color: #2d5016; /* Dark green text for light green-gray accent */
+}
+
+/* Mark/highlight - use accent color as background with high contrast text */
+/* Default: white text (for dark accents like black) */
 mark, .mark {
   font-family: var(--font-body); /* Keep body font for mark tags */
-  background-color: transparent;
-  background-image: linear-gradient(
-    transparent 0%,
-    transparent calc(50% - 8px),
-    var(--color-highlight) calc(50% - 8px),
-    var(--color-highlight) 100%
-  );
-  background-size: 100% 200%;
-  background-position: 0 0;
+  background-color: var(--theme-accent);
+  color: #ffffff;
+  padding: 0 0.125em;
+  border-radius: 0.125em;
+}
+
+/* Theme-specific mark text colors for light accents */
+[data-theme="ide"] mark,
+[data-theme="ide"] .mark {
+  color: #1a1b26; /* Dark text for light blue accent */
+}
+
+[data-theme="pixel"] mark,
+[data-theme="pixel"] .mark {
+  color: #2d5016; /* Dark green text for light green-gray accent */
 }
 
 /* HR */
@@ -327,15 +348,21 @@ hr {
 .prose mark,
 .prose .mark {
   font-family: var(--font-body); /* Keep body font for mark tags in prose */
-  background-color: transparent;
-  background-image: linear-gradient(
-    transparent 0%,
-    transparent calc(50% - 8px),
-    var(--color-highlight) calc(50% - 8px),
-    var(--color-highlight) 100%
-  );
-  background-size: 100% 200%;
-  background-position: 0 0;
+  background-color: var(--theme-accent);
+  color: #ffffff;
+  padding: 0 0.125em;
+  border-radius: 0.125em;
+}
+
+/* Theme-specific prose mark text colors for light accents */
+[data-theme="ide"] .prose mark,
+[data-theme="ide"] .prose .mark {
+  color: #1a1b26; /* Dark text for light blue accent */
+}
+
+[data-theme="pixel"] .prose mark,
+[data-theme="pixel"] .prose .mark {
+  color: #2d5016; /* Dark green text for light green-gray accent */
 }
 
 .prose ul,
@@ -345,8 +372,17 @@ hr {
   padding-left: 1.5rem;
 }
 
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
 .prose li {
   margin-bottom: 0.5rem;
+  display: list-item;
 }
 
 /* ============================================
@@ -454,9 +490,9 @@ html {
   left: 0;
   width: 0%;
   height: 3px;
-  background: linear-gradient(90deg, #000000, #333333);
+  background: linear-gradient(90deg, var(--theme-accent), var(--theme-text));
   z-index: 9999;
-  transition: width 0.1s ease-out;
+  transition: width 0.1s ease-out, background 0.3s ease;
 }
 
 /* Page Transition System - using Tailwind classes in components */
