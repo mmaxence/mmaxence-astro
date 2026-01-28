@@ -387,6 +387,7 @@ export function WhatIDoVisual() {
 // 2. EXPERIENCE SNAPSHOT - Timeline with Inflection Nodes
 export function ExperienceSnapshotVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mouseX, setMouseX] = useState<number | null>(null);
@@ -689,68 +690,11 @@ export function ExperienceSnapshotVisual() {
     }
   }, [viewportWidth, contentStartYear, yearToX, isMobile, yearDisplayStart]);
 
-  // Touch handlers for mobile swipe - defined after yearToX and other variables are available
-  const handleTouchStart = (e: React.TouchEvent<SVGSVGElement>) => {
-    // Always allow touch on mobile - check window width directly
-    if (typeof window === 'undefined') return;
-    const mobile = window.innerWidth <= 768;
-    if (!mobile) return;
-    
-    // Prevent default to stop page scrolling
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const touch = e.touches[0];
-    if (!svgRef.current || !touch) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    touchStartX.current = touch.clientX - rect.left;
-    touchStartScroll.current = currentScrollOffset.current;
-    isDragging.current = true;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
-    // Always allow touch on mobile
-    if (typeof window === 'undefined') return;
-    const mobile = window.innerWidth <= 768;
-    if (!mobile || !isDragging.current || touchStartX.current === null) return;
-    
-    // Prevent default to stop page scrolling
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const touch = e.touches[0];
-    if (!svgRef.current || !touch) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    const currentX = touch.clientX - rect.left;
-    const deltaX = currentX - touchStartX.current;
-    
-    // Use the latest yearToX function and values from the component scope
-    const startX = yearToX(yearDisplayStart);
-    const endX = yearToX(yearDisplayEnd);
-    const newScroll = touchStartScroll.current - deltaX; // Invert: swipe left moves timeline right
-    
-    // Clamp to bounds - ensure we can scroll to show 2026
-    const minScroll = 0 - startX;
-    const maxScroll = viewportWidth - endX;
-    currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent<SVGSVGElement>) => {
-    if (typeof window === 'undefined') return;
-    const mobile = window.innerWidth <= 768;
-    if (!mobile) return;
-    
-    e.preventDefault();
-    e.stopPropagation();
-    
-    isDragging.current = false;
-    touchStartX.current = null;
-  };
-
-  // Add native touch event listeners for better mobile support (React synthetic events may not work reliably)
+  // Add native touch event listeners on wrapper div for better mobile support
+  
   useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg || typeof window === 'undefined') return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper || typeof window === 'undefined') return;
 
     const isMobileDevice = () => {
       return window.innerWidth <= 768 || 'ontouchstart' in window;
@@ -759,22 +703,24 @@ export function ExperienceSnapshotVisual() {
     const handleNativeTouchStart = (e: TouchEvent) => {
       if (!isMobileDevice()) return;
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       const touch = e.touches[0];
       if (!touch) return;
-      const rect = svg.getBoundingClientRect();
+      const rect = wrapper.getBoundingClientRect();
       touchStartX.current = touch.clientX - rect.left;
       touchStartScroll.current = currentScrollOffset.current;
       isDragging.current = true;
+      // Debug log (remove in production)
+      if (typeof console !== 'undefined') console.log('Touch start', touch.clientX);
     };
 
     const handleNativeTouchMove = (e: TouchEvent) => {
       if (!isMobileDevice() || !isDragging.current || touchStartX.current === null) return;
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       const touch = e.touches[0];
       if (!touch) return;
-      const rect = svg.getBoundingClientRect();
+      const rect = wrapper.getBoundingClientRect();
       const currentX = touch.clientX - rect.left;
       const deltaX = currentX - touchStartX.current;
       
@@ -786,25 +732,29 @@ export function ExperienceSnapshotVisual() {
       const minScroll = 0 - startX;
       const maxScroll = viewportWidth - endX;
       currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
+      // Debug log (remove in production)
+      if (typeof console !== 'undefined') console.log('Touch move', deltaX, currentScrollOffset.current);
     };
 
     const handleNativeTouchEnd = (e: TouchEvent) => {
       if (!isMobileDevice()) return;
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       isDragging.current = false;
       touchStartX.current = null;
+      // Debug log (remove in production)
+      if (typeof console !== 'undefined') console.log('Touch end');
     };
 
     // Add native event listeners with passive: false to allow preventDefault
-    svg.addEventListener('touchstart', handleNativeTouchStart, { passive: false });
-    svg.addEventListener('touchmove', handleNativeTouchMove, { passive: false });
-    svg.addEventListener('touchend', handleNativeTouchEnd, { passive: false });
+    wrapper.addEventListener('touchstart', handleNativeTouchStart, { passive: false });
+    wrapper.addEventListener('touchmove', handleNativeTouchMove, { passive: false });
+    wrapper.addEventListener('touchend', handleNativeTouchEnd, { passive: false });
 
     return () => {
-      svg.removeEventListener('touchstart', handleNativeTouchStart);
-      svg.removeEventListener('touchmove', handleNativeTouchMove);
-      svg.removeEventListener('touchend', handleNativeTouchEnd);
+      wrapper.removeEventListener('touchstart', handleNativeTouchStart);
+      wrapper.removeEventListener('touchmove', handleNativeTouchMove);
+      wrapper.removeEventListener('touchend', handleNativeTouchEnd);
     };
   }, [yearToX, yearDisplayStart, yearDisplayEnd, viewportWidth]);
   
@@ -984,6 +934,7 @@ export function ExperienceSnapshotVisual() {
 
   return (
     <div 
+      ref={wrapperRef}
       className="w-full my-8 experience-visual-wrapper" 
       style={{ 
         width: '100%', 
@@ -995,7 +946,12 @@ export function ExperienceSnapshotVisual() {
         contain: 'layout style',
         // Center on mobile
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        // Enable touch scrolling on mobile
+        touchAction: isMobile ? 'pan-x' : 'auto',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none'
       }}
     >
       <svg
@@ -1014,18 +970,12 @@ export function ExperienceSnapshotVisual() {
           // Remove any intrinsic width that might constrain parent
           flexShrink: 1,
           flexGrow: 1,
-          // Enable touch scrolling on mobile
-          touchAction: isMobile ? 'pan-x' : 'auto',
-          WebkitTouchCallout: 'none',
-          WebkitUserSelect: 'none',
-          userSelect: 'none'
+          // Prevent pointer events from interfering
+          pointerEvents: 'auto'
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <defs>
           {/* Gradient for timeline fade on left edge */}
