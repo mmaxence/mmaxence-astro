@@ -690,36 +690,45 @@ export function ExperienceSnapshotVisual() {
     }
   }, [viewportWidth, contentStartYear, yearToX, isMobile, yearDisplayStart]);
 
-  // Add native touch event listeners on wrapper div for better mobile support
-  
+  // Add native touch event listeners on document to catch all touch events
+  // Check if touch is within wrapper bounds
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    if (!wrapper || typeof window === 'undefined') return;
+    if (!wrapper || typeof window === 'undefined' || typeof document === 'undefined') return;
 
     const isMobileDevice = () => {
       return window.innerWidth <= 768 || 'ontouchstart' in window;
     };
 
+    const isTouchInWrapper = (touch: Touch): boolean => {
+      const rect = wrapper.getBoundingClientRect();
+      return touch.clientX >= rect.left && 
+             touch.clientX <= rect.right && 
+             touch.clientY >= rect.top && 
+             touch.clientY <= rect.bottom;
+    };
+
     const handleNativeTouchStart = (e: TouchEvent) => {
       if (!isMobileDevice()) return;
-      e.preventDefault();
-      e.stopImmediatePropagation();
       const touch = e.touches[0];
-      if (!touch) return;
+      if (!touch || !isTouchInWrapper(touch)) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
       const rect = wrapper.getBoundingClientRect();
       touchStartX.current = touch.clientX - rect.left;
       touchStartScroll.current = currentScrollOffset.current;
       isDragging.current = true;
-      // Debug log (remove in production)
-      if (typeof console !== 'undefined') console.log('Touch start', touch.clientX);
+      console.log('[Timeline] Touch start', touch.clientX, 'wrapper:', rect.left, rect.right);
     };
 
     const handleNativeTouchMove = (e: TouchEvent) => {
       if (!isMobileDevice() || !isDragging.current || touchStartX.current === null) return;
-      e.preventDefault();
-      e.stopImmediatePropagation();
       const touch = e.touches[0];
       if (!touch) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
       const rect = wrapper.getBoundingClientRect();
       const currentX = touch.clientX - rect.left;
       const deltaX = currentX - touchStartX.current;
@@ -732,29 +741,29 @@ export function ExperienceSnapshotVisual() {
       const minScroll = 0 - startX;
       const maxScroll = viewportWidth - endX;
       currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
-      // Debug log (remove in production)
-      if (typeof console !== 'undefined') console.log('Touch move', deltaX, currentScrollOffset.current);
+      console.log('[Timeline] Touch move', deltaX, 'scroll:', currentScrollOffset.current);
     };
 
     const handleNativeTouchEnd = (e: TouchEvent) => {
-      if (!isMobileDevice()) return;
+      if (!isMobileDevice() || !isDragging.current) return;
       e.preventDefault();
-      e.stopImmediatePropagation();
+      e.stopPropagation();
       isDragging.current = false;
       touchStartX.current = null;
-      // Debug log (remove in production)
-      if (typeof console !== 'undefined') console.log('Touch end');
+      console.log('[Timeline] Touch end');
     };
 
-    // Add native event listeners with passive: false to allow preventDefault
-    wrapper.addEventListener('touchstart', handleNativeTouchStart, { passive: false });
-    wrapper.addEventListener('touchmove', handleNativeTouchMove, { passive: false });
-    wrapper.addEventListener('touchend', handleNativeTouchEnd, { passive: false });
+    // Add native event listeners to document with capture phase
+    document.addEventListener('touchstart', handleNativeTouchStart, { passive: false, capture: true });
+    document.addEventListener('touchmove', handleNativeTouchMove, { passive: false, capture: true });
+    document.addEventListener('touchend', handleNativeTouchEnd, { passive: false, capture: true });
+    document.addEventListener('touchcancel', handleNativeTouchEnd, { passive: false, capture: true });
 
     return () => {
-      wrapper.removeEventListener('touchstart', handleNativeTouchStart);
-      wrapper.removeEventListener('touchmove', handleNativeTouchMove);
-      wrapper.removeEventListener('touchend', handleNativeTouchEnd);
+      document.removeEventListener('touchstart', handleNativeTouchStart, { capture: true });
+      document.removeEventListener('touchmove', handleNativeTouchMove, { capture: true });
+      document.removeEventListener('touchend', handleNativeTouchEnd, { capture: true });
+      document.removeEventListener('touchcancel', handleNativeTouchEnd, { capture: true });
     };
   }, [yearToX, yearDisplayStart, yearDisplayEnd, viewportWidth]);
   
@@ -947,11 +956,16 @@ export function ExperienceSnapshotVisual() {
         // Center on mobile
         justifyContent: 'center',
         alignItems: 'center',
-        // Enable touch scrolling on mobile
-        touchAction: isMobile ? 'pan-x' : 'auto',
+        // Enable touch scrolling on mobile - use pan-x to allow horizontal panning
+        touchAction: isMobile ? 'pan-x pan-y' : 'auto',
         WebkitTouchCallout: 'none',
         WebkitUserSelect: 'none',
-        userSelect: 'none'
+        userSelect: 'none',
+        // Ensure wrapper can receive touch events
+        position: 'relative',
+        zIndex: 1,
+        // Prevent any pointer event blocking
+        pointerEvents: 'auto'
       }}
     >
       <svg
