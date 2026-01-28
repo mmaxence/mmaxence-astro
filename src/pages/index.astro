@@ -29,15 +29,15 @@ const blogPosts = (await getCollection('blog'))
   <!-- Hero Section - Full Viewport -->
   <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0" style="margin-top: -8rem;">
     <div class="w-full max-w-2xl mx-auto text-center">
-      <AnimatedContent delay="0">
+      <AnimatedContent delay={0}>
         <HeroShapes />
       </AnimatedContent>
-      <AnimatedContent delay="100">
+      <AnimatedContent delay={100}>
         <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading" style="font-weight: 400; color: var(--theme-text);">
           Turning early product decisions into scalable platforms.
         </h1>
       </AnimatedContent>
-      <AnimatedContent delay="200">
+      <AnimatedContent delay={200}>
         <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4" style="color: var(--theme-text);">
           Product & experience executive with 11+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.<br />Still hands-on where it matters.
         </p>
@@ -161,7 +161,7 @@ const blogPosts = (await getCollection('blog'))
     {blogPosts.length > 0 && (
       <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
         <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
-          <AnimatedContent delay="350">
+          <AnimatedContent delay={350}>
             <div class="w-full">
               <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">Latest Insights on Systems & Leadership</h1>
               <CardGrid columns={3}>
@@ -216,32 +216,19 @@ const blogPosts = (await getCollection('blog'))
     overflow: visible !important;
   }
   
-  /* Specifically target Experience visual wrapper to force full width */
-  /* Use grid to prevent SVG from constraining parent */
-  .experience-visual-wrapper {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    /* Force container to fill parent regardless of SVG size */
-    contain: layout style !important;
-    /* Ensure container takes full article width */
-    position: relative !important;
-  }
-  
-  /* Specifically target Experience visual SVG to prevent it from constraining container */
-  .experience-visual-wrapper > svg {
-    width: 100% !important;
-    max-width: 100% !important;
-    grid-column: 1 !important;
-    /* Remove any intrinsic sizing that might constrain parent */
-    min-width: 0 !important;
-    /* Force SVG to scale to container - critical for preventing 900px constraint */
-    flex-shrink: 1 !important;
-    flex-grow: 1 !important;
-    /* Ensure SVG doesn't have intrinsic width */
-    box-sizing: border-box !important;
+  /* Mobile: enable horizontal scrolling for Experience visual */
+  @media (max-width: 768px) {
+    .experience-visual-wrapper {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      touch-action: pan-x !important;
+    }
+    
+    .experience-visual-wrapper > svg {
+      min-width: auto !important;
+      max-width: none !important;
+    }
   }
 
 

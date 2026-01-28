@@ -236,10 +236,11 @@ export function WhatIDoVisual() {
   }, []);
 
   // Simple layer definitions: bottom first (renders behind), top last (renders on top)
+  // Centered horizontally: viewBox is 600 wide, so center is 300. Layers start around 150-200 to center them
   const layers = [
-    { label: 'Execution Systems', x: 50, y: 160, z: 2 },
-    { label: 'Interaction Design', x: 55, y: 110, z: 1 },
-    { label: 'Product Definition', x: 60, y: 60, z: 0 },
+    { label: 'Execution Systems', x: 150, y: 160, z: 2 },
+    { label: 'Interaction Design', x: 155, y: 110, z: 1 },
+    { label: 'Product Definition', x: 160, y: 60, z: 0 },
   ];
 
   const layerWidth = 300;
@@ -362,7 +363,7 @@ export function WhatIDoVisual() {
 
               {/* Connection line */}
               <line
-                x1="400"
+                x1="460"
                 y1={centerY + 4}
                 x2={layer.x + layerWidth - skew}
                 y2={centerY}
@@ -374,9 +375,9 @@ export function WhatIDoVisual() {
 
               {/* Label */}
               <text
-                x="400"
+                x="460"
                 y={centerY + 5}
-                fontSize={isMobile ? "18" : "14"}
+                fontSize={isMobile ? "24" : "14"}
                 fill={isHovered ? accentColor : mutedColor}
                 style={{
                   fontFamily: 'var(--theme-font-body, sans-serif)',
@@ -401,14 +402,9 @@ export function ExperienceSnapshotVisual() {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mouseX, setMouseX] = useState<number | null>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const currentScrollOffset = useRef<number>(0);
   const targetScrollOffset = useRef<number>(0);
-  
-  // Touch/swipe support for mobile
-  const touchStartX = useRef<number | null>(null);
-  const touchStartScroll = useRef<number>(0);
-  const isDragging = useRef(false);
   
   // Use refs for hover state to avoid closure issues in animation loop
   const isHoveredRef = useRef(false);
@@ -557,8 +553,9 @@ export function ExperienceSnapshotVisual() {
         setViewportHeight(400);
       } else {
         // Desktop: wide landscape ratio
+        // Increased height to accommodate milestones that appear below timeline on hover
         setViewportWidth(1400);
-        setViewportHeight(300);
+        setViewportHeight(400);
       }
     };
     
@@ -700,82 +697,6 @@ export function ExperienceSnapshotVisual() {
     }
   }, [viewportWidth, contentStartYear, yearToX, isMobile, yearDisplayStart]);
 
-  // Add native touch event listeners on document to catch all touch events
-  // Check if touch is within wrapper bounds
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper || typeof window === 'undefined' || typeof document === 'undefined') return;
-
-    const isMobileDevice = () => {
-      return window.innerWidth <= 768 || 'ontouchstart' in window;
-    };
-
-    const isTouchInWrapper = (touch: Touch): boolean => {
-      const rect = wrapper.getBoundingClientRect();
-      return touch.clientX >= rect.left && 
-             touch.clientX <= rect.right && 
-             touch.clientY >= rect.top && 
-             touch.clientY <= rect.bottom;
-    };
-
-    const handleNativeTouchStart = (e: TouchEvent) => {
-      if (!isMobileDevice()) return;
-      const touch = e.touches[0];
-      if (!touch || !isTouchInWrapper(touch)) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      const rect = wrapper.getBoundingClientRect();
-      touchStartX.current = touch.clientX - rect.left;
-      touchStartScroll.current = currentScrollOffset.current;
-      isDragging.current = true;
-      console.log('[Timeline] Touch start', touch.clientX, 'wrapper:', rect.left, rect.right);
-    };
-
-    const handleNativeTouchMove = (e: TouchEvent) => {
-      if (!isMobileDevice() || !isDragging.current || touchStartX.current === null) return;
-      const touch = e.touches[0];
-      if (!touch) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      const rect = wrapper.getBoundingClientRect();
-      const currentX = touch.clientX - rect.left;
-      const deltaX = currentX - touchStartX.current;
-      
-      // Use latest values from closure
-      const startX = yearToX(yearDisplayStart);
-      const endX = yearToX(yearDisplayEnd);
-      const newScroll = touchStartScroll.current - deltaX;
-      
-      const minScroll = 0 - startX;
-      const maxScroll = viewportWidth - endX;
-      currentScrollOffset.current = Math.max(minScroll, Math.min(maxScroll, newScroll));
-      console.log('[Timeline] Touch move', deltaX, 'scroll:', currentScrollOffset.current);
-    };
-
-    const handleNativeTouchEnd = (e: TouchEvent) => {
-      if (!isMobileDevice() || !isDragging.current) return;
-      e.preventDefault();
-      e.stopPropagation();
-      isDragging.current = false;
-      touchStartX.current = null;
-      console.log('[Timeline] Touch end');
-    };
-
-    // Add native event listeners to document with capture phase
-    document.addEventListener('touchstart', handleNativeTouchStart, { passive: false, capture: true });
-    document.addEventListener('touchmove', handleNativeTouchMove, { passive: false, capture: true });
-    document.addEventListener('touchend', handleNativeTouchEnd, { passive: false, capture: true });
-    document.addEventListener('touchcancel', handleNativeTouchEnd, { passive: false, capture: true });
-
-    return () => {
-      document.removeEventListener('touchstart', handleNativeTouchStart, { capture: true });
-      document.removeEventListener('touchmove', handleNativeTouchMove, { capture: true });
-      document.removeEventListener('touchend', handleNativeTouchEnd, { capture: true });
-      document.removeEventListener('touchcancel', handleNativeTouchEnd, { capture: true });
-    };
-  }, [yearToX, yearDisplayStart, yearDisplayEnd, viewportWidth]);
   
   // iOS-like bounce easing function
   const bounceEase = (t: number): number => {
@@ -835,7 +756,7 @@ export function ExperienceSnapshotVisual() {
         const smoothing = justEnteredHoverRef.current ? 0.03 : 0.05; // Even slower on initial hover entry
         const diff = targetScrollOffset.current - currentScrollOffset.current;
         currentScrollOffset.current += diff * smoothing;
-      } else if (!isDragging.current) {
+      } else {
         // Auto-scroll when not hovered and not dragging - forward then rewind
         const elapsed = currentTime - startTime - pausedTime;
         const cycleProgress = elapsed % cycleDuration;
@@ -951,51 +872,55 @@ export function ExperienceSnapshotVisual() {
     };
   }, [isVisible, timelineY, cycleDuration, viewportWidth, viewportHeight, isMobile, timelineScrollRange, contentStartYear, accentColor, initialOffset, hoverStartX, hoverEndX, hoverRange, activeStartX, activeEndX, activeRange, yearDisplayStart, yearDisplayEnd, scale]);
 
+  // Calculate SVG pixel width for mobile - make it wider than container to enable scrolling
+  // timelineWidth is in viewBox units, so we need to scale it to pixels
+  // Use a ratio: if viewBox width is viewportWidth and timelineWidth is the content width,
+  // then pixel width = (timelineWidth / viewportWidth) * baseMobileWidth
+  // For mobile, use a fixed wide width to ensure scrolling works
+  const baseMobileWidth = 600; // Base mobile viewBox width
+  const [svgPixelWidth, setSvgPixelWidth] = useState<number | undefined>(undefined);
+  
+  useEffect(() => {
+    if (isMobile && typeof window !== 'undefined') {
+      const calculatedWidth = Math.max(
+        window.innerWidth || 375, 
+        Math.ceil((timelineWidth / viewportWidth) * baseMobileWidth * 1.2)
+      );
+      setSvgPixelWidth(calculatedWidth);
+    } else {
+      setSvgPixelWidth(undefined);
+    }
+  }, [isMobile, timelineWidth, viewportWidth]);
+
   return (
     <div 
       ref={wrapperRef}
-      className="w-full my-8 experience-visual-wrapper" 
+      className={`w-full my-8 ${isMobile ? 'experience-visual-wrapper' : ''}`}
       style={{ 
         width: '100%', 
-        maxWidth: '100%', 
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr)',
-        boxSizing: 'border-box',
-        // Force container to fill parent regardless of SVG size
-        contain: 'layout style',
-        // Center on mobile
-        justifyContent: 'center',
+        maxWidth: '100%',
+        overflowX: isMobile ? 'auto' : 'visible',
+        overflowY: isMobile ? 'hidden' : 'visible',
+        WebkitOverflowScrolling: isMobile ? 'touch' : undefined,
+        display: isMobile ? 'block' : 'flex',
+        justifyContent: isMobile ? 'flex-start' : 'center',
         alignItems: 'center',
-        // Enable touch scrolling on mobile - use pan-x to allow horizontal panning
-        touchAction: isMobile ? 'pan-x pan-y' : 'auto',
-        WebkitTouchCallout: 'none',
-        WebkitUserSelect: 'none',
-        userSelect: 'none',
-        // Ensure wrapper can receive touch events
-        position: 'relative',
-        zIndex: 1,
-        // Prevent any pointer event blocking
-        pointerEvents: 'auto'
+        touchAction: isMobile ? 'pan-x' : 'auto',
+        position: 'relative'
       }}
     >
       <svg
         ref={svgRef}
         viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
         preserveAspectRatio="xMidYMid meet"
-        className="w-full h-auto cursor-pointer"
+        className="cursor-pointer w-full h-auto"
         style={{ 
-          width: '100%', 
-          maxWidth: '100%', 
-          minWidth: 0,
+          width: isMobile ? `${svgPixelWidth}px` : '100%',
+          minWidth: isMobile ? `${svgPixelWidth}px` : undefined,
+          maxWidth: isMobile ? 'none' : '100%',
+          minHeight: isMobile ? undefined : '400px',
           display: 'block', 
-          height: 'auto',
-          gridColumn: '1',
-          // Force SVG to scale to container, not constrain it
-          // Remove any intrinsic width that might constrain parent
-          flexShrink: 1,
-          flexGrow: 1,
-          // Prevent pointer events from interfering
-          pointerEvents: 'auto'
+          height: 'auto'
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -1268,7 +1193,7 @@ export function ExperienceSnapshotVisual() {
 export function HowIWorkVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -1303,7 +1228,7 @@ export function HowIWorkVisual() {
       return;
     }
 
-    const centerX = 200;
+    const centerX = 300;
     const centerY = 150;
     const circleRadius = 80;
     const dotStartRadius = 6;
@@ -1436,9 +1361,9 @@ export function HowIWorkVisual() {
         className="w-full h-auto"
         style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block' }}
       >
-        {/* Large circle with thick stroke */}
+        {/* Large circle with thick stroke - centered horizontally */}
         <circle
-          cx="200"
+          cx="300"
           cy="150"
           r="80"
           fill="none"
@@ -1449,9 +1374,9 @@ export function HowIWorkVisual() {
         {/* Connection line from "Product Discovery" text to dot */}
         <line
           className="discovery-line"
-          x1="320"
+          x1="420"
           y1="70"
-          x2="200"
+          x2="300"
           y2="70"
           stroke={mutedColor}
           strokeWidth={STROKE_WIDTH * 0.5}
@@ -1462,9 +1387,9 @@ export function HowIWorkVisual() {
 
         {/* Connection line from "Product Delivery" text to circle - horizontal */}
         <line
-          x1="320"
+          x1="420"
           y1="150"
-          x2="280"
+          x2="380"
           y2="150"
           stroke={mutedColor}
           strokeWidth={STROKE_WIDTH * 0.5}
@@ -1475,9 +1400,9 @@ export function HowIWorkVisual() {
 
         {/* Text labels - positioned close to visual, matching first section spacing */}
         <text
-          x="320"
+          x="420"
           y="75"
-          fontSize={isMobile ? "18" : "14"}
+          fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           style={{
             fontFamily: 'var(--theme-font-body, sans-serif)',
@@ -1489,9 +1414,9 @@ export function HowIWorkVisual() {
         </text>
 
         <text
-          x="320"
+          x="420"
           y="155"
-          fontSize={isMobile ? "18" : "14"}
+          fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           style={{
             fontFamily: 'var(--theme-font-body, sans-serif)',
@@ -1503,7 +1428,7 @@ export function HowIWorkVisual() {
         </text>
 
         {/* Discovery dot - animated */}
-        <g className="discovery-dot-group" transform="translate(200, 20)">
+        <g className="discovery-dot-group" transform="translate(300, 20)">
           <circle
             className="discovery-dot"
             cx="0"
@@ -1522,7 +1447,7 @@ export function HowIWorkVisual() {
 export function LeadershipScalesVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -1807,7 +1732,7 @@ export function LeadershipScalesVisual() {
             className="number-text"
             x="0"
             y="0"
-            fontSize={isMobile ? "32" : "24"}
+            fontSize={isMobile ? "40" : "24"}
             fill={numberTextColor}
             textAnchor="middle"
             dominantBaseline="middle"
@@ -1840,7 +1765,7 @@ export function LeadershipScalesVisual() {
           className="headcount-label"
           x={headcountLabelX}
           y={headcountLabelY}
-          fontSize={isMobile ? "18" : "14"}
+          fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1870,7 +1795,7 @@ export function LeadershipScalesVisual() {
           className="capability-label"
           x={capabilityLabelX}
           y={capabilityLabelY}
-          fontSize="14"
+          fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1900,7 +1825,7 @@ export function LeadershipScalesVisual() {
           className="influence-label"
           x={influenceLabelX}
           y={influenceLabelY}
-          fontSize={isMobile ? "18" : "14"}
+          fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1921,7 +1846,7 @@ export function LeadershipScalesVisual() {
 export function BeyondTheRoleVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const [isMobile, setIsMobile] = useState(false);
   const [viewportWidth, setViewportWidth] = useState(600);
   const [viewportHeight, setViewportHeight] = useState(200);
@@ -2087,9 +2012,12 @@ export function BeyondTheRoleVisual() {
         const root = document.documentElement;
         const currentAccentColor = getComputedStyle(root).getPropertyValue('--theme-accent').trim() || textColor;
         
-        // Base positions (initial x positions) - responsive to viewport
-        const workBaseX = isMobile ? 100 : 80;
-        const lifeBaseX = isMobile ? viewportWidth - 100 : 320;
+        // Base positions (initial x positions) - positioned relative to pendulum center
+        // Pendulum center is viewportWidth / 2 (responsive)
+        const pendulumCenterX = viewportWidth / 2;
+        const labelOffset = isMobile ? 120 : 100; // Distance from center to labels
+        const workBaseX = pendulumCenterX - labelOffset; // Left of center
+        const lifeBaseX = pendulumCenterX + labelOffset; // Right of center
         const movementAmount = isMobile ? 12 : 8; // Maximum movement in pixels (bigger on mobile)
         
         if (workLabel) {
@@ -2199,12 +2127,12 @@ export function BeyondTheRoleVisual() {
           );
         })}
         
-        {/* Work label - left side */}
+        {/* Work label - left side, positioned relative to pendulum center */}
         <text
           className="work-label"
-          x={isMobile ? 100 : 80}
+          x={isMobile ? viewportWidth / 2 - 120 : 200}
           y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
-          fontSize={isMobile ? "20" : "14"}
+          fontSize={isMobile ? "24" : "14"}
           fill={textColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -2217,12 +2145,12 @@ export function BeyondTheRoleVisual() {
           Work
         </text>
         
-        {/* Life label - right side */}
+        {/* Life label - right side, positioned relative to pendulum center */}
         <text
           className="life-label"
-          x={isMobile ? viewportWidth - 100 : 320}
+          x={isMobile ? viewportWidth / 2 + 120 : 400}
           y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
-          fontSize={isMobile ? "20" : "14"}
+          fontSize={isMobile ? "24" : "14"}
           fill={textColor}
           textAnchor="end"
           dominantBaseline="middle"
