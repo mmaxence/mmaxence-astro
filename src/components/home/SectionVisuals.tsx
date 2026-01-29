@@ -1,34 +1,27 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import timelineDataRaw from '../../data/timeline-visual.json';
-
-// Type definition for timeline data
-interface TimelineMilestone {
-  year: number;
-  label: string;
-  period?: string;
-  sublabel?: string;
-}
-
-interface TimelinePeriod {
-  id: string;
-  label: string;
-  start: number;
-  end: number;
-  milestones: Array<{ year: number; label: string }>;
-}
-
-interface TimelineConfig {
-  startYear: number;
-  endYear: number;
-  periods: TimelinePeriod[];
-  majorMilestones: TimelineMilestone[];
-}
-
-const timelineData = timelineDataRaw as TimelineConfig;
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
 
 // Shared visual constants
 const STROKE_WIDTH = 1.5;
 const ANIMATION_DURATION = 3000; // 3 seconds for slow motion
+
+// Common wrapper styles for visual components
+const visualWrapperStyle: React.CSSProperties = {
+  width: '100%',
+  maxWidth: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+// Common text style to prevent selection
+const textNoSelectStyle: React.CSSProperties = {
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+  MozUserSelect: 'none',
+  msUserSelect: 'none',
+  pointerEvents: 'none',
+};
 
 // Utility: Check for reduced motion preference
 const prefersReducedMotion = (): boolean => {
@@ -323,13 +316,7 @@ export function WhatIDoVisual() {
   const { textColor, accentColor, mutedColor, bgColor } = useThemeColors();
 
   return (
-    <div ref={containerRef} className="w-full my-8" style={{ 
-      width: '100%', 
-      maxWidth: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
+    <div ref={containerRef} className="w-full my-8" style={visualWrapperStyle}>
       <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" className="w-full h-auto" style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block' }}>
         {/* Render layers: bottom first (behind), top last (on top) */}
         {layers.map((layer, index) => {
@@ -358,7 +345,7 @@ export function WhatIDoVisual() {
                 strokeWidth={STROKE_WIDTH}
                 onMouseEnter={() => setHoverLayer(index)}
                 onMouseLeave={() => setHoverLayer(null)}
-                style={{ cursor: 'pointer', transition: 'stroke 0.4s ease' }}
+                style={{ transition: 'stroke 0.4s ease' }}
               />
 
               {/* Connection line */}
@@ -380,6 +367,7 @@ export function WhatIDoVisual() {
                 fontSize={isMobile ? "24" : "14"}
                 fill={isHovered ? accentColor : mutedColor}
                 style={{
+                  ...textNoSelectStyle,
                   fontFamily: 'var(--theme-font-body, sans-serif)',
                   opacity: isVisible ? 0.9 : 0,
                   transition: 'opacity 0.6s ease, fill 0.4s ease',
@@ -395,801 +383,8 @@ export function WhatIDoVisual() {
   );
 }
 
-// 2. EXPERIENCE SNAPSHOT - Timeline with Inflection Nodes
-export function ExperienceSnapshotVisual() {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [mouseX, setMouseX] = useState<number | null>(null);
-  const animationRef = useRef<number | undefined>(undefined);
-  const currentScrollOffset = useRef<number>(0);
-  const targetScrollOffset = useRef<number>(0);
-  
-  // Use refs for hover state to avoid closure issues in animation loop
-  const isHoveredRef = useRef(false);
-  const mouseXRef = useRef<number | null>(null);
 
-  // Track if we just entered hover for smoother animation
-  const justEnteredHoverRef = useRef(false);
-  
-  // Mouse event handlers
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    isHoveredRef.current = true;
-    justEnteredHoverRef.current = true;
-    // Reset flag after a short delay
-    setTimeout(() => {
-      justEnteredHoverRef.current = false;
-    }, 500);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setMouseX(null);
-    isHoveredRef.current = false;
-    mouseXRef.current = null;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!svgRef.current) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    setMouseX(x);
-    mouseXRef.current = x;
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.2 }
-    );
-    if (svgRef.current) observer.observe(svgRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  // Use theme colors hook that reacts to theme changes
-  const { textColor, accentColor, mutedColor, isDark, getAdjustedOpacityValue } = useThemeColors({
-    text: 0.8,
-    accent: 1.0,
-    muted: 0.4,
-  });
-
-  // Determine text color for period labels: use accent, but if accent is dark/black, use white
-  const [periodLabelColor, setPeriodLabelColor] = useState('#ffffff');
-  
-  useEffect(() => {
-    const getPeriodLabelColor = (): string => {
-      if (typeof window === 'undefined') return '#ffffff';
-      const root = document.documentElement;
-      const accent = getComputedStyle(root).getPropertyValue('--theme-accent').trim();
-      
-      // If accent is black or very dark, use white
-      if (accent.startsWith('#')) {
-        const hex = accent.slice(1);
-        const r = parseInt(hex.slice(0, 2), 16);
-        const g = parseInt(hex.slice(2, 4), 16);
-        const b = parseInt(hex.slice(4, 6), 16);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        return brightness < 128 ? '#ffffff' : accentColor;
-      }
-      
-      // For rgba colors, check if dark
-      if (accent.startsWith('rgba')) {
-        const match = accent.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        if (match) {
-          const r = parseInt(match[1]);
-          const g = parseInt(match[2]);
-          const b = parseInt(match[3]);
-          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-          return brightness < 128 ? '#ffffff' : accentColor;
-        }
-      }
-      
-      return accentColor;
-    };
-    
-    setPeriodLabelColor(getPeriodLabelColor());
-  }, [accentColor]);
-
-  // Load timeline data from JSON
-  const timelineConfig = useMemo(() => timelineData, []);
-
-  // Buffer years configuration
-  const bufferYearsBefore = 3;
-  const bufferYearsAfter = 1; // Reduced from 3 to 1 after last active year
-
-  // Content years (actual timeline data, no buffers)
-  const contentStartYear = timelineConfig.startYear;
-  const contentEndYear = timelineConfig.endYear;
-
-  // Extract data from JSON with buffer years for smooth transitions
-  const timelineStartYear = timelineConfig.startYear - bufferYearsBefore; // Add 3 years before
-  const timelineEndYear = timelineConfig.endYear + bufferYearsAfter; // Add 1 year after (reduced from 3)
-  const timelineDuration = timelineConfig.endYear - timelineConfig.startYear; // Duration of actual content
-  const totalTimelineDuration = timelineEndYear - timelineStartYear; // Total including buffers
-
-  // Year display range: show 1 year before and 1 year after active dates
-  const yearDisplayStart = contentStartYear - 1; // 2004 (2005 - 1)
-  const yearDisplayEnd = contentEndYear + 1; // 2027 (2026 + 1)
-
-  // Generate all years for floor line - show 1 year before and 1 year after active dates
-  // Show from contentStartYear - 1 to contentEndYear + 1 (e.g., 2004 to 2027)
-  const allYears = useMemo(() => {
-    const years = [];
-    // Include years from 1 before to 1 after active content
-    for (let year = yearDisplayStart; year <= yearDisplayEnd; year++) {
-      years.push(year);
-    }
-    // Gap area has no years - this creates the visual breakpoint
-    return years;
-  }, [yearDisplayStart, yearDisplayEnd]);
-
-  // Extract periods from JSON
-  const majorPeriods = useMemo(() => {
-    return timelineConfig.periods.map(period => ({
-      start: period.start,
-      end: period.end,
-      period: period.id,
-      label: period.label,
-    }));
-  }, [timelineConfig]);
-
-  // Timeline configuration - Month precision: One year = 12 months
-  // Use a flexible viewBox that scales - viewBox width should not constrain container
-  // On mobile, use a more square ratio for better visibility
-  const [viewportWidth, setViewportWidth] = useState(1400);
-  const [viewportHeight, setViewportHeight] = useState(300);
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    const updateViewport = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      if (mobile) {
-        // Mobile: smaller, tighter viewBox so content fills more space
-        // Reduced from 800x800 to 600x400 for better content density
-        setViewportWidth(600);
-        setViewportHeight(400);
-      } else {
-        // Desktop: wide landscape ratio
-        // Increased height to accommodate milestones that appear below timeline on hover
-        setViewportWidth(1400);
-        setViewportHeight(400);
-      }
-    };
-    
-    updateViewport();
-    window.addEventListener('resize', updateViewport);
-    return () => window.removeEventListener('resize', updateViewport);
-  }, []);
-  
-  // Scale factor for horizontal measurements and visual elements (fonts, strokes, etc.)
-  // On mobile, use a much larger scale multiplier to make content bigger relative to viewBox
-  const baseScale = viewportWidth / 900; // ≈ 1.556 on desktop, ≈ 0.667 on mobile (600/900)
-  const scale = isMobile ? baseScale * 2.2 : baseScale; // 2.2x multiplier on mobile = ~1.47 scale (much bigger!)
-  // Center timeline vertically on mobile (200 in 400px viewBox), keep desktop position
-  const timelineY = isMobile ? 200 : 200; // Vertical position of timeline (floor level) - centered in smaller viewBox
-  const yearWidth = Math.round(55 * scale); // Pixels per year - scaled horizontally
-  const monthWidth = yearWidth / 12; // Pixels per month (12 sections per year)
-  const gapBetweenPeriods = Math.round(8 * scale); // Small gap between consecutive periods - scaled
-  const cycleDuration = 30000; // 30 seconds for full cycle
-  // Scale fonts - use larger scale on mobile for better readability
-  const fontScale = isMobile ? scale * 1.1 : scale; // Slightly larger font scale on mobile
-  const fontSizeYear = Math.round(13 * fontScale);
-  const fontSizePeriod = Math.round(14 * fontScale);
-  const fontSizeMilestone = Math.round(12 * fontScale);
-  
-  // Helper: Convert year (with optional month fraction) to X position
-  // year can be integer (2005) or fractional (2005.916 = Nov 2005)
-  // Base position on yearDisplayStart (2004) instead of timelineStartYear (2002)
-  const yearToX = useMemo(() => {
-    return (year: number): number => {
-      return (year - yearDisplayStart) * yearWidth;
-    };
-  }, [yearDisplayStart, yearWidth]);
-  
-  // Calculate year positions - FOUNDATION: Years are positioned at exact year positions
-  const positionedYears = useMemo(() => {
-    return allYears.map(year => {
-      const x = yearToX(year);
-      return { year, x };
-    });
-  }, [allYears, yearToX]);
-
-  // Calculate month positions - 12 months per year as small indicators
-  const positionedMonths = useMemo(() => {
-    const months: Array<{ year: number; month: number; x: number }> = [];
-    
-    allYears.forEach(year => {
-      // Add 12 month markers for each year
-      for (let month = 0; month < 12; month++) {
-        const fractionalYear = year + (month / 12);
-        const x = yearToX(fractionalYear);
-        months.push({ year, month, x });
-      }
-    });
-    
-    return months;
-  }, [allYears, yearToX]);
-  
-  // Calculate period positions - Using precise month-level dates
-  // Gaps added between consecutive periods for visual separation
-  const positionedPeriods = useMemo(() => {
-    let accumulatedGap = 0;
-    
-    return majorPeriods.map((period, index) => {
-      // Start at precise date position (handles fractional years for months)
-      const startX = yearToX(period.start) + accumulatedGap;
-      // End at precise date position
-      const endX = yearToX(period.end) + accumulatedGap;
-      
-      // Add small gap after this period if next period starts close (within 2 months)
-      if (index < majorPeriods.length - 1) {
-        const nextPeriod = majorPeriods[index + 1];
-        const timeBetween = nextPeriod.start - period.end;
-        // If periods are close (less than 0.2 years = ~2.4 months), add gap
-        if (timeBetween < 0.2) {
-          accumulatedGap += gapBetweenPeriods;
-        }
-      }
-      
-      return {
-        ...period,
-        startX,
-        endX,
-        centerX: (startX + endX) / 2,
-      };
-    });
-  }, [majorPeriods, yearToX, gapBetweenPeriods]);
-  
-  // Calculate total timeline width (last period end)
-  const timelineWidth = useMemo(() => {
-    const lastPeriod = positionedPeriods[positionedPeriods.length - 1];
-    return lastPeriod ? lastPeriod.endX : yearToX(contentEndYear + 1);
-  }, [positionedPeriods, contentEndYear, yearToX]);
-  
-  // Calculate content width (from first period start to last period end) - for hover scroll optimization
-  const contentWidth = useMemo(() => {
-    if (positionedPeriods.length === 0) return timelineWidth;
-    const firstPeriod = positionedPeriods[0];
-    const lastPeriod = positionedPeriods[positionedPeriods.length - 1];
-    return lastPeriod.endX - firstPeriod.startX;
-  }, [positionedPeriods]);
-  
-  // Active timeline range (content only, no buffers) for hover scroll
-  const activeStartX = useMemo(() => yearToX(contentStartYear), [yearToX, contentStartYear]); // 2005 (actual content start)
-  const activeEndX = useMemo(() => yearToX(contentEndYear), [yearToX, contentEndYear]); // 2026 (actual content end)
-  const activeRange = useMemo(() => activeEndX - activeStartX, [activeStartX, activeEndX]);
-  
-  // Full timeline range for rendering (year display range: 2004 to 2027)
-  const hoverStartX = useMemo(() => yearToX(yearDisplayStart), [yearToX, yearDisplayStart]); // 2004 (2005 - 1)
-  const hoverEndX = useMemo(() => yearToX(yearDisplayEnd), [yearToX, yearDisplayEnd]); // 2027 (2026 + 1)
-  const hoverRange = useMemo(() => hoverEndX - hoverStartX, [hoverStartX, hoverEndX]);
-  
-  // Timeline scroll range: from start to end of displayed years
-  const timelineScrollRange = hoverRange; // Full timeline range from yearDisplayStart to yearDisplayEnd
-  
-  // Extract milestones for hover display
-  const periodMilestones = useMemo(() => {
-    return timelineConfig.periods.map(period => ({
-      periodId: period.id,
-      periodLabel: period.label,
-      milestones: period.milestones.map(m => ({
-        year: m.year,
-        label: m.label,
-        x: yearToX(m.year),
-      })),
-    }));
-  }, [timelineConfig, yearToX]);
-
-  // Calculate initial offset: on mobile, start at beginning to show all content, desktop centers first year
-  const initialOffset = useMemo(() => {
-    const firstYearX = yearToX(contentStartYear);
-    if (isMobile) {
-      // On mobile: start at the very beginning (yearDisplayStart = 2004) positioned at left edge
-      // This allows scrolling all the way to the end (2027)
-      const startX = yearToX(yearDisplayStart);
-      return 0 - startX; // Start at left edge (0) minus the start position
-    } else {
-      // Desktop: center first content year
-      return viewportWidth / 2 - firstYearX;
-    }
-  }, [viewportWidth, contentStartYear, yearToX, isMobile, yearDisplayStart]);
-
-  
-  // iOS-like bounce easing function
-  const bounceEase = (t: number): number => {
-    if (t < 0) {
-      // Bounce at start - exponential decay
-      const overshoot = -t;
-      return -Math.pow(overshoot, 1.5) * 0.15;
-    } else if (t > 1) {
-      // Bounce at end - exponential decay
-      const overshoot = t - 1;
-      return 1 + Math.pow(overshoot, 1.5) * 0.15;
-    }
-    return t;
-  };
-
-  useEffect(() => {
-    if (!isVisible || prefersReducedMotion()) return;
-
-    let startTime = performance.now();
-    let pausedTime = 0;
-    const trailHistory: Array<{ x: number; y: number; time: number }> = [];
-    const maxTrailLength = 20;
-    const trailDuration = 1000;
-
-    const animate = (currentTime: number) => {
-      if (!svgRef.current) return;
-
-      // Handle hover state - use refs to get latest values
-      if (isHoveredRef.current && mouseXRef.current !== null) {
-        const currentMouseX = mouseXRef.current;
-        // Calculate target scroll based on mouse position
-        // Constrain hover scroll to active timeline only (contentStartYear to contentEndYear)
-        // REVERSED: Mouse at left edge (0) = scroll back (show earlier), mouse at right edge (viewportWidth) = scroll forward (show later)
-        const mouseRatio = Math.max(0, Math.min(1, currentMouseX / viewportWidth)); // Clamp 0 to 1
-        
-        // Hover scroll: constrained to active timeline range only (2005 to 2026)
-        // Map mouse position: left = start of active timeline, right = end of active timeline (REVERSED)
-        const normalizedRatio = mouseRatio; // No inversion - left = back, right = forward
-        const targetScroll = activeStartX + (normalizedRatio * activeRange);
-        
-        // Apply bounce at boundaries (when mouse is at edges) - REVERSED
-        let boundedScroll = targetScroll;
-        if (mouseRatio < 0.05) {
-          // Near left edge - bounce back (but stay within active range) - REVERSED
-          const overshoot = (0.05 - mouseRatio) / 0.05;
-          boundedScroll = activeStartX - overshoot * overshoot * 5; // Reduced overshoot
-        } else if (mouseRatio > 0.95) {
-          // Near right edge - bounce forward (but stay within active range) - REVERSED
-          const overshoot = (mouseRatio - 0.95) / 0.05;
-          boundedScroll = activeEndX + overshoot * overshoot * 5; // Reduced overshoot
-        }
-        
-        targetScrollOffset.current = viewportWidth / 2 - boundedScroll;
-        
-        // Smooth interpolation to target (iOS-like spring) - slower on mouse enter for smoother feel
-        // Use slower smoothing when first entering hover state for smoother transition
-        const smoothing = justEnteredHoverRef.current ? 0.03 : 0.05; // Even slower on initial hover entry
-        const diff = targetScrollOffset.current - currentScrollOffset.current;
-        currentScrollOffset.current += diff * smoothing;
-      } else {
-        // Auto-scroll when not hovered and not dragging - forward then rewind
-        const elapsed = currentTime - startTime - pausedTime;
-        const cycleProgress = elapsed % cycleDuration;
-        const progress = cycleProgress / cycleDuration;
-        
-        // Create forward-then-rewind pattern: 0-0.8 forward, 0.8-1.0 rewind
-        let scrollProgress;
-        if (progress < 0.8) {
-          // Forward scroll: 0 to 0.8 maps to 0 to 1
-          scrollProgress = progress / 0.8;
-        } else {
-          // Rewind: 0.8 to 1.0 maps to 1 to 0 (smooth reverse)
-          const rewindProgress = (progress - 0.8) / 0.2;
-          // Use ease-out for smooth rewind
-          const easeOut = 1 - Math.pow(1 - rewindProgress, 3);
-          scrollProgress = 1 - easeOut;
-        }
-        
-        // Calculate scroll: start at initial position, scroll through timeline range
-        // On mobile, ensure we scroll through the full range to show all content including 2026
-        if (isMobile) {
-          // Mobile: scroll from start (yearDisplayStart) to end (yearDisplayEnd), ensuring 2026 is visible
-          // Calculate the scroll range needed to show from start to end
-          const startX = yearToX(yearDisplayStart);
-          const endX = yearToX(yearDisplayEnd);
-          const totalContentWidth = endX - startX;
-          // Scroll distance: from initial position (showing start at left) to position showing end at right
-          // We need to scroll enough so that the end (2027, which includes 2026) is visible at the right edge
-          // Maximum scroll distance = total content width - viewport width (so end aligns with right edge)
-          const maxScrollDistance = Math.max(0, totalContentWidth - viewportWidth);
-          const scrollDistance = scrollProgress * maxScrollDistance;
-          // Start at initialOffset (which positions startX at 0), then scroll right (negative offset)
-          const scrollX = initialOffset - scrollDistance;
-          currentScrollOffset.current = scrollX;
-        } else {
-          // Desktop: use normal scroll range
-          const scrollDistance = scrollProgress * timelineScrollRange;
-          const scrollX = initialOffset - scrollDistance;
-          currentScrollOffset.current = scrollX;
-        }
-      }
-      // If dragging, currentScrollOffset is already set by touch handlers
-
-      // Dot animation
-      const centerX = viewportWidth / 2;
-      const elapsed = currentTime - startTime - pausedTime;
-      const xDrift = Math.sin(elapsed * 0.0008) * 15 * scale + Math.cos(elapsed * 0.0012) * 8 * scale; // Scale horizontal drift
-      const dotX = centerX + xDrift;
-      const yOscillation = Math.sin(elapsed * 0.002) * 12 + Math.sin(elapsed * 0.0035) * 6; // Keep original vertical oscillation
-      const dotY = timelineY - (isMobile ? 60 : 60) + yOscillation; // Dot position above timeline
-
-      // Update trail
-      trailHistory.push({ x: dotX, y: dotY, time: currentTime });
-      while (trailHistory.length > 0 && currentTime - trailHistory[0].time > trailDuration) {
-        trailHistory.shift();
-      }
-      while (trailHistory.length > maxTrailLength) {
-        trailHistory.shift();
-      }
-
-      // Update dot position
-      const dotGroup = svgRef.current.querySelector('.flying-dot-group') as SVGGElement;
-      if (dotGroup) {
-        // Ensure valid numeric values to prevent rendering issues
-        const safeX = isNaN(dotX) ? viewportWidth / 2 : dotX;
-        const safeY = isNaN(dotY) ? timelineY - 60 : dotY;
-        dotGroup.setAttribute('transform', `translate(${safeX}, ${safeY})`);
-      }
-
-      // Update trail rendering
-      const trailGroup = svgRef.current.querySelector('.bird-trail') as SVGGElement;
-      if (trailGroup) {
-        trailGroup.innerHTML = '';
-        trailHistory.forEach((point) => {
-          const age = currentTime - point.time;
-          const opacity = Math.max(0, 1 - (age / trailDuration));
-          const radius = (8 + (age / trailDuration) * 4) * scale; // Scale trail radius for visibility
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circle.setAttribute('cx', String(point.x));
-          circle.setAttribute('cy', String(point.y));
-          circle.setAttribute('r', String(radius));
-          circle.setAttribute('fill', accentColor);
-          circle.setAttribute('opacity', String(opacity * 0.3));
-          trailGroup.appendChild(circle);
-        });
-      }
-
-      // Update timeline group transform (single timeline, no duplicates)
-      const timelineGroup = svgRef.current.querySelector('.timeline-group') as SVGGElement;
-      if (timelineGroup) {
-        // Timeline starts at hoverStartX (which is 0 in timeline coordinates)
-        let scrollX = currentScrollOffset.current + hoverStartX;
-        if (isMobile) {
-          // On mobile, clamp scroll to ensure all content is visible including 2026
-          // Calculate bounds: start position and end position (ensuring 2026/2027 is visible)
-          const startX = yearToX(yearDisplayStart);
-          const endX = yearToX(yearDisplayEnd);
-          // Minimum scroll: show start at left edge (startX should be at position 0)
-          const minScroll = 0 - startX;
-          // Maximum scroll: show end at right edge (endX should be at position viewportWidth)
-          const maxScroll = viewportWidth - endX;
-          scrollX = Math.max(minScroll, Math.min(maxScroll, scrollX));
-        }
-        timelineGroup.setAttribute('transform', `translate(${scrollX}, 0)`);
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [isVisible, timelineY, cycleDuration, viewportWidth, viewportHeight, isMobile, timelineScrollRange, contentStartYear, accentColor, initialOffset, hoverStartX, hoverEndX, hoverRange, activeStartX, activeEndX, activeRange, yearDisplayStart, yearDisplayEnd, scale]);
-
-  // Calculate SVG pixel width for mobile - make it wider than container to enable scrolling
-  // timelineWidth is in viewBox units, so we need to scale it to pixels
-  // Use a ratio: if viewBox width is viewportWidth and timelineWidth is the content width,
-  // then pixel width = (timelineWidth / viewportWidth) * baseMobileWidth
-  // For mobile, use a fixed wide width to ensure scrolling works
-  const baseMobileWidth = 600; // Base mobile viewBox width
-  const [svgPixelWidth, setSvgPixelWidth] = useState<number | undefined>(undefined);
-  
-  useEffect(() => {
-    if (isMobile && typeof window !== 'undefined') {
-      const calculatedWidth = Math.max(
-        window.innerWidth || 375, 
-        Math.ceil((timelineWidth / viewportWidth) * baseMobileWidth * 1.2)
-      );
-      setSvgPixelWidth(calculatedWidth);
-    } else {
-      setSvgPixelWidth(undefined);
-    }
-  }, [isMobile, timelineWidth, viewportWidth]);
-
-  return (
-    <div 
-      ref={wrapperRef}
-      className={`w-full my-8 ${isMobile ? 'experience-visual-wrapper' : ''}`}
-      style={{ 
-        width: '100%', 
-        maxWidth: '100%',
-        overflowX: isMobile ? 'auto' : 'visible',
-        overflowY: isMobile ? 'hidden' : 'visible',
-        WebkitOverflowScrolling: isMobile ? 'touch' : undefined,
-        display: isMobile ? 'block' : 'flex',
-        justifyContent: isMobile ? 'flex-start' : 'center',
-        alignItems: 'center',
-        touchAction: isMobile ? 'pan-x' : 'auto',
-        position: 'relative'
-      }}
-    >
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
-        preserveAspectRatio="xMidYMid meet"
-        className="cursor-pointer w-full h-auto"
-        style={{ 
-          width: isMobile ? `${svgPixelWidth}px` : '100%',
-          minWidth: isMobile ? `${svgPixelWidth}px` : undefined,
-          maxWidth: isMobile ? 'none' : '100%',
-          minHeight: isMobile ? undefined : '400px',
-          display: 'block', 
-          height: 'auto'
-        }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onMouseMove={handleMouseMove}
-      >
-        <defs>
-          {/* Gradient for timeline fade on left edge */}
-          <linearGradient id="timelineFadeLeft" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={textColor} stopOpacity="0" />
-            <stop offset="30%" stopColor={textColor} stopOpacity={String(getAdjustedOpacityValue(0.4))} />
-            <stop offset="100%" stopColor={textColor} stopOpacity={String(getAdjustedOpacityValue(0.4))} />
-          </linearGradient>
-          {/* Gradient for timeline fade on right edge */}
-          <linearGradient id="timelineFadeRight" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={textColor} stopOpacity={String(getAdjustedOpacityValue(0.4))} />
-            <stop offset="70%" stopColor={textColor} stopOpacity={String(getAdjustedOpacityValue(0.4))} />
-            <stop offset="100%" stopColor={textColor} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* Timeline line covering entire section with smooth fades */}
-        <line
-          className="timeline-line"
-          x1="0"
-          y1={timelineY}
-          x2={viewportWidth}
-          y2={timelineY}
-          stroke={textColor}
-          strokeWidth={STROKE_WIDTH * scale}
-          opacity={isVisible ? getAdjustedOpacityValue(0.4) : 0}
-          style={{ transition: 'opacity 0.6s ease' }}
-        />
-
-        {/* Gradient fade overlay at left edge */}
-        <line
-          x1="0"
-          y1={timelineY}
-          x2={Math.round(200 * scale)}
-          y2={timelineY}
-          stroke="url(#timelineFadeLeft)"
-          strokeWidth={STROKE_WIDTH * 3 * scale}
-          opacity={isVisible ? 1 : 0}
-          style={{ transition: 'opacity 0.6s ease' }}
-        />
-
-        {/* Gradient fade overlay at right edge */}
-        <line
-          x1={viewportWidth - Math.round(200 * scale)}
-          y1={timelineY}
-          x2={viewportWidth}
-          y2={timelineY}
-          stroke="url(#timelineFadeRight)"
-          strokeWidth={STROKE_WIDTH * 3 * scale}
-          opacity={isVisible ? 1 : 0}
-          style={{ transition: 'opacity 0.6s ease' }}
-        />
-
-        {/* Timeline group - original (all timeline elements animated together) */}
-        <g className="timeline-group">
-          {/* Month indicators - visible marks for each month */}
-          {positionedMonths.map((monthData, index) => {
-            // Make January (month 0) taller, others medium height
-            const isYearStart = monthData.month === 0;
-            const markerHeight = isYearStart ? 6 : 4; // Keep original vertical size
-            const markerY1 = timelineY - markerHeight;
-            const markerY2 = timelineY + markerHeight;
-            const opacity = isYearStart ? 0.4 : 0.3;
-            const strokeWidth = (isYearStart ? STROKE_WIDTH * 0.5 : STROKE_WIDTH * 0.4) * scale; // Scale stroke width
-            
-            return (
-              <line
-                key={`month-${monthData.year}-${monthData.month}`}
-                x1={monthData.x}
-                y1={markerY1}
-                x2={monthData.x}
-                y2={markerY2}
-                stroke={mutedColor}
-                strokeWidth={strokeWidth}
-                opacity={opacity}
-              />
-            );
-          })}
-
-          {/* All years on floor line */}
-          {positionedYears.map((yearData, index) => (
-          <g
-            key={`year-${yearData.year}`}
-            className={`year-${index}`}
-            opacity={isVisible ? 1 : 0}
-            style={{ transition: 'opacity 0.6s ease' }}
-          >
-            {/* Year marker on floor (taller than month markers) */}
-            <line
-              x1={yearData.x}
-              y1={timelineY - 8}
-              x2={yearData.x}
-              y2={timelineY + 8}
-              stroke={mutedColor}
-              strokeWidth={STROKE_WIDTH * 0.8 * scale}
-              opacity={String(getAdjustedOpacityValue(0.5))}
-            />
-            {/* Year label on floor */}
-            <text
-              x={yearData.x}
-              y={timelineY - (isMobile ? 18 : 12)}
-              fontSize={fontSizeYear}
-              fill={mutedColor}
-              textAnchor="middle"
-              opacity={String(getAdjustedOpacityValue(0.5))}
-              style={{
-                fontFamily: 'var(--theme-font-body, sans-serif)',
-              }}
-            >
-              {yearData.year}
-            </text>
-          </g>
-        ))}
-
-        {/* Major period lines (below floor) - thicker with labels */}
-        {positionedPeriods.map((period) => {
-          // Adjust vertical spacing for mobile - use scaled spacing
-          const periodLineY = timelineY + (isMobile ? 40 : 30); // More space on mobile for readability
-          const isCurrentPeriod = period.period === 'buzzvil' && period.end >= contentEndYear; // Check if this is the current/ongoing period
-          const dashedExtensionLength = Math.round(25 * scale); // Shorter, more subtle extension for current period
-          
-          return (
-          <g key={`period-${period.period}`}>
-            {/* Solid period line */}
-            <line
-              x1={period.startX}
-              y1={periodLineY}
-              x2={period.endX}
-              y2={periodLineY}
-              stroke={accentColor}
-              strokeWidth={STROKE_WIDTH * 12 * scale}
-              opacity={isVisible ? 1 : 0}
-              style={{ transition: 'opacity 0.6s ease' }}
-            />
-            {/* Dashed extension for current period (ongoing work) */}
-            {isCurrentPeriod && (
-              <line
-                x1={period.endX}
-                y1={periodLineY}
-                x2={period.endX + dashedExtensionLength}
-                y2={periodLineY}
-                stroke={accentColor}
-                strokeWidth={STROKE_WIDTH * 12 * scale}
-                strokeDasharray={`${Math.round(6 * scale)} ${Math.round(3 * scale)}`}
-                opacity={isVisible ? getAdjustedOpacityValue(0.3) : 0}
-                style={{ transition: 'opacity 0.6s ease' }}
-              />
-            )}
-            {/* Period label inside the line - vertically centered */}
-            <text
-              x={period.centerX}
-              y={periodLineY}
-              fontSize={fontSizePeriod}
-              fill={periodLabelColor}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              opacity={isVisible ? 1 : 0}
-              style={{
-                fontFamily: 'var(--theme-font-body, sans-serif)',
-                fontWeight: '500',
-              }}
-            >
-              {period.label}
-            </text>
-            
-            {/* Milestones shown on hover */}
-            {(() => {
-              const periodData = periodMilestones.find(p => p.periodId === period.period);
-              if (!periodData || periodData.milestones.length === 0) return null;
-              
-              return (
-                <g className="period-milestones">
-                  {periodData.milestones.map((milestone, idx) => {
-                    const milestoneX = milestone.x;
-                    // Position system: odd-numbered milestones (1st, 3rd, 5th = idx 0, 2, 4) are higher
-                    // Even-numbered milestones (2nd, 4th, 6th = idx 1, 3, 5) are lower
-                    const isOddNumbered = idx % 2 === 0; // 0-indexed: 0=1st (odd), 1=2nd (even), 2=3rd (odd)...
-                    
-                    // Timeline line position - period line is at timelineY + spacing with stroke width STROKE_WIDTH * 12
-                    const timelineLineY = timelineY + (isMobile ? 40 : 30); // Match period line Y
-                    const periodLineStrokeWidth = STROKE_WIDTH * 12 * scale; // Thick period line - scale stroke width
-                    const periodLineBottom = timelineLineY + (periodLineStrokeWidth / 2); // Bottom edge of period line
-                    // Markers start just below the period line with a gap - scaled for mobile
-                    const markerStartY = periodLineBottom + (isMobile ? 6 : 4); // More space on mobile
-                    
-                    // Both extend downward, but odd-numbered are positioned higher (shorter line) - scaled for mobile
-                    const lineLength = isOddNumbered ? (isMobile ? 18 : 12) : (isMobile ? 60 : 50); // Longer lines on mobile
-                    
-                    // Label Y position relative to marker start (since we translate to markerStartY) - scaled for mobile
-                    const labelYRelative = lineLength + (isMobile ? 16 : 12); // More space on mobile
-                    
-                    // Animation: fade in/out and grow from just below timeline line downward
-                    const opacity = isHovered ? 1 : 0;
-                    const scaleY = isHovered ? 1 : 0; // Start collapsed, expand on hover
-                    
-                    return (
-                      <g 
-                        key={`milestone-${period.period}-${idx}`}
-                        opacity={opacity}
-                        transform={`translate(${milestoneX}, ${markerStartY}) scale(1, ${scaleY})`}
-                        style={{
-                          transition: 'opacity 0.4s ease, transform 0.4s ease',
-                          transitionDelay: `${idx * 0.06}s`, // Stagger animation
-                          transformOrigin: 'center top', // Always grow downward from marker start
-                        }}
-                      >
-                        {/* Milestone marker - animates from just below period line downward */}
-                        <line
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2={lineLength}
-                          stroke={accentColor}
-                          strokeWidth={STROKE_WIDTH * 0.6 * scale}
-                          opacity="0.15"
-                        />
-                        {/* Milestone label - placed to the right of the indicator line */}
-                        <text
-                          x={Math.round(8 * scale)}
-                          y={labelYRelative}
-                          fontSize={fontSizeMilestone}
-                          fill={textColor}
-                          textAnchor="start"
-                          dominantBaseline="middle"
-                          opacity="0.8"
-                          style={{
-                            fontFamily: 'var(--theme-font-body, sans-serif)',
-                            transition: 'opacity 0.3s ease',
-                            transitionDelay: `${idx * 0.06 + 0.1}s`, // Slightly delayed after line
-                          }}
-                        >
-                          {milestone.label}
-                        </text>
-                      </g>
-                    );
-                  })}
-                </g>
-              );
-            })()}
-          </g>
-          );
-        })}
-        </g>
-        
-        {/* Bird trail/halo (fading circles behind bird) */}
-        <g className="bird-trail" opacity={isVisible ? 1 : 0} style={{ transition: 'opacity 0.6s ease' }} />
-
-        {/* Flying dot (above floor, in sky) - camera follows it */}
-        <g className="flying-dot-group" opacity={isVisible ? 1 : 0} style={{ transition: 'opacity 0.6s ease' }}>
-          <circle
-            className="flying-dot"
-            cx="0"
-            cy="0"
-            r={8 * scale}
-            fill={accentColor || '#000000'}
-            stroke="none"
-            style={{ pointerEvents: 'none' }}
-          />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-// 3. HOW I WORK - Product Discovery Circle
+// 2. HOW I WORK - Product Discovery Circle
 export function HowIWorkVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -1347,13 +542,7 @@ export function HowIWorkVisual() {
   }, [isVisible]);
 
   return (
-    <div className="w-full my-8" style={{ 
-      width: '100%', 
-      maxWidth: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
+    <div className="w-full my-8" style={visualWrapperStyle}>
       <svg
         ref={svgRef}
         viewBox="0 0 600 300"
@@ -1405,6 +594,7 @@ export function HowIWorkVisual() {
           fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             opacity: isVisible ? 0.9 : 0,
             transition: 'opacity 0.6s ease',
@@ -1419,6 +609,7 @@ export function HowIWorkVisual() {
           fontSize={isMobile ? "24" : "14"}
           fill={mutedColor}
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             opacity: isVisible ? 0.9 : 0,
             transition: 'opacity 0.6s ease',
@@ -1443,7 +634,7 @@ export function HowIWorkVisual() {
   );
 }
 
-// 4. LEADERSHIP THAT SCALES - Exponential Growth Circles
+// 3. LEADERSHIP THAT SCALES - Exponential Growth Circles
 export function LeadershipScalesVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -1476,7 +667,7 @@ export function LeadershipScalesVisual() {
   const numberTextColor = '#FFFFFF'; // White for contrast
 
   // Circle center position - centered in viewBox, allowing overflow
-  const centerX = 250;
+  const centerX = 300;
   const centerY = 90; // Match other visuals' center height
 
   // Label positions - positioned at different angles around circles for clearer connections
@@ -1497,12 +688,13 @@ export function LeadershipScalesVisual() {
       : 1 - Math.pow(-2 * clamped + 2, 3) / 2;
   };
 
-  // State sizes - increased scale differences for more dramatic growth
+  // State sizes - inner circle scales minimally, outer circles scale dramatically
+  // This emphasizes that small team growth creates exponential capability/influence
   const states = {
-    4: { inner: 20, middle: 40, outer: 65 },
-    5: { inner: 28, middle: 65, outer: 110 },
-    6: { inner: 38, middle: 95, outer: 165 },
-    7: { inner: 50, middle: 135, outer: 240 }
+    4: { inner: 18, middle: 40, outer: 65 },
+    5: { inner: 20, middle: 65, outer: 110 },
+    6: { inner: 22, middle: 95, outer: 165 },
+    7: { inner: 24, middle: 135, outer: 240 }
   };
 
   useEffect(() => {
@@ -1682,17 +874,10 @@ export function LeadershipScalesVisual() {
   const influenceLabelY = centerY + (states[4].outer + labelOffset) * Math.sin(influenceAngle);
 
   return (
-    <div className="w-full my-8" style={{ 
-      width: '100%', 
-      maxWidth: '100%', 
-      overflow: 'visible',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
+    <div className="w-full my-8 mt-12" style={{ ...visualWrapperStyle, overflow: 'visible' }}>
       <svg
         ref={svgRef}
-        viewBox="0 0 500 180"
+        viewBox="0 0 600 200"
         className="w-full h-auto"
         style={{ minHeight: '180px', width: '100%', maxWidth: '100%', overflow: 'visible' }}
       >
@@ -1732,14 +917,16 @@ export function LeadershipScalesVisual() {
             className="number-text"
             x="0"
             y="0"
-            fontSize={isMobile ? "40" : "24"}
+            fontSize="14"
             fill={numberTextColor}
             textAnchor="middle"
             dominantBaseline="middle"
             fontWeight="600"
             opacity={isVisible ? 1 : 0}
             style={{
+              ...textNoSelectStyle,
               fontFamily: 'var(--theme-font-body, sans-serif)',
+              fontSize: '14px',
               transition: 'opacity 0.6s ease',
             }}
           >
@@ -1771,6 +958,7 @@ export function LeadershipScalesVisual() {
           dominantBaseline="middle"
           opacity={isVisible ? 0.9 : 0}
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             transition: 'opacity 0.6s ease',
           }}
@@ -1801,6 +989,7 @@ export function LeadershipScalesVisual() {
           dominantBaseline="middle"
           opacity={isVisible ? 0.9 : 0}
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             transition: 'opacity 0.6s ease',
           }}
@@ -1831,6 +1020,7 @@ export function LeadershipScalesVisual() {
           dominantBaseline="middle"
           opacity={isVisible ? 0.9 : 0}
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             transition: 'opacity 0.6s ease',
           }}
@@ -1842,7 +1032,7 @@ export function LeadershipScalesVisual() {
   );
 }
 
-// 5. BEYOND THE ROLE - Newton's Cradle
+// 4. BEYOND THE ROLE - Newton's Cradle
 export function BeyondTheRoleVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -1853,8 +1043,6 @@ export function BeyondTheRoleVisual() {
   
   // 4 balls for Newton's Cradle
   const numBalls = 4;
-  const anglesRef = useRef<number[]>(new Array(numBalls).fill(0));
-  const velocitiesRef = useRef<number[]>(new Array(numBalls).fill(0));
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -2058,13 +1246,7 @@ export function BeyondTheRoleVisual() {
   }, [isVisible, numBalls, isMobile, viewportWidth, viewportHeight]);
 
   return (
-    <div className="w-full my-8" style={{ 
-      width: '100%', 
-      maxWidth: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
+    <div className="w-full my-8" style={visualWrapperStyle}>
       <svg
         ref={svgRef}
         viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
@@ -2138,6 +1320,7 @@ export function BeyondTheRoleVisual() {
           dominantBaseline="middle"
           opacity="0.4"
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             transition: 'opacity 0.3s ease, font-weight 0.3s ease',
           }}
@@ -2156,12 +1339,618 @@ export function BeyondTheRoleVisual() {
           dominantBaseline="middle"
           opacity="0.4"
           style={{
+            ...textNoSelectStyle,
             fontFamily: 'var(--theme-font-body, sans-serif)',
             transition: 'opacity 0.3s ease, font-weight 0.3s ease',
           }}
         >
           Life
         </text>
+      </svg>
+    </div>
+  );
+}
+
+// EXPERIENCE SNAPSHOT - Network Graph of Connected Spheres
+export function ExperienceSnapshotVisual() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
+  const [draggedNode, setDraggedNode] = useState<number | null>(null);
+  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
+  const dragStartPosRef = useRef<{ x: number; y: number } | null>(null);
+  const dragPrevPosRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const dragVelocityRef = useRef<{ vx: number; vy: number } | null>(null);
+  
+  // Experience keywords
+  const keywords = [
+    'Product Strategy',
+    'Platform Building',
+    'Team Scaling',
+    'Design Systems',
+    'Product Discovery',
+    'Monetization',
+    'Execution',
+    'Leadership',
+    'Mentorship',
+    'IPO Readiness'
+  ];
+
+  // Define network connections (edges) - create a connected graph
+  // Each node connects to 2-3 other nodes for a web-like structure
+  const connections: Array<[number, number]> = [
+    [0, 3], [0, 2], [0, 4], // Product Strategy connects to Design Systems, Team Scaling, Product Discovery
+    [3, 1], [3, 4], // Design Systems connects to Platform Building, Product Discovery
+    [2, 6], [2, 7], // Team Scaling connects to Execution, Leadership
+    [1, 4], [1, 5], // Platform Building connects to Product Discovery, Monetization
+    [4, 5], [4, 8], // Product Discovery connects to Monetization, Mentorship
+    [5, 6], [5, 9], // Monetization connects to Execution, IPO Readiness
+    [6, 7], [6, 9], // Execution connects to Leadership, IPO Readiness
+    [7, 8], // Leadership connects to Mentorship
+    [8, 9], // Mentorship connects to IPO Readiness
+  ];
+
+  // Node state: each node has position, size, and velocity
+  const [nodes, setNodes] = useState<Array<{
+    id: number;
+    keyword: string;
+    x: number;
+    y: number;
+    size: number;
+    opacity: number; // base opacity (0.8-1.0)
+    vx?: number; // velocity x (optional for d3-force)
+    vy?: number; // velocity y (optional for d3-force)
+  }>>([]);
+  
+  // d3-force simulation
+  const simulationRef = useRef<any>(null);
+  const d3NodesRef = useRef<any[]>([]);
+
+  useEffect(() => {
+    const updateMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    updateMobile();
+    window.addEventListener('resize', updateMobile);
+    return () => window.removeEventListener('resize', updateMobile);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.2 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Handle mouse interactions: hover, drag, and magnetic attraction
+  useEffect(() => {
+    if (!svgRef.current || !isVisible) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!svgRef.current) return;
+      const rect = svgRef.current.getBoundingClientRect();
+      const svg = svgRef.current;
+      const viewBox = svg.viewBox.baseVal;
+      
+      // Convert mouse position to SVG coordinates
+      const x = ((e.clientX - rect.left) / rect.width) * viewBox.width;
+      const y = ((e.clientY - rect.top) / rect.height) * viewBox.height;
+      
+      setMousePos({ x, y });
+
+      // Handle dragging
+      if (draggedNode !== null && dragStartPosRef.current) {
+        const dx = x - dragStartPosRef.current.x;
+        const dy = y - dragStartPosRef.current.y;
+        const now = performance.now();
+        
+        setNodes((prev) => {
+          return prev.map((node) => {
+            if (node.id === draggedNode) {
+              const radius = node.size / 2;
+              const padding = 60;
+              const viewBoxWidth = 600;
+              const viewBoxHeight = 400;
+              
+              // Update position, keeping within bounds
+              const newX = Math.max(padding + radius, Math.min(viewBoxWidth - padding - radius, node.x + dx));
+              const newY = Math.max(padding + radius, Math.min(viewBoxHeight - padding - radius, node.y + dy));
+              
+              // Update d3 node position for smooth transition
+              const d3Node = d3NodesRef.current.find((n: any) => n.id === node.id);
+              if (d3Node) {
+                d3Node.fx = newX; // Keep fixed during drag
+                d3Node.fy = newY;
+                d3Node.vx = 0;
+                d3Node.vy = 0;
+              }
+              
+              // Track drag velocity for inertia (sampled from last update)
+              const prevSample = dragPrevPosRef.current;
+              if (prevSample) {
+                const dt = Math.max(1, now - prevSample.time);
+                dragVelocityRef.current = {
+                  vx: (newX - prevSample.x) / dt, // px / ms
+                  vy: (newY - prevSample.y) / dt,
+                };
+              }
+              dragPrevPosRef.current = { x: newX, y: newY, time: now };
+              dragStartPosRef.current = { x, y };
+              
+              return {
+                ...node,
+                x: newX,
+                y: newY,
+              };
+            }
+            return node;
+          });
+        });
+      } else {
+        // Check for hover (find closest node)
+        let closestNode: number | null = null;
+        let minDistance = Infinity;
+        
+        nodes.forEach((node) => {
+          const dx = x - node.x;
+          const dy = y - node.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const radius = node.size / 2;
+          
+          if (distance < radius + 10 && distance < minDistance) {
+            minDistance = distance;
+            closestNode = node.id;
+          }
+        });
+        
+        setHoveredNode(closestNode);
+      }
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (!svgRef.current) return;
+      const rect = svgRef.current.getBoundingClientRect();
+      const svg = svgRef.current;
+      const viewBox = svg.viewBox.baseVal;
+      
+      const x = ((e.clientX - rect.left) / rect.width) * viewBox.width;
+      const y = ((e.clientY - rect.top) / rect.height) * viewBox.height;
+      
+      // Find clicked node
+      let clickedNode: number | null = null;
+      let minDistance = Infinity;
+      
+      nodes.forEach((node) => {
+        const dx = x - node.x;
+        const dy = y - node.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const radius = node.size / 2;
+        
+        if (distance < radius && distance < minDistance) {
+          minDistance = distance;
+          clickedNode = node.id;
+        }
+      });
+      
+      if (clickedNode !== null) {
+        setDraggedNode(clickedNode);
+        dragStartPosRef.current = { x, y };
+        dragVelocityRef.current = null;
+        const clicked = nodes.find((n) => n.id === clickedNode);
+        dragPrevPosRef.current = { x: clicked?.x ?? x, y: clicked?.y ?? y, time: performance.now() };
+        
+        // Stop the node's velocity in d3 simulation and fix position
+        const d3Node = d3NodesRef.current.find((n: any) => n.id === clickedNode);
+        if (d3Node) {
+          d3Node.fx = d3Node.x; // Fix position
+          d3Node.fy = d3Node.y;
+          d3Node.vx = 0;
+          d3Node.vy = 0;
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (draggedNode !== null) {
+        // Calculate drag velocity for inertia
+        const d3Node = d3NodesRef.current.find((n: any) => n.id === draggedNode);
+        if (d3Node) {
+          const v = dragVelocityRef.current;
+          if (v) {
+            // Convert px/ms to ~px/tick (16ms ≈ 1 frame at 60fps)
+            const inertia = 0.9;
+            d3Node.vx = v.vx * 16 * inertia;
+            d3Node.vy = v.vy * 16 * inertia;
+          }
+
+          // Release the fixed position
+          d3Node.fx = null;
+          d3Node.fy = null;
+        }
+        
+        setDraggedNode(null);
+        dragStartPosRef.current = null;
+        dragPrevPosRef.current = null;
+        dragVelocityRef.current = null;
+        
+        // Nudge simulation so inertia is immediately visible
+        if (simulationRef.current) {
+          simulationRef.current.alpha(0.2).restart();
+        }
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setMousePos(null);
+      setHoveredNode(null);
+      if (draggedNode !== null) {
+        handleMouseUp();
+      }
+    };
+
+    const svg = svgRef.current;
+    svg.addEventListener('mousemove', handleMouseMove);
+    svg.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mouseup', handleMouseUp);
+    svg.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      svg.removeEventListener('mousemove', handleMouseMove);
+      svg.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('mouseup', handleMouseUp);
+      svg.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [isVisible, nodes, draggedNode]);
+
+  // Initialize nodes with random positions
+  useEffect(() => {
+    if (!isVisible || nodes.length > 0) return;
+
+    const viewBoxWidth = 600;
+    const viewBoxHeight = 400; // Increased height for better spacing
+    const minSize = isMobile ? 50 : 60;
+    const maxSize = isMobile ? 90 : 110;
+    const padding = 80;
+
+    const initialNodes = keywords.map((keyword, index) => {
+      // Random size
+      const size = minSize + Math.random() * (maxSize - minSize);
+      
+      // Random opacity between 0.8 and 1.0
+      const opacity = 0.8 + Math.random() * 0.2;
+
+      // Distribute nodes in a wider circular/network pattern
+      const angle = (index / keywords.length) * Math.PI * 2;
+      const radius = Math.min(viewBoxWidth, viewBoxHeight) * 0.35; // Larger radius
+      const x = viewBoxWidth / 2 + Math.cos(angle) * radius + (Math.random() - 0.5) * 60;
+      const y = viewBoxHeight / 2 + Math.sin(angle) * radius + (Math.random() - 0.5) * 60;
+
+      return {
+        id: index,
+        keyword,
+        x: Math.max(padding, Math.min(viewBoxWidth - padding, x)),
+        y: Math.max(padding, Math.min(viewBoxHeight - padding, y)),
+        size,
+        opacity,
+        vx: 0,
+        vy: 0,
+      };
+    });
+
+    setNodes(initialNodes);
+  }, [isVisible, isMobile]);
+
+  // Initialize d3-force simulation for network graph
+  useEffect(() => {
+    if (!isVisible || nodes.length === 0 || prefersReducedMotion()) {
+      if (simulationRef.current) {
+        simulationRef.current.stop();
+        simulationRef.current = null;
+      }
+      return;
+    }
+
+    const viewBoxWidth = 600;
+    const viewBoxHeight = 400; // Increased height for better spacing
+
+    // Initialize or update d3 nodes (reuse same objects for d3-force)
+    if (d3NodesRef.current.length === 0 || d3NodesRef.current.length !== nodes.length) {
+      d3NodesRef.current = nodes.map((node) => ({
+        id: node.id,
+        keyword: node.keyword,
+        size: node.size,
+        opacity: node.opacity,
+        x: node.x,
+        y: node.y,
+        // Smooth "wander" parameters (stable per node)
+        wanderPhaseX: Math.random() * Math.PI * 2,
+        wanderPhaseY: Math.random() * Math.PI * 2,
+        wanderFreqX: 0.35 + Math.random() * 0.35, // rad/s-ish
+        wanderFreqY: 0.35 + Math.random() * 0.35,
+      }));
+    } else {
+      // Update positions but keep same objects
+      nodes.forEach((node, index) => {
+        const d3Node = d3NodesRef.current[index];
+        if (d3Node && d3Node.id === node.id) {
+          // Only update if significantly different (to avoid jitter)
+          if (Math.abs(d3Node.x - node.x) > 1 || Math.abs(d3Node.y - node.y) > 1) {
+            d3Node.x = node.x;
+            d3Node.y = node.y;
+          }
+        }
+      });
+    }
+
+    const d3Links = connections.map(([source, target]) => ({
+      source: d3NodesRef.current[source],
+      target: d3NodesRef.current[target],
+      // Calculate ideal distance based on node sizes
+      distance: (nodes[source].size / 2 + nodes[target].size / 2) * 2.5,
+    }));
+
+    // Create or update force simulation
+    let simulation = simulationRef.current;
+    
+    if (!simulation) {
+      simulation = forceSimulation(d3NodesRef.current)
+        .force('link', forceLink(d3Links).id((d: any) => d.id).distance((d: any) => d.distance).strength(0.4))
+        .force('charge', forceManyBody().strength(-500)) // Stronger repulsion to spread nodes out
+        .force('center', forceCenter(viewBoxWidth / 2, viewBoxHeight / 2).strength(0.05))
+        .force('collide', forceCollide().radius((d: any) => d.size / 2 + 15).strength(0.8)) // More spacing between nodes
+        .alphaDecay(0.02) // Slow decay for continuous movement
+        .velocityDecay(0.4) // Damping
+        .alphaTarget(0.06); // Keep a low, steady energy (prevents "bursty" motion)
+
+      // Add smooth "wander" force for continuous gentle motion (no randomness spikes)
+      const wanderForce = (alpha: number) => {
+        const t = performance.now() / 1000;
+        const strength = 0.10;
+        const a = 0.35 + alpha; // keep it alive even when alpha is low
+
+        d3NodesRef.current.forEach((node: any) => {
+          if (node.id === draggedNode) return;
+
+          const fx = Math.cos(t * (node.wanderFreqX || 0.5) + (node.wanderPhaseX || 0)) * strength * a;
+          const fy = Math.sin(t * (node.wanderFreqY || 0.5) + (node.wanderPhaseY || 0)) * strength * a;
+          node.vx = (node.vx || 0) + fx;
+          node.vy = (node.vy || 0) + fy;
+        });
+      };
+
+      simulation.force('wander', wanderForce as any);
+
+      // Add mouse attraction force (custom force) - stronger interaction
+      const mouseForce = (alpha: number) => {
+        if (!mousePos || draggedNode !== null) return; // Don't apply force when dragging
+        
+        d3NodesRef.current.forEach((node: any) => {
+          // Skip dragged node
+          if (node.id === draggedNode) return;
+          
+          const dx = mousePos.x - (node.x || 0);
+          const dy = mousePos.y - (node.y || 0);
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance > 0 && distance < 200) {
+            // Stronger attraction that increases as mouse gets closer
+            const forceStrength = alpha * 0.8 * (1 - distance / 200);
+            node.vx = (node.vx || 0) + (dx / distance) * forceStrength;
+            node.vy = (node.vy || 0) + (dy / distance) * forceStrength;
+          }
+        });
+      };
+
+      simulation.force('mouse', mouseForce as any);
+
+      // Update positions on each tick
+      simulation.on('tick', () => {
+        setNodes((prev) => {
+          return prev.map((node) => {
+            const d3Node = d3NodesRef.current.find((n: any) => n.id === node.id);
+            if (!d3Node) return node;
+
+            // Keep nodes within bounds
+            const radius = node.size / 2;
+            const padding = 60; // Increased padding for better spacing
+            const minX = padding + radius;
+            const maxX = viewBoxWidth - padding - radius;
+            const minY = padding + radius;
+            const maxY = viewBoxHeight - padding - radius;
+
+            let x = d3Node.x ?? node.x;
+            let y = d3Node.y ?? node.y;
+
+            if (x < minX) {
+              x = minX;
+              d3Node.x = x;
+              d3Node.vx = Math.abs(d3Node.vx || 0) * 0.6;
+            } else if (x > maxX) {
+              x = maxX;
+              d3Node.x = x;
+              d3Node.vx = -Math.abs(d3Node.vx || 0) * 0.6;
+            }
+
+            if (y < minY) {
+              y = minY;
+              d3Node.y = y;
+              d3Node.vy = Math.abs(d3Node.vy || 0) * 0.6;
+            } else if (y > maxY) {
+              y = maxY;
+              d3Node.y = y;
+              d3Node.vy = -Math.abs(d3Node.vy || 0) * 0.6;
+            }
+
+            return {
+              ...node,
+              x,
+              y,
+            };
+          });
+        });
+      });
+
+      simulationRef.current = simulation;
+    } else {
+      // Update existing simulation
+      simulation.nodes(d3NodesRef.current);
+      simulation.force('link', forceLink(d3Links).id((d: any) => d.id).distance((d: any) => d.distance).strength(0.4));
+      simulation.force('charge', forceManyBody().strength(-500)); // Stronger repulsion
+      simulation.force('collide', forceCollide().radius((d: any) => d.size / 2 + 15).strength(0.8)); // More spacing
+      simulation.alphaTarget(0.06);
+      
+      // Update smooth wander force for continuous gentle motion
+      const wanderForce = (alpha: number) => {
+        const t = performance.now() / 1000;
+        const strength = 0.10;
+        const a = 0.35 + alpha;
+
+        d3NodesRef.current.forEach((node: any) => {
+          if (node.id === draggedNode) return;
+
+          const fx = Math.cos(t * (node.wanderFreqX || 0.5) + (node.wanderPhaseX || 0)) * strength * a;
+          const fy = Math.sin(t * (node.wanderFreqY || 0.5) + (node.wanderPhaseY || 0)) * strength * a;
+          node.vx = (node.vx || 0) + fx;
+          node.vy = (node.vy || 0) + fy;
+        });
+      };
+      simulation.force('wander', wanderForce as any);
+      
+      // Update mouse force - stronger interaction
+      const mouseForce = (alpha: number) => {
+        if (!mousePos || draggedNode !== null) return; // Don't apply force when dragging
+        
+        d3NodesRef.current.forEach((node: any) => {
+          // Skip dragged node
+          if (node.id === draggedNode) return;
+          
+          const dx = mousePos.x - (node.x || 0);
+          const dy = mousePos.y - (node.y || 0);
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance > 0 && distance < 200) {
+            // Stronger attraction that increases as mouse gets closer
+            const forceStrength = alpha * 0.8 * (1 - distance / 200);
+            node.vx = (node.vx || 0) + (dx / distance) * forceStrength;
+            node.vy = (node.vy || 0) + (dy / distance) * forceStrength;
+          }
+        });
+      };
+      simulation.force('mouse', mouseForce as any);
+      
+      // Restart simulation when mouse position changes for immediate response
+      if (mousePos !== null) {
+        // Avoid big "bursts" that feel laggy; keep interaction responsive but smooth
+        simulation.alpha(0.2).restart();
+      }
+    }
+
+    return () => {
+      if (simulationRef.current) {
+        simulationRef.current.stop();
+        simulationRef.current = null;
+      }
+    };
+  }, [isVisible, nodes.length, mousePos, draggedNode]);
+
+  const { accentColor, bgColor, mutedColor } = useThemeColors({ accent: 1.0, bg: 1.0, muted: 0.3 });
+
+  return (
+    <div ref={containerRef} className="w-full my-8" style={visualWrapperStyle}>
+      <svg
+        ref={svgRef}
+        viewBox="0 0 600 400"
+        preserveAspectRatio="xMidYMid meet"
+        className="w-full h-auto"
+        style={{ minHeight: '400px', width: '100%', maxWidth: '100%', display: 'block' }}
+      >
+        {/* Render network edges (connections) */}
+        {connections.map(([id1, id2], index) => {
+          const node1 = nodes[id1];
+          const node2 = nodes[id2];
+          if (!node1 || !node2) return null;
+
+          return (
+            <line
+              key={`edge-${id1}-${id2}`}
+              x1={node1.x}
+              y1={node1.y}
+              x2={node2.x}
+              y2={node2.y}
+              stroke={mutedColor}
+              strokeWidth={STROKE_WIDTH * 0.5}
+              strokeDasharray="2 3"
+              opacity={isVisible ? 0.4 : 0}
+              style={{ transition: 'opacity 0.6s ease' }}
+            />
+          );
+        })}
+
+        {/* Render nodes (spheres) */}
+        {nodes.map((node) => {
+          const radius = node.size / 2;
+          // Calculate font size to fit text within sphere
+          const textLength = node.keyword.length;
+          const maxTextWidth = radius * 1.3;
+          const estimatedCharWidth = 0.55;
+          const fontSize = Math.min(
+            Math.max(9, (maxTextWidth / (textLength * estimatedCharWidth))),
+            radius * 0.32
+          );
+
+          const isHovered = hoveredNode === node.id;
+          const isDragged = draggedNode === node.id;
+          const hoverScale = isHovered ? 1.1 : 1.0;
+          const hoverStrokeWidth = isHovered ? STROKE_WIDTH * 2 : STROKE_WIDTH;
+          const hoverStrokeOpacity = isHovered ? 0.6 : 0.3;
+
+          return (
+            <g
+              key={node.id}
+              style={{
+                cursor: isHovered || isDragged ? 'grab' : 'default',
+              }}
+            >
+              {/* Sphere circle */}
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r={radius * hoverScale}
+                fill={accentColor}
+                fillOpacity={isVisible ? node.opacity : 0}
+                stroke={accentColor}
+                strokeWidth={hoverStrokeWidth}
+                strokeOpacity={isVisible ? hoverStrokeOpacity : 0}
+                style={{ 
+                  transition: isDragged ? 'none' : 'opacity 0.6s ease, stroke-width 0.2s ease, stroke-opacity 0.2s ease',
+                }}
+              />
+              
+              {/* Keyword text */}
+              <text
+                x={node.x}
+                y={node.y}
+                fontSize={fontSize}
+                fill={bgColor}
+                fillOpacity={isVisible ? 0.95 : 0}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                style={{
+                  ...textNoSelectStyle,
+                  fontFamily: 'var(--theme-font-body, sans-serif)',
+                  fontWeight: 500,
+                  transition: 'opacity 0.6s ease',
+                }}
+              >
+                {node.keyword}
+              </text>
+            </g>
+          );
+        })}
       </svg>
     </div>
   );

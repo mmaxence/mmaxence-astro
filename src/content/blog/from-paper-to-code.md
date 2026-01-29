@@ -36,7 +36,7 @@ Because design should be about shaping systems and behavior, not about adapting 
 
 Instead of asking how to design better in Figma, I started asking a simpler question:
 
-What if Figma was no longer the place where design starts and ends?
+What if Figma were no longer the place where design starts and ends?
 
 What if we experimented with a flow that looks more like:
 
@@ -46,18 +46,18 @@ Not as a provocation for the sake of it.
 Not as an anti-design stance.
 But as a way to reduce unnecessary steps between intent and reality.
 
-## Paper is a deliberate mean to take time to think 
+## Paper is a deliberate means to take time to think
 
-When I say "paper", this could be expanded to notes, or drafting, mind-mapping ideas on a tablet or on Figjam. The point being that we spend time clearly defining the problem we are trying to solve and develop solutions by stripping design down to what actually matters early on:
+When I say "paper", this could be expanded to notes, or drafting, mind-mapping ideas on a tablet or on Figjam. The point being that we spend time clearly defining the problem we are trying to solve and developing solutions by stripping design down to what actually matters early on:
 
 - Intent
 - Structure
 - Interaction
 - Constraints
 
-Sometimes that takes the form of real sketches.
-Sometimes rough wireframes.
-Sometimes a simple layout in a basic Figma file.
+Sometimes that takes the form of real sketches.  
+Sometimes rough wireframes.  
+Sometimes a simple layout in a basic Figma file.  
 Sometimes just text.
 
 The point is not fidelity.

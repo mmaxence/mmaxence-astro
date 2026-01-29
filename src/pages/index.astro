@@ -10,10 +10,10 @@ import ThemeToast from '../components/ui/ThemeToast.astro';
 import HeroShapes from '../components/home/HeroShapes.astro';
 import { 
   WhatIDoVisual, 
-  ExperienceSnapshotVisual, 
   HowIWorkVisual, 
   LeadershipScalesVisual, 
-  BeyondTheRoleVisual 
+  BeyondTheRoleVisual,
+  ExperienceSnapshotVisual
 } from '../components/home/SectionVisuals.tsx';
 import HomeSection from '../components/home/HomeSection.astro';
 import { getCollection } from 'astro:content';
@@ -27,7 +27,7 @@ const blogPosts = (await getCollection('blog'))
 <BaseLayout title="Systemic Design for High-Growth Products | Maxence Mauduit" description="Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.">
   <Header />
   <!-- Hero Section - Full Viewport -->
-  <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0" style="margin-top: -8rem;">
+  <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0" style="margin-top: -4rem;">
     <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
         <HeroShapes />
@@ -39,7 +39,7 @@ const blogPosts = (await getCollection('blog'))
       </AnimatedContent>
       <AnimatedContent delay={200}>
         <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4" style="color: var(--theme-text);">
-          Product & experience executive with 11+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.<br />Still hands-on where it matters.
+          Product & experience executive with 13+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.<br />Still hands-on where it matters.
         </p>
       </AnimatedContent>
     </div>
@@ -62,11 +62,12 @@ const blogPosts = (await getCollection('blog'))
     
     {/* EXPERIENCE SNAPSHOT */}
     <HomeSection title="EXPERIENCE SNAPSHOT" delay={50}>
+      <p slot="pre-visual" class="mt-4">13+ years of shaping products, building teams, and scaling platforms.</p>
       <ExperienceSnapshotVisual slot="visual" client:load />
       <div slot="post-visual">
         <div class="mt-8">
-          <h2 class="text-2xl md:text-3xl font-mono font-light">Buzzvil — Product & Experience Executive</h2>
-          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Seoul · 2014–Present</p>
+          <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Product & Experience Executive</h2>
+          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Buzzvil · Seoul · 2014–Present</p>
           
           <ul class="mt-6 space-y-2 list-none pl-0">
             <li class="flex items-start">
@@ -89,8 +90,8 @@ const blogPosts = (await getCollection('blog'))
         </div>
         
         <div class="mt-12">
-          <h2 class="text-2xl md:text-3xl font-mono font-light">CMS Group — UX Design Lead</h2>
-          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Paris · 2011–2014</p>
+          <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">UX Design Lead</h2>
+          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">CMS Group · Paris · 2011–2014</p>
           
           <ul class="mt-6 space-y-2 list-none pl-0">
             <li class="flex items-start">
@@ -116,22 +117,23 @@ const blogPosts = (await getCollection('blog'))
     
     {/* HOW I WORK */}
     <HomeSection title="HOW I WORK" delay={100}>
+      <p slot="pre-visual" class="mt-4">Tight discovery loops, clear intent, and execution that doesn't depend on me.</p>
       <HowIWorkVisual slot="visual" client:load />
       <div slot="post-visual">
-        <div class="mt-6 space-y-6">
+        <div class="mt-6 space-y-4">
           <div>
-            <h2 class="text-2xl md:text-3xl font-mono font-light">Deliberate thinking, fast execution</h2>
-            <p>I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
+            <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Deliberate thinking, fast execution</h2>
+            <p class="mt-1" style="margin-top: 0.25rem;">I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
           </div>
           
           <div>
-            <h2 class="text-2xl md:text-3xl font-mono font-light">Systems over screens</h2>
-            <p>I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
+            <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Systems over screens</h2>
+            <p class="mt-1" style="margin-top: 0.25rem;">I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
           </div>
           
           <div>
-            <h2 class="text-2xl md:text-3xl font-mono font-light">Product ownership mindset</h2>
-            <p>Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
+            <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Product ownership mindset</h2>
+            <p class="mt-1" style="margin-top: 0.25rem;">Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
           </div>
         </div>
       </div>
@@ -139,9 +141,10 @@ const blogPosts = (await getCollection('blog'))
     
     {/* LEADERSHIP THAT SCALES */}
     <HomeSection title="LEADERSHIP THAT SCALES" delay={150}>
+      <p slot="pre-visual" class="mt-4">Small teams, high leverage. Capability and influence grow faster than headcount.</p>
       <LeadershipScalesVisual slot="visual" client:load />
       <div slot="post-visual">
-        <p class="mt-4">I build small, senior teams designed to operate without constant oversight.</p>
+        <p class="mt-4">I build small teams designed to operate without constant oversight.</p>
         <p class="mt-4">When I lead, my goal is to remove ambiguity early and make myself unnecessary over time.</p>
         <p class="mt-4">When I contribute individually, it's usually at the beginning of new initiatives, where clarity does not exist yet and decisions are expensive.</p>
         <p class="mt-4">If execution depends on me long-term, the system is wrong.</p>
@@ -150,6 +153,7 @@ const blogPosts = (await getCollection('blog'))
     
     {/* BEYOND THE ROLE */}
     <HomeSection title="BEYOND THE ROLE" delay={200}>
+      <p slot="pre-visual" class="mt-4">Sustainable pace, continuous learning, and systems thinking beyond work.</p>
       <BeyondTheRoleVisual slot="visual" client:load />
       <div slot="post-visual">
         <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
@@ -160,10 +164,10 @@ const blogPosts = (await getCollection('blog'))
     {/* Blog Posts */}
     {blogPosts.length > 0 && (
       <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-        <div class="max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <div class="max-w-4xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
           <AnimatedContent delay={350}>
             <div class="w-full">
-              <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">Latest Insights on Systems & Leadership</h1>
+              <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Recent Writing</h2>
               <CardGrid columns={3}>
                 {blogPosts.map((post, index) => (
                   <AnimatedContent delay={400 + (index * 50)}>
@@ -198,7 +202,33 @@ const blogPosts = (await getCollection('blog'))
     transform: none !important;
   }
 
-  /* Section visuals styling */
+  /* Section visuals styling - prevent text selection */
+  .index-content-section svg,
+  .index-content-section svg * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    pointer-events: none;
+  }
+  
+  /* Re-enable pointer events for interactive elements if needed */
+  .index-content-section svg path,
+  .index-content-section svg circle,
+  .index-content-section svg line,
+  .index-content-section svg g {
+    pointer-events: auto;
+  }
+  
+  /* Specifically target text elements */
+  .index-content-section svg text {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    pointer-events: none !important;
+  }
+  
   .index-content-section svg {
     display: block;
     width: 100% !important;
@@ -207,30 +237,14 @@ const blogPosts = (await getCollection('blog'))
     min-width: 100% !important;
   }
   
-  /* Force visual wrapper divs to fill container width - prevent SVG from constraining */
+  /* Force visual wrapper divs to fill container width */
   .index-content-section > div[class*="my-8"] {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 100% !important;
-    /* Prevent child SVG from constraining parent */
     overflow: visible !important;
   }
   
-  /* Mobile: enable horizontal scrolling for Experience visual */
-  @media (max-width: 768px) {
-    .experience-visual-wrapper {
-      overflow-x: auto !important;
-      overflow-y: hidden !important;
-      -webkit-overflow-scrolling: touch !important;
-      touch-action: pan-x !important;
-    }
-    
-    .experience-visual-wrapper > svg {
-      min-width: auto !important;
-      max-width: none !important;
-    }
-  }
-
 
   /* Respect reduced motion */
   @media (prefers-reduced-motion: reduce) {

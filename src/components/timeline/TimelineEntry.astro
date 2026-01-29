@@ -1,6 +1,13 @@
 ---
 import TagList from '../ui/TagList.astro';
+import LinkCard from '../ui/LinkCard.astro';
 import { Fragment } from 'astro/jsx-runtime';
+
+interface RelatedLink {
+  href: string;
+  title: string;
+  favicon?: string;
+}
 
 interface Props {
   title: string;
@@ -8,9 +15,10 @@ interface Props {
   description?: string;
   tags?: string[];
   content: string;
+  relatedLinks?: RelatedLink[];
 }
 
-const { title, date, description, tags, content } = Astro.props;
+const { title, date, description, tags, content, relatedLinks } = Astro.props;
 
 // Handle both Date objects and period strings
 const period = typeof date === 'string' ? date : `${date.toLocaleDateString('en-US', { month: 'short' })} ${date.getFullYear()}`;
@@ -99,13 +107,13 @@ const parsedContent = parseContent(content);
     </div>
   </div>
   <div class="w-full md:w-4/5">
-    <h2 class="text-2xl md:text-3xl font-mono font-light mb-2" style="color: var(--theme-text);">
+    <h2 class="text-2xl md:text-3xl font-mono font-light mb-0" style="color: var(--theme-text); margin-bottom: 0 !important;">
       {title}
     </h2>
     {description && (
-      <p class="mb-4" style="color: var(--theme-text-muted);">{description}</p>
+      <p class="mb-4 mt-0.5" style="color: var(--theme-text-muted);">{description}</p>
     )}
-    <div class="prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text);">
+    <div class={`prose prose-lg max-w-none leading-relaxed ${!description ? 'mt-4' : ''}`} style="color: var(--theme-text);">
       {parsedContent.map((element, idx) => {
         if (element.type === 'h4') {
           return <h4 key={idx} class="font-mono text-xl font-normal mt-8 mb-4 first:mt-0">{element.content}</h4>;
@@ -165,6 +173,21 @@ const parsedContent = parseContent(content);
         return null;
       })}
     </div>
+    {relatedLinks && relatedLinks.length > 0 && (
+      <div class="mt-8 pt-8 border-t" style="border-color: var(--theme-border);">
+        <h3 class="font-mono text-xl font-normal mb-3" style="color: var(--theme-text);">Related content</h3>
+        <ul class="list-none pl-0 space-y-2">
+          {relatedLinks.map((link) => (
+            <li class="flex items-start">
+              <span class="mr-2 mt-1" style="color: var(--theme-text-muted);">•</span>
+              <span class="flex-1">
+                <LinkCard href={link.href} title={link.title} favicon={link.favicon} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
     {tags && tags.length > 0 && (
       <TagList tags={tags} class="mt-4" />
     )}

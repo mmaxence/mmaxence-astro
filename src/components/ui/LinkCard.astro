@@ -1,0 +1,254 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  favicon?: string;
+  iconSize?: 20 | 24;
+  class?: string;
+}
+
+const { href, title, favicon, iconSize = 20, class: className = '' } = Astro.props;
+
+// Determine if it's an external link
+const isExternal = href.startsWith('http://') || href.startsWith('https://');
+
+// Generate favicon URLs to try
+// For internal links, use site favicon
+// For external links, try multiple favicon paths
+let faviconUrls = [];
+
+if (favicon) {
+  // If favicon is explicitly provided, use it
+  faviconUrls = [favicon];
+} else if (isExternal) {
+  try {
+    const url = new URL(href);
+    const baseUrl = `${url.protocol}//${url.hostname}`;
+    // Try multiple common favicon paths
+    faviconUrls = [
+      `${baseUrl}/favicon.ico`,
+      `${baseUrl}/favicon.png`,
+      `${baseUrl}/favicon.svg`,
+      `${baseUrl}/apple-touch-icon.png`,
+      `https://www.google.com/s2/favicons?domain=${url.hostname}&sz=24`,
+    ];
+  } catch {
+    faviconUrls = ['/images/favicon.png'];
+  }
+} else {
+  faviconUrls = ['/images/favicon.png'];
+}
+
+// For internal blog posts, try to get the blog post slug
+let internalHref = href;
+if (!isExternal && href.startsWith('/blog/')) {
+  internalHref = href;
+} else if (!isExternal && !href.startsWith('/')) {
+  internalHref = `/${href}`;
+} else if (!isExternal) {
+  internalHref = href;
+}
+---
+
+<a 
+  href={isExternal ? href : internalHref}
+  class={`link-card prefetch-link ${className}`}
+  data-prefetch={!isExternal}
+  {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+>
+  <div class="link-card-inner" style={`--icon-size: ${iconSize}px;`}>
+    {faviconUrls.length > 0 && (
+      <img 
+        src={faviconUrls[0]} 
+        alt="" 
+        class="link-card-icon"
+        width={iconSize}
+        height={iconSize}
+        loading="lazy"
+        data-favicon-urls={JSON.stringify(faviconUrls)}
+        data-current-index="0"
+        onerror="handleFaviconError(this)"
+        onload="handleFaviconLoad(this)"
+      />
+    )}
+    <span class="link-card-title">{title}</span>
+  </div>
+</a>
+
+<script is:inline>
+  function handleFaviconLoad(img) {
+    // Verify the image actually loaded successfully
+    // Wait a bit to ensure image is fully loaded
+    setTimeout(function() {
+      const expectedUrls = JSON.parse(img.getAttribute('data-favicon-urls') || '[]');
+      const currentIndex = parseInt(img.getAttribute('data-current-index') || '0', 10);
+      const expectedUrl = expectedUrls[currentIndex];
+      
+      // Check if image actually loaded from the expected URL
+      // If naturalWidth/Height are 0, image is broken
+      // Also verify the src matches what we expect (browser might replace with default)
+      const isValid = img.naturalWidth > 0 && img.naturalHeight > 0;
+      const srcMatches = img.src === expectedUrl || img.src.includes(expectedUrl.split('/').pop() || '');
+      
+      if (!isValid || !srcMatches) {
+        // Image didn't load properly, try next or hide
+        handleFaviconError(img);
+      } else {
+        // Image loaded successfully
+        img.setAttribute('data-loaded', 'true');
+      }
+    }, 150);
+  }
+  
+  function handleFaviconError(img) {
+    // Check if image was already marked as loaded
+    if (img.getAttribute('data-loaded') === 'true') {
+      return; // Image is valid, don't hide it
+    }
+    
+    const urlsAttr = img.getAttribute('data-favicon-urls');
+    const currentIndexAttr = img.getAttribute('data-current-index');
+    
+    if (!urlsAttr) {
+      // No URLs to try, hide the image
+      hideImage(img);
+      return;
+    }
+    
+    let urls = [];
+    try {
+      urls = JSON.parse(urlsAttr);
+    } catch (e) {
+      // Invalid JSON, hide the image
+      hideImage(img);
+      return;
+    }
+    
+    // Get current index (default to 0 if not set)
+    let currentIndex = currentIndexAttr ? parseInt(currentIndexAttr, 10) : 0;
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex < urls.length) {
+      // Try next URL
+      img.setAttribute('data-current-index', nextIndex.toString());
+      img.setAttribute('data-loaded', 'false');
+      img.onerror = function() {
+        handleFaviconError(img);
+      };
+      img.onload = function() {
+        handleFaviconLoad(img);
+      };
+      img.src = urls[nextIndex];
+    } else {
+      // All URLs failed, hide the image completely
+      hideImage(img);
+    }
+  }
+  
+  function hideImage(img) {
+    // Remove all event handlers
+    img.onerror = null;
+    img.onload = null;
+    
+    // Hide completely with multiple methods
+    img.style.display = 'none';
+    img.style.visibility = 'hidden';
+    img.style.width = '0';
+    img.style.height = '0';
+    img.style.opacity = '0';
+    img.style.margin = '0';
+    img.style.padding = '0';
+    img.style.border = 'none';
+    
+    // Set a data attribute to mark as hidden
+    img.setAttribute('data-hidden', 'true');
+    
+    // Remove src to prevent browser from showing default icon
+    // Set to empty transparent SVG
+    img.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\'/%3E';
+  }
+</script>
+
+<style>
+  .link-card {
+    display: inline-block;
+    text-decoration: none !important;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .link-card:hover {
+    text-decoration: none !important;
+    transform: translateY(-1px);
+  }
+  
+  .link-card::after {
+    display: none !important;
+  }
+  
+  .link-card-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--theme-border);
+    border-radius: var(--theme-radius, 0.5rem);
+    background-color: var(--theme-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--theme-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
+  }
+  
+  .link-card:hover .link-card-inner {
+    border-color: var(--theme-accent);
+    box-shadow: var(--theme-shadow-hover, 0 2px 8px rgba(0, 0, 0, 0.12));
+    background-color: var(--theme-bg);
+  }
+  
+  .link-card-icon {
+    width: var(--icon-size, 20px);
+    height: var(--icon-size, 20px);
+    flex-shrink: 0;
+    border-radius: 2px;
+    object-fit: contain;
+  }
+  
+  .link-card-icon[style*="display: none"],
+  .link-card-icon[style*="visibility: hidden"],
+  .link-card-icon[data-hidden="true"] {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+  
+  /* Hide broken images and images without valid src */
+  .link-card-icon:not([src]),
+  .link-card-icon[src=""] {
+    display: none !important;
+  }
+  
+  .link-card-title {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--theme-text);
+    font-family: var(--theme-font-body, sans-serif);
+    font-weight: 400;
+  }
+  
+  .link-card:hover .link-card-title {
+    color: var(--theme-accent);
+  }
+  
+  /* Theme-specific adjustments */
+  [data-theme="ide"] .link-card-inner {
+    border-color: var(--theme-border);
+  }
+  
+  [data-theme="pixel"] .link-card-inner {
+    border-width: 2px;
+  }
+</style>

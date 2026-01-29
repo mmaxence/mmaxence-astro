@@ -8,9 +8,9 @@ export interface TimelineEntry {
 
 export const timelineEntries: TimelineEntry[] = [
   {
-    title: "Buzzvil — Product & Experience Executive",
+    title: "Product & Experience Executive",
     date: "2014 – Present",
-    description: "Seoul, South Korea",
+    description: "Buzzvil · Seoul, South Korea",
     tags: [],
     content: `#### IPO & Platform Readiness (2022–Present)
 • Led the organization's preparation for public listing by institutionalizing execution standards that maintain experience quality at scale.
@@ -34,9 +34,9 @@ export const timelineEntries: TimelineEntry[] = [
 • Expanded design capabilities internationally, including hiring and supporting teams in Taiwan while maintaining system-level consistency across markets.`
   },
   {
-    title: "CMS Group (3S Informatique) — UX Design Lead",
+    title: "UX Design Lead",
     date: "2011 – 2014",
-    description: "Paris, France",
+    description: "CMS Group (3S Informatique) · Paris, France",
     tags: [],
     content: `• Embedded within a research lab at Arts et Métiers ParisTech, translating academic research into a commercial SaaS EdTech platform.
 • Built a systemic UI foundation tightly aligned with production code to ensure consistency, speed, and maintainability across a complex learning management system.
