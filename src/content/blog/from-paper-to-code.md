@@ -2,13 +2,11 @@
 title: "From Paper to Code"
 description: "Rethinking 0-to-1 in product design"
 date: 2026-01-28T10:00:00+09:00
-draft: true
+draft: false
+featured_image: "/images/paper-to-code.png"
 ---
 
-Design tools have never been more powerful.
-They have also never felt this heavy.
-
-At Buzzvil, like most product teams today, we rely heavily on Figma. It is a strong tool. It standardized collaboration, reduced friction between design and engineering, and raised the overall quality bar across the industry.
+At Buzzvil, like most product teams today, we rely heavily on Figma. It is a strong tool. It standardized collaboration, reduced friction between design and engineering, and raised the overall quality bar across the industry (remember when we used to design UIs in Photoshop or AI?).
 
 But lately, I have been feeling a growing discomfort using it as the unquestioned center of our design process.
 
@@ -16,19 +14,16 @@ But lately, I have been feeling a growing discomfort using it as the unquestione
 
 The modern design workflow is now almost a default:
 
-Ideas start in Figma or Figjam.
-They get refined, polished, aligned.
-They are handed off to engineering via Dev Mode.
-They are rebuilt, adjusted, interpreted in code.
+Ideas start in Figma or Figjam, sometimes on paper, when time allows.  
+They get refined, polished, and aligned on Figma.  
+They are handed off to engineering via Dev Mode on Figma.  
+They are rebuilt, adjusted, and interpreted in code.
 
-This works. We use it every day.
-
-The issue is not so about efficiency.
-But more about dependency and a lack of perspective this constrains us.
+The issue is not so much about efficiency as about dependency and a lack of perspective.
 
 More and more of our design thinking, interaction logic, and system decisions live inside a tool we do not control. That lock-in is no longer just about files or formats. It is about pricing, feature access, platform direction, and now even LLM tokens.
 
-As a user, this starts to be uncomfortable.
+As a user, this becomes uncomfortable. We start making decisions based on the tool's constraints, including budget.
 
 Because design should be about shaping systems and behavior, not about adapting our thinking to the constraints of a tool.
 
@@ -42,9 +37,7 @@ What if we experimented with a flow that looks more like:
 
 **paper → code**
 
-Not as a provocation for the sake of it.
-Not as an anti-design stance.
-But as a way to reduce unnecessary steps between intent and reality.
+As a provocative way to reduce unnecessary steps between Problem framing and Solution materialization.
 
 ## Paper is a deliberate means to take time to think
 
@@ -57,21 +50,21 @@ When I say "paper", this could be expanded to notes, or drafting, mind-mapping i
 
 Sometimes that takes the form of real sketches.  
 Sometimes rough wireframes.  
-Sometimes a simple layout in a basic Figma file.  
+Sometimes, a simple layout in a basic Figma file.  
 Sometimes just text.
 
 The point is not fidelity.
 The point is clarity.
 
-High-fidelity mockups are expensive. They are useful, but not always necessary to move forward.
-And this might be even more true with AI, as we can now concretize an idea into a functional prototype in minutes.
+High-fidelity mockups used to be expensive. And while useful, these are not always necessary to move forward. And this might be even more true with AI, as we can now concretize an idea into a functional prototype in minutes.
 
 ## Code as a design surface
 
-Over the past months, I started using Cursor not only as an engineering tool, but as part of my design process.
+Over the past months, I started using Cursor as part of my design process.
 
 With a strong PRD, clear constraints, and lightweight visual references, Cursor can already:
 
+- Help me plan more accurately by asking for details and precision over a given PRD or story.
 - Generate working UI flows
 - Explore interaction logic
 - Iterate on states and transitions
@@ -125,11 +118,10 @@ In 2026, we plan to run small, controlled experiments at Buzzvil:
 
 - Designing some flows directly from PRD to code
 - Using sketches or low-fidelity layouts only when they add value
-- Treating Cursor as a prototyping surface, not just an editor
+- Treating Cursor as a prototyping surface
 - Letting the UI system evolve through usage, not theoretical completeness
 
-This is not a declaration of a new process.
-It is a learning phase.
+
 
 Some experiments will fail.
 Some will prove useful.
@@ -148,7 +140,7 @@ The interesting space is in between.
 Paper forces thinking.
 Code forces reality.
 
-Shortening the distance between the two feels worth exploring, even if it is uncomfortable.
+Shortening the distance between the two feels worth exploring, even if it can be uncomfortable.
 
-We are not there yet.
+We are not there yet.  
 But this is the direction we are testing.
