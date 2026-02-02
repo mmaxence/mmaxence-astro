@@ -33,7 +33,7 @@ import { timelineEntries } from '../../data/timeline'; // Import data from TypeS
 
       <div class="space-y-12">
         {timelineEntries.map((entry, index) => {
-          const isBuzzvil = entry.title.includes('Buzzvil');
+          const isBuzzvil = entry.description?.includes('Buzzvil') || entry.title.includes('Buzzvil');
           const relatedLinks = isBuzzvil ? [
             { href: '/blog/i-dont-like-ads', title: "I Don't Like Ads" },
             { href: '/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup', title: 'Life in Sprint Mode: Raising Two Kids While Working at a Hyper-Dynamic Korean Startup' },

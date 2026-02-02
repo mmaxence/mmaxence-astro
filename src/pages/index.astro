@@ -7,6 +7,7 @@ import AnimatedContent from '../components/ui/AnimatedContent.astro';
 import CardGrid from '../components/ui/CardGrid.astro';
 import BlogCard from '../components/blog/BlogCard.astro';
 import ThemeToast from '../components/ui/ThemeToast.astro';
+import LinkCard from '../components/ui/LinkCard.astro';
 import HeroShapes from '../components/home/HeroShapes.astro';
 import { 
   WhatIDoVisual, 
@@ -87,6 +88,9 @@ const blogPosts = (await getCollection('blog'))
               <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
             </li>
           </ul>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <LinkCard href="/blog/i-dont-like-ads" title="I Don't Like Ads" />
+          </div>
         </div>
         
         <div class="mt-12">
@@ -136,6 +140,10 @@ const blogPosts = (await getCollection('blog'))
             <p class="mt-1" style="margin-top: 0.25rem;">Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
           </div>
         </div>
+        <div class="mt-8 flex flex-wrap gap-2">
+          <LinkCard href="/blog/design-tempo" title="Design Tempo" />
+          <LinkCard href="/blog/high-output-management" title="High Output Management" />
+        </div>
       </div>
     </HomeSection>
     
@@ -148,6 +156,9 @@ const blogPosts = (await getCollection('blog'))
         <p class="mt-4">When I lead, my goal is to remove ambiguity early and make myself unnecessary over time.</p>
         <p class="mt-4">When I contribute individually, it's usually at the beginning of new initiatives, where clarity does not exist yet and decisions are expensive.</p>
         <p class="mt-4">If execution depends on me long-term, the system is wrong.</p>
+        <div class="mt-8 flex flex-wrap gap-2">
+          <LinkCard href="/blog/design-peer-reviews-to-support-our-team-growth" title="Design Peer Reviews" />
+        </div>
       </div>
     </HomeSection>
     
@@ -158,6 +169,9 @@ const blogPosts = (await getCollection('blog'))
       <div slot="post-visual">
         <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
         <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology.</p>
+        <div class="mt-8 flex flex-wrap gap-2">
+          <LinkCard href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" title="Life in Sprint Mode" />
+        </div>
       </div>
     </HomeSection>
     
