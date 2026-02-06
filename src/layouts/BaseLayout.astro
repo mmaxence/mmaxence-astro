@@ -5,11 +5,18 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  featured_image?: string;
+  url?: string;
 }
 
-const { title = "Product Designer, CDO at buzzvil", description = "Product Manager, Head of Design at buzzvil" } = Astro.props;
+const { title = "Product Designer, CDO at buzzvil", description = "Product Manager, Head of Design at buzzvil", featured_image, url } = Astro.props;
 const siteTitle = "Product Designer, CDO at buzzvil";
 const author = "Maxence Mauduit";
+const siteUrl = "https://mmaxence.me";
+const currentUrl = url || new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = featured_image 
+  ? (featured_image.startsWith('http') ? featured_image : new URL(featured_image, siteUrl).href)
+  : new URL('/images/mmaxence_logo.svg', siteUrl).href;
 ---
 
 <!doctype html>
@@ -24,6 +31,22 @@ const author = "Maxence Mauduit";
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Anonymous+Pro:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <meta name="generator" content={Astro.generator} />
     <title>{title === siteTitle ? title : `${title} | ${siteTitle}`}</title>
+    
+    {/* Open Graph / Facebook */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={currentUrl} />
+    <meta property="og:title" content={title === siteTitle ? title : `${title} | ${siteTitle}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={siteTitle} />
+    
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={currentUrl} />
+    <meta name="twitter:title" content={title === siteTitle ? title : `${title} | ${siteTitle}`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    
     <ViewTransitions />
     <script is:inline>
       // Initialize theme immediately to prevent flash

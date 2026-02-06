@@ -29,6 +29,8 @@ const { Content } = await post.render();
 <BaseLayout 
   title={post.data.title} 
   description={post.data.description || post.data.title}
+  featured_image={post.data.featured_image}
+  url={new URL(`/blog/${post.slug}`, Astro.site).href}
 >
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
