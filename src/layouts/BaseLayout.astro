@@ -40,7 +40,12 @@ const ogImage = featured_image
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:secure_url" content={ogImage} />
-    <meta property="og:image:type" content="image/png" />
+    {featured_image && (() => {
+      // Determine image type from extension
+      const ext = featured_image.split('.').pop()?.toLowerCase();
+      const imageType = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : ext === 'png' ? 'image/png' : 'image/png';
+      return <meta property="og:image:type" content={imageType} />;
+    })()}
     <meta property="og:site_name" content={siteTitle} />
     
     {/* Twitter */}
