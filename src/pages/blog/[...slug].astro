@@ -24,6 +24,18 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+// Extract YouTube video ID from various URL formats
+function getYouTubeId(url: string): string | null {
+  if (!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+  ];
+  const match = url.match(patterns[0]);
+  return match ? match[1] : null;
+}
+
+const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) : null;
 ---
 
 <BaseLayout 
@@ -84,6 +96,35 @@ const { Content } = await post.render();
           <div class="prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text); opacity: 0.9;">
         <Content />
       </div>
+
+      {videoId && (
+        <section class="mt-12 pt-8 border-t" style="border-color: var(--theme-text-muted);">
+          <h2 class="text-xl font-mono font-light mb-2" style="color: var(--theme-text);">Related</h2>
+          {post.data.related_video_context && (
+            <p class="text-sm mb-4" style="color: var(--theme-text-muted);">
+              {post.data.related_video_context}
+            </p>
+          )}
+          <div class="aspect-video w-full max-w-2xl rounded-lg overflow-hidden">
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title="Related video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              class="w-full h-full"
+            />
+          </div>
+          <a
+            href={post.data.related_video!}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block mt-2 text-sm hover:underline"
+            style="color: var(--theme-text-muted);"
+          >
+            Watch on YouTube →
+          </a>
+        </section>
+      )}
         </article>
   </PageContent>
   <Footer />
