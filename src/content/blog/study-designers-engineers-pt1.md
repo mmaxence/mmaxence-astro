@@ -1,5 +1,6 @@
 ---
 title: "Study*(Designers+Engineers)= ❤️ pt.1"
+description: "A cross-functional study between designers and engineers to work better together. Part one: how we identified shared conventions and built Phantom Box, a CI pipeline from Figma to Android."
 date: 2019-12-07T11:07:21+09:00
 draft: false
 featured_image: "/blog/study-designers-engineers-pt1/design_x_dev_study_at_buzzvil.jpeg"

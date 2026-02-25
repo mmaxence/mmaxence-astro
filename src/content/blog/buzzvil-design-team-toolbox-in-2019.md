@@ -1,5 +1,6 @@
 ---
 title: "Buzzvil Design Team toolbox in 2019"
+description: "When we decided to drastically change our design toolbox, we leaned on insights from other teams. Our 2019 stack: why we said goodbye to Sketch and went all-in on Figma."
 date: 2019-01-15T11:07:21+09:00
 draft: false
 featured_image: "/images/2019_toolbox.jpeg"

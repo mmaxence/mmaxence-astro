@@ -1,5 +1,6 @@
 ---
 title: "The 2026 Buzzvil Design Stack, Preparing for the AI Shift"
+description: "As Buzzvil prepares for the AI shift, tool choices are no longer just operational—they are strategic. This article outlines our 2026 design stack and why a unified, code-connected system is the prerequisite for AI-assisted product creation."
 date: 2025-11-27T10:00:00+09:00
 draft: false
 featured_image: "/blog/2026-buzzvil-design-stack/cover.jpg"

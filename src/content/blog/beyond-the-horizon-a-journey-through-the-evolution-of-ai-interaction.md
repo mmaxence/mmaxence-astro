@@ -1,5 +1,6 @@
 ---
 title: "Beyond the Horizon: A Journey Through the Evolution of AI Interaction"
+description: "Chat is the DOS of AI—a proof of concept, not the destination. This article explores where interaction design is heading: multimodal interfaces, context-aware systems, and patterns that make AI a transparent partner."
 date: 2025-07-28T11:07:21+09:00
 draft: true
 featured_image: "/images/beyond-ai.gif"

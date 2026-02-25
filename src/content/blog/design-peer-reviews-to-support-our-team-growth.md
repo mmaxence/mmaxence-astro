@@ -1,5 +1,6 @@
 ---
 title: "Design peer reviews to support our team growth"
+description: "As the team grew, we introduced a peer design review strategy across the whole team. Why we did it, how it works, and how it secures our shared design system and quality."
 author: "Maxence Mauduit"
 date: 2019-04-12T11:31:33+09:00
 draft: false

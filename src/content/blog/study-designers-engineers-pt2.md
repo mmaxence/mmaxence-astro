@@ -1,5 +1,6 @@
 ---
 title: "Study*(Designers+Engineers)= ❤️ pt.2"
+description: "The second act of our designer–engineer study: building Billy, an internal book library. What we learned from involving everyone from exploration to delivery and incubating the whole development process together."
 date: 2019-12-09T11:07:21+09:00
 draft: false
 featured_image: "/blog/study-designers-engineers-pt2/design_x_dev_study_at_buzzvil_pt2.jpeg"

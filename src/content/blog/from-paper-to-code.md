@@ -1,6 +1,6 @@
 ---
 title: "From Paper to Code"
-description: "Rethinking 0-to-1 in product design"
+description: "Rethinking 0-to-1 in product design. What if Figma were no longer where design starts and ends? This article explores a paper-to-code flow to reduce the gap between problem framing and solution."
 date: 2026-01-28T10:00:00+09:00
 draft: false
 featured_image: "/images/paper-to-code.png"

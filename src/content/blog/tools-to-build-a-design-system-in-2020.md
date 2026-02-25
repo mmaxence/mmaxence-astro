@@ -1,5 +1,6 @@
 ---
 title: "Tools to build a design system in 2020"
+description: "A healthy yearly routine: gauging your toolbox against what's new in the design tool industry. How our team of six evaluated and adjusted our stack with a focus on design systems and code integration in 2020."
 date: 2020-02-06T11:07:21+09:00
 draft: false
 featured_image: "/blog/tools-to-build-a-design-system-in-2020/buzzvil_design_system.jpeg"

@@ -1,6 +1,6 @@
-
 ---
 title: "High output management: identifying and measuring your design outputs"
+description: "Design-oriented takeaways from Andrew Grove's High Output Management. How to see design as a process with measurable outputs and apply the production-chain lens to your team's work."
 date: 2020-02-28T11:07:21+09:00
 draft: false
 featured_image: "/blog/high-output-management/breakfast_factory.jpg"

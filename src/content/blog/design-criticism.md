@@ -1,5 +1,6 @@
 ---
 title: "Design criticism"
+description: "Subjective feedback is rarely useful; your role is to turn it into something objective. How to avoid friction when receiving design feedback and keep the end user at the center of the discussion."
 date: 2020-01-06T11:07:21+09:00
 draft: false
 featured_image: "/blog/design-criticism/design_criticism.png"

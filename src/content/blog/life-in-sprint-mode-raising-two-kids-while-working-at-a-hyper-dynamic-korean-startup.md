@@ -1,5 +1,6 @@
 ---
 title: "Life in Sprint Mode: Raising Two Kids While Working at a Hyper-Dynamic Korean Startup"
+description: "Raising two kids while working at a hyper-dynamic startup is not about balance but rhythm. This piece explores how autonomy, trust, and the right culture create space for both work and life to grow."
 date: 2025-10-28T14:53:35+09:00
 draft: false
 featured_image: "/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup/hero.jpg"

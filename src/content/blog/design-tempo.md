@@ -1,5 +1,6 @@
 ---
 title: "Design Tempo: the art of managing creative pace"
+description: "Designers, like musicians, need to play in tune. A short essay on creative team pace management—how to set a shared tempo and support both creativity and productivity."
 date: 2020-01-10T08:10:00+09:00
 draft: false
 featured_image: "/blog/design-tempo/design_tempo.png"
