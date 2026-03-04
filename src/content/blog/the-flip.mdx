@@ -6,6 +6,8 @@ draft: false
 featured_image: "/images/the-flip.png"
 ---
 
+import { LogoComposition } from '../../components/blog/LogoComposition';
+
 There's this assumption floating around that AI is going to generate design systems for us. That one day you'll prompt something, and out comes your tokens, your components, your interaction patterns, neat and ready to ship. I think the opposite is about to happen.
 
 We're building a design system for an AI agent to use. Not for designers. Not for developers. For an agent.
@@ -13,6 +15,8 @@ We're building a design system for an AI agent to use. Not for designers. Not fo
 And honestly? It's changing how I think about what a design system even is.
 
 ## What do you hand an agent?
+
+![AI Agent Coverage — how context, docs, and skills are structured for the agent](/blog/the-flip/agent-coverage.png)
 
 Here's the question that started all of this. If the primary consumer of your design foundations isn't a person scrolling through a Figma library or a documentation site, if it's an autonomous agent that needs to compose a UI in real time, for a specific person, for a specific brand, at a specific moment, what do you actually give it?
 
@@ -31,6 +35,8 @@ In practice, that means the agent doesn't receive a component library and a styl
 The whole system is delivered as an NPM package. The agent pulls it in, reads the markdown, loads the context, and starts composing. No Figma. No documentation site. Just structured knowledge it can act on.
 
 ## The Chameleon problem
+
+<LogoComposition client:visible />
 
 Brands are particular. They should be. A luxury watch brand and a fintech startup don't just look different, they move differently, they breathe at different rhythms.
 
