@@ -20,6 +20,16 @@ You can't just hand it components. Components are answers. The agent needs to un
 
 So we're building something closer to a language than a library. We're defining the grammar of how interfaces should behave, look, and feel, and packaging it so an agent can speak it fluently.
 
+In practice, that means the agent doesn't receive a component library and a style guide. It receives a structured set of markdown files, context documents, and skills, each one written for a machine to parse and act on.
+
+**Context files** define the world the agent operates in. Brand identity, design principles, tone of voice, layout philosophy, the constraints and freedoms that shape every decision. These aren't briefs for a designer to interpret. They're structured enough for an agent to reason with, open enough to allow judgment.
+
+**Skills** are where capabilities live. Each skill is a discrete, well-scoped instruction set: how to compose a layout, how to apply the reward model, how to adapt density for a given brand profile, how to select and sequence Iconic interactions. Skills aren't code. They're closer to choreography, step-by-step guidance the agent follows while still making contextual decisions within each step.
+
+**Documentation files** map the component library itself, not as a visual catalogue but as annotated references the agent can query. Every component comes with usage guidance, behavioral notes, accessibility requirements, and contextual hints about when and why to use it. The agent reads these the way a seasoned designer would read a pattern library, except it does it in milliseconds, every time.
+
+The whole system is delivered as an NPM package. The agent pulls it in, reads the markdown, loads the context, and starts composing. No Figma. No documentation site. Just structured knowledge it can act on.
+
 ## The Chameleon problem
 
 Brands are particular. They should be. A luxury watch brand and a fintech startup don't just look different, they move differently, they breathe at different rhythms.
