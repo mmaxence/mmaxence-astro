@@ -31,7 +31,16 @@ const blogPosts = (await getCollection('blog'))
   <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0" style="margin-top: -4rem;">
     <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
-        <HeroShapes />
+        <div class="hero-profile-wrapper">
+          <img
+            src="/images/profile.jpeg"
+            alt="Maxence Mauduit"
+            class="hero-profile-photo"
+            width="240"
+            height="240"
+          />
+          <HeroShapes />
+        </div>
       </AnimatedContent>
       <AnimatedContent delay={100}>
         <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading" style="font-weight: 400; color: var(--theme-text);">
@@ -204,6 +213,30 @@ const blogPosts = (await getCollection('blog'))
     </BaseLayout>
 
 <style>
+  .hero-profile-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-profile-photo {
+    width: 33%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    z-index: 0;
+    margin-bottom: -3.5rem;
+    display: block;
+  }
+
+  .hero-profile-wrapper :global(.hero-shapes-wrapper) {
+    position: relative;
+    z-index: 1;
+  }
+
   /* Prevent hover effects on index content sections containing SVG images */
   .index-content-section {
     pointer-events: auto;
