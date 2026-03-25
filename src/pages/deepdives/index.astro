@@ -1,0 +1,492 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { getCollection } from 'astro:content';
+
+const allDeepdives = await getCollection('deepdives');
+const deepdives = allDeepdives
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Deep Dives" description="In-depth case studies on product design, systems thinking, and agentic experiences">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <div class="mb-12">
+          <h1 class="text-4xl md:text-5xl font-mono font-light mb-4" style="color: var(--theme-text);">
+            Deep Dives
+          </h1>
+          <p class="text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+            In-depth case studies on product design, systems thinking, and agentic experiences
+          </p>
+        </div>
+      </AnimatedContent>
+
+      {deepdives.length > 0 ? (
+        <div class="space-y-12 md:space-y-16">
+          {deepdives.map((post, index) => (
+            <AnimatedContent delay={index * 50}>
+              <a href={`/deepdives/${post.slug}/`} class="block no-underline border-none hover:bg-transparent">
+                <article>
+                  {post.data.featured_image && (
+                    <img
+                      src={post.data.featured_image}
+                      alt={post.data.title}
+                      class="w-full h-auto rounded-lg mb-4"
+                    />
+                  )}
+                  <h2 class="text-2xl md:text-3xl font-mono font-light mb-2" style="color: var(--theme-text);">
+                    {post.data.title}
+                  </h2>
+                  {post.data.description && (
+                    <p class="text-base" style="color: var(--theme-text-muted);">
+                      {post.data.description}
+                    </p>
+                  )}
+                </article>
+              </a>
+            </AnimatedContent>
+          ))}
+        </div>
+      ) : (
+        <AnimatedContent delay="100">
+          <div class="flex flex-col items-center text-center rounded-lg px-6 py-12 md:px-12 md:py-16" style="border: 1px solid var(--theme-border); background: var(--theme-bg);">
+            <p class="text-base mb-8" style="color: var(--theme-text-muted);">
+              Case studies are on the way. In the meantime, here's something to clear.
+            </p>
+
+            <!-- Minesweeper -->
+            <div class="minesweeper-wrapper">
+              <div id="minesweeper-header" class="minesweeper-header" style="display: none;">
+                <div class="minesweeper-stat">
+                  <span id="mine-count" class="minesweeper-counter">10</span>
+                  <span class="minesweeper-label">mines</span>
+                </div>
+                <div class="minesweeper-stat">
+                  <span id="minesweeper-timer" class="minesweeper-counter">0</span>
+                  <span class="minesweeper-label">sec</span>
+                </div>
+              </div>
+              <p id="minesweeper-hint" class="minesweeper-hint">Click any cell to start. Right-click to flag mines.</p>
+              <div id="minesweeper-grid" class="minesweeper-grid"></div>
+              <p id="minesweeper-message" class="minesweeper-message">&nbsp;</p>
+            </div>
+          </div>
+        </AnimatedContent>
+      )}
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+
+  <style is:global>
+    .minesweeper-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .minesweeper-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: min(100%, 420px);
+      font-family: var(--theme-font-heading, 'Anonymous Pro', monospace);
+    }
+
+    .minesweeper-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 3rem;
+    }
+
+    .minesweeper-counter {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--theme-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .minesweeper-label {
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--theme-text-muted);
+    }
+
+    .minesweeper-hint {
+      font-family: var(--theme-font-heading, 'Anonymous Pro', monospace);
+      font-size: 0.75rem;
+      color: var(--theme-text-muted);
+      margin: 0 0 0.5rem 0;
+      opacity: 0.7;
+    }
+
+    .minesweeper-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 3px;
+      width: 100%;
+      aspect-ratio: 1;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .ms-cell {
+      aspect-ratio: 1;
+      border: 1.5px solid var(--theme-border);
+      border-radius: 2px;
+      background: var(--theme-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: var(--theme-font-heading, 'Anonymous Pro', monospace);
+      font-size: clamp(0.75rem, 2vw, 1rem);
+      font-weight: 700;
+      color: var(--theme-bg);
+      transition: background-color 0.1s ease, opacity 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ms-cell:hover:not(.revealed):not(.flagged) {
+      opacity: 0.7;
+    }
+
+    .ms-cell.revealed {
+      background: var(--theme-bg);
+      color: var(--theme-text);
+      border-color: var(--theme-border);
+      cursor: default;
+    }
+
+    .ms-cell.revealed.empty {
+      color: transparent;
+    }
+
+    .ms-cell.revealed.n1 { color: var(--theme-text-muted); }
+    .ms-cell.revealed.n2 { color: var(--theme-text); opacity: 0.7; }
+    .ms-cell.revealed.n3 { color: var(--theme-text); opacity: 0.8; }
+    .ms-cell.revealed.n4 { color: var(--theme-text); opacity: 0.9; }
+    .ms-cell.revealed.n5 { color: var(--theme-text); }
+    .ms-cell.revealed.n6 { color: var(--theme-text); }
+    .ms-cell.revealed.n7 { color: var(--theme-text); }
+    .ms-cell.revealed.n8 { color: var(--theme-text); }
+
+    .ms-cell.revealed.mine {
+      background: var(--theme-text);
+      color: var(--theme-bg);
+    }
+
+    .ms-cell.flagged {
+      background: var(--theme-text-muted);
+      color: var(--theme-bg);
+    }
+
+    .minesweeper-message {
+      font-family: var(--theme-font-heading, 'Anonymous Pro', monospace);
+      font-size: 0.8125rem;
+      color: var(--theme-text-muted);
+      min-height: 1.5em;
+      margin: 0;
+    }
+
+    .minesweeper-message.win {
+      color: var(--theme-text);
+      font-weight: 700;
+    }
+
+    .minesweeper-message.lose {
+      color: var(--theme-text);
+      font-weight: 700;
+    }
+
+    .minesweeper-new-game {
+      font-family: var(--theme-font-heading, 'Anonymous Pro', monospace);
+      font-size: 0.8125rem;
+      color: var(--theme-text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+      margin-top: 0.25rem;
+    }
+
+    .minesweeper-new-game:hover {
+      color: var(--theme-text);
+    }
+  </style>
+
+  <script is:inline>
+    function initMinesweeper() {
+      var ROWS = 9;
+      var COLS = 9;
+      var MINES = 10;
+
+      var board = [];
+      var revealed = [];
+      var flagged = [];
+      var gameOver = false;
+      var gameStarted = false;
+      var timer = 0;
+      var timerInterval = null;
+      var firstClick = true;
+
+      var grid = document.getElementById('minesweeper-grid');
+      var mineCountEl = document.getElementById('mine-count');
+      var timerEl = document.getElementById('minesweeper-timer');
+      var messageEl = document.getElementById('minesweeper-message');
+      var headerEl = document.getElementById('minesweeper-header');
+      var hintEl = document.getElementById('minesweeper-hint');
+
+      if (!grid) return;
+
+      function makeArray(rows, cols, val) {
+        var arr = [];
+        for (var i = 0; i < rows; i++) {
+          var row = [];
+          for (var j = 0; j < cols; j++) row.push(val);
+          arr.push(row);
+        }
+        return arr;
+      }
+
+      function createBoard(safeRow, safeCol) {
+        board = makeArray(ROWS, COLS, 0);
+        revealed = makeArray(ROWS, COLS, false);
+        flagged = makeArray(ROWS, COLS, false);
+
+        var placed = 0;
+        while (placed < MINES) {
+          var r = Math.floor(Math.random() * ROWS);
+          var c = Math.floor(Math.random() * COLS);
+          if (board[r][c] === -1) continue;
+          if (Math.abs(r - safeRow) <= 1 && Math.abs(c - safeCol) <= 1) continue;
+          board[r][c] = -1;
+          placed++;
+        }
+
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            if (board[r][c] === -1) continue;
+            var count = 0;
+            for (var dr = -1; dr <= 1; dr++) {
+              for (var dc = -1; dc <= 1; dc++) {
+                var nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc] === -1) {
+                  count++;
+                }
+              }
+            }
+            board[r][c] = count;
+          }
+        }
+      }
+
+      function render() {
+        grid.innerHTML = '';
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            var cell = document.createElement('div');
+            cell.className = 'ms-cell';
+
+            if (revealed[r] && revealed[r][c]) {
+              cell.classList.add('revealed');
+              if (board[r][c] === -1) {
+                cell.classList.add('mine');
+                cell.textContent = '\u00D7';
+              } else if (board[r][c] === 0) {
+                cell.classList.add('empty');
+              } else {
+                cell.classList.add('n' + board[r][c]);
+                cell.textContent = board[r][c];
+              }
+            } else if (flagged[r] && flagged[r][c]) {
+              cell.classList.add('flagged');
+              cell.textContent = '\u2691';
+            }
+
+            (function(row, col) {
+              cell.addEventListener('click', function() { handleClick(row, col); });
+              cell.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                handleFlag(row, col);
+              });
+
+              var pressTimer = null;
+              cell.addEventListener('touchstart', function(e) {
+                pressTimer = setTimeout(function() {
+                  e.preventDefault();
+                  handleFlag(row, col);
+                  pressTimer = null;
+                }, 400);
+              }, { passive: false });
+              cell.addEventListener('touchend', function() {
+                if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+              });
+              cell.addEventListener('touchmove', function() {
+                if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+              });
+            })(r, c);
+
+            grid.appendChild(cell);
+          }
+        }
+        updateMineCount();
+      }
+
+      function handleClick(r, c) {
+        if (gameOver) return;
+        if (flagged[r] && flagged[r][c]) return;
+        if (revealed[r] && revealed[r][c]) return;
+
+        if (firstClick) {
+          createBoard(r, c);
+          firstClick = false;
+          gameStarted = true;
+          if (headerEl) headerEl.style.display = '';
+          if (hintEl) hintEl.style.display = 'none';
+          showNewGameLink();
+          startTimer();
+        }
+
+        reveal(r, c);
+        render();
+        checkWin();
+      }
+
+      function handleFlag(r, c) {
+        if (gameOver || firstClick) return;
+        if (revealed[r] && revealed[r][c]) return;
+        flagged[r][c] = !flagged[r][c];
+        render();
+      }
+
+      function reveal(r, c) {
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
+        if (revealed[r][c] || flagged[r][c]) return;
+
+        revealed[r][c] = true;
+
+        if (board[r][c] === -1) {
+          endGame(false);
+          return;
+        }
+
+        if (board[r][c] === 0) {
+          for (var dr = -1; dr <= 1; dr++) {
+            for (var dc = -1; dc <= 1; dc++) {
+              reveal(r + dr, c + dc);
+            }
+          }
+        }
+      }
+
+      function checkWin() {
+        if (gameOver) return;
+        var unrevealedSafe = 0;
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            if (!revealed[r][c] && board[r][c] !== -1) unrevealedSafe++;
+          }
+        }
+        if (unrevealedSafe === 0) endGame(true);
+      }
+
+      function showNewGameLink() {
+        messageEl.innerHTML = '';
+        var link = document.createElement('button');
+        link.className = 'minesweeper-new-game';
+        link.textContent = 'New game';
+        link.addEventListener('click', reset);
+        messageEl.appendChild(link);
+      }
+
+      function endGame(won) {
+        gameOver = true;
+        stopTimer();
+        var msg = won ? 'Cleared. Case studies incoming. ' : 'Boom. ';
+        var cls = won ? 'win' : 'lose';
+        messageEl.className = 'minesweeper-message ' + cls;
+        var span = document.createElement('span');
+        span.textContent = msg;
+        messageEl.insertBefore(span, messageEl.firstChild);
+
+        if (!won) {
+          for (var r = 0; r < ROWS; r++) {
+            for (var c = 0; c < COLS; c++) {
+              if (board[r][c] === -1) revealed[r][c] = true;
+            }
+          }
+          render();
+        }
+      }
+
+      function updateMineCount() {
+        var flags = 0;
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            if (flagged[r] && flagged[r][c]) flags++;
+          }
+        }
+        mineCountEl.textContent = (MINES - flags);
+      }
+
+      function startTimer() {
+        timer = 0;
+        timerEl.textContent = '0';
+        timerInterval = setInterval(function() {
+          timer++;
+          timerEl.textContent = timer;
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function reset() {
+        stopTimer();
+        board = [];
+        revealed = makeArray(ROWS, COLS, false);
+        flagged = makeArray(ROWS, COLS, false);
+        gameOver = false;
+        gameStarted = false;
+        firstClick = true;
+        timer = 0;
+        timerEl.textContent = '0';
+        mineCountEl.textContent = MINES;
+        messageEl.innerHTML = '\u00A0';
+        messageEl.className = 'minesweeper-message';
+        if (headerEl) headerEl.style.display = 'none';
+        if (hintEl) hintEl.style.display = '';
+        render();
+      }
+
+      reset();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMinesweeper);
+    } else {
+      initMinesweeper();
+    }
+    document.addEventListener('astro:page-load', initMinesweeper);
+  </script>
+</BaseLayout>
