@@ -1623,11 +1623,12 @@ export function ExperienceSnapshotVisual() {
       // Random opacity between 0.8 and 1.0
       const opacity = 0.8 + Math.random() * 0.2;
 
-      // Distribute nodes in a wider circular/network pattern
+      // Distribute nodes in a wider elliptical/network pattern
       const angle = (index / keywords.length) * Math.PI * 2;
-      const radius = Math.min(viewBoxWidth, viewBoxHeight) * 0.35; // Larger radius
-      const x = viewBoxWidth / 2 + Math.cos(angle) * radius + (Math.random() - 0.5) * 60;
-      const y = viewBoxHeight / 2 + Math.sin(angle) * radius + (Math.random() - 0.5) * 60;
+      const radiusX = viewBoxWidth * 0.38;
+      const radiusY = viewBoxHeight * 0.32;
+      const x = viewBoxWidth / 2 + Math.cos(angle) * radiusX + (Math.random() - 0.5) * 60;
+      const y = viewBoxHeight / 2 + Math.sin(angle) * radiusY + (Math.random() - 0.5) * 60;
 
       return {
         id: index,
