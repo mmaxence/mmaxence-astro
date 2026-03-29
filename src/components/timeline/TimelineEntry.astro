@@ -100,20 +100,20 @@ function parseParagraph(text: string) {
 const parsedContent = parseContent(content);
 ---
 
-<article class="flex flex-col md:flex-row gap-6 md:gap-8 pb-8 border-b border-gray-200 last:border-b-0">
+<article class="flex flex-col md:flex-row gap-6 md:gap-8 pb-8 border-b border-theme last:border-b-0">
   <div class="w-full md:w-1/5">
-    <div class="text-[1.125rem] font-mono font-normal" style="color: var(--theme-text-muted);">
+    <div class="text-base font-mono font-normal text-theme-muted">
       {period}
     </div>
   </div>
   <div class="w-full md:w-4/5">
-    <h2 class="text-2xl md:text-3xl font-mono font-light mb-0" style="color: var(--theme-text); margin-bottom: 0 !important;">
+    <h2 class="text-2xl md:text-3xl font-mono font-light !mb-0 text-theme">
       {title}
     </h2>
     {description && (
-      <p class="mb-4 mt-0.5" style="color: var(--theme-text-muted);">{description}</p>
+      <p class="mb-4 mt-0.5 text-theme-muted">{description}</p>
     )}
-    <div class={`prose prose-lg max-w-none leading-relaxed ${!description ? 'mt-4' : ''}`} style="color: var(--theme-text);">
+    <div class={`prose prose-lg max-w-none leading-relaxed text-theme ${!description ? 'mt-4' : ''}`}>
       {parsedContent.map((element, idx) => {
         if (element.type === 'h4') {
           return <h4 key={idx} class="font-mono text-xl font-normal mt-8 mb-4 first:mt-0">{element.content}</h4>;
@@ -125,8 +125,8 @@ const parsedContent = parseContent(content);
           const parts = parseParagraph(element.content);
           return (
             <div key={idx} class="mb-2 flex items-start">
-              <span class="mr-2 mt-1" style="color: var(--theme-text-muted);">•</span>
-              <span class="text-[1.125rem] flex-1">
+              <span class="mr-2 mt-1 text-theme-muted">•</span>
+              <span class="text-base flex-1">
                 {parts.map((part, i) => {
                   if (part.type === 'link') {
                     const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
@@ -150,7 +150,7 @@ const parsedContent = parseContent(content);
         if (element.type === 'p') {
           const parts = parseParagraph(element.content);
           return (
-            <p key={idx} class="mb-4 text-[1.125rem]">
+            <p key={idx} class="mb-4 text-base">
               {parts.map((part, i) => {
                 if (part.type === 'link') {
                   const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
@@ -174,8 +174,8 @@ const parsedContent = parseContent(content);
       })}
     </div>
     {relatedLinks && relatedLinks.length > 0 && (
-      <div class="mt-8 pt-8 border-t" style="border-color: var(--theme-border);">
-        <h3 class="font-mono text-xl font-normal mb-3" style="color: var(--theme-text);">Related content</h3>
+      <div class="mt-8 pt-8 border-t border-theme">
+        <h3 class="font-mono text-xl font-normal mb-3 text-theme">Related content</h3>
         <div class="flex flex-wrap gap-2">
           {relatedLinks.map((link) => (
             <LinkCard href={link.href} title={link.title} favicon={link.favicon} />

@@ -55,12 +55,12 @@ const techStack = [
     <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
         <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">About This Website</h1>
-        <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed mb-12" style="color: var(--theme-text);">
+        <div class="prose prose-lg max-w-none text-base leading-relaxed mb-12 text-theme">
           <p>This website is built with modern web technologies, focusing on performance, accessibility, and a delightful user experience. It features interactive SVG visuals, responsive design, and a unique random theme system. It's a showcase of how to build a fast, beautiful portfolio/blog using cutting-edge static site generation.</p>
           
           <p class="mt-4">The homepage includes five distinct interactive visual components that reinforce the mental models described in each section, all built with React and SVG for smooth, performant animations.</p>
           
-          <p class="mt-6 p-4 bg-gray-50 rounded" style="border-left: 4px solid var(--theme-accent);">
+          <p class="mt-6 p-4 bg-theme rounded border-l-4 border-theme-accent">
             <strong class="font-mono">✨ Open Source:</strong> This entire project is available as a <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="prefetch-link" data-prefetch="false">public repository on GitHub</a>. Feel free to use it as a starting point for your own portfolio, blog, or website. Fork it, customize it, and make it your own!
           </p>
         </div>
@@ -73,14 +73,14 @@ const techStack = [
               <h2 class="text-2xl md:text-3xl font-mono font-light mb-6">{category.category}</h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {category.items.map((item, itemIndex) => (
-                  <div class="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                  <div class="p-4 border border-theme rounded-lg hover:shadow-theme-hover transition-shadow">
                     <h3 class="font-mono text-xl font-normal mb-2">
                       {item.link ? (
-                        <a 
-                          href={item.link} 
-                          target="_blank" 
+                        <a
+                          href={item.link}
+                          target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors" style="color: var(--theme-text);" onmouseover="this.style.color='var(--theme-accent)'" onmouseout="this.style.color='var(--theme-text)'"
+                          class="transition-colors text-theme hover:text-theme-accent"
                         >
                           {item.name}
                         </a>
@@ -88,7 +88,7 @@ const techStack = [
                         item.name
                       )}
                     </h3>
-                    <p class="text-[1.125rem] leading-relaxed" style="color: var(--theme-text-muted);">
+                    <p class="text-base leading-relaxed text-theme-muted">
                       {item.description}
                     </p>
                   </div>
@@ -100,9 +100,9 @@ const techStack = [
       </div>
 
       <AnimatedContent delay={techStack.length * 100}>
-        <div class="mt-16 p-6 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="mt-16 p-6 bg-theme rounded-lg border border-theme">
           <h2 class="text-2xl font-mono font-light mb-4">Design Philosophy</h2>
-          <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+          <div class="prose prose-lg max-w-none text-base leading-relaxed text-theme">
             <p>This website embodies several key principles:</p>
             <ul class="list-disc pl-6 space-y-2 mt-4">
               <li><strong>Performance First:</strong> Static generation, minimal JavaScript, and optimized assets ensure fast load times and smooth interactions.</li>
@@ -116,9 +116,9 @@ const techStack = [
       </AnimatedContent>
 
       <AnimatedContent delay={(techStack.length + 1) * 100}>
-        <div class="mt-16 p-6 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="mt-16 p-6 bg-theme rounded-lg border border-theme">
           <h2 class="text-2xl font-mono font-light mb-4">Random Theme System</h2>
-          <div class="prose prose-lg max-w-none text-[1.125rem] leading-relaxed" style="color: var(--theme-text);">
+          <div class="prose prose-lg max-w-none text-base leading-relaxed text-theme">
             <p>This website features a hidden random theme system that can be activated by clicking on the hero shapes on the homepage. Here's how it works:</p>
             
             <h3 class="text-xl font-mono font-normal mt-6 mb-3">How It Works</h3>
@@ -137,9 +137,9 @@ const techStack = [
             <h3 class="text-xl font-mono font-normal mt-6 mb-3">Technical Implementation</h3>
             <ul class="list-disc pl-6 space-y-2">
               <li><strong>Color System:</strong> Themes are generated using CSS custom properties (CSS variables) that cascade throughout the entire site, affecting backgrounds, text, borders, shadows, and UI elements.</li>
-              <li><strong>Accessibility:</strong> Each theme combination is validated using WCAG luminance and contrast ratio calculations to ensure readability. The system uses the relative luminance formula: <code class="bg-gray-200 px-1 rounded">L = 0.2126 × R + 0.7152 × G + 0.0722 × B</code></li>
+              <li><strong>Accessibility:</strong> Each theme combination is validated using WCAG luminance and contrast ratio calculations to ensure readability. The system uses the relative luminance formula: <code class="bg-theme-border px-1 rounded">L = 0.2126 × R + 0.7152 × G + 0.0722 × B</code></li>
               <li><strong>Dynamic Toast Colors:</strong> The toast notification itself adapts to each theme, with background and text colors calculated to contrast with the page background while maintaining accessibility standards.</li>
-              <li><strong>Theme Storage:</strong> Themes are stored in <code class="bg-gray-200 px-1 rounded">localStorage</code> to persist across page refreshes and navigation.</li>
+              <li><strong>Theme Storage:</strong> Themes are stored in <code class="bg-theme-border px-1 rounded">localStorage</code> to persist across page refreshes and navigation.</li>
               <li><strong>SVG Color Updates:</strong> Hero shapes and logo SVGs dynamically update their fill colors to match the current theme using CSS custom properties.</li>
             </ul>
 
@@ -158,29 +158,23 @@ const techStack = [
 
       <AnimatedContent delay={(techStack.length + 2) * 100}>
         <div class="mt-12 text-center">
-          <p class="text-[1.125rem] mb-6" style="color: var(--theme-text-muted);">
+          <p class="text-base mb-6 text-theme-muted">
             Built with ❤️ using Astro and modern web standards
           </p>
           <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <a 
-              href="https://github.com/mmaxence/mmaxence-astro" 
-              target="_blank" 
+            <a
+              href="https://github.com/mmaxence/mmaxence-astro"
+              target="_blank"
               rel="noopener noreferrer"
-              class="px-6 py-3 rounded-lg transition-colors font-mono text-sm"
-              style="background-color: var(--theme-text); color: var(--theme-bg);"
-              onmouseover="this.style.opacity='0.9'"
-              onmouseout="this.style.opacity='1'"
+              class="about-btn-primary px-6 py-3 rounded-lg transition-opacity font-mono text-sm bg-[var(--theme-text)] text-[var(--theme-bg)] hover:opacity-90"
             >
               View on GitHub
             </a>
-            <a 
-              href="https://astro.build/" 
-              target="_blank" 
+            <a
+              href="https://astro.build/"
+              target="_blank"
               rel="noopener noreferrer"
-              class="px-6 py-3 rounded-lg transition-colors font-mono text-sm"
-              style="border: 1px solid var(--theme-border); color: var(--theme-text);"
-              onmouseover="this.style.backgroundColor='var(--theme-border)'"
-              onmouseout="this.style.backgroundColor='transparent'"
+              class="about-btn-secondary px-6 py-3 rounded-lg transition-colors font-mono text-sm border border-theme text-theme hover:bg-theme-border"
             >
               Learn Astro
             </a>

@@ -6,24 +6,29 @@ export default {
       fontFamily: {
         'body': ['var(--font-body)', 'sans-serif'],
         'heading': ['var(--font-heading)', 'serif'],
-        'mono': ['var(--font-heading)', 'monospace'], // Use CSS variable so it switches
+        'mono': ['var(--font-heading)', 'monospace'],
         'sans': ['var(--font-body)', 'sans-serif'],
         'serif': ['var(--font-heading)', 'serif'],
       },
       fontSize: {
-        'base': '1.125rem', // 18px
+        'base': '1.125rem',
       },
       colors: {
-        'text': '#1a1a1a',
-        'text-muted': 'rgba(26, 26, 26, 0.6)',
-        'text-light': 'rgba(26, 26, 26, 0.5)',
-        'bg': '#ffffff',
-        'bg-muted': '#f1f2f3',
-        'accent': '#000000',
-        'accent-hover': '#1a1a1a',
-        'highlight': '#FBF1A9',
-        'border': '#e5e7eb',
-        'border-light': '#f1f2f3',
+        'theme-text': 'var(--theme-text)',
+        'theme-text-muted': 'var(--theme-text-muted)',
+        'theme-bg': 'var(--theme-bg)',
+        'theme-accent': 'var(--theme-accent)',
+        'theme-border': 'var(--theme-border)',
+        'theme-highlight': 'var(--theme-highlight)',
+      },
+      boxShadow: {
+        'theme': 'var(--theme-shadow)',
+        'theme-hover': 'var(--shadow-hover)',
+      },
+      borderRadius: {
+        'card': 'var(--radius-card)',
+        'card-image': 'var(--radius-card-image)',
+        'card-inner': 'var(--radius-card-inner)',
       },
     },
   },

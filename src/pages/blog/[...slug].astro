@@ -61,19 +61,19 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
               class="w-full h-auto rounded-lg"
             />
           {post.data.credential && (
-            <p class="text-sm text-gray-500 mt-2">
+            <p class="text-sm text-theme-muted mt-2">
               {post.data.credentiallink ? (
                 <a 
                   href={post.data.credentiallink} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   class="credential"
-                  style="color: var(--theme-text-muted);"
+                  class="credential text-theme-muted"
                 >
                   {post.data.credential}
                 </a>
               ) : (
-                <span class="credential">{post.data.credential}</span>
+                <span class="credential text-theme-muted">{post.data.credential}</span>
               )}
             </p>
           )}
@@ -85,7 +85,7 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
         <h1 class="text-4xl md:text-5xl font-mono font-light mb-4">
           {post.data.title}
         </h1>
-            <time class="text-sm" style="color: var(--theme-text-muted);">
+            <time class="text-sm text-theme-muted">
           {post.data.date.toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
@@ -94,15 +94,15 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
         </time>
       </header>
       
-          <div class="prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text); opacity: 0.9;">
+          <div class="prose prose-lg max-w-none leading-relaxed text-theme opacity-90">
         <Content />
       </div>
 
       {videoId && (
-        <section class="mt-12 pt-8 border-t" style="border-color: var(--theme-text-muted);">
-          <h2 class="text-xl font-mono font-light mb-2" style="color: var(--theme-text);">Related</h2>
+        <section class="mt-12 pt-8 border-t border-theme">
+          <h2 class="text-xl font-mono font-light mb-2 text-theme">Related</h2>
           {post.data.related_video_context && (
-            <p class="text-sm mb-4" style="color: var(--theme-text-muted);">
+            <p class="text-sm mb-4 text-theme-muted">
               {post.data.related_video_context}
             </p>
           )}
@@ -119,8 +119,7 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
             href={post.data.related_video!}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-block mt-2 text-sm hover:underline"
-            style="color: var(--theme-text-muted);"
+            class="inline-block mt-2 text-sm hover:underline text-theme-muted"
           >
             Watch on YouTube →
           </a>

@@ -13,7 +13,7 @@ const { title, description, class: className = '' } = Astro.props;
     {title}
   </h1>
   {description && (
-    <p class="text-[1.125rem]" style="color: var(--theme-text);" set:html={description} />
+    <p class="text-base text-theme" set:html={description} />
   )}
 </div>
 

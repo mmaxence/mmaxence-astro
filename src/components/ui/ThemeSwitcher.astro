@@ -3,33 +3,30 @@
 ---
 
 <div id="theme-switcher" class="theme-switcher fixed bottom-4 right-4 z-50 hidden">
-  <div class="bg-white border border-gray-300 rounded-lg shadow-lg p-3" style="background-color: var(--theme-bg); border-color: var(--theme-border); box-shadow: var(--theme-shadow);">
-    <p class="text-xs mb-2 font-semibold" style="color: var(--theme-text); font-family: var(--theme-font-heading);">Theme</p>
+  <div class="bg-theme border border-theme rounded-lg shadow-theme p-3">
+    <p class="text-xs mb-2 font-semibold font-heading text-theme">Theme</p>
     <div class="flex gap-2">
       <button
         id="theme-default"
-        class="theme-btn w-8 h-8 rounded border-2 transition-all"
+        class="theme-btn theme-btn-default w-8 h-8 rounded border-2 border-theme-accent transition-all"
         data-theme="default"
         title="Default Theme"
-        style="background-color: #ffffff; border-color: var(--theme-accent);"
       >
         <span class="sr-only">Default</span>
       </button>
       <button
         id="theme-ide"
-        class="theme-btn w-8 h-8 rounded border-2 transition-all"
+        class="theme-btn theme-btn-ide w-8 h-8 rounded border-2 border-theme-accent transition-all"
         data-theme="ide"
         title="IDE Theme"
-        style="background-color: #1a1b26; border-color: var(--theme-accent);"
       >
         <span class="sr-only">IDE</span>
       </button>
       <button
         id="theme-pixel"
-        class="theme-btn w-8 h-8 rounded border-2 transition-all"
+        class="theme-btn theme-btn-pixel w-8 h-8 rounded border-2 border-theme-accent transition-all"
         data-theme="pixel"
         title="Pixel Theme"
-        style="background-color: #e8e8d3; border-color: var(--theme-accent);"
       >
         <span class="sr-only">Pixel</span>
       </button>
@@ -377,6 +374,11 @@
   .theme-btn {
     cursor: pointer;
   }
+
+  /* Theme preview colors — intentionally static to represent each theme */
+  .theme-btn-default { background-color: #ffffff; }
+  .theme-btn-ide     { background-color: #1a1b26; }
+  .theme-btn-pixel   { background-color: #e8e8d3; }
 
   .theme-btn:hover {
     transform: scale(1.15);

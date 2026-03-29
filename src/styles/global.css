@@ -69,6 +69,24 @@
 }
 
 /* ============================================
+   THEME UTILITY CLASSES
+   ============================================
+   Replaces inline style="color: var(--theme-*)" patterns
+*/
+
+.text-theme        { color: var(--theme-text); }
+.text-theme-muted  { color: var(--theme-text-muted); }
+.text-theme-accent { color: var(--theme-accent); }
+.bg-theme          { background-color: var(--theme-bg); }
+.bg-theme-border   { background-color: var(--theme-border); }
+.border-theme      { border-color: var(--theme-border); }
+.shadow-theme      { box-shadow: var(--theme-shadow); }
+
+/* Hover variants */
+.hover\:text-theme-accent:hover { color: var(--theme-accent); }
+.hover\:bg-theme-border:hover   { background-color: var(--theme-border); }
+
+/* ============================================
    CARD RADIUS SYSTEM
    ============================================ */
 

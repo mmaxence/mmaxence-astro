@@ -14,22 +14,21 @@ const featuredImage = post.data.featured_image?.startsWith('/')
 ---
 
 <a href={`/blog/${post.slug}`} class="blog-card-link block prefetch-link" data-prefetch="true">
-  <article class="blog-card text-[1.125rem] leading-relaxed p-6 relative overflow-hidden" style="color: var(--theme-text); border: 1px solid var(--theme-border); box-shadow: var(--theme-shadow); border-radius: var(--radius-card);">
+  <article class="blog-card text-base leading-relaxed p-6 relative overflow-hidden text-theme border border-theme shadow-theme rounded-card">
     {post.data.featured_image && (
-      <div class="mb-4 overflow-hidden" style="border-radius: var(--radius-card-image);">
-        <img 
-          src={featuredImage} 
+      <div class="mb-4 overflow-hidden rounded-card-image">
+        <img
+          src={featuredImage}
           alt={post.data.title}
-          class="blog-card-image w-full h-auto transition-transform duration-300"
-          style="border-radius: var(--radius-card-image);"
+          class="blog-card-image w-full h-auto transition-transform duration-300 rounded-card-image"
         />
       </div>
     )}
-    <DateDisplay date={post.data.date} class="block mb-2 text-sm" style="color: var(--theme-text-muted);" />
+    <DateDisplay date={post.data.date} class="block mb-2 text-sm text-theme-muted" />
     <h2 class="text-xl md:text-2xl font-mono font-light mt-0 md:mt-2 mb-2">
       {post.data.title}
     </h2>
-    <p class="text-[1.125rem] leading-relaxed">
+    <p class="text-base leading-relaxed">
       {post.data.description || 'Read the full article to learn more.'}
     </p>
   </article>

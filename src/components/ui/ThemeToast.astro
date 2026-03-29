@@ -12,8 +12,6 @@
       id="reset-theme-btn"
       class="reset-btn text-xs font-semibold px-3 py-1.5 rounded transition-all duration-200"
       style="background-color: var(--toast-button-bg); color: var(--toast-button-text);"
-      onmouseover="this.style.transform='scale(1.05)'"
-      onmouseout="this.style.transform='scale(1)'"
       aria-label="Reset to default theme"
     >
       Reset
@@ -502,6 +500,7 @@
   }
 
   .reset-btn:hover {
+    transform: scale(1.05);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 

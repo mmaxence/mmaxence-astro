@@ -34,22 +34,22 @@ function isActive(url: string): boolean {
     <div class="flex flex-col md:flex-row items-start md:items-baseline justify-between max-w-screen-xl mx-auto gap-3 md:gap-6">
       <a href="/" class="header-logo-link flex flex-row items-center mb-0 pl-0 md:pl-2 grow md:mr-3 no-underline hover:bg-transparent border-none group">
         <svg class="header-logo-svg mr-2 flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 self-start mt-0.5" width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="512" height="512" rx="256" style="fill: var(--theme-bg);"/>
-          <path d="M256 58.5142L427.028 157.257V354.743L256 453.486L84.9725 354.743V157.257L256 58.5142Z" style="fill: var(--theme-text);"/>
-          <rect x="173.248" y="256" width="117.029" height="117.029" transform="rotate(-45 173.248 256)" style="fill: var(--theme-bg);"/>
+          <rect width="512" height="512" rx="256" class="fill-[var(--theme-bg)]"/>
+          <path d="M256 58.5142L427.028 157.257V354.743L256 453.486L84.9725 354.743V157.257L256 58.5142Z" class="fill-[var(--theme-text)]"/>
+          <rect x="173.248" y="256" width="117.029" height="117.029" transform="rotate(-45 173.248 256)" class="fill-[var(--theme-bg)]"/>
         </svg>
         <div class="flex flex-col">
-          <p class="text-base md:text-[1.5rem] leading-tight transition-colors duration-300 mb-1" style="color: var(--theme-text);">
+          <p class="text-base md:text-[1.5rem] leading-tight transition-colors duration-300 mb-1 text-theme">
             {author}
           </p>
           <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-0.5">
             {subtitleParts.map((part, index) => (
               <>
-                <span class="text-sm md:text-base font-body font-normal transition-colors duration-300 leading-tight" style="color: var(--theme-text-muted);">
+                <span class="text-sm md:text-base font-body font-normal transition-colors duration-300 leading-tight text-theme-muted">
                   {part}
                 </span>
                 {index < subtitleParts.length - 1 && (
-                  <span class="text-sm md:text-base font-body font-normal leading-tight" style="color: var(--theme-text-muted); opacity: 0.4;">
+                  <span class="text-sm md:text-base font-body font-normal leading-tight text-theme-muted opacity-40">
                     ·
                   </span>
                 )}
@@ -65,10 +65,9 @@ function isActive(url: string): boolean {
             {desktopMenuItems.map((item) => {
               const active = isActive(item.url);
               return (
-              <li class="text-[1.125rem] font-normal inline-block relative transition-all duration-150">
+              <li class="text-base font-normal inline-block relative transition-all duration-150">
                     <a
-                      class={`prefetch-link px-1 py-1 transition-colors duration-300 ${active ? 'nav-active' : ''}`}
-                      style={active ? "color: var(--theme-accent);" : "color: var(--theme-text);"}
+                      class={`prefetch-link px-1 py-1 transition-colors duration-300 ${active ? 'nav-active text-theme-accent' : 'text-theme'}`}
                       href={item.url}
                       title={`${item.name} page`}
                       data-prefetch="true"
@@ -103,8 +102,7 @@ function isActive(url: string): boolean {
           <ul class="mobile-menu-list">
             <li>
               <a
-                class={`mobile-menu-item prefetch-link ${isActive('/') ? 'nav-active' : ''}`}
-                style={isActive('/') ? "color: var(--theme-accent);" : "color: var(--theme-text);"}
+                class={`mobile-menu-item prefetch-link ${isActive('/') ? 'nav-active text-theme-accent' : 'text-theme'}`}
                 href="/"
                 title="Home page"
                 data-prefetch="true"
@@ -118,8 +116,7 @@ function isActive(url: string): boolean {
               return (
                 <li>
                   <a
-                    class={`mobile-menu-item prefetch-link ${active ? 'nav-active' : ''}`}
-                    style={active ? "color: var(--theme-accent);" : "color: var(--theme-text);"}
+                    class={`mobile-menu-item prefetch-link ${active ? 'nav-active text-theme-accent' : 'text-theme'}`}
                     href={item.url}
                     title={`${item.name} page`}
                     data-prefetch="true"
@@ -133,8 +130,7 @@ function isActive(url: string): boolean {
             <li>
               <button
                 id="mobile-reset-theme-btn"
-                class="mobile-menu-item mobile-reset-theme-btn"
-                style="color: var(--theme-text);"
+                class="mobile-menu-item mobile-reset-theme-btn text-theme"
                 aria-label="Reset to default theme"
               >
                 Reset Theme

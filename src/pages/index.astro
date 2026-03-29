@@ -28,7 +28,7 @@ const blogPosts = (await getCollection('blog'))
 <BaseLayout title="Systemic Design for High-Growth Products | Maxence Mauduit" description="Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.">
   <Header />
   <!-- Hero Section - Full Viewport -->
-  <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0" style="margin-top: -4rem;">
+  <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0 -mt-16">
     <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
         <div class="hero-profile-wrapper">
@@ -43,12 +43,12 @@ const blogPosts = (await getCollection('blog'))
         </div>
       </AnimatedContent>
       <AnimatedContent delay={100}>
-        <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading" style="font-weight: 400; color: var(--theme-text);">
+        <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading font-normal text-theme">
           Turning early product decisions into scalable platforms.
         </h1>
       </AnimatedContent>
       <AnimatedContent delay={200}>
-        <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4" style="color: var(--theme-text);">
+        <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4 text-theme">
           Product & experience executive with 13+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.<br />Still hands-on where it matters.
         </p>
       </AnimatedContent>
@@ -76,24 +76,24 @@ const blogPosts = (await getCollection('blog'))
       <ExperienceSnapshotVisual slot="visual" client:load />
       <div slot="post-visual">
         <div class="mt-8">
-          <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Product & Experience Executive</h2>
-          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">Buzzvil · Seoul · 2014–Present</p>
+          <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product & Experience Executive</h2>
+          <p class="text-base font-normal mt-1 text-theme-muted">Buzzvil · Seoul · 2014–Present</p>
           
           <ul class="mt-6 space-y-2 list-none pl-0">
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Shaped first iterations of nearly every major product and monetization model</span>
             </li>
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Led the company through a major pivot from consumer products to B2B Ads and SDK platforms</span>
             </li>
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Built and scaled a high-retention design team with strong product ownership</span>
             </li>
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
             </li>
           </ul>
@@ -106,20 +106,20 @@ const blogPosts = (await getCollection('blog'))
         </div>
         
         <div class="mt-12">
-          <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">UX Design Lead</h2>
-          <p class="text-base font-normal mt-1" style="color: var(--theme-text-muted);">CMS Group · Paris · 2011–2014</p>
+          <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">UX Design Lead</h2>
+          <p class="text-base font-normal mt-1 text-theme-muted">CMS Group · Paris · 2011–2014</p>
           
           <ul class="mt-6 space-y-2 list-none pl-0">
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Led UX for enterprise and SaaS products</span>
             </li>
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Co-published research on co-design validation methods</span>
             </li>
             <li class="flex items-start">
-              <span class="mr-2" style="color: var(--theme-text-muted);">•</span>
+              <span class="mr-2 text-theme-muted">•</span>
               <span>Built an education SaaS bridging design intent and production code</span>
             </li>
           </ul>
@@ -138,18 +138,18 @@ const blogPosts = (await getCollection('blog'))
       <div slot="post-visual">
         <div class="mt-6 space-y-4">
           <div>
-            <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Deliberate thinking, fast execution</h2>
-            <p class="mt-1" style="margin-top: 0.25rem;">I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
+            <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Deliberate thinking, fast execution</h2>
+            <p class="!mt-1">I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
           </div>
           
           <div>
-            <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Systems over screens</h2>
-            <p class="mt-1" style="margin-top: 0.25rem;">I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
+            <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Systems over screens</h2>
+            <p class="!mt-1">I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
           </div>
           
           <div>
-            <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Product ownership mindset</h2>
-            <p class="mt-1" style="margin-top: 0.25rem;">Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
+            <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product ownership mindset</h2>
+            <p class="!mt-1">Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
           </div>
         </div>
         <div class="mt-8 flex flex-wrap gap-2">
@@ -190,10 +190,10 @@ const blogPosts = (await getCollection('blog'))
     {/* Blog Posts */}
     {blogPosts.length > 0 && (
       <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
-        <div class="w-full max-w-5xl mx-auto text-[1.125rem] leading-relaxed index" style="color: var(--theme-text);">
+        <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
           <AnimatedContent delay={350}>
             <div class="w-full">
-              <h2 class="text-2xl md:text-3xl font-light mb-0" style="font-family: var(--theme-font-body); margin-bottom: 0;">Recent Writing</h2>
+              <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Recent Writing</h2>
               <CardGrid columns={3} class="mt-12">
                 {blogPosts.map((post, index) => (
                   <AnimatedContent delay={400 + (index * 50)}>

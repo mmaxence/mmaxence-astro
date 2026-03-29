@@ -19,25 +19,24 @@ const featuredImage = book.data.featured_image?.startsWith('/')
   data-prefetch="true"
   onclick="return false;"
 >
-  <article class="book-card p-6 border shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:-translate-y-1" style="background-color: var(--theme-bg); border-color: var(--theme-border); border-radius: var(--radius-card); box-shadow: var(--theme-shadow);">
+  <article class="book-card p-6 border border-theme bg-theme rounded-card shadow-theme transition-all duration-300 hover:shadow-theme-hover hover:-translate-y-1">
     {book.data.featured_image && (
-      <img 
-        src={featuredImage} 
+      <img
+        src={featuredImage}
         alt={book.data.title}
-        class="book-cover w-full h-64 object-cover mb-4"
-        style="border-radius: var(--radius-card-image);"
+        class="book-cover w-full h-64 object-cover mb-4 rounded-card-image"
       />
     )}
-    <h2 class="book-title text-xl font-semibold mb-2" style="color: var(--theme-text);">
+    <h2 class="book-title text-xl font-semibold mb-2 text-theme">
       {book.data.title}
     </h2>
     {book.data.book_author && (
-      <h3 class="book-author font-body text-[1.125rem] mb-2" style="color: var(--theme-text-muted);">
+      <h3 class="book-author font-body text-base mb-2 text-theme-muted">
         by {book.data.book_author}
       </h3>
     )}
     {book.data.book_category && (
-      <p class="book-description text-sm mb-3" style="color: var(--theme-text-muted);">
+      <p class="book-description text-sm mb-3 text-theme-muted">
         {book.data.book_category}
       </p>
     )}
