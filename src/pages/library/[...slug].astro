@@ -32,6 +32,8 @@ const featuredImage = book.data.featured_image?.startsWith('/')
 <BaseLayout
   title={book.data.title}
   description={book.data.description || book.data.title}
+  type="article"
+  date={book.data.date}
 >
       <Header />
       <PageContent class="flex flex-col items-center pb-4 min-h-screen">

@@ -1,0 +1,12 @@
+# robots.txt for mmaxence.me
+# Welcome crawlers and AI agents
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mmaxence.me/sitemap-index.xml
+
+# LLM-friendly content
+# See /llms.txt for a structured overview of this site
+# See /llms-full.txt for full content optimized for LLM consumption

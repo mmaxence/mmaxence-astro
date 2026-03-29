@@ -8,16 +8,59 @@ interface Props {
   featured_image?: string;
   url?: string;
   type?: 'website' | 'article';
+  date?: Date;
 }
 
-const { title = "Product Designer, CDO at buzzvil", description = "Product Manager, Head of Design at buzzvil", featured_image, url, type = 'website' } = Astro.props;
+const { title = "Product Designer, CDO at buzzvil", description = "Product Manager, Head of Design at buzzvil", featured_image, url, type = 'website', date } = Astro.props;
 const siteTitle = "Product Designer, CDO at buzzvil";
 const author = "Maxence Mauduit";
 const siteUrl = "https://mmaxence.me";
 const currentUrl = url || (Astro.url.pathname.endsWith('/') ? new URL(Astro.url.pathname, siteUrl).href : new URL(Astro.url.pathname + '/', siteUrl).href);
-const ogImage = featured_image 
+const ogImage = featured_image
   ? (featured_image.startsWith('http') ? featured_image : new URL(featured_image, siteUrl).href)
   : new URL('/images/mmaxence_logo.svg', siteUrl).href;
+
+// JSON-LD structured data
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Maxence Mauduit",
+  "url": siteUrl,
+  "jobTitle": "Chief Design Officer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Buzzvil",
+    "url": "https://www.buzzvil.com"
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/mmaxence/",
+    "https://github.com/mmaxence"
+  ],
+  "knowsAbout": ["Product Design", "Interaction Design", "Design Systems", "Product Management", "Leadership", "UX Design"]
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Maxence Mauduit",
+  "url": siteUrl,
+  "description": "Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.",
+  "author": { "@type": "Person", "name": "Maxence Mauduit" }
+};
+
+const articleSchema = type === 'article' ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "url": currentUrl,
+  "author": { "@type": "Person", "name": "Maxence Mauduit" },
+  ...(ogImage && { "image": ogImage }),
+  ...(date && { "datePublished": date.toISOString() }),
+  "publisher": { "@type": "Person", "name": "Maxence Mauduit" }
+} : null;
+
+const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [articleSchema] : [])];
 ---
 
 <!doctype html>
@@ -31,8 +74,16 @@ const ogImage = featured_image
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Anonymous+Pro:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <meta name="generator" content={Astro.generator} />
+    <meta name="author" content={author} />
+    <link rel="canonical" href={currentUrl} />
+    <link rel="alternate" type="application/rss+xml" title="Maxence Mauduit — Blog" href={new URL('/rss.xml', siteUrl).href} />
     <title>{title === siteTitle ? title : `${title} | ${siteTitle}`}</title>
-    
+
+    {/* JSON-LD Structured Data */}
+    {jsonLdSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+
     {/* Open Graph / Facebook */}
     <meta property="og:type" content={type} />
     <meta property="og:url" content={currentUrl} />
