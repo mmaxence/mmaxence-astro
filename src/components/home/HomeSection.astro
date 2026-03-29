@@ -33,21 +33,19 @@ const { title, delay = 0 } = Astro.props;
   .index-content-section [class*="my-8"] {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 100% !important;
     box-sizing: border-box !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-  
+
   /* Ensure SVGs inside visual components fill their containers and don't constrain parent */
   .index-content-section > div[class*="my-8"] > svg,
   .index-content-section > * > div[class*="my-8"] > svg,
   .index-content-section [class*="my-8"] > svg {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 100% !important;
     display: block !important;
     box-sizing: border-box !important;
     /* Prevent SVG from constraining parent width */

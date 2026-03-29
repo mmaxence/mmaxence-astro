@@ -498,10 +498,9 @@ a.credential:hover {
    INTERACTIONS & ANIMATIONS
    ============================================ */
 
-/* Smooth scrolling for anchor links + prevent horizontal overflow on mobile */
+/* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 /* Reading Progress Bar - can't be done with Tailwind */
