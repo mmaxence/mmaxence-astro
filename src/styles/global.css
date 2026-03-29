@@ -113,6 +113,7 @@ body {
   color: var(--theme-text) !important;
   background-color: var(--theme-bg);
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 /* Apply line-height and font-size-scale only when theme variables are set */
