@@ -217,16 +217,6 @@ export function WhatIDoVisual() {
   const [isVisible, setIsVisible] = useState(false);
   const [hoverLayer, setHoverLayer] = useState<number | null>(null);
   const [waveProgresses, setWaveProgresses] = useState([0, 0, 0]);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const updateMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    updateMobile();
-    window.addEventListener('resize', updateMobile);
-    return () => window.removeEventListener('resize', updateMobile);
-  }, []);
 
   // Simple layer definitions: bottom first (renders behind), top last (renders on top)
   // Centered horizontally: viewBox is 600 wide, so center is 300. Layers start around 150-200 to center them
@@ -364,7 +354,7 @@ export function WhatIDoVisual() {
               <text
                 x="460"
                 y={centerY + 5}
-                fontSize={isMobile ? "24" : "14"}
+                fontSize="14"
                 fill={isHovered ? accentColor : mutedColor}
                 style={{
                   ...textNoSelectStyle,
@@ -389,16 +379,6 @@ export function HowIWorkVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const animationRef = useRef<number | undefined>(undefined);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const updateMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    updateMobile();
-    window.addEventListener('resize', updateMobile);
-    return () => window.removeEventListener('resize', updateMobile);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -591,7 +571,7 @@ export function HowIWorkVisual() {
         <text
           x="420"
           y="75"
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={mutedColor}
           style={{
             ...textNoSelectStyle,
@@ -606,7 +586,7 @@ export function HowIWorkVisual() {
         <text
           x="420"
           y="155"
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={mutedColor}
           style={{
             ...textNoSelectStyle,
@@ -639,16 +619,6 @@ export function LeadershipScalesVisual() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const animationRef = useRef<number | undefined>(undefined);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const updateMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    updateMobile();
-    window.addEventListener('resize', updateMobile);
-    return () => window.removeEventListener('resize', updateMobile);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -952,7 +922,7 @@ export function LeadershipScalesVisual() {
           className="headcount-label"
           x={headcountLabelX}
           y={headcountLabelY}
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -983,7 +953,7 @@ export function LeadershipScalesVisual() {
           className="capability-label"
           x={capabilityLabelX}
           y={capabilityLabelY}
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1014,7 +984,7 @@ export function LeadershipScalesVisual() {
           className="influence-label"
           x={influenceLabelX}
           y={influenceLabelY}
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1314,7 +1284,7 @@ export function BeyondTheRoleVisual() {
           className="work-label"
           x={isMobile ? viewportWidth / 2 - 120 : 200}
           y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={textColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1333,7 +1303,7 @@ export function BeyondTheRoleVisual() {
           className="life-label"
           x={isMobile ? viewportWidth / 2 + 120 : 400}
           y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
-          fontSize={isMobile ? "24" : "14"}
+          fontSize="14"
           fill={textColor}
           textAnchor="end"
           dominantBaseline="middle"
