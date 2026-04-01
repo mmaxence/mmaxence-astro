@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import TagList from '../ui/TagList.astro';
+import BlogCard from './BlogCard.astro';
+import CardGrid from '../ui/CardGrid.astro';
 
 interface Props {
   currentPost: CollectionEntry<'blog'>;
@@ -32,6 +34,17 @@ const related = currentTags.length > 0
       .slice(0, 3)
       .map((r) => r.post)
   : [];
+
+// Resolve featured image path for a post
+function getImage(post: CollectionEntry<'blog'>): string | null {
+  if (!post.data.featured_image) return null;
+  return post.data.featured_image.startsWith('/')
+    ? post.data.featured_image
+    : `/blog/${post.slug}/${post.data.featured_image}`;
+}
+
+const prevImage = prevPost ? getImage(prevPost) : null;
+const nextImage = nextPost ? getImage(nextPost) : null;
 ---
 
 {/* Tags */}
@@ -43,21 +56,45 @@ const related = currentTags.length > 0
 
 {/* Prev / Next navigation */}
 <nav class="blog-post-nav mt-16 pt-8 border-t border-theme" aria-label="Blog post navigation">
-  <div class="flex flex-col sm:flex-row justify-between gap-6">
+  <div class="flex flex-col sm:flex-row justify-between gap-4">
     {prevPost ? (
-      <a href={`/blog/${prevPost.slug}`} class="blog-nav-link group flex-1" data-nav="prev">
-        <span class="text-sm text-theme-muted">Previous</span>
-        <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors">
-          {prevPost.data.title}
-        </span>
+      <a href={`/blog/${prevPost.slug}`} class="blog-nav-link group flex-1 flex items-center gap-3" data-nav="prev">
+        {prevImage && (
+          <img
+            src={prevImage}
+            alt=""
+            class="blog-nav-thumb flex-shrink-0"
+            width="64"
+            height="64"
+            loading="lazy"
+          />
+        )}
+        <div>
+          <span class="text-sm text-theme-muted">Previous</span>
+          <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors leading-snug">
+            {prevPost.data.title}
+          </span>
+        </div>
       </a>
     ) : <div class="flex-1" />}
     {nextPost ? (
-      <a href={`/blog/${nextPost.slug}`} class="blog-nav-link group flex-1 text-right" data-nav="next">
-        <span class="text-sm text-theme-muted">Next</span>
-        <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors">
-          {nextPost.data.title}
-        </span>
+      <a href={`/blog/${nextPost.slug}`} class="blog-nav-link group flex-1 flex items-center gap-3 sm:flex-row-reverse sm:text-right" data-nav="next">
+        {nextImage && (
+          <img
+            src={nextImage}
+            alt=""
+            class="blog-nav-thumb flex-shrink-0"
+            width="64"
+            height="64"
+            loading="lazy"
+          />
+        )}
+        <div>
+          <span class="text-sm text-theme-muted">Next</span>
+          <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors leading-snug">
+            {nextPost.data.title}
+          </span>
+        </div>
       </a>
     ) : <div class="flex-1" />}
   </div>
@@ -67,20 +104,11 @@ const related = currentTags.length > 0
 {related.length > 0 && (
   <section class="mt-12 pt-8 border-t border-theme">
     <h2 class="text-lg font-mono font-light mb-6 text-theme-muted">Related</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <CardGrid columns={3}>
       {related.map((post) => (
-        <a href={`/blog/${post.slug}`} class="blog-related-link block p-4 border border-theme rounded-lg transition-colors group">
-          <span class="block text-base text-theme group-hover:text-theme-accent transition-colors leading-snug">
-            {post.data.title}
-          </span>
-          {post.data.tags && post.data.tags.length > 0 && (
-            <span class="block mt-2 text-xs text-theme-muted">
-              {post.data.tags.slice(0, 2).join(' · ')}
-            </span>
-          )}
-        </a>
+        <BlogCard post={post} />
       ))}
-    </div>
+    </CardGrid>
   </section>
 )}
 
@@ -88,29 +116,24 @@ const related = currentTags.length > 0
   .blog-nav-link {
     text-decoration: none;
     padding: 0.75rem;
+    border: 1px solid var(--theme-border);
     border-radius: var(--theme-radius, 0.5rem);
-    transition: background-color 0.2s ease;
+    transition: border-color 0.2s ease;
   }
 
   .blog-nav-link:hover {
-    background-color: var(--theme-border);
+    border-color: var(--theme-accent);
   }
 
   .blog-nav-link::after {
     display: none !important;
   }
 
-  .blog-related-link {
-    text-decoration: none;
-  }
-
-  .blog-related-link:hover {
-    border-color: var(--theme-accent);
-    background-color: transparent;
-  }
-
-  .blog-related-link::after {
-    display: none !important;
+  .blog-nav-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: calc(var(--theme-radius, 0.5rem) * 0.75);
   }
 </style>
 
