@@ -15,7 +15,10 @@ const author = "Maxence Mauduit";
     {/* Conversational CTA */}
     <p class="text-base md:text-lg font-body leading-relaxed" style="color: var(--theme-text);">
       If you're navigating complex product decisions or scaling challenges,
-      I'm always happy to exchange perspectives — reach out at{' '}
+      I'm always happy to exchange perspectives.
+    </p>
+    <p class="text-base md:text-lg font-body leading-relaxed mt-2" style="color: var(--theme-text);">
+      Reach out at{' '}
       <a href="mailto:contact@mmaxence.me" class="footer-email-link" style="color: var(--theme-text);">
         contact@mmaxence.me
       </a>
@@ -55,6 +58,7 @@ const author = "Maxence Mauduit";
     <p class="mt-8 text-sm" style="color: var(--theme-text-muted);">
       &copy; {currentYear} {author}
     </p>
+    <a href="/about/" class="footer-about-link">About this site</a>
     </AnimatedContent>
   </div>
 </footer>
@@ -89,6 +93,24 @@ const author = "Maxence Mauduit";
 
   /* Override global link ::after for social icons */
   .footer-social-link::after {
+    display: none !important;
+  }
+
+  .footer-about-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--theme-text-muted);
+    opacity: 0.6;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .footer-about-link:hover {
+    opacity: 1;
+  }
+
+  .footer-about-link::after {
     display: none !important;
   }
 </style>

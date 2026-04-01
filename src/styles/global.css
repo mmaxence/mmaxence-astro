@@ -503,12 +503,21 @@ hr {
     margin-bottom: 0;
   }
 
+  /* Center content vertically in compact bar */
+  .header-scrolled .header-logo-link p {
+    margin-bottom: 0;
+  }
+
+  .header-scrolled .header-nav > div {
+    align-items: center;
+  }
+
   .header-border {
     border-bottom: 1px solid transparent;
     transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .header-scrolled .header-border {
+  .header-scrolled.header-border {
     border-color: var(--theme-border);
   }
 }
