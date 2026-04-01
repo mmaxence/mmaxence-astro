@@ -151,15 +151,19 @@ function isActive(url: string): boolean {
     transform: translateX(4px);
   }
   
+  /* All nav links need inline-block for consistent alignment */
+  nav ul li a {
+    display: inline-block;
+  }
+
   /* Desktop nav link hover - muted to full color */
   nav ul li a:not(.nav-active) {
-    display: inline-block;
     transition: color 0.2s ease;
   }
 
   nav ul li a:not(.nav-active):hover {
     color: var(--theme-text) !important;
-    animation: nav-giggle 4s ease-in-out 1.4s infinite;
+    animation: nav-giggle 4s ease-in-out 1s infinite;
   }
 
   /* Giggle occupies first 10% of the 4s cycle (0.4s), idle for the remaining 90% */
