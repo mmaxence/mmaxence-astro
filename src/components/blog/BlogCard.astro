@@ -16,11 +16,11 @@ const featuredImage = post.data.featured_image?.startsWith('/')
 <a href={`/blog/${post.slug}`} class="blog-card-link block prefetch-link" data-prefetch="true">
   <article class="blog-card text-base leading-relaxed p-6 relative overflow-hidden">
     {post.data.featured_image && (
-      <div class="mb-4 overflow-hidden rounded-card-image">
+      <div class="blog-card-image-wrap mb-4">
         <img
           src={featuredImage}
           alt={post.data.title}
-          class="blog-card-image w-full h-auto transition-transform duration-300 rounded-card-image"
+          class="blog-card-image w-full h-auto transition-transform duration-300"
         />
       </div>
     )}
@@ -57,6 +57,13 @@ const featuredImage = post.data.featured_image?.startsWith('/')
     border-color: var(--theme-accent);
     box-shadow: var(--theme-shadow-hover, 0 2px 8px rgba(0, 0, 0, 0.12));
     transform: translateY(-1px);
+  }
+
+  /* Image container - forces compositing layer so overflow: hidden works during transform */
+  .blog-card-image-wrap {
+    overflow: hidden;
+    border-radius: var(--radius-card-image);
+    isolation: isolate;
   }
 
   /* Image zoom effect on hover */
