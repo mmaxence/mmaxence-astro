@@ -1,0 +1,153 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import TagList from '../ui/TagList.astro';
+
+interface Props {
+  currentPost: CollectionEntry<'blog'>;
+  allPosts: CollectionEntry<'blog'>[];
+}
+
+const { currentPost, allPosts } = Astro.props;
+
+// Sort by date descending (newest first)
+const sorted = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const currentIndex = sorted.findIndex((p) => p.slug === currentPost.slug);
+const prevPost = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+const nextPost = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
+
+// Related articles: posts sharing at least one tag, excluding current
+const currentTags = currentPost.data.tags || [];
+const related = currentTags.length > 0
+  ? sorted
+      .filter((p) => p.slug !== currentPost.slug)
+      .map((p) => ({
+        post: p,
+        shared: (p.data.tags || []).filter((t: string) => currentTags.includes(t)).length,
+      }))
+      .filter((r) => r.shared > 0)
+      .sort((a, b) => b.shared - a.shared)
+      .slice(0, 3)
+      .map((r) => r.post)
+  : [];
+---
+
+{/* Tags */}
+{currentTags.length > 0 && (
+  <div class="mt-8">
+    <TagList tags={currentTags} />
+  </div>
+)}
+
+{/* Prev / Next navigation */}
+<nav class="blog-post-nav mt-16 pt-8 border-t border-theme" aria-label="Blog post navigation">
+  <div class="flex flex-col sm:flex-row justify-between gap-6">
+    {prevPost ? (
+      <a href={`/blog/${prevPost.slug}`} class="blog-nav-link group flex-1" data-nav="prev">
+        <span class="text-sm text-theme-muted">Previous</span>
+        <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors">
+          {prevPost.data.title}
+        </span>
+      </a>
+    ) : <div class="flex-1" />}
+    {nextPost ? (
+      <a href={`/blog/${nextPost.slug}`} class="blog-nav-link group flex-1 text-right" data-nav="next">
+        <span class="text-sm text-theme-muted">Next</span>
+        <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors">
+          {nextPost.data.title}
+        </span>
+      </a>
+    ) : <div class="flex-1" />}
+  </div>
+</nav>
+
+{/* Related articles */}
+{related.length > 0 && (
+  <section class="mt-12 pt-8 border-t border-theme">
+    <h2 class="text-lg font-mono font-light mb-6 text-theme-muted">Related</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {related.map((post) => (
+        <a href={`/blog/${post.slug}`} class="blog-related-link block p-4 border border-theme rounded-lg transition-colors group">
+          <span class="block text-base text-theme group-hover:text-theme-accent transition-colors leading-snug">
+            {post.data.title}
+          </span>
+          {post.data.tags && post.data.tags.length > 0 && (
+            <span class="block mt-2 text-xs text-theme-muted">
+              {post.data.tags.slice(0, 2).join(' · ')}
+            </span>
+          )}
+        </a>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .blog-nav-link {
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: var(--theme-radius, 0.5rem);
+    transition: background-color 0.2s ease;
+  }
+
+  .blog-nav-link:hover {
+    background-color: var(--theme-border);
+  }
+
+  .blog-nav-link::after {
+    display: none !important;
+  }
+
+  .blog-related-link {
+    text-decoration: none;
+  }
+
+  .blog-related-link:hover {
+    border-color: var(--theme-accent);
+    background-color: transparent;
+  }
+
+  .blog-related-link::after {
+    display: none !important;
+  }
+</style>
+
+<script>
+  function initBlogKeyboardNav() {
+    const nav = document.querySelector('.blog-post-nav');
+    if (!nav) return;
+
+    const prevLink = nav.querySelector('[data-nav="prev"]') as HTMLAnchorElement | null;
+    const nextLink = nav.querySelector('[data-nav="next"]') as HTMLAnchorElement | null;
+
+    function onKeydown(e: KeyboardEvent) {
+      // Don't navigate if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'ArrowLeft' && prevLink) {
+        prevLink.click();
+      } else if (e.key === 'ArrowRight' && nextLink) {
+        nextLink.click();
+      }
+    }
+
+    document.addEventListener('keydown', onKeydown);
+
+    // Cleanup on page transition
+    document.addEventListener('astro:before-swap', () => {
+      document.removeEventListener('keydown', onKeydown);
+    }, { once: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBlogKeyboardNav);
+  } else {
+    initBlogKeyboardNav();
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(initBlogKeyboardNav, 50);
+  });
+</script>

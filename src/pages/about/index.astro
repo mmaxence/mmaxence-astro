@@ -5,6 +5,7 @@ import Footer from '../../components/layout/Footer.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
+import LinkCard from '../../components/ui/LinkCard.astro';
 
 const techStack = [
   {
@@ -157,15 +158,8 @@ const techStack = [
       </AnimatedContent>
 
       <AnimatedContent delay={(techStack.length + 2) * 100}>
-        <div class="mt-12 text-center">
-          <a
-            href="https://github.com/mmaxence/mmaxence-astro"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-block px-6 py-3 rounded-lg transition-colors font-mono text-sm border border-theme text-theme-muted hover:text-theme hover:border-theme-accent"
-          >
-            View on GitHub
-          </a>
+        <div class="mt-12 flex justify-center">
+          <LinkCard href="https://github.com/mmaxence/mmaxence-astro" title="View on GitHub" />
         </div>
       </AnimatedContent>
     </div>
@@ -173,9 +167,3 @@ const techStack = [
   <Footer />
   <ThemeToast />
 </BaseLayout>
-
-<style>
-  .tech-link:hover {
-    color: var(--theme-accent);
-  }
-</style>

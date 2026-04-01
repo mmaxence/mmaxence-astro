@@ -6,6 +6,7 @@ draft: false
 featured_image: "/images/design_system_at_buzzvil.jpeg"
 credential: "Illustration by Jetty Cho"
 credentiallink: "https://www.linkedin.com/in/jettycho/"
+tags: ["design-systems", "product-strategy"]
 ---
 
 Design system vs startup. Takeaways.

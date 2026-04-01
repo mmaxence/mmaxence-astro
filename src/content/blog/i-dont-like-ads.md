@@ -6,6 +6,7 @@ featured_image: "/blog/i-dont-like-ads/cover.jpg"
 credential: ""
 credentiallink: ""
 description: "How treating ads as interaction systems rather than endpoints led to fundamentally different engagement patterns and outcomes at Buzzvil."
+tags: ["ads-monetization", "product-strategy"]
 ---
 
 I Don't Like Ads

@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/tools-to-build-a-design-system-in-2020/buzzvil_design_system.jpeg"
 credential: ""
 credentiallink: ""
+tags: ["tools", "design-systems"]
 ---
 
 A snap taken during our last sprint prior to publish our system online

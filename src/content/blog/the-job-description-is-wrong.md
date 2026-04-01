@@ -4,6 +4,7 @@ description: "Most design job descriptions are optimized for a role that is quie
 date: 2026-03-25T12:00:00+09:00
 draft: false
 featured_image: "/images/the-job-description-is-wrong.png"
+tags: ["career", "design-leadership", "ai-design"]
 ---
 
 Most design job descriptions being written right now are optimized for a role that is quietly disappearing. Not the designer. The specific version of the designer whose primary value was making things at a high level of craft. That version had a good run. Its successor looks quite different, and most hiring processes haven't caught up.

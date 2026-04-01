@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/study-designers-engineers-pt2/design_x_dev_study_at_buzzvil_pt2.jpeg"
 credential: ""
 credentiallink: ""
+tags: ["craft", "design-systems", "tools"]
 ---
 
 We’ve shared a [first story](/blog/posts/studydesigners+engineers-%EF%B8%8F-pt1/) about how we started a study between engineers and designers. The outcome was a lot of fun and a CI pipeline from Figma to Android environment called Phantom Box. This story is about the second act of our study.

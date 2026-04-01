@@ -4,6 +4,7 @@ description: "How lightweight rituals keep a distributed design team aligned"
 date: 2026-01-29T10:00:00+09:00
 draft: false
 featured_image: "/images/design-routines.png"
+tags: ["team-management", "design-leadership"]
 ---
 
 Design at Buzzvil does not live in a single squad, mission, or product.

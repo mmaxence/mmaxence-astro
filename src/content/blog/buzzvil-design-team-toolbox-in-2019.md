@@ -4,6 +4,7 @@ description: "When we decided to drastically change our design toolbox, we leane
 date: 2019-01-15T11:07:21+09:00
 draft: false
 featured_image: "/images/2019_toolbox.jpeg"
+tags: ["tools", "team-management"]
 ---
 
 Hi, I’m Max and I lead a team of designers at Buzzvil. When we’ve decided last year to drastically change our design toolbox, I was pleased to find plenty of insights from other teams around the world. This post talks about our decisions and related needs!

@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/study-designers-engineers-pt1/design_x_dev_study_at_buzzvil.jpeg"
 credential: "How our study usually looked like 🍕 💻"
 credentiallink: "/blog/posts/studydesigners+engineers-%EF%B8%8F-pt1/design_x_dev_study_at_buzzvil.jpeg"
+tags: ["craft", "design-systems", "tools"]
 ---
 
 About a year ago we started a small study group with engineers and designers to understand each other better. It was an insightful and fun experience. Fun enough to run 2 different projects summarized over 2 different stories. Here is the first one, sharing both designer and engineer points of views.

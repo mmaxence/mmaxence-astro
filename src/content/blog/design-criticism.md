@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/design-criticism/design_criticism.png"
 credential: ""
 credentiallink: ""
+tags: ["craft", "team-management"]
 ---
 ### How to avoid friction when receiving feedback on your design.
 It usually starts like this:   

@@ -6,6 +6,7 @@ draft: false
 featured_image: "/images/designing-above-the-interface.png"
 related_video: "https://youtu.be/ivVPJhYM8Ng?si=Eu4Ys6cQHCAc11so"
 related_video_context: "Po-Shen Loh on learning in the age of AI — the talk that inspired the \"grading the homework\" idea in this article."
+tags: ["ai-design", "product-strategy", "craft"]
 ---
 
 It is becoming slightly impolite to say this out loud, but designers are no longer valuable because they can make things.

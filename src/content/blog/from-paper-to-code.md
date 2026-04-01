@@ -4,6 +4,7 @@ description: "Rethinking 0-to-1 in product design. What if Figma were no longer 
 date: 2026-01-28T10:00:00+09:00
 draft: false
 featured_image: "/images/paper-to-code.png"
+tags: ["craft", "tools", "product-strategy"]
 ---
 
 At Buzzvil, like most product teams today, we rely heavily on Figma. It is a strong tool. It standardized collaboration, reduced friction between design and engineering, and raised the overall quality bar across the industry (remember when we used to design UIs in Photoshop or AI?).

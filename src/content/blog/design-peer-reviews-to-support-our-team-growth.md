@@ -5,7 +5,7 @@ author: "Maxence Mauduit"
 date: 2019-04-12T11:31:33+09:00
 draft: false
 featured_image: "/images/design_peer_review.jpeg"
-tags: ["design", "team", "methodology"]
+tags: ["craft", "team-management", "design-leadership"]
 credential: "Illustration by Jetty Cho"
 credentiallink: "https://www.linkedin.com/in/jettycho/"
 ---

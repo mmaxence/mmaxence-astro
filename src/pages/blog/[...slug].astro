@@ -5,24 +5,25 @@ import Footer from '../../components/layout/Footer.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
+import BlogPostNav from '../../components/blog/BlogPostNav.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const blogPosts = await getCollection('blog');
-  return blogPosts
-    .filter((post) => !post.data.draft)
-    .map((post) => ({
-      params: { slug: post.slug },
-      props: { post },
-    }));
+  const published = blogPosts.filter((post) => !post.data.draft);
+  return published.map((post) => ({
+    params: { slug: post.slug },
+    props: { post, allPosts: published },
+  }));
 }
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  allPosts: CollectionEntry<'blog'>[];
 }
 
-const { post } = Astro.props;
+const { post, allPosts } = Astro.props;
 const { Content } = await post.render();
 
 // Extract YouTube video ID from various URL formats
@@ -125,6 +126,8 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
           </a>
         </section>
       )}
+
+      <BlogPostNav currentPost={post} allPosts={allPosts} />
         </article>
   </PageContent>
   <Footer />

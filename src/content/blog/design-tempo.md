@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/design-tempo/design_tempo.png"
 credential: "Conversion de Merlin, Distro Marzin Musical Notation"
 credentiallink: "https://commons.wikimedia.org/wiki/File:Conversion_de_Merlin_(Distro_Marzin).svg"
+tags: ["design-leadership", "team-management", "craft"]
 ---
 Designers, like musicians, need to play in diapason in order to come up with melodious experiences. 🎶
 

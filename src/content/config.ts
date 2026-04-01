@@ -12,6 +12,7 @@ const blog = defineCollection({
     credentiallink: z.string().optional(),
     related_video: z.string().optional(),
     related_video_context: z.string().optional(),
+    tags: z.array(z.string()).default([]),
   }),
 });
 

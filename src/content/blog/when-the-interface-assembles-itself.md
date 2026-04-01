@@ -4,6 +4,7 @@ description: "Agentic systems are starting to assemble interfaces in real time, 
 date: 2026-03-25T10:00:00+09:00
 draft: false
 featured_image: "/images/when-the-interface-assembles-itself.png"
+tags: ["ai-design", "product-strategy"]
 ---
 
 For now, everyone using a product sees roughly the same thing. That's about to become the exception. Agentic systems are starting to assemble interfaces in real time, differently for each person, and with it, the way designers think, work, and deliver is about to change fundamentally. What replaces the fixed screen, and who designs for it, is worth thinking about before it arrives.

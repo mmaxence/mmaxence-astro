@@ -4,6 +4,7 @@ description: "Chat is the DOS of AI—a proof of concept, not the destination. T
 date: 2025-07-28T11:07:21+09:00
 draft: true
 featured_image: "/images/beyond-ai.gif"
+tags: ["ai-design", "product-strategy"]
 ---
 
 ## A brief step back

@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup/hero.jpg"
 credential: "A top-down view of a MacBook surrounded by colorful LEGO bricks, symbolizing the intersection of work and family life"
 credentiallink: ""
+tags: ["career", "team-management"]
 ---
 
 The house wakes up before the city does, and by the time I open my laptop, I've already negotiated breakfast, socks, and small acts of rebellion. Mornings start with spilled milk; evenings end with unread messages. Somewhere between product reviews and bedtime stories, things blur together: noise, laughter, Slack, Lego. It's not balance, but a kind of rhythm. Imperfect, fast, sometimes ridiculous, and strangely, it works. But how?

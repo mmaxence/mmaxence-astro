@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/high-output-management/breakfast_factory.jpg"
 credential: "photography from Pexels.com, illustrating the basic of production with a breakfast factory 🤔"
 credentiallink: "https://images.pexels.com/photos/2402506/pexels-photo-2402506.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+tags: ["design-leadership", "team-management"]
 ---
 
 #### Design oriented Takeaways from Andrew Grove’s best seller.

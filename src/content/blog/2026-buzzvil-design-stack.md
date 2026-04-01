@@ -6,6 +6,7 @@ draft: false
 featured_image: "/blog/2026-buzzvil-design-stack/cover.jpg"
 credential: ""
 credentiallink: ""
+tags: ["design-systems", "tools", "ai-design"]
 ---
 
 2026 marks a transition year for Buzzvil Design. Our tool choices are no longer just operational decisions, they are strategic steps toward a unified, code-connected design system capable of supporting the next generation of AI-assisted product creation.
