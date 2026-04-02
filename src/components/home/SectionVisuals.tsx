@@ -306,7 +306,7 @@ export function WhatIDoVisual() {
 
   return (
     <div ref={containerRef} className="w-full my-8" style={visualWrapperStyle}>
-      <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" className="w-full h-auto" style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block' }}>
+      <svg viewBox="-20 0 640 300" preserveAspectRatio="xMidYMid meet" className="w-full h-auto" style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block', overflow: 'visible' }}>
         {/* Render layers: bottom first (behind), top last (on top) */}
         {layers.map((layer, index) => {
           const waveProgress = waveProgresses[index] || 0;
@@ -353,7 +353,7 @@ export function WhatIDoVisual() {
               <text
                 x="460"
                 y={centerY + 5}
-                fontSize="14"
+                fontSize="12"
                 fill={isHovered ? accentColor : mutedColor}
                 style={{
                   ...textNoSelectStyle,
@@ -524,10 +524,10 @@ export function HowIWorkVisual() {
     <div className="w-full my-8" style={visualWrapperStyle}>
       <svg
         ref={svgRef}
-        viewBox="0 0 600 300"
+        viewBox="-20 0 640 300"
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-auto"
-        style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block' }}
+        style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block', overflow: 'visible' }}
       >
         {/* Large circle with thick stroke - centered horizontally */}
         <circle
@@ -570,7 +570,7 @@ export function HowIWorkVisual() {
         <text
           x="420"
           y="75"
-          fontSize="14"
+          fontSize="12"
           fill={mutedColor}
           style={{
             ...textNoSelectStyle,
@@ -585,7 +585,7 @@ export function HowIWorkVisual() {
         <text
           x="420"
           y="155"
-          fontSize="14"
+          fontSize="12"
           fill={mutedColor}
           style={{
             ...textNoSelectStyle,
@@ -846,7 +846,7 @@ export function LeadershipScalesVisual() {
     <div className="w-full my-8 mt-12" style={{ ...visualWrapperStyle, overflow: 'visible' }}>
       <svg
         ref={svgRef}
-        viewBox="0 0 600 200"
+        viewBox="-20 -10 640 220"
         className="w-full h-auto"
         style={{ minHeight: '180px', width: '100%', maxWidth: '100%', overflow: 'visible' }}
       >
@@ -886,7 +886,7 @@ export function LeadershipScalesVisual() {
             className="number-text"
             x="0"
             y="0"
-            fontSize="14"
+            fontSize="12"
             fill={numberTextColor}
             textAnchor="middle"
             dominantBaseline="middle"
@@ -895,7 +895,7 @@ export function LeadershipScalesVisual() {
             style={{
               ...textNoSelectStyle,
               fontFamily: 'var(--theme-font-body, sans-serif)',
-              fontSize: '14px',
+              fontSize: '12px',
               transition: 'opacity 0.6s ease',
             }}
           >
@@ -921,7 +921,7 @@ export function LeadershipScalesVisual() {
           className="headcount-label"
           x={headcountLabelX}
           y={headcountLabelY}
-          fontSize="14"
+          fontSize="12"
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -952,7 +952,7 @@ export function LeadershipScalesVisual() {
           className="capability-label"
           x={capabilityLabelX}
           y={capabilityLabelY}
-          fontSize="14"
+          fontSize="12"
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -983,7 +983,7 @@ export function LeadershipScalesVisual() {
           className="influence-label"
           x={influenceLabelX}
           y={influenceLabelY}
-          fontSize="14"
+          fontSize="12"
           fill={mutedColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1221,7 +1221,7 @@ export function BeyondTheRoleVisual() {
         viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
         preserveAspectRatio="xMidYMid meet"
         className="w-full h-auto"
-        style={{ minHeight: isMobile ? '300px' : '200px', width: '100%', maxWidth: '100%', display: 'block' }}
+        style={{ minHeight: isMobile ? '300px' : '200px', width: '100%', maxWidth: '100%', display: 'block', overflow: 'visible' }}
       >
         {/* Pivot bar - centered in viewBox */}
         <line
@@ -1283,7 +1283,7 @@ export function BeyondTheRoleVisual() {
           className="work-label"
           x={isMobile ? viewportWidth / 2 - 120 : 200}
           y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
-          fontSize="14"
+          fontSize="12"
           fill={textColor}
           textAnchor="start"
           dominantBaseline="middle"
@@ -1302,7 +1302,7 @@ export function BeyondTheRoleVisual() {
           className="life-label"
           x={isMobile ? viewportWidth / 2 + 120 : 400}
           y={isMobile ? 54 + 144 + 40 : 36 + 96 + 30}
-          fontSize="14"
+          fontSize="12"
           fill={textColor}
           textAnchor="end"
           dominantBaseline="middle"
@@ -1373,10 +1373,10 @@ export function ExperienceSnapshotVisual() {
 
   // Layout
   const cx = 300;
-  const cy = 240;
-  const ringRadius = 100;
+  const cy = 200;
+  const ringRadius = 90;
   const viewW = 600;
-  const viewH = 480;
+  const viewH = 400;
   const numStages = stages.length;
 
   // Stage positions on the ring
@@ -1420,7 +1420,7 @@ export function ExperienceSnapshotVisual() {
       const startAngle = stageAngle - fanSpread / 2;
       stage.items.forEach((_, ii) => {
         const angle = startAngle + (fanSpread * ii) / (count - 1 || 1);
-        const baseRadius = 185 + (ii % 2 === 0 ? 0 : 25) + (si * 7);
+        const baseRadius = 170 + (ii % 2 === 0 ? 0 : 20) + (si * 6);
         positions.push({ stageIndex: si, itemIndex: ii, angle, radius: baseRadius });
       });
     });
@@ -1456,7 +1456,7 @@ export function ExperienceSnapshotVisual() {
   const getStageArcPath = (si: number) => {
     const a1 = getStageAngle(si) - Math.PI / numStages;
     const a2 = getStageAngle(si) + Math.PI / numStages;
-    const outerR = 230;
+    const outerR = 210;
     const x1 = cx + Math.cos(a1) * outerR;
     const y1 = cy + Math.sin(a1) * outerR;
     const x2 = cx + Math.cos(a2) * outerR;
@@ -1469,8 +1469,9 @@ export function ExperienceSnapshotVisual() {
   return (
     <div ref={containerRef} style={visualWrapperStyle} className="my-8">
       <svg
-        viewBox={`0 0 ${viewW} ${viewH}`}
-        style={{ width: '100%', height: 'auto', maxWidth: viewW, overflow: 'visible' }}
+        viewBox={`-20 -10 ${viewW + 40} ${viewH + 20}`}
+        className="w-full h-auto"
+        style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block', overflow: 'visible' }}
       >
         {/* Invisible hover sectors */}
         {stages.map((_, si) => (
@@ -1493,33 +1494,6 @@ export function ExperienceSnapshotVisual() {
           stroke={mutedColor}
           strokeWidth={1}
         />
-
-        {/* Direction arrows on the ring */}
-        {stages.map((_, si) => {
-          const arrow = getArrowPos(si);
-          const dir = arrow.angle + Math.PI / 2;
-          const size = 5;
-          return (
-            <g key={`arrow-${si}`} opacity={0.35}>
-              <line
-                x1={arrow.x - Math.cos(dir) * size + Math.cos(dir + 2.5) * size}
-                y1={arrow.y - Math.sin(dir) * size + Math.sin(dir + 2.5) * size}
-                x2={arrow.x}
-                y2={arrow.y}
-                stroke={mutedColor}
-                strokeWidth={1}
-              />
-              <line
-                x1={arrow.x - Math.cos(dir) * size + Math.cos(dir - 2.5) * size}
-                y1={arrow.y - Math.sin(dir) * size + Math.sin(dir - 2.5) * size}
-                x2={arrow.x}
-                y2={arrow.y}
-                stroke={mutedColor}
-                strokeWidth={1}
-              />
-            </g>
-          );
-        })}
 
         {/* Keyword connection lines + floating labels */}
         {stages.map((stage, si) => {
@@ -1556,7 +1530,7 @@ export function ExperienceSnapshotVisual() {
                       y={kwPos.y - 10}
                       textAnchor="middle"
                       fill={isHovered ? textColor : mutedColor}
-                      fontSize={si === 0 ? 16 : 14}
+                      fontSize={13}
                       style={{
                         ...textNoSelectStyle,
                         fontFamily: 'var(--theme-font-body, sans-serif)',
@@ -1578,14 +1552,20 @@ export function ExperienceSnapshotVisual() {
           const pos = getStagePos(si);
           const isHovered = hoveredStage === si;
           const labelAngle = getStageAngle(si);
-          const labelR = ringRadius - 34;
+          // Place label at center of ring, offset toward the stage
+          const labelR = ringRadius * 0.62;
           const labelPos = {
             x: cx + Math.cos(labelAngle) * labelR,
             y: cy + Math.sin(labelAngle) * labelR,
           };
 
           return (
-            <g key={`stage-${si}`}>
+            <g
+              key={`stage-${si}`}
+              onMouseEnter={() => setHoveredStage(si)}
+              onMouseLeave={() => setHoveredStage(null)}
+              style={{ cursor: 'default' }}
+            >
               <circle
                 cx={pos.x}
                 cy={pos.y}
@@ -1595,10 +1575,11 @@ export function ExperienceSnapshotVisual() {
               />
               <text
                 x={labelPos.x}
-                y={labelPos.y + 5}
+                y={labelPos.y}
                 textAnchor="middle"
+                dominantBaseline="central"
                 fill={isHovered ? accentColor : textColor}
-                fontSize={16}
+                fontSize={15}
                 style={{
                   ...textNoSelectStyle,
                   fontFamily: 'var(--theme-font-heading)',
