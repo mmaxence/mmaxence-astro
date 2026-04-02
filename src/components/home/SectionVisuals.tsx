@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
 
 // Shared visual constants
 const STROKE_WIDTH = 1.5;
@@ -1321,72 +1320,36 @@ export function BeyondTheRoleVisual() {
   );
 }
 
-// EXPERIENCE SNAPSHOT - Network Graph of Connected Spheres
+// EXPERIENCE SNAPSHOT - Concentric Rings of Capability Layers
 export function ExperienceSnapshotVisual() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
-  const [draggedNode, setDraggedNode] = useState<number | null>(null);
-  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
-  const dragStartPosRef = useRef<{ x: number; y: number } | null>(null);
-  const dragPrevPosRef = useRef<{ x: number; y: number; time: number } | null>(null);
-  const dragVelocityRef = useRef<{ vx: number; vy: number } | null>(null);
-  
-  // Experience keywords
-  const keywords = [
-    'Product Strategy',
-    'Platform Building',
-    'Team Scaling',
-    'Design Systems',
-    'Product Discovery',
-    'Monetization',
-    'Execution',
-    'Leadership',
-    'Mentorship',
-    'IPO Readiness'
+  const [hoveredStage, setHoveredStage] = useState<number | null>(null);
+  const [drawProgress, setDrawProgress] = useState(0);
+
+  // Define → Systematize → Scale — circular flow
+  const stages = [
+    {
+      label: 'Define',
+      items: ['Product Discovery', 'Product Strategy', 'Monetization Design'],
+    },
+    {
+      label: 'Systematize',
+      items: ['Design Systems', 'Execution Culture', 'Platform Architecture'],
+    },
+    {
+      label: 'Scale',
+      items: ['Team Building', 'Mentorship', 'IPO Readiness'],
+    },
   ];
 
-  // Define network connections (edges) - create a connected graph
-  // Each node connects to 2-3 other nodes for a web-like structure
-  const connections: Array<[number, number]> = [
-    [0, 3], [0, 2], [0, 4], // Product Strategy connects to Design Systems, Team Scaling, Product Discovery
-    [3, 1], [3, 4], // Design Systems connects to Platform Building, Product Discovery
-    [2, 6], [2, 7], // Team Scaling connects to Execution, Leadership
-    [1, 4], [1, 5], // Platform Building connects to Product Discovery, Monetization
-    [4, 5], [4, 8], // Product Discovery connects to Monetization, Mentorship
-    [5, 6], [5, 9], // Monetization connects to Execution, IPO Readiness
-    [6, 7], [6, 9], // Execution connects to Leadership, IPO Readiness
-    [7, 8], // Leadership connects to Mentorship
-    [8, 9], // Mentorship connects to IPO Readiness
-  ];
+  const { textColor, accentColor, mutedColor } = useThemeColors({
+    text: 0.9,
+    accent: 0.7,
+    muted: 0.3,
+  });
 
-  // Node state: each node has position, size, and velocity
-  const [nodes, setNodes] = useState<Array<{
-    id: number;
-    keyword: string;
-    x: number;
-    y: number;
-    size: number;
-    opacity: number; // base opacity (0.8-1.0)
-    vx?: number; // velocity x (optional for d3-force)
-    vy?: number; // velocity y (optional for d3-force)
-  }>>([]);
-  
-  // d3-force simulation
-  const simulationRef = useRef<any>(null);
-  const d3NodesRef = useRef<any[]>([]);
-
-  useEffect(() => {
-    const updateMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    updateMobile();
-    window.addEventListener('resize', updateMobile);
-    return () => window.removeEventListener('resize', updateMobile);
-  }, []);
-
+  // Visibility
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
@@ -1396,532 +1359,288 @@ export function ExperienceSnapshotVisual() {
     return () => observer.disconnect();
   }, []);
 
-  // Handle mouse interactions: hover, drag, and magnetic attraction
+  // Continuous animation phase
   useEffect(() => {
-    if (!svgRef.current || !isVisible) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!svgRef.current) return;
-      const rect = svgRef.current.getBoundingClientRect();
-      const svg = svgRef.current;
-      const viewBox = svg.viewBox.baseVal;
-      
-      // Convert mouse position to SVG coordinates
-      const x = ((e.clientX - rect.left) / rect.width) * viewBox.width;
-      const y = ((e.clientY - rect.top) / rect.height) * viewBox.height;
-      
-      setMousePos({ x, y });
-
-      // Handle dragging
-      if (draggedNode !== null && dragStartPosRef.current) {
-        const dx = x - dragStartPosRef.current.x;
-        const dy = y - dragStartPosRef.current.y;
-        const now = performance.now();
-        
-        setNodes((prev) => {
-          return prev.map((node) => {
-            if (node.id === draggedNode) {
-              const radius = node.size / 2;
-              const padding = 60;
-              const viewBoxWidth = 600;
-              const viewBoxHeight = 400;
-              
-              // Update position, keeping within bounds
-              const newX = Math.max(padding + radius, Math.min(viewBoxWidth - padding - radius, node.x + dx));
-              const newY = Math.max(padding + radius, Math.min(viewBoxHeight - padding - radius, node.y + dy));
-              
-              // Update d3 node position for smooth transition
-              const d3Node = d3NodesRef.current.find((n: any) => n.id === node.id);
-              if (d3Node) {
-                d3Node.fx = newX; // Keep fixed during drag
-                d3Node.fy = newY;
-                d3Node.vx = 0;
-                d3Node.vy = 0;
-              }
-              
-              // Track drag velocity for inertia (sampled from last update)
-              const prevSample = dragPrevPosRef.current;
-              if (prevSample) {
-                const dt = Math.max(1, now - prevSample.time);
-                dragVelocityRef.current = {
-                  vx: (newX - prevSample.x) / dt, // px / ms
-                  vy: (newY - prevSample.y) / dt,
-                };
-              }
-              dragPrevPosRef.current = { x: newX, y: newY, time: now };
-              dragStartPosRef.current = { x, y };
-              
-              return {
-                ...node,
-                x: newX,
-                y: newY,
-              };
-            }
-            return node;
-          });
-        });
-      } else {
-        // Check for hover (find closest node)
-        let closestNode: number | null = null;
-        let minDistance = Infinity;
-        
-        nodes.forEach((node) => {
-          const dx = x - node.x;
-          const dy = y - node.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const radius = node.size / 2;
-          
-          if (distance < radius + 10 && distance < minDistance) {
-            minDistance = distance;
-            closestNode = node.id;
-          }
-        });
-        
-        setHoveredNode(closestNode);
-      }
+    if (!isVisible || prefersReducedMotion()) return;
+    let frameId: number;
+    const animate = () => {
+      setDrawProgress(Date.now() / 1000);
+      frameId = requestAnimationFrame(animate);
     };
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [isVisible]);
 
-    const handleMouseDown = (e: MouseEvent) => {
-      if (!svgRef.current) return;
-      const rect = svgRef.current.getBoundingClientRect();
-      const svg = svgRef.current;
-      const viewBox = svg.viewBox.baseVal;
-      
-      const x = ((e.clientX - rect.left) / rect.width) * viewBox.width;
-      const y = ((e.clientY - rect.top) / rect.height) * viewBox.height;
-      
-      // Find clicked node
-      let clickedNode: number | null = null;
-      let minDistance = Infinity;
-      
-      nodes.forEach((node) => {
-        const dx = x - node.x;
-        const dy = y - node.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const radius = node.size / 2;
-        
-        if (distance < radius && distance < minDistance) {
-          minDistance = distance;
-          clickedNode = node.id;
-        }
+  // Layout
+  const cx = 300;
+  const cy = 240;
+  const ringRadius = 100;
+  const viewW = 600;
+  const viewH = 480;
+  const numStages = stages.length;
+
+  // Stage positions on the ring
+  const stageAngleOffset = -Math.PI / 2;
+  const getStageAngle = (i: number) => stageAngleOffset + (2 * Math.PI * i) / numStages;
+  const getStagePos = (i: number) => {
+    const angle = getStageAngle(i);
+    return { x: cx + Math.cos(angle) * ringRadius, y: cy + Math.sin(angle) * ringRadius };
+  };
+
+  // Smooth orbit with gentle speed variation
+  // Adds a subtle sine wobble so the dot speeds up slightly near stage nodes
+  // and slows down between them — no hard stops, fully continuous
+  const orbitPeriod = 10;
+  const linearT = (drawProgress % orbitPeriod) / orbitPeriod;
+  // Speed peaks AT stage nodes: derivative of sin is cos, cos(0)=1 at t=0,1/3,2/3
+  // Nudge phase slightly forward so boost lands ON the dots, stronger amplitude
+  const easeAmplitude = 0.052;
+  const phaseNudge = -1.5;
+  const easeAngle = (t: number) => t - easeAmplitude * Math.cos(t * numStages * 2 * Math.PI + phaseNudge);
+  const easedT = easeAngle(linearT);
+  const orbitAngle = stageAngleOffset + easedT * 2 * Math.PI;
+
+  // Trail: time-based so it expands when fast (near nodes) and compresses when slow
+  const trailCount = 12;
+  const trailTimeStep = 0.01; // seconds back per trail dot — tighter for smoother trail
+  const trailAngles = Array.from({ length: trailCount }, (_, i) => {
+    const pastTime = ((drawProgress - (i + 1) * trailTimeStep) % orbitPeriod + orbitPeriod) % orbitPeriod;
+    const pastLinearT = pastTime / orbitPeriod;
+    const pastEased = easeAngle(pastLinearT);
+    return stageAngleOffset + pastEased * 2 * Math.PI;
+  });
+
+  // Keyword positions — scattered wide around the circle
+  const keywordLayout = useMemo(() => {
+    const positions: Array<{ stageIndex: number; itemIndex: number; angle: number; radius: number }> = [];
+    stages.forEach((stage, si) => {
+      const stageAngle = getStageAngle(si);
+      const count = stage.items.length;
+      const fanSpread = 1.2;
+      const startAngle = stageAngle - fanSpread / 2;
+      stage.items.forEach((_, ii) => {
+        const angle = startAngle + (fanSpread * ii) / (count - 1 || 1);
+        const baseRadius = 185 + (ii % 2 === 0 ? 0 : 25) + (si * 7);
+        positions.push({ stageIndex: si, itemIndex: ii, angle, radius: baseRadius });
       });
-      
-      if (clickedNode !== null) {
-        setDraggedNode(clickedNode);
-        dragStartPosRef.current = { x, y };
-        dragVelocityRef.current = null;
-        const clicked = nodes.find((n) => n.id === clickedNode);
-        dragPrevPosRef.current = { x: clicked?.x ?? x, y: clicked?.y ?? y, time: performance.now() };
-        
-        // Stop the node's velocity in d3 simulation and fix position
-        const d3Node = d3NodesRef.current.find((n: any) => n.id === clickedNode);
-        if (d3Node) {
-          d3Node.fx = d3Node.x; // Fix position
-          d3Node.fy = d3Node.y;
-          d3Node.vx = 0;
-          d3Node.vy = 0;
-        }
-      }
-    };
-
-    const handleMouseUp = () => {
-      if (draggedNode !== null) {
-        // Calculate drag velocity for inertia
-        const d3Node = d3NodesRef.current.find((n: any) => n.id === draggedNode);
-        if (d3Node) {
-          const v = dragVelocityRef.current;
-          if (v) {
-            // Convert px/ms to ~px/tick (16ms ≈ 1 frame at 60fps)
-            const inertia = 0.9;
-            d3Node.vx = v.vx * 16 * inertia;
-            d3Node.vy = v.vy * 16 * inertia;
-          }
-
-          // Release the fixed position
-          d3Node.fx = null;
-          d3Node.fy = null;
-        }
-        
-        setDraggedNode(null);
-        dragStartPosRef.current = null;
-        dragPrevPosRef.current = null;
-        dragVelocityRef.current = null;
-        
-        // Nudge simulation so inertia is immediately visible
-        if (simulationRef.current) {
-          simulationRef.current.alpha(0.2).restart();
-        }
-      }
-    };
-
-    const handleMouseLeave = () => {
-      setMousePos(null);
-      setHoveredNode(null);
-      if (draggedNode !== null) {
-        handleMouseUp();
-      }
-    };
-
-    const svg = svgRef.current;
-    svg.addEventListener('mousemove', handleMouseMove);
-    svg.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
-    svg.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      svg.removeEventListener('mousemove', handleMouseMove);
-      svg.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mouseup', handleMouseUp);
-      svg.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, [isVisible, nodes, draggedNode]);
-
-  // Initialize nodes with random positions
-  useEffect(() => {
-    if (!isVisible || nodes.length > 0) return;
-
-    const viewBoxWidth = 600;
-    const viewBoxHeight = 400; // Increased height for better spacing
-    const minSize = isMobile ? 50 : 60;
-    const maxSize = isMobile ? 90 : 110;
-    const padding = 80;
-
-    const initialNodes = keywords.map((keyword, index) => {
-      // Random size
-      const size = minSize + Math.random() * (maxSize - minSize);
-      
-      // Random opacity between 0.8 and 1.0
-      const opacity = 0.8 + Math.random() * 0.2;
-
-      // Distribute nodes in a wider elliptical/network pattern
-      const angle = (index / keywords.length) * Math.PI * 2;
-      const radiusX = viewBoxWidth * 0.38;
-      const radiusY = viewBoxHeight * 0.32;
-      const x = viewBoxWidth / 2 + Math.cos(angle) * radiusX + (Math.random() - 0.5) * 60;
-      const y = viewBoxHeight / 2 + Math.sin(angle) * radiusY + (Math.random() - 0.5) * 60;
-
-      return {
-        id: index,
-        keyword,
-        x: Math.max(padding, Math.min(viewBoxWidth - padding, x)),
-        y: Math.max(padding, Math.min(viewBoxHeight - padding, y)),
-        size,
-        opacity,
-        vx: 0,
-        vy: 0,
-      };
     });
+    return positions;
+  }, []);
 
-    setNodes(initialNodes);
-  }, [isVisible, isMobile]);
-
-  // Initialize d3-force simulation for network graph
-  useEffect(() => {
-    if (!isVisible || nodes.length === 0 || prefersReducedMotion()) {
-      if (simulationRef.current) {
-        simulationRef.current.stop();
-        simulationRef.current = null;
-      }
-      return;
-    }
-
-    const viewBoxWidth = 600;
-    const viewBoxHeight = 400; // Increased height for better spacing
-
-    // Initialize or update d3 nodes (reuse same objects for d3-force)
-    if (d3NodesRef.current.length === 0 || d3NodesRef.current.length !== nodes.length) {
-      d3NodesRef.current = nodes.map((node) => ({
-        id: node.id,
-        keyword: node.keyword,
-        size: node.size,
-        opacity: node.opacity,
-        x: node.x,
-        y: node.y,
-        // Smooth "wander" parameters (stable per node)
-        wanderPhaseX: Math.random() * Math.PI * 2,
-        wanderPhaseY: Math.random() * Math.PI * 2,
-        wanderFreqX: 0.35 + Math.random() * 0.35, // rad/s-ish
-        wanderFreqY: 0.35 + Math.random() * 0.35,
-      }));
-    } else {
-      // Update positions but keep same objects
-      nodes.forEach((node, index) => {
-        const d3Node = d3NodesRef.current[index];
-        if (d3Node && d3Node.id === node.id) {
-          // Only update if significantly different (to avoid jitter)
-          if (Math.abs(d3Node.x - node.x) > 1 || Math.abs(d3Node.y - node.y) > 1) {
-            d3Node.x = node.x;
-            d3Node.y = node.y;
-          }
-        }
-      });
-    }
-
-    const d3Links = connections.map(([source, target]) => ({
-      source: d3NodesRef.current[source],
-      target: d3NodesRef.current[target],
-      // Calculate ideal distance based on node sizes
-      distance: (nodes[source].size / 2 + nodes[target].size / 2) * 2.5,
-    }));
-
-    // Create or update force simulation
-    let simulation = simulationRef.current;
-    
-    if (!simulation) {
-      simulation = forceSimulation(d3NodesRef.current)
-        .force('link', forceLink(d3Links).id((d: any) => d.id).distance((d: any) => d.distance).strength(0.4))
-        .force('charge', forceManyBody().strength(-500)) // Stronger repulsion to spread nodes out
-        .force('center', forceCenter(viewBoxWidth / 2, viewBoxHeight / 2).strength(0.05))
-        .force('collide', forceCollide().radius((d: any) => d.size / 2 + 15).strength(0.8)) // More spacing between nodes
-        .alphaDecay(0.02) // Slow decay for continuous movement
-        .velocityDecay(0.4) // Damping
-        .alphaTarget(0.06); // Keep a low, steady energy (prevents "bursty" motion)
-
-      // Add smooth "wander" force for continuous gentle motion (no randomness spikes)
-      const wanderForce = (alpha: number) => {
-        const t = performance.now() / 1000;
-        const strength = 0.10;
-        const a = 0.35 + alpha; // keep it alive even when alpha is low
-
-        d3NodesRef.current.forEach((node: any) => {
-          if (node.id === draggedNode) return;
-
-          const fx = Math.cos(t * (node.wanderFreqX || 0.5) + (node.wanderPhaseX || 0)) * strength * a;
-          const fy = Math.sin(t * (node.wanderFreqY || 0.5) + (node.wanderPhaseY || 0)) * strength * a;
-          node.vx = (node.vx || 0) + fx;
-          node.vy = (node.vy || 0) + fy;
-        });
-      };
-
-      simulation.force('wander', wanderForce as any);
-
-      // Add mouse attraction force (custom force) - stronger interaction
-      const mouseForce = (alpha: number) => {
-        if (!mousePos || draggedNode !== null) return; // Don't apply force when dragging
-        
-        d3NodesRef.current.forEach((node: any) => {
-          // Skip dragged node
-          if (node.id === draggedNode) return;
-          
-          const dx = mousePos.x - (node.x || 0);
-          const dy = mousePos.y - (node.y || 0);
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance > 0 && distance < 200) {
-            // Stronger attraction that increases as mouse gets closer
-            const forceStrength = alpha * 0.8 * (1 - distance / 200);
-            node.vx = (node.vx || 0) + (dx / distance) * forceStrength;
-            node.vy = (node.vy || 0) + (dy / distance) * forceStrength;
-          }
-        });
-      };
-
-      simulation.force('mouse', mouseForce as any);
-
-      // Update positions on each tick
-      simulation.on('tick', () => {
-        setNodes((prev) => {
-          return prev.map((node) => {
-            const d3Node = d3NodesRef.current.find((n: any) => n.id === node.id);
-            if (!d3Node) return node;
-
-            // Keep nodes within bounds
-            const radius = node.size / 2;
-            const padding = 60; // Increased padding for better spacing
-            const minX = padding + radius;
-            const maxX = viewBoxWidth - padding - radius;
-            const minY = padding + radius;
-            const maxY = viewBoxHeight - padding - radius;
-
-            let x = d3Node.x ?? node.x;
-            let y = d3Node.y ?? node.y;
-
-            if (x < minX) {
-              x = minX;
-              d3Node.x = x;
-              d3Node.vx = Math.abs(d3Node.vx || 0) * 0.6;
-            } else if (x > maxX) {
-              x = maxX;
-              d3Node.x = x;
-              d3Node.vx = -Math.abs(d3Node.vx || 0) * 0.6;
-            }
-
-            if (y < minY) {
-              y = minY;
-              d3Node.y = y;
-              d3Node.vy = Math.abs(d3Node.vy || 0) * 0.6;
-            } else if (y > maxY) {
-              y = maxY;
-              d3Node.y = y;
-              d3Node.vy = -Math.abs(d3Node.vy || 0) * 0.6;
-            }
-
-            return {
-              ...node,
-              x,
-              y,
-            };
-          });
-        });
-      });
-
-      simulationRef.current = simulation;
-    } else {
-      // Update existing simulation
-      simulation.nodes(d3NodesRef.current);
-      simulation.force('link', forceLink(d3Links).id((d: any) => d.id).distance((d: any) => d.distance).strength(0.4));
-      simulation.force('charge', forceManyBody().strength(-500)); // Stronger repulsion
-      simulation.force('collide', forceCollide().radius((d: any) => d.size / 2 + 15).strength(0.8)); // More spacing
-      simulation.alphaTarget(0.06);
-      
-      // Update smooth wander force for continuous gentle motion
-      const wanderForce = (alpha: number) => {
-        const t = performance.now() / 1000;
-        const strength = 0.10;
-        const a = 0.35 + alpha;
-
-        d3NodesRef.current.forEach((node: any) => {
-          if (node.id === draggedNode) return;
-
-          const fx = Math.cos(t * (node.wanderFreqX || 0.5) + (node.wanderPhaseX || 0)) * strength * a;
-          const fy = Math.sin(t * (node.wanderFreqY || 0.5) + (node.wanderPhaseY || 0)) * strength * a;
-          node.vx = (node.vx || 0) + fx;
-          node.vy = (node.vy || 0) + fy;
-        });
-      };
-      simulation.force('wander', wanderForce as any);
-      
-      // Update mouse force - stronger interaction
-      const mouseForce = (alpha: number) => {
-        if (!mousePos || draggedNode !== null) return; // Don't apply force when dragging
-        
-        d3NodesRef.current.forEach((node: any) => {
-          // Skip dragged node
-          if (node.id === draggedNode) return;
-          
-          const dx = mousePos.x - (node.x || 0);
-          const dy = mousePos.y - (node.y || 0);
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance > 0 && distance < 200) {
-            // Stronger attraction that increases as mouse gets closer
-            const forceStrength = alpha * 0.8 * (1 - distance / 200);
-            node.vx = (node.vx || 0) + (dx / distance) * forceStrength;
-            node.vy = (node.vy || 0) + (dy / distance) * forceStrength;
-          }
-        });
-      };
-      simulation.force('mouse', mouseForce as any);
-      
-      // Restart simulation when mouse position changes for immediate response
-      if (mousePos !== null) {
-        // Avoid big "bursts" that feel laggy; keep interaction responsive but smooth
-        simulation.alpha(0.2).restart();
-      }
-    }
-
-    return () => {
-      if (simulationRef.current) {
-        simulationRef.current.stop();
-        simulationRef.current = null;
-      }
+  const getKeywordPos = (layoutIndex: number) => {
+    const kw = keywordLayout[layoutIndex];
+    const floatX = Math.sin(drawProgress * 0.3 + kw.stageIndex * 2.1 + kw.itemIndex * 1.7) * 5;
+    const floatY = Math.cos(drawProgress * 0.25 + kw.stageIndex * 1.5 + kw.itemIndex * 2.3) * 5;
+    const r = kw.radius;
+    return {
+      x: cx + Math.cos(kw.angle) * r + floatX,
+      y: cy + Math.sin(kw.angle) * r + floatY,
     };
-  }, [isVisible, nodes.length, mousePos, draggedNode]);
+  };
 
-  const { accentColor, bgColor, mutedColor } = useThemeColors({ accent: 1.0, bg: 1.0, muted: 0.3 });
+  // Arrow chevrons between stages
+  const getArrowPos = (stageIndex: number) => {
+    const a1 = getStageAngle(stageIndex);
+    const a2 = getStageAngle((stageIndex + 1) % numStages);
+    let diff = a2 - a1;
+    if (diff < 0) diff += 2 * Math.PI;
+    const midAngle = a1 + diff / 2;
+    return {
+      x: cx + Math.cos(midAngle) * ringRadius,
+      y: cy + Math.sin(midAngle) * ringRadius,
+      angle: midAngle,
+    };
+  };
+
+  // Hover sector paths
+  const getStageArcPath = (si: number) => {
+    const a1 = getStageAngle(si) - Math.PI / numStages;
+    const a2 = getStageAngle(si) + Math.PI / numStages;
+    const outerR = 230;
+    const x1 = cx + Math.cos(a1) * outerR;
+    const y1 = cy + Math.sin(a1) * outerR;
+    const x2 = cx + Math.cos(a2) * outerR;
+    const y2 = cy + Math.sin(a2) * outerR;
+    return `M ${cx} ${cy} L ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} Z`;
+  };
+
+  let kwIndex = 0;
 
   return (
-    <div ref={containerRef} className="w-full my-8" style={visualWrapperStyle}>
+    <div ref={containerRef} style={visualWrapperStyle} className="my-8">
       <svg
-        ref={svgRef}
-        viewBox="0 0 600 400"
-        preserveAspectRatio="xMidYMid meet"
-        className="w-full h-auto"
-        style={{ minHeight: '400px', width: '100%', maxWidth: '100%', display: 'block' }}
+        viewBox={`0 0 ${viewW} ${viewH}`}
+        style={{ width: '100%', height: 'auto', maxWidth: viewW, overflow: 'visible' }}
       >
-        {/* Render network edges (connections) */}
-        {connections.map(([id1, id2], index) => {
-          const node1 = nodes[id1];
-          const node2 = nodes[id2];
-          if (!node1 || !node2) return null;
+        {/* Invisible hover sectors */}
+        {stages.map((_, si) => (
+          <path
+            key={`sector-${si}`}
+            d={getStageArcPath(si)}
+            fill="transparent"
+            onMouseEnter={() => setHoveredStage(si)}
+            onMouseLeave={() => setHoveredStage(null)}
+            style={{ cursor: 'default' }}
+          />
+        ))}
 
+        {/* Main ring */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={ringRadius}
+          fill="none"
+          stroke={mutedColor}
+          strokeWidth={1}
+        />
+
+        {/* Direction arrows on the ring */}
+        {stages.map((_, si) => {
+          const arrow = getArrowPos(si);
+          const dir = arrow.angle + Math.PI / 2;
+          const size = 5;
           return (
-            <line
-              key={`edge-${id1}-${id2}`}
-              x1={node1.x}
-              y1={node1.y}
-              x2={node2.x}
-              y2={node2.y}
-              stroke={mutedColor}
-              strokeWidth={STROKE_WIDTH * 0.5}
-              strokeDasharray="2 3"
-              opacity={isVisible ? 0.4 : 0}
-              style={{ transition: 'opacity 0.6s ease' }}
-            />
+            <g key={`arrow-${si}`} opacity={0.35}>
+              <line
+                x1={arrow.x - Math.cos(dir) * size + Math.cos(dir + 2.5) * size}
+                y1={arrow.y - Math.sin(dir) * size + Math.sin(dir + 2.5) * size}
+                x2={arrow.x}
+                y2={arrow.y}
+                stroke={mutedColor}
+                strokeWidth={1}
+              />
+              <line
+                x1={arrow.x - Math.cos(dir) * size + Math.cos(dir - 2.5) * size}
+                y1={arrow.y - Math.sin(dir) * size + Math.sin(dir - 2.5) * size}
+                x2={arrow.x}
+                y2={arrow.y}
+                stroke={mutedColor}
+                strokeWidth={1}
+              />
+            </g>
           );
         })}
 
-        {/* Render nodes (spheres) */}
-        {nodes.map((node) => {
-          const radius = node.size / 2;
-          // Calculate font size to fit text within sphere
-          const textLength = node.keyword.length;
-          const maxTextWidth = radius * 1.3;
-          const estimatedCharWidth = 0.55;
-          const fontSize = Math.min(
-            Math.max(9, (maxTextWidth / (textLength * estimatedCharWidth))),
-            radius * 0.32
-          );
-
-          const isHovered = hoveredNode === node.id;
-          const isDragged = draggedNode === node.id;
-          const hoverScale = isHovered ? 1.1 : 1.0;
-          const hoverStrokeWidth = isHovered ? STROKE_WIDTH * 2 : STROKE_WIDTH;
-          const hoverStrokeOpacity = isHovered ? 0.6 : 0.3;
+        {/* Keyword connection lines + floating labels */}
+        {stages.map((stage, si) => {
+          const stagePos = getStagePos(si);
+          const isHovered = hoveredStage === si;
 
           return (
-            <g
-              key={node.id}
-              style={{
-                cursor: isHovered || isDragged ? 'grab' : 'default',
-              }}
-            >
-              {/* Sphere circle */}
+            <g key={`keywords-${si}`}>
+              {stage.items.map((item, ii) => {
+                const currentKwIndex = kwIndex++;
+                const kwPos = getKeywordPos(currentKwIndex);
+                return (
+                  <g key={ii}>
+                    <line
+                      x1={stagePos.x}
+                      y1={stagePos.y}
+                      x2={kwPos.x}
+                      y2={kwPos.y}
+                      stroke={isHovered ? accentColor : mutedColor}
+                      strokeWidth={0.5}
+                      strokeDasharray="3 3"
+                      opacity={isHovered ? 0.5 : 0.2}
+                      style={{ transition: 'stroke 0.3s ease, opacity 0.3s ease' }}
+                    />
+                    <circle
+                      cx={kwPos.x}
+                      cy={kwPos.y}
+                      r={isHovered ? 3.5 : 2.5}
+                      fill={isHovered ? accentColor : mutedColor}
+                      style={{ transition: 'fill 0.3s ease' }}
+                    />
+                    <text
+                      x={kwPos.x}
+                      y={kwPos.y - 10}
+                      textAnchor="middle"
+                      fill={isHovered ? textColor : mutedColor}
+                      fontSize={si === 0 ? 16 : 14}
+                      style={{
+                        ...textNoSelectStyle,
+                        fontFamily: 'var(--theme-font-body, sans-serif)',
+                        fontWeight: isHovered ? 500 : 400,
+                        transition: 'fill 0.3s ease',
+                      }}
+                    >
+                      {item}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          );
+        })}
+
+        {/* Stage nodes on the ring */}
+        {stages.map((stage, si) => {
+          const pos = getStagePos(si);
+          const isHovered = hoveredStage === si;
+          const labelAngle = getStageAngle(si);
+          const labelR = ringRadius - 34;
+          const labelPos = {
+            x: cx + Math.cos(labelAngle) * labelR,
+            y: cy + Math.sin(labelAngle) * labelR,
+          };
+
+          return (
+            <g key={`stage-${si}`}>
               <circle
-                cx={node.x}
-                cy={node.y}
-                r={radius * hoverScale}
-                fill={accentColor}
-                fillOpacity={isVisible ? node.opacity : 0}
-                stroke={accentColor}
-                strokeWidth={hoverStrokeWidth}
-                strokeOpacity={isVisible ? hoverStrokeOpacity : 0}
-                style={{ 
-                  transition: isDragged ? 'none' : 'opacity 0.6s ease, stroke-width 0.2s ease, stroke-opacity 0.2s ease',
-                }}
+                cx={pos.x}
+                cy={pos.y}
+                r={isHovered ? 10 : 8}
+                fill={isHovered ? accentColor : textColor}
+                style={{ transition: 'fill 0.2s ease' }}
               />
-              
-              {/* Keyword text */}
               <text
-                x={node.x}
-                y={node.y}
-                fontSize={fontSize}
-                fill={bgColor}
-                fillOpacity={isVisible ? 0.95 : 0}
+                x={labelPos.x}
+                y={labelPos.y + 5}
                 textAnchor="middle"
-                dominantBaseline="middle"
+                fill={isHovered ? accentColor : textColor}
+                fontSize={16}
                 style={{
                   ...textNoSelectStyle,
-                  fontFamily: 'var(--theme-font-body, sans-serif)',
-                  fontWeight: 500,
-                  transition: 'opacity 0.6s ease',
+                  fontFamily: 'var(--theme-font-heading)',
+                  textTransform: 'uppercase' as const,
+                  letterSpacing: '0.1em',
+                  fontWeight: 700,
+                  transition: 'fill 0.2s ease',
                 }}
               >
-                {node.keyword}
+                {stage.label}
               </text>
             </g>
           );
         })}
+
+        {/* Orbiting dot with time-based trail */}
+        {/* Trail dots first (behind lead) */}
+        {trailAngles.map((a, i) => {
+          const tx = cx + Math.cos(a) * ringRadius;
+          const ty = cy + Math.sin(a) * ringRadius;
+          const t = i / trailCount; // 0 to ~1
+          const size = Math.max(0.5, 5.5 * (1 - t * t)); // quadratic falloff
+          const alpha = Math.max(0.02, 0.7 * (1 - t));
+          return (
+            <circle
+              key={`trail-${i}`}
+              cx={tx}
+              cy={ty}
+              r={size}
+              fill={accentColor}
+              opacity={alpha}
+            />
+          );
+        })}
+        {/* Lead dot */}
+        <circle
+          cx={cx + Math.cos(orbitAngle) * ringRadius}
+          cy={cy + Math.sin(orbitAngle) * ringRadius}
+          r={6}
+          fill={accentColor}
+          opacity={0.95}
+        />
       </svg>
     </div>
   );
