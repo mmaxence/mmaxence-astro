@@ -15,18 +15,18 @@
   --theme-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --theme-radius: 0.5rem;
   --theme-spacing: 1rem;
-  
+
   /* Card Radius System */
   --radius-card: 1rem; /* 16px - Main card container radius */
   --radius-card-image: 0.875rem; /* 14px - Images inside cards, slightly smaller for visual hierarchy */
   --radius-card-inner: 0.75rem; /* 12px - Inner elements with spacing from card edge */
-  --theme-font-heading: 'Anonymous Pro', monospace;
-  --theme-font-body: 'Plus Jakarta Sans', sans-serif;
+  --theme-font-heading: "Anonymous Pro", monospace;
+  --theme-font-body: "Plus Jakarta Sans", sans-serif;
 
   /* Typography - Anonymous Pro (bold) + Plus Jakarta Sans */
   --font-body: var(--theme-font-body);
   --font-heading: var(--theme-font-heading);
-  
+
   /* Font Sizes */
   --text-base: 1.125rem; /* 18px - body text */
   --text-sm: 0.875rem; /* 14px */
@@ -37,7 +37,7 @@
   --text-4xl: 2.25rem; /* 36px */
   --text-5xl: 3rem; /* 48px */
   --text-6xl: 3.75rem; /* 60px */
-  
+
   /* Colors - use theme variables */
   --color-text: var(--theme-text);
   --color-text-muted: var(--theme-text-muted);
@@ -46,10 +46,10 @@
   --color-bg-muted: var(--theme-bg);
   --color-accent: var(--theme-accent);
   --color-accent-hover: var(--theme-accent);
-  --color-highlight: var(--theme-highlight, #FBF1A9);
+  --color-highlight: var(--theme-highlight, #fbf1a9);
   --color-border: var(--theme-border);
   --color-border-light: var(--theme-border);
-  
+
   /* Spacing */
   --spacing-xs: 0.25rem; /* 4px */
   --spacing-sm: 0.5rem; /* 8px */
@@ -57,12 +57,12 @@
   --spacing-lg: 1.5rem; /* 24px */
   --spacing-xl: 2rem; /* 32px */
   --spacing-2xl: 3rem; /* 48px */
-  
+
   /* Transitions */
   --transition-fast: 0.15s ease-out;
   --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  
+
   /* Shadows */
   --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -74,17 +74,35 @@
    Replaces inline style="color: var(--theme-*)" patterns
 */
 
-.text-theme        { color: var(--theme-text); }
-.text-theme-muted  { color: var(--theme-text-muted); }
-.text-theme-accent { color: var(--theme-accent); }
-.bg-theme          { background-color: var(--theme-bg); }
-.bg-theme-border   { background-color: var(--theme-border); }
-.border-theme      { border-color: var(--theme-border); }
-.shadow-theme      { box-shadow: var(--theme-shadow); }
+.text-theme {
+  color: var(--theme-text);
+}
+.text-theme-muted {
+  color: var(--theme-text-muted);
+}
+.text-theme-accent {
+  color: var(--theme-accent);
+}
+.bg-theme {
+  background-color: var(--theme-bg);
+}
+.bg-theme-border {
+  background-color: var(--theme-border);
+}
+.border-theme {
+  border-color: var(--theme-border);
+}
+.shadow-theme {
+  box-shadow: var(--theme-shadow);
+}
 
 /* Hover variants */
-.hover\:text-theme-accent:hover { color: var(--theme-accent); }
-.hover\:bg-theme-border:hover   { background-color: var(--theme-border); }
+.hover\:text-theme-accent:hover {
+  color: var(--theme-accent);
+}
+.hover\:bg-theme-border:hover {
+  background-color: var(--theme-border);
+}
 
 /* ============================================
    CARD RADIUS SYSTEM
@@ -102,7 +120,6 @@
   border-radius: var(--radius-card-image);
 }
 
-
 /* ============================================
    BASE TYPOGRAPHY
    ============================================ */
@@ -112,7 +129,9 @@ body {
   font-size: var(--text-base);
   color: var(--theme-text) !important;
   background-color: var(--theme-bg);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Apply line-height and font-size-scale only when theme variables are set */
@@ -123,16 +142,28 @@ body {
 }
 
 /* Force theme colors on all text elements */
-p, span, div, article, section, li {
+p,
+span,
+div,
+article,
+section,
+li {
   color: var(--theme-text);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--theme-font-heading);
   font-weight: 700; /* Anonymous Pro bold for all headings */
   line-height: normal;
   color: var(--theme-text);
-  transition: font-family 0.3s ease, color 0.3s ease;
+  transition:
+    font-family 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Apply line-height only for IDE theme headings (no font-size scaling) */
@@ -152,7 +183,9 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme="pixel"] h5,
 [data-theme="pixel"] h6 {
   line-height: var(--line-height-heading);
-  font-size: calc(1em * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+  font-size: calc(
+    1em * var(--font-size-scale-heading, var(--font-size-scale, 1))
+  );
 }
 
 /* H1 and H2 headings need more bottom margin for better spacing */
@@ -171,7 +204,8 @@ em {
 }
 
 /* Links - base styles only, hover handled by interactions */
-a, a:visited {
+a,
+a:visited {
   color: var(--color-text);
   text-decoration: none;
 }
@@ -201,7 +235,8 @@ a, a:visited {
 
 /* Mark/highlight - use accent color as background with high contrast text */
 /* Default: white text (for dark accents like black) */
-mark, .mark {
+mark,
+.mark {
   font-family: var(--font-body); /* Keep body font for mark tags */
   background-color: var(--theme-accent);
   color: #ffffff;
@@ -313,15 +348,21 @@ hr {
 }
 
 [data-theme="pixel"] .prose h1 {
-  font-size: calc(var(--text-3xl) * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+  font-size: calc(
+    var(--text-3xl) * var(--font-size-scale-heading, var(--font-size-scale, 1))
+  );
 }
 
 [data-theme="pixel"] .prose h2 {
-  font-size: calc(var(--text-2xl) * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+  font-size: calc(
+    var(--text-2xl) * var(--font-size-scale-heading, var(--font-size-scale, 1))
+  );
 }
 
 [data-theme="pixel"] .prose h3 {
-  font-size: calc(var(--text-xl) * var(--font-size-scale-heading, var(--font-size-scale, 1)));
+  font-size: calc(
+    var(--text-xl) * var(--font-size-scale-heading, var(--font-size-scale, 1))
+  );
 }
 
 [data-theme="ide"] .prose p,
@@ -334,7 +375,9 @@ hr {
   margin-bottom: 1.5rem;
   border-radius: var(--theme-radius);
   box-shadow: var(--theme-shadow);
-  transition: border-radius 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-radius 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .prose a {
@@ -385,6 +428,34 @@ hr {
   color: #2d5016; /* Dark green text for light green-gray accent */
 }
 
+.prose blockquote {
+  border-left: 3px solid var(--theme-accent);
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 0 var(--theme-radius) var(--theme-radius) 0;
+}
+
+.prose blockquote p {
+  margin-bottom: 0;
+}
+
+.prose blockquote em {
+  font-family: var(--font-body);
+  font-size: inherit;
+  color: var(--color-text);
+  opacity: 0.85;
+}
+
+/* Theme-aware blockquote backgrounds */
+[data-theme="ide"] .prose blockquote {
+  background: rgba(192, 202, 245, 0.08);
+}
+
+[data-theme="pixel"] .prose blockquote {
+  background: rgba(45, 80, 22, 0.06);
+}
+
 .prose ul,
 .prose ol {
   margin-top: 1rem;
@@ -403,6 +474,109 @@ hr {
 .prose li {
   margin-bottom: 0.5rem;
   display: list-item;
+}
+
+/* Italic — reset global em styles for prose */
+.prose em {
+  font-family: var(--font-body);
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Strong/bold — use body font, full opacity */
+.prose strong {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Inline code */
+.prose code {
+  font-family: "Anonymous Pro", monospace;
+  font-size: 0.875em;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+[data-theme="ide"] .prose code {
+  background: rgba(192, 202, 245, 0.12);
+}
+
+[data-theme="pixel"] .prose code {
+  background: rgba(45, 80, 22, 0.1);
+}
+
+/* Code blocks — override inline code styles */
+.prose pre {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+  border-radius: 0;
+}
+
+[data-theme="ide"] .prose pre {
+  background: rgba(192, 202, 245, 0.06);
+  border-color: rgba(192, 202, 245, 0.15);
+}
+
+[data-theme="pixel"] .prose pre {
+  background: rgba(45, 80, 22, 0.04);
+  border-color: rgba(45, 80, 22, 0.12);
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95em;
+}
+
+.prose th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--theme-border);
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--theme-border);
+  vertical-align: top;
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="ide"] .prose tbody tr:hover {
+  background: rgba(192, 202, 245, 0.05);
+}
+
+[data-theme="pixel"] .prose tbody tr:hover {
+  background: rgba(45, 80, 22, 0.04);
+}
+
+/* Horizontal rules */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--theme-border);
+  margin: 2.5rem 0;
 }
 
 /* ============================================
@@ -441,7 +615,9 @@ hr {
    INDEX PAGE SPECIFIC STYLES
    ============================================ */
 
-.index h1, .index h2, .index h5 {
+.index h1,
+.index h2,
+.index h5 {
   font-family: var(--font-heading);
   font-weight: 700; /* Anonymous Pro bold */
 }
@@ -491,9 +667,10 @@ hr {
     max-height: 2rem;
     opacity: 1;
     overflow: hidden;
-    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .header-scrolled .header-subtitle {
@@ -566,14 +743,18 @@ html {
   height: 3px;
   background: linear-gradient(90deg, var(--theme-accent), var(--theme-text));
   z-index: 9999;
-  transition: width 0.1s ease-out, background 0.3s ease;
+  transition:
+    width 0.1s ease-out,
+    background 0.3s ease;
 }
 
 /* Page Transition System - using Tailwind classes in components */
 .page-transition {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+  transition:
+    opacity var(--transition-smooth),
+    transform var(--transition-smooth);
 }
 
 .page-transition.loaded {
@@ -636,7 +817,7 @@ nav ul li {
 }
 
 .prose a:not(.no-underline)::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0px;
   left: 0;
@@ -657,15 +838,19 @@ nav ul li {
 
 /* General links - blue on hover, underline animation */
 /* Exclude blog-card-link and book-item to prevent conflicts with their custom hover effects */
-a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item) {
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
+    .book-item
+  ) {
   position: relative;
   color: var(--color-text);
   text-decoration: none;
   padding-bottom: 2px;
 }
 
-a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item)::after {
-  content: '';
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
+    .book-item
+  )::after {
+  content: "";
   position: absolute;
   bottom: 0px;
   left: 0;
@@ -676,11 +861,15 @@ a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-
   z-index: 2;
 }
 
-a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item):hover {
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
+    .book-item
+  ):hover {
   color: var(--color-accent);
 }
 
-a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-item):hover::after {
+a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
+    .book-item
+  ):hover::after {
   width: 100%;
 }
 
@@ -701,7 +890,9 @@ a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-
 .qualification-item {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+  transition:
+    opacity var(--transition-smooth),
+    transform var(--transition-smooth);
 }
 
 .principle-card.visible,
@@ -718,11 +909,11 @@ a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(.book-
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   html {
     scroll-behavior: auto;
   }
-  
+
   .page-transition,
   .principle-card,
   .book-item,
