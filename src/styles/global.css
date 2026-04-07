@@ -540,6 +540,8 @@ hr {
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.95em;
+  display: block;
+  overflow-x: auto;
 }
 
 .prose th {
