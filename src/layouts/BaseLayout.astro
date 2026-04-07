@@ -289,6 +289,25 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
   </head>
       <body style="background-color: var(--theme-bg); transition: background-color 0.3s ease;">
         <slot />
+        <script is:inline>
+          (function() {
+            function wrapTables() {
+              document.querySelectorAll('.prose table').forEach(function(table) {
+                if (table.parentElement && table.parentElement.classList.contains('table-wrapper')) return;
+                var wrapper = document.createElement('div');
+                wrapper.className = 'table-wrapper';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+              });
+            }
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', wrapTables);
+            } else {
+              wrapTables();
+            }
+            document.addEventListener('astro:page-load', wrapTables);
+          })();
+        </script>
       </body>
 </html>
 
