@@ -49,7 +49,7 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
 >
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-    <article class="max-w-3xl mx-auto px-3 md:px-6 py-12 overflow-x-hidden">
+    <article class="max-w-3xl mx-auto px-3 md:px-6 py-12">
       {post.data.featured_image && (() => {
         const featuredImage = post.data.featured_image.startsWith('/') 
           ? post.data.featured_image 
@@ -133,4 +133,19 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
   <Footer />
   <ThemeToast />
 </BaseLayout>
+
+<script>
+  function wrapProseTables() {
+    document.querySelectorAll('.prose table').forEach((table) => {
+      if (table.parentElement?.classList.contains('table-wrapper')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentNode!.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  }
+
+  wrapProseTables();
+  document.addEventListener('astro:page-load', wrapProseTables);
+</script>
 
