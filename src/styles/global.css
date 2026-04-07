@@ -856,6 +856,7 @@ a.credential:hover {
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Reading Progress Bar - can't be done with Tailwind */
