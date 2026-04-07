@@ -129,7 +129,6 @@ body {
   font-size: var(--text-base);
   color: var(--theme-text) !important;
   background-color: var(--theme-bg);
-  overflow-x: hidden;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -859,7 +858,6 @@ a.credential:hover {
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 /* Reading Progress Bar - can't be done with Tailwind */
