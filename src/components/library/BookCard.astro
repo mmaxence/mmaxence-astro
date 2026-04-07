@@ -15,9 +15,8 @@ const featuredImage = book.data.featured_image?.startsWith('/')
 
 <a 
   href={`/library/${slug}`} 
-  class="book-item prefetch-link block no-underline hover:bg-transparent border-none book-card-disabled" 
+  class="book-item prefetch-link block no-underline hover:bg-transparent border-none"
   data-prefetch="true"
-  onclick="return false;"
 >
   <article class="book-card p-6 border border-theme bg-theme rounded-card shadow-theme transition-all duration-300 hover:shadow-theme-hover hover:-translate-y-1">
     {book.data.featured_image && (

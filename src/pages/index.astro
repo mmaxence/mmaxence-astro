@@ -59,7 +59,7 @@ const blogPosts = (await getCollection('blog'))
     {/* WHAT I DO */}
     <HomeSection title="WHAT I DO" delay={0}>
       <p slot="pre-visual" class="mt-4">I work at the intersection of product definition, interaction design, and execution systems.</p>
-      <WhatIDoVisual slot="visual" client:load />
+      <WhatIDoVisual slot="visual" client:visible />
       <div slot="post-visual">
         <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Sometimes that means leading. Sometimes that means designing the first version myself and stepping away once the direction is clear.</p>
         <p class="mt-4">
@@ -71,7 +71,7 @@ const blogPosts = (await getCollection('blog'))
     {/* THE CRAFT */}
     <HomeSection title="THE CRAFT" delay={25}>
       <p slot="pre-visual" class="mt-4">Code as a design tool — before AI, and even more with it.</p>
-      <TheCraftVisual slot="visual" client:load />
+      <TheCraftVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="mt-6">
           <p>I've always used code as a design tool — building shared systems, prototyping interactions too complex for Figma, and closing the gap between intent and implementation. AI coding agents turned that into a superpower. With a structured control system I designed for autonomous agent work, I now fully leverage my cross-disciplinary fluency in design, product, and engineering at a pace that wasn't possible before.</p>
@@ -117,7 +117,7 @@ const blogPosts = (await getCollection('blog'))
     {/* EXPERIENCE SNAPSHOT */}
     <HomeSection title="EXPERIENCE SNAPSHOT" delay={50}>
       <p slot="pre-visual" class="mt-4">13+ years of shaping products, building teams, and scaling platforms.</p>
-      <ExperienceSnapshotVisual slot="visual" client:load />
+      <ExperienceSnapshotVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="mt-8">
           <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product & Experience Executive</h2>
@@ -179,7 +179,7 @@ const blogPosts = (await getCollection('blog'))
     {/* HOW I WORK */}
     <HomeSection title="HOW I WORK" delay={100}>
       <p slot="pre-visual" class="mt-4">Tight discovery loops, clear intent, and execution that doesn't depend on me.</p>
-      <HowIWorkVisual slot="visual" client:load />
+      <HowIWorkVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="craft-grid mt-10">
           <div class="craft-cell">
@@ -214,7 +214,7 @@ const blogPosts = (await getCollection('blog'))
     {/* BEYOND THE ROLE */}
     <HomeSection title="BEYOND THE ROLE" delay={200}>
       <p slot="pre-visual" class="mt-4">Sustainable pace, continuous learning, and systems thinking beyond work.</p>
-      <BeyondTheRoleVisual slot="visual" client:load />
+      <BeyondTheRoleVisual slot="visual" client:visible />
       <div slot="post-visual">
         <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
         <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>

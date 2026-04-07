@@ -68,7 +68,6 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
                   href={post.data.credentiallink} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  class="credential"
                   class="credential text-theme-muted"
                 >
                   {post.data.credential}
@@ -132,19 +131,5 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
   </PageContent>
   <Footer />
   <ThemeToast />
-  <script>
-    function wrapProseTables() {
-      document.querySelectorAll('.prose table').forEach((table) => {
-        if (table.parentElement?.classList.contains('table-wrapper')) return;
-        const wrapper = document.createElement('div');
-        wrapper.className = 'table-wrapper';
-        table.parentNode!.insertBefore(wrapper, table);
-        wrapper.appendChild(table);
-      });
-    }
-
-    wrapProseTables();
-    document.addEventListener('astro:page-load', wrapProseTables);
-  </script>
 </BaseLayout>
 

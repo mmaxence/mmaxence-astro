@@ -362,14 +362,21 @@ function isActive(url: string): boolean {
     }
   }
 
+  // Track cleanup for document-level listeners
+  let mobileMenuAbort: AbortController | null = null;
+
   function initMobileMenu() {
     const fab = document.getElementById('mobile-menu-fab');
     const bottomsheet = document.getElementById('mobile-menu-bottomsheet');
-    
+
     if (!fab || !bottomsheet) {
       setTimeout(initMobileMenu, 50);
       return;
     }
+
+    // Clean up previous document-level listeners
+    if (mobileMenuAbort) mobileMenuAbort.abort();
+    mobileMenuAbort = new AbortController();
 
     // Update FAB overlay color on initialization
     updateFABOverlay();
@@ -441,7 +448,7 @@ function isActive(url: string): boolean {
           closeMenu();
         }
       }
-    });
+    }, { signal: mobileMenuAbort!.signal });
 
     // Close on menu item click (but not reset theme button)
     const menuItems = bottomsheet.querySelectorAll('.mobile-menu-item:not(.mobile-reset-theme-btn)');
@@ -468,7 +475,7 @@ function isActive(url: string): boolean {
       if (e.key === 'Escape' && bottomsheet.classList.contains('sheet-open')) {
         closeMenu();
       }
-    });
+    }, { signal: mobileMenuAbort!.signal });
   }
 
   // Initialize on DOM ready
