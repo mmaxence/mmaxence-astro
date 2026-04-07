@@ -272,7 +272,7 @@ hr {
   color: var(--color-text);
   line-height: 1.75;
   opacity: 0.9;
-  overflow-x: auto;
+  overflow-wrap: break-word;
 }
 
 /* Apply line-height and font-size-scale only when theme variables are set */
@@ -497,6 +497,7 @@ hr {
   background: rgba(0, 0, 0, 0.06);
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
+  word-break: break-all;
 }
 
 [data-theme="ide"] .prose code {
