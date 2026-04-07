@@ -1,6 +1,5 @@
 ---
 import TagList from '../ui/TagList.astro';
-import LinkCard from '../ui/LinkCard.astro';
 import { Fragment } from 'astro/jsx-runtime';
 
 interface RelatedLink {
@@ -174,13 +173,26 @@ const parsedContent = parseContent(content);
       })}
     </div>
     {relatedLinks && relatedLinks.length > 0 && (
-      <div class="mt-8 pt-8 border-t border-theme">
-        <h3 class="font-mono text-xl font-normal mb-3 text-theme">Related content</h3>
-        <div class="flex flex-wrap gap-2">
-          {relatedLinks.map((link) => (
-            <LinkCard href={link.href} title={link.title} favicon={link.favicon} />
-          ))}
-        </div>
+      <div class="ref-links mt-8 pt-8 border-t border-theme">
+        <span class="ref-label">See also:</span>
+        {relatedLinks.map((link) => {
+          const isExternal = link.href.startsWith('http://') || link.href.startsWith('https://');
+          const faviconSrc = link.favicon
+            ? link.favicon
+            : isExternal
+              ? `https://www.google.com/s2/favicons?domain=${new URL(link.href).hostname}&sz=24`
+              : '/images/favicon.png';
+          return (
+            <a
+              href={link.href}
+              class="ref-link"
+              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
+              <img src={faviconSrc} alt="" class="ref-icon" width="14" height="14" />
+              {link.title}
+            </a>
+          );
+        })}
       </div>
     )}
     {tags && tags.length > 0 && (

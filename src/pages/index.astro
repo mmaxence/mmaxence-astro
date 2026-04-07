@@ -7,12 +7,11 @@ import AnimatedContent from '../components/ui/AnimatedContent.astro';
 import CardGrid from '../components/ui/CardGrid.astro';
 import BlogCard from '../components/blog/BlogCard.astro';
 import ThemeToast from '../components/ui/ThemeToast.astro';
-import LinkCard from '../components/ui/LinkCard.astro';
 import HeroShapes from '../components/home/HeroShapes.astro';
-import { 
-  WhatIDoVisual, 
-  HowIWorkVisual, 
-  LeadershipScalesVisual, 
+import {
+  WhatIDoVisual,
+  TheCraftVisual,
+  HowIWorkVisual,
   BeyondTheRoleVisual,
   ExperienceSnapshotVisual
 } from '../components/home/SectionVisuals.tsx';
@@ -63,13 +62,58 @@ const blogPosts = (await getCollection('blog'))
       <WhatIDoVisual slot="visual" client:load />
       <div slot="post-visual">
         <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Sometimes that means leading. Sometimes that means designing the first version myself and stepping away once the direction is clear.</p>
-        <p class="mt-4">I'm comfortable operating as an executive, and I remain effective as an individual contributor when the work requires depth, speed, and judgment.</p>
         <p class="mt-4">
-          <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="content-link">View my resume</a> for a detailed overview of my experience and impact.
+          <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />View my resume</a> for a detailed overview of my experience and impact.
         </p>
       </div>
     </HomeSection>
     
+    {/* THE CRAFT */}
+    <HomeSection title="THE CRAFT" delay={25}>
+      <p slot="pre-visual" class="mt-4">Code as a design tool — before AI, and even more with it.</p>
+      <TheCraftVisual slot="visual" client:load />
+      <div slot="post-visual">
+        <div class="mt-6">
+          <p>I've always used code as a design tool — building shared systems, prototyping interactions too complex for Figma, and closing the gap between intent and implementation. AI coding agents turned that into a superpower. With a structured control system I designed for autonomous agent work, I now fully leverage my cross-disciplinary fluency in design, product, and engineering at a pace that wasn't possible before.</p>
+        </div>
+
+        <div class="craft-grid mt-10">
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Interaction</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Primitives, micro-interactions, and system-level patterns that scale across products.</p>
+            <div class="ref-links">
+              <a href="/blog/when-the-interface-assembles-itself" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />When the Interface Assembles Itself</a>
+              <a href="/blog/designing-above-the-interface" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Designing Above the Interface</a>
+              <a href="/blog/from-paper-to-code" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />From Paper to Code</a>
+            </div>
+          </div>
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Engineering</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Shipping design decisions directly in production codebases.</p>
+            <div class="ref-links">
+              <a href="/about/" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />About This Site</a>
+              <a href="/blog/from-paper-to-code" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />From Paper to Code</a>
+            </div>
+          </div>
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Systems</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Component libraries and design tokens that hold across products and teams.</p>
+            <div class="ref-links">
+              <a href="https://design.buzzvil.com" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=design.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
+            </div>
+          </div>
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Product</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Scoping, sequencing, and making tradeoffs before pixels.</p>
+            <div class="ref-links">
+              <a href="/blog/designing-above-the-interface" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Designing Above the Interface</a>
+              <a href="/blog/harnessing-ai-coding-agents" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Agent Operating Manual</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </HomeSection>
+
     {/* EXPERIENCE SNAPSHOT */}
     <HomeSection title="EXPERIENCE SNAPSHOT" delay={50}>
       <p slot="pre-visual" class="mt-4">13+ years of shaping products, building teams, and scaling platforms.</p>
@@ -97,11 +141,12 @@ const blogPosts = (await getCollection('blog'))
               <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
             </li>
           </ul>
-          <div class="mt-6 flex flex-wrap gap-2">
-            <LinkCard href="/blog/i-dont-like-ads" title="I Don't Like Ads" />
-            <LinkCard href="https://www.buzzvil.com/en/company/about_us" title="About Us" />
-            <LinkCard href="https://docs.buzzvil.com/" title="Buzzvil Docs" />
-            <LinkCard href="https://buzzvil.github.io/design/" title="Design Buzzvil" />
+          <div class="ref-links mt-6">
+            <span class="ref-label">See also:</span>
+            <a href="/blog/i-dont-like-ads" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />I Don't Like Ads</a>
+            <a href="https://www.buzzvil.com/en/company/about_us" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />About Us</a>
+            <a href="https://docs.buzzvil.com/" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=docs.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Buzzvil Docs</a>
+            <a href="https://buzzvil.github.io/design/" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=buzzvil.github.io&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
           </div>
         </div>
         
@@ -126,7 +171,7 @@ const blogPosts = (await getCollection('blog'))
         </div>
         
         <div class="mt-8">
-          <p class="text-base">For more details, see my <a href="/timeline" class="content-link">full experience timeline</a>.</p>
+          <p class="text-base">For more details, see my <a href="/timeline" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />full experience timeline</a>.</p>
         </div>
       </div>
     </HomeSection>
@@ -136,40 +181,32 @@ const blogPosts = (await getCollection('blog'))
       <p slot="pre-visual" class="mt-4">Tight discovery loops, clear intent, and execution that doesn't depend on me.</p>
       <HowIWorkVisual slot="visual" client:load />
       <div slot="post-visual">
-        <div class="mt-6 space-y-4">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Deliberate thinking, fast execution</h2>
-            <p class="!mt-1">I invest heavily upfront to clarify constraints, tradeoffs, and intent, so execution can move quickly without rework.</p>
+        <div class="craft-grid mt-10">
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Deliberate thinking, fast execution</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Investing heavily upfront to clarify constraints, tradeoffs, and intent, so execution moves quickly without rework.</p>
+            <div class="ref-links">
+              <a href="/blog/design-tempo" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Design Tempo</a>
+            </div>
           </div>
-          
-          <div>
-            <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Systems over screens</h2>
-            <p class="!mt-1">I design interaction models, primitives, and patterns that hold together across teams and iterations, not just polished flows.</p>
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Systems over screens</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Interaction models, primitives, and patterns that hold together across teams and iterations.</p>
           </div>
-          
-          <div>
-            <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product ownership mindset</h2>
-            <p class="!mt-1">Whether leading or contributing, I design with unit economics, engineering cost, and long-term maintainability in mind.</p>
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Product ownership mindset</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Designing with unit economics, engineering cost, and long-term maintainability in mind.</p>
+            <div class="ref-links">
+              <a href="/blog/high-output-management" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />High Output Management</a>
+            </div>
           </div>
-        </div>
-        <div class="mt-8 flex flex-wrap gap-2">
-          <LinkCard href="/blog/design-tempo" title="Design Tempo" />
-          <LinkCard href="/blog/high-output-management" title="High Output Management" />
-        </div>
-      </div>
-    </HomeSection>
-    
-    {/* LEADERSHIP THAT SCALES */}
-    <HomeSection title="LEADERSHIP THAT SCALES" delay={150}>
-      <p slot="pre-visual" class="mt-4">Small teams, high leverage. Capability and influence grow faster than headcount.</p>
-      <LeadershipScalesVisual slot="visual" client:load />
-      <div slot="post-visual">
-        <p class="mt-4">I build small teams designed to operate without constant oversight.</p>
-        <p class="mt-4">When I lead, my goal is to remove ambiguity early and make myself unnecessary over time.</p>
-        <p class="mt-4">When I contribute individually, it's usually at the beginning of new initiatives, where clarity does not exist yet and decisions are expensive.</p>
-        <p class="mt-4">If execution depends on me long-term, the system is wrong.</p>
-        <div class="mt-8 flex flex-wrap gap-2">
-          <LinkCard href="/blog/design-peer-reviews-to-support-our-team-growth" title="Design Peer Reviews" />
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Building teams that don't need me</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Small teams designed to operate without constant oversight. Removing ambiguity early and becoming unnecessary over time.</p>
+            <div class="ref-links">
+              <a href="/blog/design-peer-reviews-to-support-our-team-growth" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Design Peer Reviews</a>
+            </div>
+          </div>
         </div>
       </div>
     </HomeSection>
@@ -180,10 +217,7 @@ const blogPosts = (await getCollection('blog'))
       <BeyondTheRoleVisual slot="visual" client:load />
       <div slot="post-visual">
         <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
-        <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology.</p>
-        <div class="mt-8 flex flex-wrap gap-2">
-          <LinkCard href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" title="Life in Sprint Mode" />
-        </div>
+        <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>
       </div>
     </HomeSection>
     
@@ -235,6 +269,52 @@ const blogPosts = (await getCollection('blog'))
   .hero-profile-wrapper :global(.hero-shapes-wrapper) {
     position: relative;
     z-index: 1;
+  }
+
+  /* Craft dimensions grid — 4 > 2 > 1 columns */
+  .craft-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid var(--theme-border);
+    border-radius: var(--theme-radius);
+    overflow: hidden;
+  }
+
+  .craft-cell {
+    padding: 1.25rem;
+    background: var(--theme-bg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .craft-cell h3 {
+    margin-bottom: 1.75rem !important;
+    font-size: 1.125rem;
+  }
+
+  .craft-cell .ref-links {
+    margin-top: auto;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--theme-border);
+  }
+
+  /* 1px borders between cells via background on parent */
+  .craft-grid {
+    background: var(--theme-border);
+  }
+
+  @media (max-width: 1024px) {
+    .craft-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .craft-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* Prevent hover effects on index content sections containing SVG images */

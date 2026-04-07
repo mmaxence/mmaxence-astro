@@ -5,7 +5,6 @@ import Footer from '../../components/layout/Footer.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
-import LinkCard from '../../components/ui/LinkCard.astro';
 
 const techStack = [
   {
@@ -62,7 +61,7 @@ const techStack = [
           <p class="mt-4">The homepage includes five distinct interactive visual components that reinforce the mental models described in each section, all built with React and SVG for smooth, performant animations.</p>
           
           <p class="mt-6 p-4 bg-theme rounded border-l-4 border-theme-accent">
-            <strong class="font-mono">✨ Open Source:</strong> This entire project is available as a <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="prefetch-link" data-prefetch="false">public repository on GitHub</a>. Feel free to use it as a starting point for your own portfolio, blog, or website. Fork it, customize it, and make it your own!
+            <strong class="font-mono">✨ Open Source:</strong> This entire project is available as a <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=24" alt="" width="14" height="14" class="inline-card-icon" />public repository on GitHub</a>. Feel free to use it as a starting point for your own portfolio, blog, or website. Fork it, customize it, and make it your own!
           </p>
         </div>
       </AnimatedContent>
@@ -158,8 +157,11 @@ const techStack = [
       </AnimatedContent>
 
       <AnimatedContent delay={(techStack.length + 2) * 100}>
-        <div class="mt-12 flex justify-center">
-          <LinkCard href="https://github.com/mmaxence/mmaxence-astro" title="View on GitHub" />
+        <div class="mt-12 text-center">
+          <div class="ref-links" style="justify-content: center;">
+            <span class="ref-label">Source:</span>
+            <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=24" alt="" class="ref-icon" width="14" height="14" />View on GitHub</a>
+          </div>
         </div>
       </AnimatedContent>
     </div>

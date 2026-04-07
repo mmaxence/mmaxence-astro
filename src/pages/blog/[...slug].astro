@@ -132,20 +132,19 @@ const videoId = post.data.related_video ? getYouTubeId(post.data.related_video) 
   </PageContent>
   <Footer />
   <ThemeToast />
+  <script>
+    function wrapProseTables() {
+      document.querySelectorAll('.prose table').forEach((table) => {
+        if (table.parentElement?.classList.contains('table-wrapper')) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode!.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+    }
+
+    wrapProseTables();
+    document.addEventListener('astro:page-load', wrapProseTables);
+  </script>
 </BaseLayout>
-
-<script>
-  function wrapProseTables() {
-    document.querySelectorAll('.prose table').forEach((table) => {
-      if (table.parentElement?.classList.contains('table-wrapper')) return;
-      const wrapper = document.createElement('div');
-      wrapper.className = 'table-wrapper';
-      table.parentNode!.insertBefore(wrapper, table);
-      wrapper.appendChild(table);
-    });
-  }
-
-  wrapProseTables();
-  document.addEventListener('astro:page-load', wrapProseTables);
-</script>
 

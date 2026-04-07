@@ -1320,6 +1320,296 @@ export function BeyondTheRoleVisual() {
   );
 }
 
+// THE CRAFT — AI-amplified craft visual
+// A single input node fans out through a central hub to 4 craft dimensions
+export function TheCraftVisual() {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const animationRef = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.2 }
+    );
+    if (svgRef.current) observer.observe(svgRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const { textColor, accentColor, mutedColor } = useThemeColors({
+    text: 0.8,
+    accent: 0.8,
+    muted: 0.3,
+  });
+
+  // Layout
+  const inputX = 80;
+  const hubX = 220;
+  const outputX = 460;
+  const centerY = 150;
+  const outputSpacing = 60;
+
+  const outputs = [
+    'Interaction',
+    'Engineering',
+    'Systems',
+    'Product',
+  ];
+
+  const outputPositions = outputs.map((_, i) => ({
+    x: outputX,
+    y: centerY - ((outputs.length - 1) / 2) * outputSpacing + i * outputSpacing,
+  }));
+
+  const hubRadius = 18;
+
+  // Animation: expanding rings from hub + pulses to outputs
+  useEffect(() => {
+    if (!isVisible || prefersReducedMotion()) {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      return;
+    }
+
+    const cycleDuration = 3000;
+    const pulseDuration = 600;
+    const startTime = performance.now();
+
+    const animate = (time: number) => {
+      if (!svgRef.current) return;
+
+      const elapsed = (time - startTime) % cycleDuration;
+
+      // Hub expanding rings — 3 rings staggered, continuously pulsing
+      for (let r = 0; r < 3; r++) {
+        const ring = svgRef.current.querySelector(`.craft-ring-${r}`) as SVGCircleElement;
+        if (!ring) continue;
+        const ringCycle = 2500;
+        const ringOffset = r * (ringCycle / 3);
+        const ringElapsed = ((time - startTime + ringOffset) % ringCycle) / ringCycle;
+        const ringRadius = hubRadius + ringElapsed * 40;
+        const ringOpacity = (1 - ringElapsed) * 0.35;
+        ring.setAttribute('r', String(ringRadius));
+        ring.setAttribute('opacity', String(Math.max(0, ringOpacity)));
+      }
+
+      // Output pulses in sequence
+      for (let i = 0; i < outputs.length; i++) {
+        const pulseStart = (cycleDuration / outputs.length) * i;
+        const pulseElapsed = elapsed - pulseStart;
+        const pulse = svgRef.current.querySelector(`.craft-pulse-${i}`) as SVGCircleElement;
+
+        if (!pulse) continue;
+
+        if (pulseElapsed >= 0 && pulseElapsed < pulseDuration) {
+          const t = pulseElapsed / pulseDuration;
+          const eased = 1 - Math.pow(1 - t, 3);
+          const outPos = outputPositions[i];
+          const px = hubX + (outPos.x - hubX) * eased;
+          const py = centerY + (outPos.y - centerY) * eased;
+          const opacity = t < 0.2 ? t / 0.2 : t > 0.8 ? (1 - t) / 0.2 : 1;
+
+          pulse.setAttribute('cx', String(px));
+          pulse.setAttribute('cy', String(py));
+          pulse.setAttribute('opacity', String(opacity * 0.9));
+          pulse.setAttribute('r', '4');
+        } else {
+          pulse.setAttribute('opacity', '0');
+        }
+      }
+
+      // Input pulse
+      const inputPulse = svgRef.current.querySelector('.craft-input-pulse') as SVGCircleElement;
+      if (inputPulse) {
+        const inputCycle = 1500;
+        const inputElapsed = elapsed % inputCycle;
+        const inputDuration = 500;
+        if (inputElapsed < inputDuration) {
+          const t = inputElapsed / inputDuration;
+          const eased = 1 - Math.pow(1 - t, 3);
+          const px = inputX + (hubX - inputX) * eased;
+          const opacity = t < 0.2 ? t / 0.2 : t > 0.7 ? (1 - t) / 0.3 : 1;
+          inputPulse.setAttribute('cx', String(px));
+          inputPulse.setAttribute('cy', String(centerY));
+          inputPulse.setAttribute('opacity', String(opacity * 0.8));
+        } else {
+          inputPulse.setAttribute('opacity', '0');
+        }
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [isVisible, hubX, hubRadius, inputX, centerY, outputPositions]);
+
+  return (
+    <div className="w-full my-8" style={visualWrapperStyle}>
+      <svg
+        ref={svgRef}
+        viewBox="-20 0 640 300"
+        preserveAspectRatio="xMidYMid meet"
+        className="w-full h-auto"
+        style={{ minHeight: '300px', width: '100%', maxWidth: '100%', display: 'block', overflow: 'visible' }}
+      >
+        {/* Input node — the practitioner */}
+        <circle
+          cx={inputX}
+          cy={centerY}
+          r={8}
+          fill={accentColor}
+          opacity={isVisible ? 1 : 0}
+          style={{ transition: 'opacity 0.6s ease' }}
+        />
+        <text
+          x={inputX}
+          y={centerY + 24}
+          textAnchor="middle"
+          fontSize="11"
+          fill={mutedColor}
+          opacity={isVisible ? 0.9 : 0}
+          style={{
+            ...textNoSelectStyle,
+            fontFamily: 'var(--theme-font-body, sans-serif)',
+            transition: 'opacity 0.6s ease',
+          }}
+        >
+          You
+        </text>
+
+        {/* Line from input to hub */}
+        <line
+          x1={inputX + 10}
+          y1={centerY}
+          x2={hubX - hubRadius - 2}
+          y2={centerY}
+          stroke={mutedColor}
+          strokeWidth={1}
+          strokeDasharray="4 3"
+          opacity={isVisible ? 0.4 : 0}
+          style={{ transition: 'opacity 0.6s ease' }}
+        />
+
+        {/* Hub — AI amplifier with expanding rings */}
+        {[0, 1, 2].map((r) => (
+          <circle
+            key={`ring-${r}`}
+            className={`craft-ring-${r}`}
+            cx={hubX}
+            cy={centerY}
+            r={hubRadius}
+            fill="none"
+            stroke={accentColor}
+            strokeWidth={1}
+            opacity={0}
+          />
+        ))}
+        <circle
+          cx={hubX}
+          cy={centerY}
+          r={hubRadius}
+          fill={accentColor}
+          opacity={isVisible ? 0.15 : 0}
+          style={{ transition: 'opacity 0.6s ease' }}
+        />
+        <circle
+          cx={hubX}
+          cy={centerY}
+          r={hubRadius * 0.5}
+          fill={accentColor}
+          opacity={isVisible ? 0.6 : 0}
+          style={{ transition: 'opacity 0.6s ease' }}
+        />
+        <text
+          x={hubX}
+          y={centerY + hubRadius + 16}
+          textAnchor="middle"
+          fontSize="11"
+          fill={accentColor}
+          opacity={isVisible ? 0.9 : 0}
+          style={{
+            ...textNoSelectStyle,
+            fontFamily: 'var(--theme-font-body, sans-serif)',
+            fontWeight: 500,
+            transition: 'opacity 0.6s ease',
+          }}
+        >
+          AI Agents
+        </text>
+
+        {/* Lines from hub to each output */}
+        {outputPositions.map((pos, i) => (
+          <line
+            key={`line-${i}`}
+            x1={hubX + hubRadius + 2}
+            y1={centerY}
+            x2={pos.x - 8}
+            y2={pos.y}
+            stroke={mutedColor}
+            strokeWidth={0.75}
+            strokeDasharray="4 3"
+            opacity={isVisible ? 0.3 : 0}
+            style={{ transition: 'opacity 0.6s ease' }}
+          />
+        ))}
+
+        {/* Output nodes + labels */}
+        {outputPositions.map((pos, i) => (
+          <g key={`output-${i}`}>
+            <circle
+              cx={pos.x}
+              cy={pos.y}
+              r={6}
+              fill={textColor}
+              opacity={isVisible ? 0.6 : 0}
+              style={{ transition: 'opacity 0.6s ease' }}
+            />
+            <text
+              x={pos.x + 14}
+              y={pos.y + 4}
+              fontSize="12"
+              fill={mutedColor}
+              opacity={isVisible ? 0.9 : 0}
+              style={{
+                ...textNoSelectStyle,
+                fontFamily: 'var(--theme-font-body, sans-serif)',
+                transition: 'opacity 0.6s ease',
+              }}
+            >
+              {outputs[i]}
+            </text>
+          </g>
+        ))}
+
+        {/* Animated pulses — one per output */}
+        {outputs.map((_, i) => (
+          <circle
+            key={`pulse-${i}`}
+            className={`craft-pulse-${i}`}
+            cx={hubX}
+            cy={centerY}
+            r={4}
+            fill={accentColor}
+            opacity={0}
+          />
+        ))}
+
+        {/* Input pulse */}
+        <circle
+          className="craft-input-pulse"
+          cx={inputX}
+          cy={centerY}
+          r={3}
+          fill={accentColor}
+          opacity={0}
+        />
+      </svg>
+    </div>
+  );
+}
+
 // EXPERIENCE SNAPSHOT - Concentric Rings of Capability Layers
 export function ExperienceSnapshotVisual() {
   const containerRef = useRef<HTMLDivElement>(null);
