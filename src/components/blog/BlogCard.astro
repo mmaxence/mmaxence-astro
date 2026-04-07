@@ -4,19 +4,20 @@ import DateDisplay from '../ui/DateDisplay.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  featured?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, featured = false } = Astro.props;
 
 const featuredImage = post.data.featured_image?.startsWith('/') 
   ? post.data.featured_image 
   : `/blog/${post.slug}/${post.data.featured_image}`;
 ---
 
-<a href={`/blog/${post.slug}`} class="blog-card-link block prefetch-link" data-prefetch="true">
-  <article class="blog-card text-base leading-relaxed p-6 relative overflow-hidden">
+<a href={`/blog/${post.slug}`} class={`blog-card-link block prefetch-link ${featured ? 'blog-card-featured' : ''}`} data-prefetch="true">
+  <article class={`blog-card text-base leading-relaxed ${featured ? 'p-6 md:p-8' : 'p-6'} relative overflow-hidden`}>
     {post.data.featured_image && (
-      <div class="blog-card-image-wrap mb-4">
+      <div class={`blog-card-image-wrap ${featured ? 'mb-5' : 'mb-4'}`}>
         <img
           src={featuredImage}
           alt={post.data.title}
@@ -25,10 +26,10 @@ const featuredImage = post.data.featured_image?.startsWith('/')
       </div>
     )}
     <DateDisplay date={post.data.date} class="block mb-2 text-sm text-theme-muted" />
-    <h2 class="text-xl md:text-2xl font-mono font-light mt-0 md:mt-2 mb-2">
+    <h2 class={`font-mono font-light mt-0 md:mt-2 mb-2 ${featured ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>
       {post.data.title}
     </h2>
-    <p class="text-base leading-relaxed">
+    <p class={`leading-relaxed ${featured ? 'text-base md:text-lg' : 'text-base'}`}>
       {post.data.description || 'Read the full article to learn more.'}
     </p>
   </article>

@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
+import CardGrid from '../../components/ui/CardGrid.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const FIRST_PAGE_SIZE = 9;
+  const OTHER_PAGE_SIZE = 10;
+
+  const allPosts = await getCollection('blog');
+  const sorted = allPosts
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  const remaining = sorted.length - FIRST_PAGE_SIZE;
+  const totalPages = remaining > 0
+    ? 1 + Math.ceil(remaining / OTHER_PAGE_SIZE)
+    : 1;
+
+  return Array.from({ length: totalPages }, (_, i) => {
+    const pageNum = i + 1;
+    let posts: typeof sorted;
+    if (pageNum === 1) {
+      posts = sorted.slice(0, FIRST_PAGE_SIZE);
+    } else {
+      const start = FIRST_PAGE_SIZE + (pageNum - 2) * OTHER_PAGE_SIZE;
+      posts = sorted.slice(start, start + OTHER_PAGE_SIZE);
+    }
+    return {
+      params: { page: pageNum === 1 ? undefined : String(pageNum) },
+      props: { posts, currentPage: pageNum, totalPages },
+    };
+  });
+}
+
+const { posts, currentPage, totalPages } = Astro.props;
+const isFirstPage = currentPage === 1;
+const heroPost = isFirstPage ? posts[0] : null;
+const gridPosts = isFirstPage ? posts.slice(1) : posts;
+
+const prevUrl = currentPage > 1
+  ? currentPage === 2 ? '/blog/' : `/blog/${currentPage - 1}/`
+  : null;
+const nextUrl = currentPage < totalPages
+  ? `/blog/${currentPage + 1}/`
+  : null;
+---
+
+<BaseLayout title="Blog" description="Blog posts about design, product, and leadership">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay={0}>
+        <PageHeader
+          title="Blog"
+          description="Blog posts about design, product, and leadership"
+        />
+      </AnimatedContent>
+
+      {heroPost && (
+        <div class="mb-12 md:mb-16">
+          <AnimatedContent delay={50}>
+            <BlogCard post={heroPost} featured />
+          </AnimatedContent>
+        </div>
+      )}
+
+      <CardGrid columns={2}>
+        {gridPosts.map((post, index) => (
+          <AnimatedContent delay={(isFirstPage ? index + 1 : index) * 50 + 100}>
+            <BlogCard post={post} />
+          </AnimatedContent>
+        ))}
+      </CardGrid>
+
+      {totalPages > 1 && (
+        <nav class="blog-pagination mt-16 pt-8 border-t border-theme" aria-label="Blog pagination">
+          <div class="flex items-center justify-between gap-4">
+            {prevUrl ? (
+              <a href={prevUrl} class="blog-pagination-link group" data-nav="prev">
+                <span class="text-base text-theme group-hover:text-theme-accent transition-colors">
+                  Previous
+                </span>
+                <span class="hidden sm:inline blog-pagination-key">←</span>
+              </a>
+            ) : <div class="flex-1" />}
+
+            <span class="text-sm text-theme-muted font-mono">
+              {currentPage} / {totalPages}
+            </span>
+
+            {nextUrl ? (
+              <a href={nextUrl} class="blog-pagination-link group" data-nav="next">
+                <span class="hidden sm:inline blog-pagination-key">→</span>
+                <span class="text-base text-theme group-hover:text-theme-accent transition-colors">
+                  Next
+                </span>
+              </a>
+            ) : <div class="flex-1" />}
+          </div>
+        </nav>
+      )}
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>
+
+<style>
+  .blog-pagination-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--theme-border);
+    border-radius: var(--theme-radius, 0.5rem);
+    transition: border-color 0.2s ease;
+  }
+
+  .blog-pagination-link:hover {
+    border-color: var(--theme-accent);
+  }
+
+  .blog-pagination-key {
+    font-size: 0.65rem;
+    font-family: var(--theme-font-heading);
+    line-height: 1;
+    min-width: 1.4em;
+    text-align: center;
+    padding: 0.25rem 0.4rem 0.2rem;
+    border-top: 1px solid var(--theme-border);
+    border-left: 1px solid var(--theme-border);
+    border-right: 2px solid var(--theme-border);
+    border-bottom: 3px solid var(--theme-border);
+    border-radius: 0.25rem;
+    background-color: var(--theme-bg);
+    color: var(--theme-text-muted);
+    opacity: 0.6;
+  }
+</style>
+
+<script>
+  function initBlogPaginationNav() {
+    const nav = document.querySelector('.blog-pagination');
+    if (!nav) return;
+
+    const prevLink = nav.querySelector('[data-nav="prev"]') as HTMLAnchorElement | null;
+    const nextLink = nav.querySelector('[data-nav="next"]') as HTMLAnchorElement | null;
+
+    function onKeydown(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.key === 'ArrowLeft' && prevLink) {
+        prevLink.click();
+      } else if (e.key === 'ArrowRight' && nextLink) {
+        nextLink.click();
+      }
+    }
+
+    document.addEventListener('keydown', onKeydown);
+
+    document.addEventListener('astro:before-swap', () => {
+      document.removeEventListener('keydown', onKeydown);
+    }, { once: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBlogPaginationNav);
+  } else {
+    initBlogPaginationNav();
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(initBlogPaginationNav, 50);
+  });
+</script>
