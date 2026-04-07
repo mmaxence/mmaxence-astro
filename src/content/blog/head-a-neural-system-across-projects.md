@@ -78,6 +78,17 @@ The key insight is that the same structure serves three purposes:
 
 No translation layer between them. The markdown is the interface for all three.
 
+## Growing the nervous system
+
+Once the structure was in place, it became natural to add skills — reusable behaviors the agent can invoke across any project:
+
+- **Weekly review** — scans git logs across all active projects, drafts a review document, walks me through it, and updates goals. The ritual that keeps the system alive.
+- **Deploy check** — after pushing code, verifies the Vercel build passed and surfaces errors with suggested fixes. Removes the "did it deploy?" tab-switching.
+- **New blog post** — scaffolds a post with frontmatter, image directory, and dev server. This article was created with it.
+- **Image optimization** — detects image context (blog cover vs screenshot vs icon) and applies the right compression. A hook catches oversized images automatically; the skill handles nuanced cases.
+
+These aren't complex. Each is a markdown file describing a process — the same format as everything else in head. The agent reads the skill and follows the steps. No code, no framework, just structured instructions that compound over time.
+
 ---
 
 If your projects are multiplying faster than your ability to hold them in context, the answer might not be a better project management tool. It might be a nervous system.
