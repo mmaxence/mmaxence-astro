@@ -129,6 +129,7 @@ body {
   font-size: var(--text-base);
   color: var(--theme-text) !important;
   background-color: var(--theme-bg);
+  overflow-x: hidden;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
