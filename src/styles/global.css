@@ -273,6 +273,7 @@ hr {
   color: var(--color-text);
   line-height: 1.75;
   opacity: 0.9;
+  contain: inline-size;
 }
 
 /* Apply line-height and font-size-scale only when theme variables are set */
@@ -497,6 +498,8 @@ hr {
   background: rgba(0, 0, 0, 0.06);
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 [data-theme="ide"] .prose code {
@@ -536,18 +539,10 @@ hr {
 }
 
 
-.prose .table-wrapper {
+.prose table {
+  display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin: 1.5rem 0;
-}
-
-.prose .table-wrapper table {
-  margin: 0;
-}
-
-.prose table {
-  min-width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.95em;
