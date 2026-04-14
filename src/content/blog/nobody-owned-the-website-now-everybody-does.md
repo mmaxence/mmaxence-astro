@@ -222,26 +222,30 @@ This was a deliberate choice. We could have kept it as a designer's project. Ins
 
 ## Where we are today
 
-The project started on March 5, 2026. Six weeks later, this is the status:
+The project started on March 5, 2026. Here is where things stand:
 
-| App | Status | Timeline |
-|-----|--------|----------|
-| [Tech Blog](https://buzzvil-tech-blog.vercel.app/) | Live | 195+ posts migrated, launched mid-March |
-| [Homepage](https://buzzvil-homepage.vercel.app/) | Live | System converted, content pages rolling out |
-| [SDK Docs](https://buzzvil-docs.vercel.app/) | Final QA | 227 pages migrated, DNS cutover end of April |
-| Design Portal | In monorepo | Deployable, waiting for launch sequence |
+| App | Status |
+|-----|--------|
+| [Design Portal](https://design.buzzvil.com) | Live (first to launch) |
+| [Tech Blog](https://buzzvil-tech-blog.vercel.app/) | Live, 195+ posts migrated |
+| [SDK Docs](https://buzzvil-docs.vercel.app/) | Final QA, 227 pages migrated |
+| Homepage | In progress, system converted, content migration ongoing |
 
-![The tech blog, rebuilt from Hugo with 195+ posts under the shared token system](/blog/nobody-owned-the-website-now-everybody-does/tech-blog.png)
+![The design portal at design.buzzvil.com](/blog/nobody-owned-the-website-now-everybody-does/tech-blog.png)
+*The tech blog. 195+ engineering posts migrated from Hugo, now sharing the same token system as every other surface.*
 
-![The SDK documentation, 227 pages migrated from Docusaurus](/blog/nobody-owned-the-website-now-everybody-does/docs.png)
+![The SDK documentation](/blog/nobody-owned-the-website-now-everybody-does/docs.png)
+*SDK documentation. 227 pages covering three SDK versions, migrated from Docusaurus. Same typography, same spacing, same brand.*
 
-![The homepage, serving as the company's primary marketing surface](/blog/nobody-owned-the-website-now-everybody-does/homepage.png)
+![The homepage](/blog/nobody-owned-the-website-now-everybody-does/homepage.png)
+*The homepage (in progress). The most complex surface, with content dependencies across multiple teams.*
 
-![The culture blog, content pages living inside the homepage app](/blog/nobody-owned-the-website-now-everybody-does/culture-blog.png)
+![The culture blog](/blog/nobody-owned-the-website-now-everybody-does/culture-blog.png)
+*Culture blog. Content pages living inside the homepage app, sharing layouts and components.*
 
-The tech blog went live first because it had the most content and the clearest migration path. The homepage followed, though some pages still depend on content from other teams, which is being worked out through a new collaboration workflow. The SDK docs passed full content parity and SEO verification, and are going through a final visual QA with four reviewers before the DNS cutover.
+The design portal went live first, as the surface closest to our team. The tech blog followed with the largest content migration. The SDK docs are through content parity and SEO verification, going through a final visual QA with four reviewers. The homepage is the most complex, with content dependencies across multiple teams being worked out through a new collaboration workflow.
 
-The whole process, from first commit to three apps in production, took about five weeks. Compare that to the months it used to take with freelancers just to update one page.
+Two apps in production, one in final QA, one in progress. Compare that to the months it used to take with freelancers just to update one page.
 
 ## What we learned
 
