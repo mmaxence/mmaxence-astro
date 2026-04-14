@@ -237,6 +237,8 @@ The project started on March 5, 2026. Six weeks later, this is the status:
 
 ![The homepage, serving as the company's primary marketing surface](/blog/nobody-owned-the-website-now-everybody-does/homepage.png)
 
+![The culture blog, content pages living inside the homepage app](/blog/nobody-owned-the-website-now-everybody-does/culture-blog.png)
+
 The tech blog went live first because it had the most content and the clearest migration path. The homepage followed, though some pages still depend on content from other teams, which is being worked out through a new collaboration workflow. The SDK docs passed full content parity and SEO verification, and are going through a final visual QA with four reviewers before the DNS cutover.
 
 The whole process, from first commit to three apps in production, took about five weeks. Compare that to the months it used to take with freelancers just to update one page.
