@@ -35,13 +35,13 @@ So the gap persisted. Not because we lacked taste, but because we lacked hands.
 
 Two things happened in late 2025.
 
-First, the design system matured. We had spent the previous year building a token-based system with OKLCH colors, semantic CSS custom properties, and runtime theming. It was originally built for our interaction patterns (ad experiences, gamification, campaign UIs), but the token layer was universal. Any surface could consume it.
+First, the design system matured. We had spent the previous year building a token-based system with semantic CSS custom properties and runtime theming. It was originally built for our interaction patterns (ad experiences, gamification, campaign UIs), but the token layer was universal. Any surface could consume it.
 
 Second, AI coding tools reached a threshold where a single designer could move at engineering speed. Not "AI generates a mockup" speed. Actual production code speed. Next.js apps, responsive layouts, SEO plumbing, image optimization, CI/CD pipelines. The kind of work that used to require a dedicated frontend team.
 
-The combination unlocked something we had been wanting for years: a designer who understands the brand can now *build* the brand, end to end. No waiting for engineering allocation. No simplifying the vision to fit a template. And more importantly, no Figma in the loop. Paper sketches, a token system, and Claude Code turned out to be enough.
+The combination unlocked something we had been wanting for years: a designer who understands the brand can now build it, end to end. No waiting for engineering allocation. No simplifying the vision to fit a template. And more importantly, no Figma in the loop. Paper sketches, a token system, and Claude Code turned out to be enough.
 
-I started building on March 5, 2026. Five weeks later, three apps were in production.
+I started building in early March 2026. Five weeks later, three apps were in production.
 
 ## Brand as code
 
@@ -87,8 +87,6 @@ We wanted to change that. We wanted the brand to be expressed as code, as the ac
 When marketing needs a new page on buzzvil.com, the brand is already there. Not as a reference to check against. As the material the page is made of.
 
 ## The architecture
-
-We call the monorepo `buzzvil-web`, though internally it sometimes goes by `buzzvil-mediums`. A nod to the idea that these are not separate products but different mediums expressing the same brand.
 
 ```bash
 buzzvil-web/
@@ -222,7 +220,7 @@ This was a deliberate choice. We could have kept it as a designer's project. Ins
 
 ## Where we are today
 
-The project started on March 5, 2026. Here is where things stand:
+The project started in early March 2026. Here is where things stand:
 
 | App | Status |
 |-----|--------|
@@ -267,7 +265,7 @@ So I tested that assumption early. I took our existing brand values, decomposed 
 
 The brand we have today is us. It is probably not perfect. It could be refined, evolved, sharpened. But for the first time, it is *alive*. It is not a PDF that someone checks before a release. It is not a Figma file that drifts from what actually shipped. It is the material the surfaces are made of. When it changes, everything changes with it.
 
-And the same token system already powers more than just these web apps. It powers the [interaction library](/blog/the-flip), the gamification and campaign experiences that run inside publisher apps across Korea. The same tokens that theme a blog post also theme a scratch card or a spin wheel inside KakaoBank.
+And the same token system already powers more than just these web apps. It powers the [interaction library](/blog/the-flip), the gamification and campaign experiences that run inside publisher apps across Korea.
 
 ## What comes next
 
