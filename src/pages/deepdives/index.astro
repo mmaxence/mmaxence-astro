@@ -6,6 +6,7 @@ import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
 import { getCollection } from 'astro:content';
 
 const allDeepdives = await getCollection('deepdives');
@@ -30,28 +31,10 @@ const deepdives = allDeepdives
       </AnimatedContent>
 
       {deepdives.length > 0 && (
-        <div class="space-y-12 md:space-y-16">
+        <div class="space-y-8 md:space-y-10">
           {deepdives.map((post, index) => (
             <AnimatedContent delay={index * 50}>
-              <a href={`/deepdives/${post.slug}/`} class="block no-underline border-none hover:bg-transparent">
-                <article>
-                  {post.data.featured_image && (
-                    <img
-                      src={post.data.featured_image}
-                      alt={post.data.title}
-                      class="w-full h-auto rounded-lg mb-4"
-                    />
-                  )}
-                  <h2 class="text-2xl md:text-3xl font-mono font-light mb-2" style="color: var(--theme-text);">
-                    {post.data.title}
-                  </h2>
-                  {post.data.description && (
-                    <p class="text-base" style="color: var(--theme-text-muted);">
-                      {post.data.description}
-                    </p>
-                  )}
-                </article>
-              </a>
+              <BlogCard post={post} section="deepdives" featured />
             </AnimatedContent>
           ))}
         </div>

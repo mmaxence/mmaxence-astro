@@ -3,18 +3,19 @@ import type { CollectionEntry } from 'astro:content';
 import DateDisplay from '../ui/DateDisplay.astro';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: CollectionEntry<'blog'> | CollectionEntry<'deepdives'>;
   featured?: boolean;
+  section?: 'blog' | 'deepdives';
 }
 
-const { post, featured = false } = Astro.props;
+const { post, featured = false, section = 'blog' } = Astro.props;
 
-const featuredImage = post.data.featured_image?.startsWith('/') 
-  ? post.data.featured_image 
-  : `/blog/${post.slug}/${post.data.featured_image}`;
+const featuredImage = post.data.featured_image?.startsWith('/')
+  ? post.data.featured_image
+  : `/${section}/${post.slug}/${post.data.featured_image}`;
 ---
 
-<a href={`/blog/${post.slug}`} class={`blog-card-link block prefetch-link ${featured ? 'blog-card-featured' : ''}`} data-prefetch="true">
+<a href={`/${section}/${post.slug}`} class={`blog-card-link block prefetch-link ${featured ? 'blog-card-featured' : ''}`} data-prefetch="true">
   <article class={`blog-card text-base leading-relaxed ${featured ? 'p-6 md:p-8' : 'p-6'} relative overflow-hidden`}>
     {post.data.featured_image && (
       <div class={`blog-card-image-wrap ${featured ? 'mb-5' : 'mb-4'}`}>
