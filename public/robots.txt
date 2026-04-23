@@ -4,9 +4,16 @@
 User-agent: *
 Allow: /
 
+# Keep the agent-facing raw-markdown variants out of the general index to avoid
+# duplicate-canonical noise. Pages expose an X-Robots-Tag: noindex header too.
+Disallow: /blog/*.md$
+Disallow: /deepdives/*.md$
+
 # Sitemap
 Sitemap: https://mmaxence.me/sitemap-index.xml
 
 # LLM-friendly content
 # See /llms.txt for a structured overview of this site
 # See /llms-full.txt for full content optimized for LLM consumption
+# Per-post Markdown: append .md to any /blog or /deepdives URL
+#   Example: https://mmaxence.me/deepdives/ai-native-design-workflow-playbook.md

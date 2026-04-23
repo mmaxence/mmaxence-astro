@@ -2,16 +2,23 @@
 (function() {
   'use strict';
 
-  // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎨 Delightful Interactions loaded!');
+  function initAll() {
     initPageTransitions();
     initReadingProgress();
     initScrollAnimations();
     initSmoothScrolling();
     initLibraryEnhancements();
     initIndexEnhancements();
+  }
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎨 Delightful Interactions loaded!');
+    initAll();
   });
+
+  // Re-run after Astro View Transitions client-side navigations
+  document.addEventListener('astro:page-load', initAll);
 
   // Page Transition System
   function initPageTransitions() {
@@ -27,33 +34,42 @@
   }
 
   // Reading Progress Bar
+  // The element gets re-created on every page load because Astro View Transitions
+  // swap the <body> contents. We keep a single scroll listener and let it look up
+  // the element by id on each call.
+  function updateReadingProgress() {
+    const progressBar = document.getElementById('reading-progress');
+    if (!progressBar) return;
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    const denom = scrollHeight - clientHeight;
+    const scrollPercent = denom > 0 ? (scrollTop / denom) * 100 : 0;
+    progressBar.style.width = `${Math.min(scrollPercent, 100)}%`;
+  }
+
   function initReadingProgress() {
-    // Create progress bar
-    const progressBar = document.createElement('div');
-    progressBar.id = 'reading-progress';
-    document.body.prepend(progressBar);
-
-    // Update progress on scroll
-    function updateProgress() {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      const scrollPercent = (scrollTop / (scrollHeight - clientHeight)) * 100;
-      progressBar.style.width = `${Math.min(scrollPercent, 100)}%`;
+    // Ensure the bar exists in the current DOM
+    if (!document.getElementById('reading-progress')) {
+      const progressBar = document.createElement('div');
+      progressBar.id = 'reading-progress';
+      document.body.prepend(progressBar);
     }
 
-    // Throttled scroll listener
-    let ticking = false;
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateProgress();
-          ticking = false;
-        });
-        ticking = true;
-      }
+    // Attach the scroll listener exactly once per session
+    if (!window.__readingProgressListenerAttached) {
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateReadingProgress();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+      window.__readingProgressListenerAttached = true;
     }
 
-    window.addEventListener('scroll', onScroll);
-    updateProgress(); // Initial call
+    updateReadingProgress(); // Initial sync (and re-sync after navigation)
   }
 
   // Scroll-triggered animations
@@ -156,15 +172,7 @@
   }
 
   // Handle window resize
-  window.addEventListener('resize', debounce(() => {
-    // Recalculate any layout-dependent features
-    const progressBar = document.getElementById('reading-progress');
-    if (progressBar) {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      const scrollPercent = (scrollTop / (scrollHeight - clientHeight)) * 100;
-      progressBar.style.width = `${Math.min(scrollPercent, 100)}%`;
-    }
-  }, 250));
+  window.addEventListener('resize', debounce(updateReadingProgress, 250));
 
   // Add loading states for better UX
   function addLoadingState(element) {

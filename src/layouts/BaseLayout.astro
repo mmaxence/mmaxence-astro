@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import JsonLd from '../components/ui/JsonLd.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -80,9 +81,7 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     <title>{title === siteTitle ? title : `${title} | ${siteTitle}`}</title>
 
     {/* JSON-LD Structured Data */}
-    {jsonLdSchemas.map((schema) => (
-      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-    ))}
+    {jsonLdSchemas.map((schema) => <JsonLd data={schema} />)}
 
     {/* Open Graph / Facebook */}
     <meta property="og:type" content={type} />

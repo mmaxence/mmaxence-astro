@@ -22,6 +22,10 @@ const blogPosts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3); // Get latest 3 posts for homepage
+
+const featuredDeepdive = (await getCollection('deepdives'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0];
 ---
 
 <BaseLayout title="Systemic Design for High-Growth Products | Maxence Mauduit" description="Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.">
@@ -106,6 +110,7 @@ const blogPosts = (await getCollection('blog'))
             <h3 class="text-base font-heading font-bold">Product</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Scoping, sequencing, and making tradeoffs before pixels.</p>
             <div class="ref-links">
+              <a href="/deepdives/ai-native-design-workflow-playbook" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />AI-Native Design Playbook</a>
               <a href="/blog/designing-above-the-interface" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Designing Above the Interface</a>
               <a href="/blog/harnessing-ai-coding-agents" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Agent Operating Manual</a>
             </div>
@@ -221,6 +226,33 @@ const blogPosts = (await getCollection('blog'))
       </div>
     </HomeSection>
     
+    {/* Featured Deep Dive */}
+    {featuredDeepdive && (
+      <section class="flex flex-col items-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+        <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
+          <AnimatedContent delay={325}>
+            <div class="w-full">
+              <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Featured Deep Dive</h2>
+              <a href={`/deepdives/${featuredDeepdive.slug}/`} class="featured-deepdive-card mt-12 block no-underline border-none hover:bg-transparent">
+                <article class="p-6 md:p-10" style="border: 1px solid var(--theme-border); border-radius: var(--theme-radius);">
+                  <p class="text-xs uppercase tracking-widest mb-4" style="color: var(--theme-text-muted);">Deep Dive</p>
+                  <h3 class="text-2xl md:text-4xl font-mono font-light mb-3" style="color: var(--theme-text);">
+                    {featuredDeepdive.data.title}
+                  </h3>
+                  {featuredDeepdive.data.description && (
+                    <p class="text-base md:text-lg leading-relaxed" style="color: var(--theme-text-muted);">
+                      {featuredDeepdive.data.description}
+                    </p>
+                  )}
+                  <p class="mt-6 text-sm font-mono" style="color: var(--theme-text);">Read the full playbook →</p>
+                </article>
+              </a>
+            </div>
+          </AnimatedContent>
+        </div>
+      </section>
+    )}
+
     {/* Blog Posts */}
     {blogPosts.length > 0 && (
       <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">

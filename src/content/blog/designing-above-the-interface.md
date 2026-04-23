@@ -62,3 +62,8 @@ By 2026, the question is no longer who can produce the most output. Machines hav
 The real question is who decides what the machine makes, and on whose behalf. The answer will not be a job title. It will be a way of thinking.
 
 As machines become very good at making things, value shifts to those who can decide what is worth making at all.
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

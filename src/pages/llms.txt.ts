@@ -6,12 +6,20 @@ export const GET: APIRoute = async () => {
     .filter((post) => !post.data.draft)
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
+  const deepdivePosts = (await getCollection('deepdives'))
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
   const libraryBooks = (await getCollection('library'))
     .filter((book) => !book.data.draft)
     .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 
   const blogList = blogPosts
     .map((post) => `- [${post.data.title}](https://mmaxence.me/blog/${post.slug}/): ${post.data.description || ''}`)
+    .join('\n');
+
+  const deepdiveList = deepdivePosts
+    .map((post) => `- [${post.data.title}](https://mmaxence.me/deepdives/${post.slug}/): ${post.data.description || ''}`)
     .join('\n');
 
   const libraryList = libraryBooks
@@ -28,14 +36,25 @@ Maxence Mauduit is a Product Design Leader (CDO) at Buzzvil in Seoul, South Kore
 
 His strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale.
 
+## Machine-readable variants
+
+- Full prose corpus (Markdown): https://mmaxence.me/llms-full.txt
+- Per-post Markdown: append \`.md\` to any /blog or /deepdives URL.
+  Example: https://mmaxence.me/deepdives/ai-native-design-workflow-playbook.md
+
 ## Key Pages
 
 - [Home](https://mmaxence.me/): Overview of expertise, experience, and approach
 - [Experience Timeline](https://mmaxence.me/timeline/): Detailed career timeline and impact
+- [Deep Dives](https://mmaxence.me/deepdives/): In-depth case studies on product design, systems thinking, and agentic experiences
 - [Blog](https://mmaxence.me/blog/): Articles on product design, leadership, and design systems
 - [Library / Shelf](https://mmaxence.me/library/): Curated book reviews on design, leadership, and strategy
 - [About](https://mmaxence.me/about/): About this website and its tech stack
 - [Resume](https://mmaxence.me/images/Maxence-Mauduit_Resume-2026.pdf): PDF resume
+
+## Deep Dives
+
+${deepdiveList}
 
 ## Blog Articles
 

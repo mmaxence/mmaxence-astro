@@ -88,3 +88,8 @@ The next step is to create our own patterns. This is vastly everything we refer 
 ![](/blog/design-tempo/end.png)
 
 It isn’t always easy to manage a creative team, creativity tends to express itself in various ways under various conditions. It requires from the lead flexibility and empathy to allow and enhance creative behavior within the team. The importance of rest, installing a tempo within the team helped us a lot. It requires time and permanent adjustment but I believe it to be worth it. The 5 staves are great ways to check if the current rhythm works for everyone. If one of us feels uncomfortable it is usually a sign for a change. Design systems and other optimization processes are trendy and to my opinion worth the time. Systems can be seen as limiting creativity by adding too much control over it. But to our experience it actually produces the exact opposite as designers spend less time on details and more time working on the bigger picture. This tempo recently allowed 2 of us (out of a team of 6) to become Product owners across different mission teams, proof of our capacity to be efficient and sharp with our Design. Defining a creative pace sets solid foundations
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

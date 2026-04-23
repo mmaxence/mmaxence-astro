@@ -32,6 +32,10 @@ export const GET: APIRoute = async () => {
     .filter((post) => !post.data.draft)
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
+  const deepdivePosts = (await getCollection('deepdives'))
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
   const libraryBooks = (await getCollection('library'))
     .filter((book) => !book.data.draft)
     .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
@@ -46,7 +50,27 @@ Focus: Product design leadership, interaction systems, design systems, team buil
 
 ---
 
-## Blog Articles
+## Deep Dives
+
+`;
+
+  for (const post of deepdivePosts) {
+    const postDate = post.data.date.toISOString().split('T')[0];
+    const bodyText = stripMarkdown(post.body || '');
+    content += `### ${post.data.title}
+
+Date: ${postDate}
+URL: https://mmaxence.me/deepdives/${post.slug}/
+${post.data.description ? `Summary: ${post.data.description}` : ''}
+
+${bodyText}
+
+---
+
+`;
+  }
+
+  content += `## Blog Articles
 
 `;
 

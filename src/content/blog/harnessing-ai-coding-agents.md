@@ -209,3 +209,8 @@ You don't need all five layers on day one. Start with what gives you the most le
 5. **Hooks** (30 minutes) — Five small shell scripts. Add when you want active enforcement. This is the layer that makes the biggest difference for code quality, but it needs the others to be truly effective.
 
 The harness grows with your trust. Start loose, tighten where you see problems. The goal isn't maximum control — it's minimum friction with maximum confidence.
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

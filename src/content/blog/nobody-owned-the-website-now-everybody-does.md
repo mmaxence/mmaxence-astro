@@ -280,3 +280,8 @@ That is the real answer to "who owns the website?" Nobody needs to own it, becau
 ---
 
 *buzzvil-web: 274 commits, 4 apps, 5 shared packages. Built by one designer with Claude Code, open to contributions from the entire organization.*
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

@@ -112,3 +112,8 @@ The question isn't whether designers have a role in an AI-composed world. They'l
 The question is whether the discipline thinks seriously about that role before the alternative, handing the assembly entirely to the AI and hoping for the best, becomes the default.
 
 It won't make good choices on its own. It will make fast ones.
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

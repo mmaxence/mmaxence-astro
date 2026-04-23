@@ -1,0 +1,18 @@
+---
+interface Props {
+  data: object;
+}
+
+const { data } = Astro.props;
+
+// Escape `<`, U+2028, U+2029 so a field containing `</script>` or line-separator
+// characters cannot break out of the script tag.
+const LINE_SEP = String.fromCharCode(0x2028);
+const PARA_SEP = String.fromCharCode(0x2029);
+const json = JSON.stringify(data)
+  .split('<').join('\\u003c')
+  .split(LINE_SEP).join('\\u2028')
+  .split(PARA_SEP).join('\\u2029');
+---
+
+<script type="application/ld+json" set:html={json} />

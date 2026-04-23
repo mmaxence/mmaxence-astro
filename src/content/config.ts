@@ -42,6 +42,7 @@ const deepdives = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().default(false),
     featured_image: z.string().optional(),
+    tags: z.array(z.string()).default([]),
   }),
 });
 

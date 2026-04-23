@@ -94,3 +94,8 @@ Practice expressing ideas in writing. Not long-form essays necessarily. Precise,
 And think about what you want to be working on in three years. Not in a career goals interview answer way. Genuinely. Because the work is opening up in ways that reward people who have a point of view about where things are going, and who are comfortable operating without a clear destination in sight. The ones still waiting for a job description that fits exactly are going to be waiting a while.
 
 The job description is wrong. The good news is that the actual job is more interesting than the description ever was.
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

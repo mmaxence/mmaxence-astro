@@ -145,3 +145,7 @@ Shortening the distance between the two feels worth exploring, even if it can be
 
 We are not there yet.  
 But this is the direction we are testing.
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*

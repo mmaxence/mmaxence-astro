@@ -92,3 +92,8 @@ These aren't complex. Each is a markdown file describing a process — the same 
 ---
 
 If your projects are multiplying faster than your ability to hold them in context, the answer might not be a better project management tool. It might be a nervous system.
+
+
+---
+
+*Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
