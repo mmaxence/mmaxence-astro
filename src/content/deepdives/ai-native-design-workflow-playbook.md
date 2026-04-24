@@ -47,7 +47,16 @@ The numbers back her up. In 2025-2026:
 
 Mockup-and-handoff was already slow. Now it's the slowest part of the system.
 
-Jenny's own team at Anthropic saw the shift in real time. Mockup and prototyping work went from 60-70% of a designer's job to 30-40%. The rest moved to two new modes: *supporting execution* (consulting with engineers as they build, giving feedback, polishing in code) and *setting short-range vision* (3-6 months, not multi-year roadmaps). [^1]
+Jenny's own team at Anthropic saw the shift in real time. The time allocation inverted:
+
+| Work type | A few years ago | Now |
+|-----------|-----------------|-----|
+| Mocking and prototyping | 60-70% | 30-40% |
+| Jamming and pairing with engineers | ~20% | 30-40% |
+| Coordination | ~10% | (shrinking) |
+| Direct implementation in code | 0% | A new slice |
+
+Time that used to go into pixel-perfect compositions now goes into two modes: *supporting execution* (consulting with engineers as they build, giving feedback, polishing in code) and *setting short-range vision* (3-6 months, not multi-year roadmaps). [^1]
 
 At Buzzvil, we went further. I don't make mockups anymore. I write user stories, on paper or in text. I describe intent, constraints, and success criteria. Then I build directly in code with Claude Code, or I direct an agent to do it.
 
@@ -314,7 +323,13 @@ What matters now:
 - **Conviction:** can you hold a position without a finished artifact to point at?
 - **Speed:** can you ship something rough, learn from it, and iterate?
 
-Jenny Wen at Anthropic is hiring fresh graduates with zero industry experience. Her logic: "People without ingrained habits or attachment to established processes are an advantage when those processes are changing fast." [^1] The underlying point is broader than seniority. Adaptability, the willingness to adjust to new tools and workflows as they emerge, is becoming a vital characteristic in its own right. The processes are changing fast enough that attachment to any single tool or method is a liability, regardless of experience level.
+Jenny Wen at Anthropic uses a clean three-archetype framework for who actually thrives in this workflow. [^1] It is the most useful hiring frame we've found, and we apply it at Buzzvil.
+
+1. **The block-shaped generalist.** Rather than the classic T-shape (one deep skill plus light coverage), this person has several core skills at the 80th percentile. Research, visual design, prototyping, product thinking, maybe light code. The block shape matters because the design role now stretches into PM and engineering territory. Anyone who can flex across a few domains absorbs the role change without breaking.
+2. **The deep specialist (long-T).** Top 10% in one specific skill: visual design, motion, typography, illustration, or highly technical design closer to engineering. In a world where anyone can produce good-enough output, the deep specialist is what makes the work feel *special*.
+3. **The craft new grad.** Early-career, humble, technically curious, already building in code. Jenny makes the counter-intuitive case: "People without ingrained habits or attachment to established processes are an advantage when those processes are changing fast." The craft new grad hasn't built muscle memory around Figma-first workflows, which means they don't have to unlearn anything.
+
+The common thread is adaptability. The processes are changing fast enough that attachment to any single tool or method is a liability, regardless of experience level.
 
 The best preparation isn't a portfolio of polished case studies. It's evidence of judgment, speed, and willingness to work in code.
 
