@@ -6,6 +6,7 @@ import PageContent from '../../components/ui/PageContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
 import CopyForAI from '../../components/blog/CopyForAI.tsx';
 import JsonLd from '../../components/ui/JsonLd.astro';
+import SubstrateCTA from '../../components/ui/SubstrateCTA.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
@@ -95,6 +96,8 @@ const breadcrumbSchema = {
       <div class="prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text); opacity: 0.9;">
         <Content />
       </div>
+
+      <SubstrateCTA variant="inline" />
 
       <style>
         .deepdive-toc {

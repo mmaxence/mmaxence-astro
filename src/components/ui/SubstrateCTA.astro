@@ -1,0 +1,97 @@
+---
+/**
+ * Substrate newsletter signup CTA.
+ * Used on the homepage (after Recent Writing) and at the bottom of each deep dive.
+ *
+ * Variant prop controls the visual emphasis:
+ *  - "section" (default): full-width section block, suitable for homepage placement
+ *  - "inline": compact card for inline use at the end of an article
+ */
+
+interface Props {
+  variant?: 'section' | 'inline';
+  delay?: number;
+}
+
+const { variant = 'section', delay = 0 } = Astro.props;
+
+import AnimatedContent from './AnimatedContent.astro';
+---
+
+{variant === 'section' && (
+  <section class="flex flex-col items-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+    <div class="w-full max-w-5xl mx-auto text-base leading-relaxed text-theme">
+      <AnimatedContent delay={delay}>
+        <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Substrate</h2>
+        <div class="mt-12 p-6 md:p-10 substrate-cta-card">
+          <p class="text-xs uppercase tracking-widest mb-4" style="color: var(--theme-text-muted);">Newsletter</p>
+          <h3 class="text-2xl md:text-3xl font-mono font-light mb-3" style="color: var(--theme-text);">
+            Insights on what's underneath the work that ships.
+          </h3>
+          <p class="text-base md:text-lg leading-relaxed mb-6" style="color: var(--theme-text-muted);">
+            A monthly newsletter for designers, product leaders, and builders trying to figure out what to make (and what to stop making) as the surface of software keeps moving. Free, monthly, in your inbox.
+          </p>
+          <a
+            href="https://mmaxence.substack.com/subscribe"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="substrate-cta-button"
+          >
+            Subscribe to Substrate →
+          </a>
+        </div>
+      </AnimatedContent>
+    </div>
+  </section>
+)}
+
+{variant === 'inline' && (
+  <aside class="my-16 substrate-cta-inline">
+    <div class="p-6 md:p-8 substrate-cta-card">
+      <p class="text-xs uppercase tracking-widest mb-3" style="color: var(--theme-text-muted);">Substrate · Newsletter</p>
+      <p class="text-lg md:text-xl font-mono font-light mb-3" style="color: var(--theme-text);">
+        Insights on what's underneath the work that ships.
+      </p>
+      <p class="text-base leading-relaxed mb-5" style="color: var(--theme-text-muted);">
+        A monthly newsletter for designers, product leaders, and builders. Free, monthly, in your inbox.
+      </p>
+      <a
+        href="https://mmaxence.substack.com/subscribe"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="substrate-cta-button"
+      >
+        Subscribe to Substrate →
+      </a>
+    </div>
+  </aside>
+)}
+
+<style>
+  .substrate-cta-card {
+    border: 1px solid var(--theme-border);
+    border-radius: var(--theme-radius);
+  }
+
+  .substrate-cta-button {
+    display: inline-block;
+    padding: 0.625rem 1.25rem;
+    border: 1px solid var(--theme-text);
+    border-radius: var(--theme-radius);
+    color: var(--theme-text);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .substrate-cta-button:hover {
+    background-color: var(--theme-text);
+    color: var(--theme-bg);
+    transform: translateY(-1px);
+  }
+
+  .substrate-cta-button::after {
+    display: none !important;
+  }
+</style>

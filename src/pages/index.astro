@@ -16,6 +16,7 @@ import {
   ExperienceSnapshotVisual
 } from '../components/home/SectionVisuals.tsx';
 import HomeSection from '../components/home/HomeSection.astro';
+import SubstrateCTA from '../components/ui/SubstrateCTA.astro';
 import { getCollection } from 'astro:content';
 
 const blogPosts = (await getCollection('blog'))
@@ -272,7 +273,10 @@ const featuredDeepdive = (await getCollection('deepdives'))
         </div>
       </section>
     )}
-    
+
+    {/* Substrate Newsletter CTA */}
+    <SubstrateCTA variant="section" delay={500} />
+
   </PageContent>
       <Footer />
       <ThemeToast />
