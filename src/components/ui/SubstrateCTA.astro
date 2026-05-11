@@ -73,15 +73,16 @@ import AnimatedContent from './AnimatedContent.astro';
     border-radius: var(--theme-radius);
   }
 
-  .substrate-cta-button {
+  a.substrate-cta-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     height: 2.75rem;
-    padding: 0 1.5rem;
+    padding: 4px 1.5rem 0 1.5rem;
     border: 1px solid var(--theme-text);
     border-radius: var(--theme-radius);
     color: var(--theme-text);
+    background-color: transparent;
     font-family: var(--font-mono, ui-monospace, monospace);
     font-size: 0.95rem;
     line-height: 1;
@@ -89,13 +90,13 @@ import AnimatedContent from './AnimatedContent.astro';
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
   }
 
-  .substrate-cta-button:hover {
-    background-color: var(--theme-text);
-    color: var(--theme-bg);
+  a.substrate-cta-button:hover {
+    background-color: var(--theme-text) !important;
+    color: var(--theme-bg) !important;
     transform: translateY(-1px);
   }
 
-  .substrate-cta-button::after {
+  a.substrate-cta-button::after {
     display: none !important;
   }
 </style>
