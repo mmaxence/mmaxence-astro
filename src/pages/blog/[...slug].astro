@@ -8,6 +8,7 @@ import ThemeToast from '../../components/ui/ThemeToast.astro';
 import BlogPostNav from '../../components/blog/BlogPostNav.astro';
 import CopyForAI from '../../components/blog/CopyForAI.tsx';
 import JsonLd from '../../components/ui/JsonLd.astro';
+import SubstrateCTA from '../../components/ui/SubstrateCTA.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
@@ -142,6 +143,8 @@ const breadcrumbSchema = {
           </a>
         </section>
       )}
+
+      <SubstrateCTA variant="inline" />
 
       <BlogPostNav currentPost={post} allPosts={allPosts} />
         </article>
