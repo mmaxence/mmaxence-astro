@@ -3,9 +3,13 @@ title: "The AI-Native Design Playbook"
 description: "How Buzzvil's design team ships through pull requests, not handoffs. A full playbook for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design."
 date: 2026-04-23T10:00:00+09:00
 draft: false
+featured: true
+featured_order: 1
 featured_image: "/images/ai-native-design-workflow-playbook.png"
 tags: ["ai-design", "design-systems", "product-strategy", "workflow", "engineering"]
 ---
+
+<!-- SYNC: canonical source for the AI-Native Design Playbook. Mirrored to design.buzzvil.com (EN+KO) and tech-blog (KO condensed). Edits here should propagate per /Users/max/projects/head/projects/playbook-sync.md -->
 
 **How Buzzvil's design team ships through pull requests, not handoffs.**
 
@@ -337,7 +341,7 @@ The best preparation isn't a portfolio of polished case studies. It's evidence o
 
 If designers ship through PRs, measure PRs.
 
-At Buzzvil, we track design team pull requests as a key result: 30+ PRs from 3+ designers in Q2 2026. The Q1 baseline was 16 PRs from 2 contributors (Max: 14, Joy: 2).
+At Buzzvil, we track design team pull requests as a key result: 30+ PRs from 3+ designers in Q2 2026. The Q1 baseline was 16 PRs from 2 contributors (14 of them mine).
 
 This is a novel metric. No other design team we've found tracks PR count as an OKR. But it's the most honest measure of the workflow shift, and it answers one question directly: *are designers actually shipping, or are they still handing off?*
 

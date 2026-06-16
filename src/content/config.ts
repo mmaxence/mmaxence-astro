@@ -8,6 +8,8 @@ const blog = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().default(false),
     featured_image: z.string().optional(),
+    featured: z.boolean().optional(),
+    featured_order: z.number().optional(),
     credential: z.string().optional(),
     credentiallink: z.string().optional(),
     related_video: z.string().optional(),
@@ -42,6 +44,8 @@ const deepdives = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().default(false),
     featured_image: z.string().optional(),
+    featured: z.boolean().optional(),
+    featured_order: z.number().optional(),
     tags: z.array(z.string()).default([]),
   }),
 });

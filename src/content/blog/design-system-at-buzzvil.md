@@ -3,6 +3,8 @@ title: "Design system at Buzzvil"
 description: "Design system versus startup: is it worth it? Takeaways from building a design system at Buzzvil to cover diverse, growing product needs with a modest team."
 date: 2019-05-16T11:07:21+09:00
 draft: false
+featured: true
+featured_order: 6
 featured_image: "/images/design_system_at_buzzvil.jpeg"
 credential: "Illustration by Jetty Cho"
 credentiallink: "https://www.linkedin.com/in/jettycho/"
@@ -152,3 +154,7 @@ Sharing our assets is a way to help not just our co-workers but anyone communica
 Sharing our early concepts, principles and design culture is for everyone to understand our process and to understand how sharing ideas is never a useless thing. In the end, a single concept could resonate in a different way to someone else, bringing up new leads.
 
 Like many others, we will soon share our design system to everyone after cleaning up the mess a bit :). Thanks for taking the time to read me until the end, I’ve decided to keep this article away from our actual products and components to keep it more generic, but I would be happy to answer any question you’d have!
+## Related
+
+- The same instinct, now for agents: [The Flip](/blog/the-flip)
+- The full method today: [AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook)

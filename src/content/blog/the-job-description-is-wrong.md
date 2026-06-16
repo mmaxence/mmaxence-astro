@@ -3,6 +3,8 @@ title: "The Job Description Is Wrong"
 description: "Most design job descriptions are optimized for a role that is quietly disappearing. The five traits that actually matter now, and how to hire and apply for the work that's replacing it."
 date: 2026-03-25T12:00:00+09:00
 draft: false
+featured: true
+featured_order: 4
 featured_image: "/images/the-job-description-is-wrong.png"
 tags: ["career", "design-leadership", "ai-design"]
 ---
@@ -99,3 +101,8 @@ The job description is wrong. The good news is that the actual job is more inter
 ---
 
 *Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
+
+## Related
+
+- Builds on: [Designing Above the Interface](/blog/designing-above-the-interface) and [When the Interface Assembles Itself](/blog/when-the-interface-assembles-itself)
+- Where it started: [From Paper to Code](/blog/from-paper-to-code)

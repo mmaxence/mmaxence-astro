@@ -214,3 +214,8 @@ The harness grows with your trust. Start loose, tighten where you see problems. 
 ---
 
 *Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
+
+## Related
+
+- Sister systems: [Head: A Neural System](/blog/head-a-neural-system-across-projects), [Nobody Owned the Website](/blog/nobody-owned-the-website-now-everybody-does)
+- The full method: [AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook)

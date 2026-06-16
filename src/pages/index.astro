@@ -20,16 +20,16 @@ import SubstrateCTA from '../components/ui/SubstrateCTA.astro';
 import { getCollection } from 'astro:content';
 
 const blogPosts = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3); // Get latest 3 posts for homepage
+  .filter((post) => !post.data.draft && post.data.featured)
+  .sort((a, b) => (a.data.featured_order ?? 99) - (b.data.featured_order ?? 99))
+  .slice(0, 3); // Featured posts, in start-here order
 
 const featuredDeepdive = (await getCollection('deepdives'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0];
+  .filter((post) => !post.data.draft && post.data.featured)
+  .sort((a, b) => (a.data.featured_order ?? 99) - (b.data.featured_order ?? 99))[0];
 ---
 
-<BaseLayout title="Systemic Design for High-Growth Products | Maxence Mauduit" description="Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.">
+<BaseLayout title="Maxence Mauduit · Designing what should exist, and the systems that build it" description="Product designer. 13+ years across product, system, and brand at one company. I build the design infrastructure people and AI agents work within, and I still design in code.">
   <Header />
   <!-- Hero Section - Full Viewport -->
   <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0">
@@ -48,12 +48,12 @@ const featuredDeepdive = (await getCollection('deepdives'))
       </AnimatedContent>
       <AnimatedContent delay={100}>
         <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading font-normal text-theme">
-          Turning early product decisions into scalable platforms.
+          Systems for people to design with, and for agents to design within.
         </h1>
       </AnimatedContent>
       <AnimatedContent delay={200}>
         <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4 text-theme">
-          Product & experience executive with 13+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.<br />Still hands-on where it matters.
+          15 years in product design, 12 of them at one company, across product, system, and brand. One thread the whole way: trying to make ads worth our attention, in a lean and driven team. Lately I build the design infrastructure that people and AI agents make good things within, and I design in it too, in code where the truth shows up early.
         </p>
       </AnimatedContent>
     </div>
@@ -63,10 +63,10 @@ const featuredDeepdive = (await getCollection('deepdives'))
   <PageContent class="flex flex-col">
     {/* WHAT I DO */}
     <HomeSection title="WHAT I DO" delay={0}>
-      <p slot="pre-visual" class="mt-4">I work at the intersection of product definition, interaction design, and execution systems.</p>
+      <p slot="pre-visual" class="mt-4">Most of the work happens before the screen: deciding what should exist, and what does not deserve to.</p>
       <WhatIDoVisual slot="visual" client:visible />
       <div slot="post-visual">
-        <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Sometimes that means leading. Sometimes that means designing the first version myself and stepping away once the direction is clear.</p>
+        <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
         <p class="mt-4">
           <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />View my resume</a> for a detailed overview of my experience and impact.
         </p>
@@ -75,45 +75,39 @@ const featuredDeepdive = (await getCollection('deepdives'))
     
     {/* THE CRAFT */}
     <HomeSection title="THE CRAFT" delay={25}>
-      <p slot="pre-visual" class="mt-4">Code as a design tool — before AI, and even more with it.</p>
+      <p slot="pre-visual" class="mt-4">I build the systems that people and agents design within.</p>
       <TheCraftVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="mt-6">
-          <p>I've always used code as a design tool — building shared systems, prototyping interactions too complex for Figma, and closing the gap between intent and implementation. AI coding agents turned that into a superpower. With a structured control system I designed for autonomous agent work, I now fully leverage my cross-disciplinary fluency in design, product, and engineering at a pace that wasn't possible before.</p>
+          <p>The work that matters most now is not drawing screens. It is encoding judgment into systems, so good things get made without anyone standing over the work. People design with them, agents design within them, and I design right alongside.</p>
+          <p class="mt-4">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use, not for designers (@buzzvil/design-library), the recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
+          <p class="mt-4">Code is one surface I think on, not the identity.</p>
         </div>
 
-        <div class="craft-grid mt-10">
+        <div class="craft-grid craft-grid-3 mt-10">
           <div class="craft-cell">
-            <h3 class="text-base font-heading font-bold">Interaction</h3>
-            <p class="text-base leading-relaxed text-theme-muted !mt-0">Primitives, micro-interactions, and system-level patterns that scale across products.</p>
+            <h3 class="text-base font-heading font-bold">Discernment</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Deciding what deserves to exist, before anything is drawn or built.</p>
             <div class="ref-links">
-              <a href="/blog/when-the-interface-assembles-itself" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />When the Interface Assembles Itself</a>
               <a href="/blog/designing-above-the-interface" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Designing Above the Interface</a>
-              <a href="/blog/from-paper-to-code" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />From Paper to Code</a>
+              <a href="/blog/the-job-description-is-wrong" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />The Job Description Is Wrong</a>
             </div>
           </div>
           <div class="craft-cell">
-            <h3 class="text-base font-heading font-bold">Engineering</h3>
-            <p class="text-base leading-relaxed text-theme-muted !mt-0">Shipping design decisions directly in production codebases.</p>
+            <h3 class="text-base font-heading font-bold">Systems for agents</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Design infrastructure that people and AI agents compose within, without losing the plot.</p>
             <div class="ref-links">
-              <a href="/about/" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />About This Site</a>
-              <a href="/blog/from-paper-to-code" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />From Paper to Code</a>
-            </div>
-          </div>
-          <div class="craft-cell">
-            <h3 class="text-base font-heading font-bold">Systems</h3>
-            <p class="text-base leading-relaxed text-theme-muted !mt-0">Component libraries and design tokens that hold across products and teams.</p>
-            <div class="ref-links">
+              <a href="/blog/the-flip" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />The Flip</a>
+              <a href="/blog/when-the-interface-assembles-itself" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />When the Interface Assembles Itself</a>
               <a href="https://design.buzzvil.com" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=design.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
             </div>
           </div>
           <div class="craft-cell">
-            <h3 class="text-base font-heading font-bold">Product</h3>
-            <p class="text-base leading-relaxed text-theme-muted !mt-0">Scoping, sequencing, and making tradeoffs before pixels.</p>
+            <h3 class="text-base font-heading font-bold">In the codebase</h3>
+            <p class="text-base leading-relaxed text-theme-muted !mt-0">Shaping products where they actually live, not in a mockup of them.</p>
             <div class="ref-links">
-              <a href="/deepdives/ai-native-design-workflow-playbook" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />AI-Native Design Playbook</a>
-              <a href="/blog/designing-above-the-interface" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Designing Above the Interface</a>
-              <a href="/blog/harnessing-ai-coding-agents" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Agent Operating Manual</a>
+              <a href="/blog/from-paper-to-code" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />From Paper to Code</a>
+              <a href="/blog/harnessing-ai-coding-agents" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Harnessing AI Coding Agents</a>
             </div>
           </div>
         </div>
@@ -122,29 +116,29 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
     {/* EXPERIENCE SNAPSHOT */}
     <HomeSection title="EXPERIENCE SNAPSHOT" delay={50}>
-      <p slot="pre-visual" class="mt-4">13+ years of shaping products, building teams, and scaling platforms.</p>
+      <p slot="pre-visual" class="mt-4">15 years of shaping products, building teams, and the systems that hold them together.</p>
       <ExperienceSnapshotVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="mt-8">
-          <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product & Experience Executive</h2>
+          <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product Designer & Design Leader</h2>
           <p class="text-base font-normal mt-1 text-theme-muted">Buzzvil · Seoul · 2014–Present</p>
           
           <ul class="mt-6 space-y-2 list-none pl-0">
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
-              <span>Shaped first iterations of nearly every major product and monetization model</span>
+              <span>Called and shipped the company's defining pivots (consumer to B2B SDK, then Offerwall) back when the right move was not yet obvious</span>
             </li>
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
-              <span>Led the company through a major pivot from consumer products to B2B Ads and SDK platforms</span>
+              <span>Shaped the first version of nearly every major product and monetization model</span>
             </li>
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
-              <span>Built and scaled a high-retention design team with strong product ownership</span>
+              <span>Built a small, high-retention design team that ships through PRs, not handoffs</span>
             </li>
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
-              <span>Currently institutionalizing execution and experience coherence in preparation for IPO</span>
+              <span>Now building the agent-consumable design infrastructure the team and our AI agents compose within</span>
             </li>
           </ul>
           <div class="ref-links mt-6">
@@ -198,6 +192,9 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Systems over screens</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Interaction models, primitives, and patterns that hold together across teams and iterations.</p>
+            <div class="ref-links">
+              <a href="/blog/design-system-at-buzzvil" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Design System at Buzzvil</a>
+            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Product ownership mindset</h3>
@@ -260,7 +257,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
         <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
           <AnimatedContent delay={350}>
             <div class="w-full">
-              <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Recent Writing</h2>
+              <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Selected Writing</h2>
               <CardGrid columns={3} class="mt-12">
                 {blogPosts.map((post, index) => (
                   <AnimatedContent delay={400 + (index * 50)}>
@@ -315,6 +312,10 @@ const featuredDeepdive = (await getCollection('deepdives'))
     border: 1px solid var(--theme-border);
     border-radius: var(--theme-radius);
     overflow: hidden;
+  }
+
+  .craft-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .craft-cell {

@@ -3,6 +3,8 @@ title: "When the Interface Assembles Itself"
 description: "Agentic systems are starting to assemble interfaces in real time, differently for each person. What replaces the fixed screen, and who designs for it, is worth thinking about before it arrives."
 date: 2026-03-25T10:00:00+09:00
 draft: false
+featured: true
+featured_order: 2
 featured_image: "/images/when-the-interface-assembles-itself.png"
 tags: ["ai-design", "product-strategy"]
 ---
@@ -117,3 +119,9 @@ It won't make good choices on its own. It will make fast ones.
 ---
 
 *Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
+
+## Related
+
+- Before this: [Designing Above the Interface](/blog/designing-above-the-interface)
+- The same stack, shipped: [The Flip](/blog/the-flip)
+- Then: [The Job Description Is Wrong](/blog/the-job-description-is-wrong)

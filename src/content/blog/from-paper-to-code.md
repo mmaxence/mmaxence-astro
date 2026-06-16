@@ -149,3 +149,7 @@ But this is the direction we are testing.
 ---
 
 *Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
+
+## Related
+
+- Where this thinking went: [Designing Above the Interface](/blog/designing-above-the-interface), [When the Interface Assembles Itself](/blog/when-the-interface-assembles-itself), [The Flip](/blog/the-flip)

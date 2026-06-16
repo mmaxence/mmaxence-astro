@@ -3,6 +3,8 @@ title: "Designing Above the Interface"
 description: "As the cost of making drops to zero, the value of design shifts from execution to discernment. This article explores why the designer's primary role is no longer to build, but to define the intent and judgment behind what the machine produces."
 date: 2026-02-25T10:00:00+09:00
 draft: false
+featured: true
+featured_order: 1
 featured_image: "/images/designing-above-the-interface.png"
 related_video: "https://youtu.be/ivVPJhYM8Ng?si=Eu4Ys6cQHCAc11so"
 related_video_context: "Po-Shen Loh on learning in the age of AI — the talk that inspired the \"grading the homework\" idea in this article."
@@ -67,3 +69,9 @@ As machines become very good at making things, value shifts to those who can dec
 ---
 
 *Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
+
+## Related
+
+- Next: [When the Interface Assembles Itself](/blog/when-the-interface-assembles-itself)
+- The same convergence, as a hiring rubric: [The Job Description Is Wrong](/blog/the-job-description-is-wrong)
+- Where it started: [From Paper to Code](/blog/from-paper-to-code)

@@ -14,9 +14,12 @@ export async function getStaticPaths() {
   const FIRST_PAGE_SIZE = 9;
   const OTHER_PAGE_SIZE = 10;
 
-  const allPosts = await getCollection('blog');
+  const allPosts = (await getCollection('blog')).filter((post) => !post.data.draft);
+  const featured = allPosts
+    .filter((post) => post.data.featured)
+    .sort((a, b) => (a.data.featured_order ?? 99) - (b.data.featured_order ?? 99));
   const sorted = allPosts
-    .filter((post) => !post.data.draft)
+    .filter((post) => !post.data.featured)
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const remaining = sorted.length - FIRST_PAGE_SIZE;
@@ -35,12 +38,12 @@ export async function getStaticPaths() {
     }
     return {
       params: { page: pageNum === 1 ? undefined : String(pageNum) },
-      props: { posts, currentPage: pageNum, totalPages },
+      props: { posts, featured: pageNum === 1 ? featured : [], currentPage: pageNum, totalPages },
     };
   });
 }
 
-const { posts, currentPage, totalPages } = Astro.props;
+const { posts, featured, currentPage, totalPages } = Astro.props;
 const isFirstPage = currentPage === 1;
 const heroPost = isFirstPage ? posts[0] : null;
 const gridPosts = isFirstPage ? posts.slice(1) : posts;
@@ -53,16 +56,37 @@ const nextUrl = currentPage < totalPages
   : null;
 ---
 
-<BaseLayout title="Blog" description="Blog posts about design, product, and leadership">
+<BaseLayout title="Blog" description="Essays on product design in the AI age: the systems people and agents design within, working in code, and the judgment that doesn't automate.">
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
     <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay={0}>
         <PageHeader
           title="Blog"
-          description="Blog posts about design, product, and leadership"
+          description="Essays on product design in the AI age: the systems people and agents design within, working in code, and the judgment that doesn't automate."
         />
       </AnimatedContent>
+
+      {isFirstPage && featured.length > 0 && (
+        <div class="mb-16">
+          <AnimatedContent delay={40}>
+            <h2 class="text-xl md:text-2xl font-light font-body !mb-0 text-theme">Start here</h2>
+          </AnimatedContent>
+          <CardGrid columns={2} class="mt-8">
+            {featured.map((post, index) => (
+              <AnimatedContent delay={60 + index * 50}>
+                <BlogCard post={post} />
+              </AnimatedContent>
+            ))}
+          </CardGrid>
+        </div>
+      )}
+
+      {isFirstPage && (
+        <AnimatedContent delay={50}>
+          <h2 class="text-xl md:text-2xl font-light font-body !mb-0 mt-4 text-theme">All writing</h2>
+        </AnimatedContent>
+      )}
 
       {heroPost && (
         <div class="mb-12 md:mb-16">

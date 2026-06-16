@@ -3,6 +3,8 @@ title: "What Rises and What Fades When Agents Reshape the Interface"
 description: "Agents reduce the surface of the interface and reshape what's left. This essay identifies what survives the shift and what comes after."
 date: 2026-05-08T10:00:00+09:00
 draft: false
+featured: true
+featured_order: 2
 featured_image: "/images/what-rises-and-what-fades.png"
 tags: ["ai-design", "product-strategy", "agents", "future-of-work"]
 ---
@@ -204,3 +206,7 @@ The shift is already underway. What you do about it depends on which side of it 
 [^google-ultra]: Reported in Winsome Marketing, "The $250 Stratification: How Google AI Ultra Reveals the Coming AI Class Divide," May 2025.
 
 [^cepr]: CEPR, "The expansion of AI will likely shrink earnings inequality," October 2024.
+
+## Related
+
+- The proof, what I have shipped: [AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook)

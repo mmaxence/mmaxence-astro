@@ -7,4 +7,4 @@ tags: ["Outcomes", "Design", "Mentoring", "Coaching"]
 description: "Seoul - 2022.09 to now"
 ---
 
-It was time to take a step back from product management and put a stronger focus on Design, as the team grew in numbers and our business now needs to better control our design outcomes.
+From 2022 I embarked in a new type of position, expanding my influence to the entire org, while keeping hands-on critical missions as a versed IC. 2022 marked the start of the AI-era, and since then, my role was to design the infrastructure for designers, then the entire org, to 'design with AI'. This year I could publish the Buzzvil AI-Native Design Playbook, as one of the surfacing mediums of this strategy.

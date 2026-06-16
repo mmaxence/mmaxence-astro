@@ -68,3 +68,8 @@ Finally, it does feel great to know that everything included in that style guide
 We moved this project to DevOps and Design team in order to implement it within our workflow. This final step requires communication and documentation in order to let others know how this works. A recent Design survey among people at our company showed that some of our engineers already pointed out the lack of consistent rules on nomenclatures between design and dev, making this project in line with other team’s expectations. We will properly integrate this new process within our team and will think of the best way to share something generic outside our organization.
 
 By the time we published this article, the design team could connect our color and font styles through a set of tokens and [publicly published](https://design.buzzvil.com) online thanks to the amazing [Zeroheight](http://zeroheight.com) platform. Our icon set is being converted into XMLs from Figma, sharing common conventions and updated according to our design.
+
+## Related
+
+- Continued: [part 2](/blog/study-designers-engineers-pt2)
+- The same design-and-code pipeline, years on: [The Flip](/blog/the-flip), [Nobody Owned the Website](/blog/nobody-owned-the-website-now-everybody-does)

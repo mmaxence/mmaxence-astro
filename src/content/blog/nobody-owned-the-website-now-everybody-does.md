@@ -3,6 +3,8 @@ title: "Nobody Owned the Website. Now Everybody Does."
 description: "How Buzzvil's design team unified every web property under a single monorepo powered by a shared token system, and made the whole thing AI-native so anyone in the company can contribute."
 date: 2026-04-14T10:00:00+09:00
 draft: false
+featured: true
+featured_order: 5
 featured_image: "/blog/nobody-owned-the-website-now-everybody-does/cover.png"
 tags: ["ai-design", "design-systems", "product-strategy"]
 ---
@@ -285,3 +287,8 @@ That is the real answer to "who owns the website?" Nobody needs to own it, becau
 ---
 
 *Part of [The AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook), a full guide for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design.*
+
+## Related
+
+- The harness behind it: [My Agents' Operating Manual](/blog/harnessing-ai-coding-agents), [Head: A Neural System](/blog/head-a-neural-system-across-projects)
+- What predicted it: [The 2026 Buzzvil Design Stack](/blog/2026-buzzvil-design-stack)
