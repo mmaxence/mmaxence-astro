@@ -556,11 +556,20 @@ function isActive(url: string): boolean {
       }
     }
 
-    // Set initial state based on current scroll position
+    // Set initial state based on current scroll position WITHOUT animating the
+    // correction. Otherwise, on load / view-transition the header renders expanded
+    // and then animates to collapsed (or vice-versa), which reads as a "bounce".
+    // We snap to the right state instantly here; only real scroll changes animate.
+    header.classList.add('header-no-anim');
     if (window.scrollY > COLLAPSE_THRESHOLD) {
       header.classList.add('header-scrolled');
       isScrolled = true;
+    } else {
+      header.classList.remove('header-scrolled');
+      isScrolled = false;
     }
+    void header.offsetHeight; // force reflow so the snap is not transitioned
+    requestAnimationFrame(() => header.classList.remove('header-no-anim'));
 
     window.addEventListener('scroll', onScroll, { passive: true });
     currentScrollHandler = onScroll;
@@ -581,7 +590,9 @@ function isActive(url: string): boolean {
 
   // Re-initialize on page transitions
   document.addEventListener('astro:page-load', () => {
-    setTimeout(initStickyHeader, 50);
+    // Run synchronously so the snap-to-correct-state happens before paint,
+    // not 50ms later (which let the wrong state show and then animate).
+    initStickyHeader();
   });
 
   // Re-initialize on resize (desktop <-> mobile transition)

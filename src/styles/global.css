@@ -829,6 +829,15 @@ p:has(.inline-card) {
   .header-scrolled.header-border {
     border-color: var(--theme-border);
   }
+
+  /* Snap to the corrected state without animating it (prevents the
+     load / view-transition "bounce" between expanded and collapsed). */
+  .header-no-anim.header-sticky,
+  .header-no-anim .header-nav,
+  .header-no-anim .header-subtitle,
+  .header-no-anim.header-border {
+    transition: none !important;
+  }
 }
 
 /* Respect reduced motion for header transitions */

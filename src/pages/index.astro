@@ -37,13 +37,18 @@ const featuredDeepdive = (await getCollection('deepdives'))
     <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
         <div class="hero-profile-wrapper">
-          <img
-            src="/images/profile.jpeg"
-            alt="Maxence Mauduit"
-            class="hero-profile-photo"
-            width="240"
-            height="240"
-          />
+          <div
+            class="profile-flip"
+            id="profile-flip"
+            role="button"
+            tabindex="0"
+            aria-label="Maxence Mauduit (pinch to spin)"
+          >
+            <div class="profile-flip-inner" id="profile-flip-inner">
+              <img class="profile-face profile-face-front" src="/images/profile.jpeg" alt="Maxence Mauduit" width="240" height="240" draggable="false" />
+              <img class="profile-face profile-face-back" src="/images/profile.jpeg" alt="" width="240" height="240" draggable="false" aria-hidden="true" />
+            </div>
+          </div>
           <HeroShapes />
         </div>
       </AnimatedContent>
@@ -286,16 +291,52 @@ const featuredDeepdive = (await getCollection('deepdives'))
     align-items: center;
   }
 
-  .hero-profile-photo {
+  /* Pinch-to-spin easter egg: a suspended, two-faced disc */
+  .profile-flip {
     width: 33%;
-    height: auto;
-    border-radius: 50%;
-    object-fit: cover;
     aspect-ratio: 1 / 1;
     position: relative;
     z-index: 0;
     margin-bottom: -3.5rem;
+    perspective: 1100px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 50%;
+  }
+
+  .profile-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .profile-face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    user-select: none;
+    -webkit-user-drag: none;
     display: block;
+    transition: filter 0.2s ease;
+  }
+
+  .profile-face-back {
+    transform: rotateX(180deg);
+  }
+
+  .profile-flip:hover .profile-face {
+    filter: brightness(1.04);
+  }
+
+  .profile-flip:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-text) 30%, transparent);
   }
 
   .hero-profile-wrapper :global(.hero-shapes-wrapper) {
@@ -419,4 +460,103 @@ const featuredDeepdive = (await getCollection('deepdives'))
   }
 
 </style>
+
+<script>
+  // Easter egg: "pinch" the hero photo (click / Enter) and the suspended disc
+  // spins fast — recto / verso / recto / verso — then friction-decelerates and
+  // settles on the next photo. Physics-flavoured: a quick pinch squash + wind-up,
+  // a high-velocity spin, friction decay, and a small settle wobble.
+  function initProfileFlip() {
+    const flip = document.getElementById('profile-flip');
+    const inner = document.getElementById('profile-flip-inner');
+    if (!flip || !inner || flip.dataset.flipInit) return;
+    flip.dataset.flipInit = '1';
+
+    const front = inner.querySelector('.profile-face-front');
+    const back = inner.querySelector('.profile-face-back');
+
+    // [0] is shown on load; each pinch lands on the next, then wraps.
+    // Rhythm: alone, with-kid, alone, with-kid, ... (wraps cleanly).
+    const photos = [
+      '/images/profile.jpeg', // alone
+      '/images/profile-carrier.jpg', // with kid
+      '/images/profile-work.jpg', // alone
+      '/images/profile-porto.jpg', // with kid
+      '/images/profile-cafe.jpg', // alone
+      '/images/profile-garden.jpg', // with kid
+    ];
+    photos.forEach((src) => {
+      const pre = new Image();
+      pre.src = src;
+    });
+
+    let index = 0;
+    let busy = false;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Seed the verso with the photo the first pinch will land on.
+    back.src = photos[(index + 1) % photos.length];
+
+    async function pinch() {
+      if (busy) return;
+      busy = true;
+      const next = (index + 1) % photos.length;
+      back.src = photos[next]; // the verso is the image the spin lands on
+
+      try {
+        if (reduce) {
+          front.src = photos[next];
+        } else {
+          // Odd number of half-turns so the spin lands on the back face (= next photo).
+          // Randomised a little so each pinch feels physical, not canned.
+          const halfTurns = [7, 9, 11][Math.floor(Math.random() * 3)];
+          const total = halfTurns * 180;
+          const duration = 820 + halfTurns * 60;
+
+          const spin = inner.animate(
+            [
+              { offset: 0, transform: 'rotateX(0deg) scale(1)', easing: 'cubic-bezier(0.4, 0, 0.6, 1)' },
+              // the pinch: quick squash + a little wind-up backwards
+              { offset: 0.07, transform: 'rotateX(-10deg) scale(0.9)', easing: 'cubic-bezier(0.165, 0.84, 0.44, 1)' },
+              // the spin: high velocity, friction deceleration through the half-turns
+              { offset: 0.9, transform: `rotateX(${total - 6}deg) scale(1)`, easing: 'ease-out' },
+              // overshoot a hair, then settle — it "stabilizes"
+              { offset: 0.97, transform: `rotateX(${total + 4}deg) scale(1.006)`, easing: 'ease-in-out' },
+              { offset: 1, transform: `rotateX(${total}deg) scale(1)` },
+            ],
+            { duration, fill: 'forwards' }
+          );
+          await spin.finished;
+          spin.commitStyles();
+          spin.cancel();
+
+          // Seamless reset: the back (now facing us) already shows photos[next].
+          // Copy it onto the front and zero the rotation for the next pinch.
+          front.src = photos[next];
+          inner.style.transform = 'rotateX(0deg) scale(1)';
+        }
+        index = next;
+        back.src = photos[(index + 1) % photos.length]; // pre-seed the next verso
+      } finally {
+        busy = false;
+      }
+    }
+
+    flip.addEventListener('click', pinch);
+    flip.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        pinch();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProfileFlip);
+  } else {
+    initProfileFlip();
+  }
+  // Re-bind after Astro view-transition navigations (fresh DOM each time).
+  document.addEventListener('astro:page-load', initProfileFlip);
+</script>
 

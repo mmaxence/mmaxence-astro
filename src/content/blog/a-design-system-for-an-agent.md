@@ -2,6 +2,7 @@
 title: "A Design System for an Agent"
 description: "The consumer of our design system changed from designers to agents. What that breaks, and how craft survives when an agent does the composing: the judgment moves into the recipe, it doesn't disappear."
 date: 2026-06-17T10:00:00+09:00
+featured_image: "/images/a-design-system-for-an-agent.png"
 draft: false
 featured: true
 featured_order: 6
