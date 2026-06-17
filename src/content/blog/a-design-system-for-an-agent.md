@@ -1,16 +1,12 @@
 ---
 title: "A Design System for an Agent"
 description: "The consumer of our design system changed from designers to agents. What that breaks, and how craft survives when an agent does the composing: the judgment moves into the recipe, it doesn't disappear."
-date: 2026-06-16T10:00:00+09:00
-draft: true
+date: 2026-06-17T10:00:00+09:00
+draft: false
+featured: true
+featured_order: 6
 tags: ["ai-design", "design-systems", "agents", "product-strategy"]
 ---
-
-<!-- AGENT DRAFT for Max's voice pass. Structural draft only, rewrite the prose in your own voice.
-     Running metaphor: the kitchen (cook = agent, ingredients/recipes/cookbook = the library, tasting = review).
-     Kept as nuance, not allegory. The banks/river signature line was dropped for one coherent metaphor, restore if you want it.
-     TODO before publish: final title/slug, replace [Cooker screenshot], add a ## Related block
-     (the-flip / ai-native-design-workflow-playbook / when-the-interface-assembles-itself), set featured + featured_order. -->
 
 As a Frenchman, I love spending time in the kitchen, cooking things for the fam. As a designer, I love crafting delightful interactions. So in the first half of 2026, I spent a crazy amount of time in an interaction cooker. What did I do in there? I taught agents how to cook. How did I do it? This article will tell you. :)
 
@@ -55,11 +51,11 @@ The brand is data too. A recipe does not know whose it is until a seed arrives.
 
 ```ts
 // Same recipe. Two brands. Two seeds.
-export const oliveYoung = {
-  seed: { primary: '#00A862', mode: 'light', radiusBase: 8 },
+export const skincareBrand = {
+  seed: { primary: '#1FA46A', mode: 'light', radiusBase: 8 },
   designNotes: 'Clean and inviting. Avoid aggressive urgency.',
 };
-export const musinsa = {
+export const streetwearBrand = {
   seed: { primary: '#000000', mode: 'dark', radiusBase: 2 },
   designNotes: 'Minimal, monochrome, sharp corners. Bold CTAs, nothing cute.',
 };
@@ -73,9 +69,9 @@ A label tells you an ingredient *can* go in a dish. It does not prove the dish h
 
 The Cooker is a test kitchen. It takes a recipe, a brand's house style, and the library, and plates the whole interaction end to end, the way an agent would make it. It is where we found out whether the recipes we wrote were the right recipes, before anything reached a paying table.
 
-![The same O/X Quiz recipe in the Cooker, rendered under Olive Young: green, rounded, a skincare question.](/blog/a-design-system-for-an-agent/ox-quiz-olive-young.jpg)
+![The same O/X Quiz recipe in the Cooker, rendered under a skincare brand: green, rounded, a skincare question.](/blog/a-design-system-for-an-agent/ox-quiz-skincare.jpg)
 
-![And under Musinsa: black, sharp, a streetwear question. Same recipe, same skeleton, opposite feel.](/blog/a-design-system-for-an-agent/ox-quiz-musinsa.jpg)
+![And under a streetwear brand: black, sharp, a streetwear question. Same recipe, same skeleton, opposite feel.](/blog/a-design-system-for-an-agent/ox-quiz-streetwear.jpg)
 
 ## Where the craft went
 
