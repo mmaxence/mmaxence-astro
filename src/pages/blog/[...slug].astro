@@ -14,7 +14,8 @@ import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const blogPosts = await getCollection('blog');
-  const published = blogPosts.filter((post) => !post.data.draft);
+  // Drafts render in dev for local preview, but are excluded from production builds.
+  const published = blogPosts.filter((post) => import.meta.env.PROD ? !post.data.draft : true);
   return published.map((post) => ({
     params: { slug: post.slug },
     props: { post, allPosts: published },

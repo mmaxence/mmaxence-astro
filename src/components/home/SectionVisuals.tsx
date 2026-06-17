@@ -28,42 +28,16 @@ const prefersReducedMotion = (): boolean => {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
-// Utility: Get theme color
+// Utility: Get theme color as a LIVE CSS expression.
+// We intentionally do NOT snapshot the computed value here. Returning `var(...)` /
+// `color-mix(...)` lets the browser re-resolve the color on every theme swap (and on
+// SSR'd markup before hydration), exactly like the page background and the hero shapes.
+// Snapshotting was the root cause of "SVGs don't follow the theme": React state held a
+// resolved rgba that only updated when a re-read happened to fire, so it lagged or stuck.
 const getThemeColor = (property: string, opacity: number = 1): string => {
-  if (typeof window === 'undefined') return `rgba(31, 31, 31, ${opacity})`;
-  const root = document.documentElement;
-  const color = getComputedStyle(root).getPropertyValue(property).trim();
-  
-  if (!color) return `rgba(31, 31, 31, ${opacity})`;
-  
-  // Already has opacity
-  if (color.startsWith('rgba(')) {
-    if (opacity === 1) return color;
-    // Extract RGB values and apply new opacity
-    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-      return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${opacity})`;
-    }
-  }
-  
-  // Hex color
-  if (color.startsWith('#')) {
-    const hex = color.slice(1);
-    const r = parseInt(hex.slice(0, 2), 16);
-    const g = parseInt(hex.slice(2, 4), 16);
-    const b = parseInt(hex.slice(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-  }
-  
-  // RGB color
-  if (color.startsWith('rgb(')) {
-    const match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-      return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${opacity})`;
-    }
-  }
-  
-  return color;
+  if (opacity >= 1) return `var(${property}, #1a1a1a)`;
+  const pct = Math.max(0, Math.min(100, Math.round(opacity * 100)));
+  return `color-mix(in srgb, var(${property}) ${pct}%, transparent)`;
 };
 
 // Utility: Detect if current theme is dark
@@ -194,11 +168,15 @@ const useThemeColors = (opacities?: {
       setTimeout(updateColors, 50);
     };
     window.addEventListener('themechange', handleThemeChange);
+    // The theme code actually dispatches 'random-theme-applied' on document; the old
+    // 'themechange' name was never fired, leaving the racy MutationObserver as the only path.
+    document.addEventListener('random-theme-applied', handleThemeChange);
 
     return () => {
       observer.disconnect();
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('themechange', handleThemeChange);
+      document.removeEventListener('random-theme-applied', handleThemeChange);
     };
   }, [baseTextOpacity, baseAccentOpacity, baseMutedOpacity, baseBgOpacity]);
 

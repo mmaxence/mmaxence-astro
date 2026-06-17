@@ -31,6 +31,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
 <BaseLayout title="Maxence Mauduit · Designing what should exist, and the systems that build it" description="Product designer. 13+ years across product, system, and brand at one company. I build the design infrastructure people and AI agents work within, and I still design in code.">
   <Header />
+  <PageContent class="flex flex-col">
   <!-- Hero Section - Full Viewport -->
   <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0">
     <div class="w-full max-w-2xl mx-auto text-center">
@@ -48,22 +49,21 @@ const featuredDeepdive = (await getCollection('deepdives'))
       </AnimatedContent>
       <AnimatedContent delay={100}>
         <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading font-normal text-theme">
-          Systems for people to design with, and for agents to design within.
+          I build the systems people and agents design within.
         </h1>
       </AnimatedContent>
       <AnimatedContent delay={200}>
         <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4 text-theme">
-          15 years in product design, 12 of them at one company, across product, system, and brand. One thread the whole way: trying to make ads worth our attention, in a lean and driven team. Lately I build the design infrastructure that people and AI agents make good things within, and I design in it too, in code where the truth shows up early.
+          15 years in product design, 12 at one company, across product, system, and brand. So I spent most of it making ads worth our attention, in a lean, driven team. Leadership came early, yet I remain a very active IC, working in code where our products live.
         </p>
       </AnimatedContent>
     </div>
   </section>
   
   <!-- Main Content Sections -->
-  <PageContent class="flex flex-col">
     {/* WHAT I DO */}
     <HomeSection title="WHAT I DO" delay={0}>
-      <p slot="pre-visual" class="mt-4">Most of the work happens before the screen: deciding what should exist, and what does not deserve to.</p>
+      <p slot="pre-visual" class="mt-4 max-w-2xl text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
       <WhatIDoVisual slot="visual" client:visible />
       <div slot="post-visual">
         <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
@@ -79,9 +79,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <TheCraftVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="mt-6">
-          <p>The work that matters most now is not drawing screens. It is encoding judgment into systems, so good things get made without anyone standing over the work. People design with them, agents design within them, and I design right alongside.</p>
-          <p class="mt-4">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use, not for designers (@buzzvil/design-library), the recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
-          <p class="mt-4">Code is one surface I think on, not the identity.</p>
+          <p>The work that matters most now is not drawing screens. It is encoding judgment into systems, so good things get made without anyone standing over the work. People design with them, agents design within them.</p>
+          <p class="mt-4">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use (@buzzvil/design-library), the interaction recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
         </div>
 
         <div class="craft-grid craft-grid-3 mt-10">
@@ -126,7 +125,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <ul class="mt-6 space-y-2 list-none pl-0">
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
-              <span>Called and shipped the company's defining pivots (consumer to B2B SDK, then Offerwall) back when the right move was not yet obvious</span>
+              <span>Helped shape and initiate the company's defining pivots (consumer to B2B SDK, then Offerwall), back when the right move was not yet obvious</span>
             </li>
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
@@ -134,7 +133,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
             </li>
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>
-              <span>Built a small, high-retention design team that ships through PRs, not handoffs</span>
+              <span>Built a small, high-retention design team that ships through PRs</span>
             </li>
             <li class="flex items-start">
               <span class="mr-2 text-theme-muted">•</span>

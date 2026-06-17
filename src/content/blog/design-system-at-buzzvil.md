@@ -3,8 +3,6 @@ title: "Design system at Buzzvil"
 description: "Design system versus startup: is it worth it? Takeaways from building a design system at Buzzvil to cover diverse, growing product needs with a modest team."
 date: 2019-05-16T11:07:21+09:00
 draft: false
-featured: true
-featured_order: 6
 featured_image: "/images/design_system_at_buzzvil.jpeg"
 credential: "Illustration by Jetty Cho"
 credentiallink: "https://www.linkedin.com/in/jettycho/"

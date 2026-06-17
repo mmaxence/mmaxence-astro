@@ -664,18 +664,24 @@ hr {
   align-items: center;
   gap: 5px;
   vertical-align: baseline;
-  padding: 5px !important;
+  padding: 5px 8px !important;
+  margin: 0 3px;
   border: 1px solid var(--theme-border);
   border-radius: 0.25rem;
   color: var(--theme-text-muted);
   text-decoration: none;
-  font-size: 15px;
+  font-size: inherit;
   line-height: 0;
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+/* Paragraphs holding an in-block card get a touch more line-height so the card breathes */
+p:has(.inline-card) {
+  line-height: 1.85;
 }
 
 .inline-card:hover {
@@ -891,8 +897,8 @@ html {
 /* Page Content Animation - consistent across all pages */
 .page-content {
   opacity: 0;
-  transform: translateY(20px);
-  animation: pageContentFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform: translateY(12px);
+  animation: pageContentFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes pageContentFadeIn {
@@ -909,13 +915,14 @@ html {
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.4s;
+  animation-duration: 0.25s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Smooth page transitions */
 ::view-transition-old(root) {
   z-index: 1;
+  animation-duration: 0.2s;
 }
 
 ::view-transition-new(root) {
@@ -960,7 +967,7 @@ nav ul li {
 /* Exclude blog-card-link and book-item to prevent conflicts with their custom hover effects */
 a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
     .book-item
-  ) {
+  ):not(.start-here-link) {
   position: relative;
   color: var(--color-text);
   text-decoration: none;
@@ -969,7 +976,7 @@ a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
 
 a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
     .book-item
-  )::after {
+  ):not(.start-here-link)::after {
   content: "";
   position: absolute;
   bottom: 0px;
@@ -983,13 +990,13 @@ a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
 
 a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
     .book-item
-  ):hover {
+  ):not(.start-here-link):hover {
   color: var(--color-accent);
 }
 
 a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
     .book-item
-  ):hover::after {
+  ):not(.start-here-link):hover::after {
   width: 100%;
 }
 

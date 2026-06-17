@@ -70,21 +70,34 @@ const nextUrl = currentPage < totalPages
       {isFirstPage && featured.length > 0 && (
         <div class="mb-16">
           <AnimatedContent delay={40}>
-            <h2 class="text-xl md:text-2xl font-light font-body !mb-0 text-theme">Start here</h2>
+            <h2 class="text-xl md:text-2xl font-light font-body !mb-1 text-theme">The AI series</h2>
+            <p class="text-sm text-theme-muted mb-6">Designing in the AI age, read in order.</p>
           </AnimatedContent>
-          <CardGrid columns={2} class="mt-8">
-            {featured.map((post, index) => (
-              <AnimatedContent delay={60 + index * 50}>
-                <BlogCard post={post} />
-              </AnimatedContent>
-            ))}
-          </CardGrid>
+          <AnimatedContent delay={60}>
+            <ol class="start-here-path">
+              {featured.map((post, index) => (
+                <li class="start-here-item">
+                  <a href={`/blog/${post.slug}/`} class="start-here-link">
+                    <span class="start-here-num">{index + 1}</span>
+                    {post.data.featured_image && (
+                      <img src={post.data.featured_image} alt="" class="start-here-cover" loading="lazy" />
+                    )}
+                    <span class="start-here-text">
+                      <span class="start-here-title">{post.data.title}</span>
+                      {post.data.description && <span class="start-here-desc">{post.data.description}</span>}
+                    </span>
+                    <span class="start-here-arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </AnimatedContent>
         </div>
       )}
 
       {isFirstPage && (
         <AnimatedContent delay={50}>
-          <h2 class="text-xl md:text-2xl font-light font-body !mb-0 mt-4 text-theme">All writing</h2>
+          <h2 class="text-xl md:text-2xl font-light font-body mb-8 mt-4 text-theme">All writing</h2>
         </AnimatedContent>
       )}
 
@@ -168,6 +181,83 @@ const nextUrl = currentPage < totalPages
     background-color: var(--theme-bg);
     color: var(--theme-text-muted);
     opacity: 0.6;
+  }
+
+  /* The AI series — numbered reading path */
+  .start-here-path {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--theme-border);
+    border-radius: var(--theme-radius, 0.5rem);
+    overflow: hidden;
+  }
+  .start-here-item + .start-here-item {
+    border-top: 1px solid var(--theme-border);
+  }
+  .start-here-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    text-decoration: none;
+    color: var(--theme-text);
+    transition: background-color 0.2s ease;
+  }
+  .start-here-link:hover {
+    background-color: color-mix(in srgb, var(--theme-text) 5%, transparent);
+  }
+  .start-here-num {
+    flex-shrink: 0;
+    width: 1.85rem;
+    height: 1.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--theme-border);
+    font-family: var(--theme-font-heading, monospace);
+    font-size: 0.85rem;
+    color: var(--theme-text-muted);
+  }
+  .start-here-cover {
+    flex-shrink: 0;
+    height: 34px;
+    width: auto;
+    max-width: 82px;
+    object-fit: contain;
+    border-radius: 3px;
+    border: 1px solid var(--theme-border);
+  }
+  .start-here-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .start-here-title {
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--theme-text);
+  }
+  .start-here-desc {
+    font-size: 0.85rem;
+    color: var(--theme-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .start-here-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--theme-text-muted);
+    opacity: 0;
+    transform: translateX(-2px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .start-here-link:hover .start-here-arrow {
+    opacity: 1;
+    transform: translateX(0);
   }
 </style>
 
