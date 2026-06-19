@@ -18,8 +18,9 @@ export async function getStaticPaths() {
   const featured = allPosts
     .filter((post) => post.data.featured)
     .sort((a, b) => (a.data.featured_order ?? 99) - (b.data.featured_order ?? 99));
-  const sorted = allPosts
-    .filter((post) => !post.data.featured)
+  // "All writing" lists every post by date, including the ones highlighted in the
+  // AI series above (they should appear in both places).
+  const sorted = [...allPosts]
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const remaining = sorted.length - FIRST_PAGE_SIZE;

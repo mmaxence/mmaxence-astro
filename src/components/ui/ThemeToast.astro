@@ -5,8 +5,8 @@
 
 <div id="theme-toast" class="theme-toast fixed bottom-4 right-4 z-50 hidden md:block">
   <div class="toast-content rounded-lg shadow-lg px-4 py-3 flex items-center gap-3" style="background-color: var(--toast-bg); box-shadow: var(--toast-shadow);">
-    <div class="flex flex-col">
-      <span class="toast-message text-sm font-semibold" style="color: var(--toast-text);">Random theme applied</span>
+    <div class="flex flex-col flex-1">
+      <span class="toast-message text-sm font-semibold" style="color: var(--toast-text);">Theme</span>
     </div>
     <button
       id="reset-theme-btn"
@@ -234,6 +234,7 @@
     function resetToDefault() {
       applyTheme(defaultTheme, true, false);
       hideToast();
+      localStorage.removeItem('hero-theme-label');
       // Photo + theme are a pair: resetting the theme returns the photo too.
       document.dispatchEvent(new CustomEvent('hero-reset'));
     }
@@ -259,6 +260,13 @@
       }
     }
 
+    // Restore the contextual label (e.g. "Ocean") when a persisted theme is re-applied.
+    function restoreToastLabel() {
+      const savedLabel = localStorage.getItem('hero-theme-label');
+      const el = toast && toast.querySelector('.toast-message');
+      if (savedLabel && el) el.textContent = savedLabel;
+    }
+
     // Reset button click handler
     resetBtn.addEventListener('click', resetToDefault);
 
@@ -277,6 +285,7 @@
           const themeObj = JSON.parse(savedThemeData);
           applyTheme(themeObj, false, true);
           showToast();
+          restoreToastLabel();
         } catch (e) {
           // If parsing fails, reset to default
           resetToDefault();
@@ -304,6 +313,7 @@
               const themeObj = JSON.parse(savedThemeData);
               applyTheme(themeObj, false, true);
               showToast();
+              restoreToastLabel();
             } catch (e) {
               resetToDefault();
             }
@@ -320,9 +330,9 @@
       }, 10);
     });
 
-    // Apply a specific (photo-matched) theme. Shows the toast + Reset works, but
-    // does not persist as "random" so a reload returns to the default photo+theme pair.
-    window.applyHeroTheme = function(c) {
+    // Apply a specific (photo-matched) theme. Persists across pages (like the old
+    // random theme); the paired photo index is restored alongside it (see index.astro).
+    window.applyHeroTheme = function(c, label) {
       const rgb = hexToRgb(c.bg);
       const isDark = rgb ? getLuminance(rgb.r, rgb.g, rgb.b) < 0.4 : false;
       const theme = {
@@ -338,7 +348,13 @@
         '--theme-font-heading': "'Anonymous Pro', monospace",
         '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
       };
-      applyTheme(theme, true, false);
+      applyTheme(theme, true, true);
+      // contextual toast label for this photo's theme (e.g. "Ocean", "Porto")
+      if (label) {
+        localStorage.setItem('hero-theme-label', label);
+        const msgEl = document.querySelector('#theme-toast .toast-message');
+        if (msgEl) msgEl.textContent = label;
+      }
       document.dispatchEvent(new CustomEvent('random-theme-applied'));
     };
   }

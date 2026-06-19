@@ -72,8 +72,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <p slot="pre-visual" class="mt-4 max-w-2xl text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
       <WhatIDoVisual slot="visual" client:visible />
       <div slot="post-visual">
-        <p class="mt-4">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
-        <p class="mt-4">
+        <p class="mt-4 max-w-2xl text-balance">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
+        <p class="mt-4 max-w-2xl">
           <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />View my resume</a> for a detailed overview of my experience and impact.
         </p>
       </div>
@@ -85,8 +85,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <TheCraftVisual slot="visual" client:visible />
       <div slot="post-visual">
         <div class="mt-6">
-          <p>The work that matters most now is not drawing screens. It is encoding judgment into systems, so good things get made without anyone standing over the work. People design with them, agents design within them.</p>
-          <p class="mt-4">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use (@buzzvil/design-library), the interaction recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
+          <p class="max-w-2xl text-balance">The work that matters most now is not drawing screens. It is encoding judgment into systems, so good things get made without anyone standing over the work. People design with them, agents design within them.</p>
+          <p class="mt-4 max-w-2xl text-balance">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use (@buzzvil/design-library), the interaction recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
         </div>
 
         <div class="craft-grid craft-grid-3 mt-10">
@@ -224,8 +224,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <p slot="pre-visual" class="mt-4">Sustainable pace, continuous learning, and systems thinking beyond work.</p>
       <BeyondTheRoleVisual slot="visual" client:visible />
       <div slot="post-visual">
-        <p class="mt-4">I value sustainable performance and depth over constant acceleration.</p>
-        <p class="mt-4">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>
+        <p class="mt-4 max-w-2xl text-balance">I value sustainable performance and depth over constant acceleration.</p>
+        <p class="mt-4 max-w-2xl text-balance">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>
       </div>
     </HomeSection>
     
@@ -519,12 +519,12 @@ const featuredDeepdive = (await getCollection('deepdives'))
     // Photo + matched theme pairs. [0] is the default (on load / after Reset).
     // Rhythm: alone, with-kid, alone, with-kid, ...
     const slides = [
-      { src: '/images/profile.jpeg',        theme: { bg: '#eaf4fb', text: '#0b3a5b', muted: '#3a6f93', accent: '#0a5a8a', border: '#cfe6f5' } }, // beach / ocean
-      { src: '/images/profile-carrier.jpg', theme: { bg: '#eef3ec', text: '#2f4a2e', muted: '#5a7257', accent: '#3a5d39', border: '#dbe6d7' } }, // hike / sage
-      { src: '/images/profile-work.jpg',    theme: { bg: '#1c2340', text: '#e8eaf2', muted: '#aab0c8', accent: '#c4663a', border: '#2a3457' } }, // velvet couch (dark)
-      { src: '/images/profile-porto.jpg',   theme: { bg: '#fbf1e8', text: '#6e3b27', muted: '#9a6b54', accent: '#c0532b', border: '#f0ddca' } }, // porto / terracotta
-      { src: '/images/profile-cafe.jpg',    theme: { bg: '#f7f3ea', text: '#3a3326', muted: '#6b6150', accent: '#d9682e', border: '#ece5d6' } }, // cafe / coral
-      { src: '/images/profile-garden.jpg',  theme: { bg: '#eaf1e6', text: '#27401f', muted: '#52704a', accent: '#3f6f8f', border: '#d6e3cf' } }, // garden / green
+      { src: '/images/profile.jpeg',        label: 'Ocean',       theme: { bg: '#eaf4fb', text: '#0b3a5b', muted: '#3a6f93', accent: '#0a5a8a', border: '#cfe6f5' } }, // beach
+      { src: '/images/profile-carrier.jpg', label: 'Trailside',   theme: { bg: '#eef3ec', text: '#2f4a2e', muted: '#5a7257', accent: '#3a5d39', border: '#dbe6d7' } }, // hike
+      { src: '/images/profile-work.jpg',    label: 'After hours',  theme: { bg: '#1c2340', text: '#e8eaf2', muted: '#aab0c8', accent: '#c4663a', border: '#2a3457' } }, // velvet couch
+      { src: '/images/profile-porto.jpg',   label: 'Porto',       theme: { bg: '#fbf1e8', text: '#6e3b27', muted: '#9a6b54', accent: '#c0532b', border: '#f0ddca' } }, // porto
+      { src: '/images/profile-cafe.jpg',    label: 'Café',        theme: { bg: '#f7f3ea', text: '#3a3326', muted: '#6b6150', accent: '#d9682e', border: '#ece5d6' } }, // cafe
+      { src: '/images/profile-garden.jpg',  label: 'Garden',      theme: { bg: '#eaf1e6', text: '#27401f', muted: '#52704a', accent: '#3f6f8f', border: '#d6e3cf' } }, // garden
     ];
     const photos = slides.map((s) => s.src);
     photos.forEach((src) => {
@@ -535,6 +535,16 @@ const featuredDeepdive = (await getCollection('deepdives'))
     let index = 0;
     let busy = false;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Restore the photo that pairs with the persisted theme (kept in sync on every flip).
+    try {
+      const saved = parseInt(localStorage.getItem('hero-photo-index') || '0', 10);
+      if (saved > 0 && saved < photos.length) {
+        index = saved;
+        front.src = photos[index];
+        backing.src = photos[index];
+      }
+    } catch (e) {}
 
     back.src = photos[(index + 1) % photos.length];
 
@@ -565,13 +575,21 @@ const featuredDeepdive = (await getCollection('deepdives'))
             { duration, fill: 'forwards' }
           );
           await spin.finished;
-          spin.commitStyles();
+          // Hold the landed orientation explicitly (set before cancel so there's no
+          // one-frame revert to base), then swap the front face and DECODE it before
+          // resetting to 0deg — otherwise the reveal flashes the previous photo.
+          inner.style.transform = `rotateX(${total}deg) scale(1)`;
           spin.cancel();
-
           front.src = photos[target];
+          try {
+            await front.decode();
+          } catch (e) {
+            /* ignore decode errors, fall through to the reset */
+          }
           inner.style.transform = 'rotateX(0deg) scale(1)';
         }
         index = target;
+        try { localStorage.setItem('hero-photo-index', String(index)); } catch (e) {}
         back.src = photos[(index + 1) % photos.length]; // pre-seed the next verso
         backing.src = photos[index]; // the soft memory behind matches the new photo
       } finally {
@@ -583,7 +601,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
     function advance() {
       if (busy) return;
       const target = (index + 1) % slides.length;
-      if (typeof window.applyHeroTheme === 'function') window.applyHeroTheme(slides[target].theme);
+      if (typeof window.applyHeroTheme === 'function') window.applyHeroTheme(slides[target].theme, slides[target].label);
       flipTo(target);
     }
 
