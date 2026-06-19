@@ -46,25 +46,6 @@
       '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
     };
 
-    // Calculate contrast ratio between two colors
-    function getContrastRatio(color1, color2) {
-      const getLuminance = (hex) => {
-        const rgb = hexToRgb(hex);
-        if (!rgb) return 0;
-        const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(val => {
-          val = val / 255;
-          return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
-        });
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-      };
-
-      const lum1 = getLuminance(color1);
-      const lum2 = getLuminance(color2);
-      const lighter = Math.max(lum1, lum2);
-      const darker = Math.min(lum1, lum2);
-      return (lighter + 0.05) / (darker + 0.05);
-    }
-
     function hexToRgb(hex) {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result ? {
@@ -72,62 +53,6 @@
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
       } : null;
-    }
-
-    // Generate accessible random theme
-    function generateRandomTheme() {
-      // Pool of accessible color combinations (background, text)
-      // All combinations meet WCAG AA contrast ratio (4.5:1 minimum)
-      const accessibleThemes = [
-        // Dark backgrounds with light text
-        { bg: '#1a1a2e', text: '#eaeaea', muted: '#b8b8b8', accent: '#0f3460', border: '#16213e' },
-        { bg: '#0f3460', text: '#eaeaea', muted: '#b8b8b8', accent: '#533483', border: '#16213e' },
-        { bg: '#16213e', text: '#eaeaea', muted: '#b8b8b8', accent: '#0f3460', border: '#1a1a2e' },
-        { bg: '#2d3436', text: '#dfe6e9', muted: '#b2bec3', accent: '#636e72', border: '#636e72' },
-        { bg: '#2c2c54', text: '#ecf0f1', muted: '#bdc3c7', accent: '#40407a', border: '#706fd3' },
-        { bg: '#1e272e', text: '#f1f2f6', muted: '#d2dae2', accent: '#485460', border: '#808e9b' },
-        // Light backgrounds with dark text
-        { bg: '#f8f9fa', text: '#212529', muted: '#495057', accent: '#343a40', border: '#dee2e6' },
-        { bg: '#fff5f5', text: '#2d3748', muted: '#4a5568', accent: '#1a202c', border: '#e2e8f0' },
-        { bg: '#f0f4f8', text: '#2c3e50', muted: '#5a6c7d', accent: '#1a252f', border: '#cbd5e0' },
-        { bg: '#f7fafc', text: '#2d3748', muted: '#4a5568', accent: '#1a202c', border: '#e2e8f0' },
-        { bg: '#fefefe', text: '#1a1a1a', muted: '#4a4a4a', accent: '#000000', border: '#e0e0e0' },
-        // Warm tones
-        { bg: '#fff8e1', text: '#3e2723', muted: '#5d4037', accent: '#1b0000', border: '#d7ccc8' },
-        { bg: '#f3e5f5', text: '#4a148c', muted: '#6a1b9a', accent: '#12005e', border: '#e1bee7' },
-        { bg: '#e8f5e9', text: '#1b5e20', muted: '#2e7d32', accent: '#0d2818', border: '#c8e6c9' },
-        // Cool tones
-        { bg: '#e3f2fd', text: '#0d47a1', muted: '#1565c0', accent: '#01579b', border: '#bbdefb' },
-        { bg: '#e0f2f1', text: '#004d40', muted: '#00695c', accent: '#00251a', border: '#b2dfdb' },
-        { bg: '#f1f8e9', text: '#33691e', muted: '#558b2f', accent: '#1b5e20', border: '#dcedc8' },
-      ];
-
-      // Randomly select a theme
-      const selected = accessibleThemes[Math.floor(Math.random() * accessibleThemes.length)];
-      
-      // Verify contrast ratio (should be >= 4.5 for AA compliance)
-      const contrast = getContrastRatio(selected.bg, selected.text);
-      
-      // Generate theme object
-      const theme = {
-        '--theme-bg': selected.bg,
-        '--theme-text': selected.text,
-        '--theme-text-muted': selected.muted,
-        '--theme-accent': selected.accent,
-        '--theme-border': selected.border,
-        '--theme-shadow': selected.bg.startsWith('#') && parseInt(selected.bg.slice(1, 3), 16) < 128 
-          ? '0 4px 12px rgba(0, 0, 0, 0.6)' 
-          : '0 2px 8px rgba(0, 0, 0, 0.08)',
-        '--theme-highlight': selected.bg.startsWith('#') && parseInt(selected.bg.slice(1, 3), 16) < 128
-          ? '#2ac3de'
-          : '#FBF1A9',
-        '--theme-radius': '0.5rem',
-        '--theme-spacing': '1rem',
-        '--theme-font-heading': "'Anonymous Pro', monospace",
-        '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
-      };
-
-      return { theme, contrast };
     }
 
     // Calculate relative luminance (WCAG formula)
@@ -309,6 +234,8 @@
     function resetToDefault() {
       applyTheme(defaultTheme, true, false);
       hideToast();
+      // Photo + theme are a pair: resetting the theme returns the photo too.
+      document.dispatchEvent(new CustomEvent('hero-reset'));
     }
 
     // Export reset function for use in mobile menu
@@ -393,10 +320,25 @@
       }, 10);
     });
 
-    // Export function to generate and apply random theme
-    window.applyRandomTheme = function() {
-      const { theme } = generateRandomTheme();
-      applyTheme(theme, true, true);
+    // Apply a specific (photo-matched) theme. Shows the toast + Reset works, but
+    // does not persist as "random" so a reload returns to the default photo+theme pair.
+    window.applyHeroTheme = function(c) {
+      const rgb = hexToRgb(c.bg);
+      const isDark = rgb ? getLuminance(rgb.r, rgb.g, rgb.b) < 0.4 : false;
+      const theme = {
+        '--theme-bg': c.bg,
+        '--theme-text': c.text,
+        '--theme-text-muted': c.muted,
+        '--theme-accent': c.accent,
+        '--theme-border': c.border,
+        '--theme-shadow': isDark ? '0 4px 12px rgba(0, 0, 0, 0.6)' : '0 2px 8px rgba(0, 0, 0, 0.08)',
+        '--theme-highlight': c.highlight || (isDark ? '#2ac3de' : '#FBF1A9'),
+        '--theme-radius': '0.5rem',
+        '--theme-spacing': '1rem',
+        '--theme-font-heading': "'Anonymous Pro', monospace",
+        '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
+      };
+      applyTheme(theme, true, false);
       document.dispatchEvent(new CustomEvent('random-theme-applied'));
     };
   }

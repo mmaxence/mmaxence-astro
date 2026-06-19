@@ -117,41 +117,23 @@ const techStack = [
 
       <AnimatedContent delay={(techStack.length + 1) * 100}>
         <div class="mt-16 p-6 bg-theme rounded-lg border border-theme">
-          <h2 class="text-2xl font-mono font-light mb-4">Random Theme System</h2>
+          <h2 class="text-2xl font-mono font-light mb-4">A Hidden Pairing</h2>
           <div class="prose prose-lg max-w-none text-base leading-relaxed text-theme">
-            <p>This website features a hidden random theme system that can be activated by clicking on the hero shapes on the homepage. Here's how it works:</p>
-            
+            <p>The homepage hero hides a small toy. The portrait is a flip disc, and tapping it (or the three shapes beside it) cycles through a short series of photos, each one paired with a theme that recolors the whole site to match.</p>
+
             <h3 class="text-xl font-mono font-normal mt-6 mb-3">How It Works</h3>
             <ul class="list-disc pl-6 space-y-2">
-              <li><strong>Activation:</strong> Click any of the three animated shapes (diamond, circle, hexagon) in the hero section to generate and apply a random theme.</li>
-              <li><strong>Theme Generation:</strong> The system uses a curated pool of WCAG AA compliant color combinations, ensuring all themes meet accessibility standards with a minimum contrast ratio of 4.5:1 for text.</li>
-              <li><strong>Theme Persistence:</strong> Random themes persist across page navigation using Astro View Transitions, allowing you to browse the site while maintaining your selected theme.</li>
-              <li><strong>Reset Options:</strong> 
-                <ul class="list-disc pl-6 mt-2 space-y-1">
-                  <li><strong>Desktop:</strong> A toast notification appears in the bottom-right corner with a "Reset" button to return to the default theme.</li>
-                  <li><strong>Mobile:</strong> Use the "Reset Theme" option in the mobile menu (FAB menu) to return to default.</li>
-                </ul>
-              </li>
+              <li><strong>Activation:</strong> Click or tap the hero photo, or the diamond / circle / hexagon next to it. The circular frame spins to the next photo, the site recolors to that photo's matched theme, and the three shapes bloom and settle back into place.</li>
+              <li><strong>Photo and theme as a pair:</strong> Each photo carries a hand-picked palette that echoes it: ocean blue for the beach, forest green for the garden, terracotta for Porto, with contrast kept readable.</li>
+              <li><strong>Reset:</strong> A toast appears bottom-right with a "Reset" button on desktop, or the "Reset Theme" item in the mobile menu, returning to the default photo and theme. The pairing is playful and per-session, so a reload always starts from the default.</li>
             </ul>
 
-            <h3 class="text-xl font-mono font-normal mt-6 mb-3">Technical Implementation</h3>
+            <h3 class="text-xl font-mono font-normal mt-6 mb-3">Under the Hood</h3>
             <ul class="list-disc pl-6 space-y-2">
-              <li><strong>Color System:</strong> Themes are generated using CSS custom properties (CSS variables) that cascade throughout the entire site, affecting backgrounds, text, borders, shadows, and UI elements.</li>
-              <li><strong>Accessibility:</strong> Each theme combination is validated using WCAG luminance and contrast ratio calculations to ensure readability. The system uses the relative luminance formula: <code class="bg-theme-border px-1 rounded">L = 0.2126 × R + 0.7152 × G + 0.0722 × B</code></li>
-              <li><strong>Dynamic Toast Colors:</strong> The toast notification itself adapts to each theme, with background and text colors calculated to contrast with the page background while maintaining accessibility standards.</li>
-              <li><strong>Theme Storage:</strong> Themes are stored in <code class="bg-theme-border px-1 rounded">localStorage</code> to persist across page refreshes and navigation.</li>
-              <li><strong>SVG Color Updates:</strong> Hero shapes and logo SVGs dynamically update their fill colors to match the current theme using CSS custom properties.</li>
+              <li><strong>One cascade:</strong> A theme is just a set of CSS custom properties (background, text, accent, border, shadow) set on the root, so everything downstream recolors in one move.</li>
+              <li><strong>Live SVGs:</strong> The hero shapes, the section illustrations, and the logo read those variables directly, recoloring instantly with no JavaScript redraw.</li>
+              <li><strong>Self-adjusting toast:</strong> The reset toast recomputes its own background and text against the active theme so it stays legible on any palette.</li>
             </ul>
-
-            <h3 class="text-xl font-mono font-normal mt-6 mb-3">Theme Pool</h3>
-            <p>The system includes a diverse collection of accessible color palettes:</p>
-            <ul class="list-disc pl-6 space-y-2 mt-2">
-              <li>Dark themes with light text (various shades of navy, charcoal, and deep blues)</li>
-              <li>Light themes with dark text (soft grays, creams, and whites)</li>
-              <li>Warm tones (yellows, purples, greens with appropriate contrast)</li>
-              <li>Cool tones (blues, teals, mint greens)</li>
-            </ul>
-            <p class="mt-4">Each theme maintains consistent typography, spacing, and design system variables while providing a unique visual experience.</p>
           </div>
         </div>
       </AnimatedContent>

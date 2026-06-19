@@ -36,14 +36,15 @@ const featuredDeepdive = (await getCollection('deepdives'))
   <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0">
     <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
-        <div class="hero-profile-wrapper">
-          <div
-            class="profile-flip"
-            id="profile-flip"
-            role="button"
-            tabindex="0"
-            aria-label="Maxence Mauduit (pinch to spin)"
-          >
+        <div
+          class="hero-profile-wrapper"
+          id="hero-flip-zone"
+          role="button"
+          tabindex="0"
+          aria-label="Maxence Mauduit — tap to flip the photo and theme"
+        >
+          <div class="profile-flip" id="profile-flip">
+            <img class="profile-flip-backing" id="profile-flip-backing" src="/images/profile.jpeg" alt="" draggable="false" aria-hidden="true" />
             <div class="profile-flip-inner" id="profile-flip-inner">
               <img class="profile-face profile-face-front" src="/images/profile.jpeg" alt="Maxence Mauduit" width="240" height="240" draggable="false" />
               <img class="profile-face profile-face-back" src="/images/profile.jpeg" alt="" width="240" height="240" draggable="false" aria-hidden="true" />
@@ -289,6 +290,14 @@ const featuredDeepdive = (await getCollection('deepdives'))
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .hero-profile-wrapper:focus-visible {
+    outline: 2px solid var(--theme-accent);
+    outline-offset: 6px;
+    border-radius: 16px;
   }
 
   /* Pinch-to-spin easter egg: a suspended, two-faced disc */
@@ -302,6 +311,37 @@ const featuredDeepdive = (await getCollection('deepdives'))
     cursor: pointer;
     outline: none;
     border-radius: 50%;
+    overflow: hidden;
+    /* recess tone behind the disc so the circle is never empty mid-spin */
+    background-color: color-mix(in srgb, var(--theme-text) 26%, var(--theme-bg));
+  }
+
+  /* Soft, dimmed copy of the photo behind the disc — the "memory" bleeding
+     through the gap as the disc tilts, instead of bare page. */
+  .profile-flip-backing {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.08);
+    filter: blur(10px) brightness(0.82) saturate(0.92);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Delicate inset shadow: the photo reads as a recessed "memory window" in the page */
+  .profile-flip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 18px 2px rgba(0, 0, 0, 0.26),
+      inset 0 0 5px rgba(0, 0, 0, 0.16);
+    pointer-events: none;
+    z-index: 2;
   }
 
   .profile-flip-inner {
@@ -462,29 +502,31 @@ const featuredDeepdive = (await getCollection('deepdives'))
 </style>
 
 <script>
-  // Easter egg: "pinch" the hero photo (click / Enter) and the suspended disc
-  // spins fast — recto / verso / recto / verso — then friction-decelerates and
-  // settles on the next photo. Physics-flavoured: a quick pinch squash + wind-up,
-  // a high-velocity spin, friction decay, and a small settle wobble.
+  // Hero easter egg: tap the photo/shapes to flip to the next photo, swap to a
+  // matching theme, and bloom the shapes. Photo + theme are a pair; Reset returns both.
+  let currentReset = null;
+
   function initProfileFlip() {
-    const flip = document.getElementById('profile-flip');
+    const zone = document.getElementById('hero-flip-zone');
     const inner = document.getElementById('profile-flip-inner');
-    if (!flip || !inner || flip.dataset.flipInit) return;
-    flip.dataset.flipInit = '1';
+    if (!zone || !inner || zone.dataset.flipInit) return;
+    zone.dataset.flipInit = '1';
 
     const front = inner.querySelector('.profile-face-front');
     const back = inner.querySelector('.profile-face-back');
+    const backing = document.getElementById('profile-flip-backing');
 
-    // [0] is shown on load; each pinch lands on the next, then wraps.
-    // Rhythm: alone, with-kid, alone, with-kid, ... (wraps cleanly).
-    const photos = [
-      '/images/profile.jpeg', // alone
-      '/images/profile-carrier.jpg', // with kid
-      '/images/profile-work.jpg', // alone
-      '/images/profile-porto.jpg', // with kid
-      '/images/profile-cafe.jpg', // alone
-      '/images/profile-garden.jpg', // with kid
+    // Photo + matched theme pairs. [0] is the default (on load / after Reset).
+    // Rhythm: alone, with-kid, alone, with-kid, ...
+    const slides = [
+      { src: '/images/profile.jpeg',        theme: { bg: '#eaf4fb', text: '#0b3a5b', muted: '#3a6f93', accent: '#0a5a8a', border: '#cfe6f5' } }, // beach / ocean
+      { src: '/images/profile-carrier.jpg', theme: { bg: '#eef3ec', text: '#2f4a2e', muted: '#5a7257', accent: '#3a5d39', border: '#dbe6d7' } }, // hike / sage
+      { src: '/images/profile-work.jpg',    theme: { bg: '#1c2340', text: '#e8eaf2', muted: '#aab0c8', accent: '#c4663a', border: '#2a3457' } }, // velvet couch (dark)
+      { src: '/images/profile-porto.jpg',   theme: { bg: '#fbf1e8', text: '#6e3b27', muted: '#9a6b54', accent: '#c0532b', border: '#f0ddca' } }, // porto / terracotta
+      { src: '/images/profile-cafe.jpg',    theme: { bg: '#f7f3ea', text: '#3a3326', muted: '#6b6150', accent: '#d9682e', border: '#ece5d6' } }, // cafe / coral
+      { src: '/images/profile-garden.jpg',  theme: { bg: '#eaf1e6', text: '#27401f', muted: '#52704a', accent: '#3f6f8f', border: '#d6e3cf' } }, // garden / green
     ];
+    const photos = slides.map((s) => s.src);
     photos.forEach((src) => {
       const pre = new Image();
       pre.src = src;
@@ -494,34 +536,30 @@ const featuredDeepdive = (await getCollection('deepdives'))
     let busy = false;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Seed the verso with the photo the first pinch will land on.
     back.src = photos[(index + 1) % photos.length];
 
-    async function pinch() {
+    // Spin the disc to a specific photo and bloom the shapes alongside it.
+    async function flipTo(target) {
       if (busy) return;
       busy = true;
-      const next = (index + 1) % photos.length;
-      back.src = photos[next]; // the verso is the image the spin lands on
-
+      back.src = photos[target]; // the verso is the image the spin lands on
       try {
         if (reduce) {
-          front.src = photos[next];
+          front.src = photos[target];
+          document.dispatchEvent(new CustomEvent('hero-flip', { detail: { duration: 0 } }));
         } else {
-          // Odd number of half-turns so the spin lands on the back face (= next photo).
-          // Randomised a little so each pinch feels physical, not canned.
+          // Odd number of half-turns so the spin lands on the back face (= target).
           const halfTurns = [7, 9, 11][Math.floor(Math.random() * 3)];
           const total = halfTurns * 180;
-          const duration = 820 + halfTurns * 60;
+          const duration = 900 + halfTurns * 75;
+
+          // accompany the spin with the shape choreography
+          document.dispatchEvent(new CustomEvent('hero-flip', { detail: { duration } }));
 
           const spin = inner.animate(
             [
-              { offset: 0, transform: 'rotateX(0deg) scale(1)', easing: 'cubic-bezier(0.4, 0, 0.6, 1)' },
-              // the pinch: quick squash + a little wind-up backwards
-              { offset: 0.07, transform: 'rotateX(-10deg) scale(0.9)', easing: 'cubic-bezier(0.165, 0.84, 0.44, 1)' },
-              // the spin: high velocity, friction deceleration through the half-turns
-              { offset: 0.9, transform: `rotateX(${total - 6}deg) scale(1)`, easing: 'ease-out' },
-              // overshoot a hair, then settle — it "stabilizes"
-              { offset: 0.97, transform: `rotateX(${total + 4}deg) scale(1.006)`, easing: 'ease-in-out' },
+              { offset: 0, transform: 'rotateX(0deg) scale(1)', easing: 'cubic-bezier(0.5, 0, 0.75, 0.4)' },
+              { offset: 0.08, transform: 'rotateX(-12deg) scale(0.93)', easing: 'cubic-bezier(0.16, 0.85, 0.28, 1)' },
               { offset: 1, transform: `rotateX(${total}deg) scale(1)` },
             ],
             { duration, fill: 'forwards' }
@@ -530,26 +568,41 @@ const featuredDeepdive = (await getCollection('deepdives'))
           spin.commitStyles();
           spin.cancel();
 
-          // Seamless reset: the back (now facing us) already shows photos[next].
-          // Copy it onto the front and zero the rotation for the next pinch.
-          front.src = photos[next];
+          front.src = photos[target];
           inner.style.transform = 'rotateX(0deg) scale(1)';
         }
-        index = next;
+        index = target;
         back.src = photos[(index + 1) % photos.length]; // pre-seed the next verso
+        backing.src = photos[index]; // the soft memory behind matches the new photo
       } finally {
         busy = false;
       }
     }
 
-    flip.addEventListener('click', pinch);
-    flip.addEventListener('keydown', (e) => {
+    // A tap advances the pair: matching theme first, then the spin + bloom.
+    function advance() {
+      if (busy) return;
+      const target = (index + 1) % slides.length;
+      if (typeof window.applyHeroTheme === 'function') window.applyHeroTheme(slides[target].theme);
+      flipTo(target);
+    }
+
+    zone.addEventListener('click', advance);
+    zone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        pinch();
+        advance();
       }
     });
+
+    // The Reset button (theme -> default) returns the photo to [0] too.
+    currentReset = () => flipTo(0);
   }
+
+  // Single document listener (document persists across view transitions).
+  document.addEventListener('hero-reset', () => {
+    if (currentReset) currentReset();
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initProfileFlip);
