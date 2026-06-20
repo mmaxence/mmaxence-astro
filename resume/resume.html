@@ -67,13 +67,27 @@
         font-weight: 500;
         color: var(--muted);
       }
+      .photo-wrap {
+        position: relative;
+        flex-shrink: 0;
+        width: 78px;
+        height: 78px;
+      }
       .photo {
         width: 78px;
         height: 78px;
         border-radius: 50%;
         object-fit: cover;
-        flex-shrink: 0;
         border: 1px solid var(--rule);
+        display: block;
+      }
+      .logo-badge {
+        position: absolute;
+        left: -1px;
+        bottom: -1px;
+        width: 27px;
+        height: 27px;
+        filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.95));
       }
 
       /* Contact, two columns */
@@ -87,7 +101,7 @@
         line-height: 1.7;
       }
       .contact .right { text-align: right; }
-      .contact a { color: var(--link); text-decoration: underline; }
+      .contact a { color: var(--ink); text-decoration: underline; }
       .contact .plain { color: var(--muted); }
 
       /* Sections */
@@ -144,7 +158,13 @@
           <h1 class="name">Maxence Mauduit</h1>
           <p class="title">Product Designer · Interaction Systems &amp; Scale</p>
         </div>
-        <img class="photo" src="photo.jpg" alt="Maxence Mauduit" />
+        <div class="photo-wrap">
+          <img class="photo" src="photo.jpg" alt="Maxence Mauduit" />
+          <svg class="logo-badge" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M256 58.5142L427.028 157.257V354.743L256 453.486L84.9725 354.743V157.257L256 58.5142Z" fill="#1a1a1a" />
+            <rect x="173.248" y="256" width="117.029" height="117.029" transform="rotate(-45 173.248 256)" fill="#ffffff" />
+          </svg>
+        </div>
       </header>
 
       <div class="contact">
