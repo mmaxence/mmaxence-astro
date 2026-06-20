@@ -71,9 +71,11 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Anonymous+Pro:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <!-- Self-hosted fonts: preload the critical weights so they're ready at first paint (no FOUT swap-flash) -->
+    <link rel="preload" href="/fonts/plus-jakarta-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/plus-jakarta-sans-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/anonymous-pro-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content={author} />
     <link rel="canonical" href={currentUrl} />
