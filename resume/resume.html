@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Maxence Mauduit — Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a1a1a;
+        --muted: #6b6f76;
+        --faint: #9aa0a6;
+        --rule: #e4e6e9;
+        --link: #3a6f93;
+      }
+
+      * { box-sizing: border-box; }
+
+      @page {
+        size: A4;
+        margin: 16mm 17mm;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        color: var(--ink);
+        font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 10pt;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      @media screen {
+        body { background: #f3f4f6; padding: 24px; }
+        .sheet {
+          width: 210mm;
+          margin: 0 auto 18px;
+          background: #fff;
+          padding: 16mm 17mm;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+        }
+      }
+      @media print { .sheet { padding: 0; } }
+
+      /* Header */
+      .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+      }
+      .name {
+        font-size: 25pt;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 0;
+        line-height: 1.04;
+      }
+      .title {
+        margin: 5px 0 0;
+        font-size: 11.5pt;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .photo {
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid var(--rule);
+      }
+
+      /* Contact, two columns */
+      .contact {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        margin-top: 16px;
+        font-size: 9.5pt;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .contact .right { text-align: right; }
+      .contact a { color: var(--link); text-decoration: underline; }
+      .contact .plain { color: var(--muted); }
+
+      /* Sections */
+      .section { margin-top: 22px; }
+      .section-label {
+        font-size: 9pt;
+        font-weight: 600;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin-bottom: 12px;
+      }
+
+      .summary { margin: 0; }
+
+      /* Experience */
+      .org {
+        font-size: 9pt;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink);
+        margin: 0;
+      }
+      .org-block + .org-block { margin-top: 20px; }
+
+      .role {
+        margin-top: 16px;
+        break-inside: avoid;
+      }
+      .role-title { font-weight: 700; font-size: 11pt; margin: 0; }
+      .role-date { color: var(--muted); font-size: 9.5pt; margin: 1px 0 0; }
+      ul.bullets { margin: 7px 0 0; padding-left: 18px; }
+      ul.bullets li { margin: 4px 0; padding-left: 2px; }
+      ul.bullets li::marker { color: var(--faint); }
+
+      /* Education + skills lists */
+      ul.edu { margin: 0; padding-left: 18px; }
+      ul.edu li { margin: 5px 0; }
+      ul.edu li::marker { color: var(--faint); }
+
+      ul.skills { margin: 0; padding-left: 18px; }
+      ul.skills > li { margin: 4px 0; font-weight: 700; break-inside: avoid; }
+      ul.skills > li::marker { color: var(--ink); }
+      ul.skills ul { margin: 3px 0 9px; padding-left: 18px; }
+      ul.skills ul li { font-weight: 400; color: var(--muted); margin: 2px 0; }
+      ul.skills ul li::marker { color: var(--faint); }
+    </style>
+  </head>
+  <body>
+    <div class="sheet">
+      <header class="head">
+        <div>
+          <h1 class="name">Maxence Mauduit</h1>
+          <p class="title">Product Designer · Interaction Systems &amp; Scale</p>
+        </div>
+        <img class="photo" src="photo.jpg" alt="Maxence Mauduit" />
+      </header>
+
+      <div class="contact">
+        <div class="left">
+          <a href="mailto:contact@mmaxence.me">contact@mmaxence.me</a><br />
+          <span class="plain">+82 10 2760 3830 (iPhone)</span><br />
+          <span class="plain">Seoul, South Korea · Open to Remote / Europe</span>
+        </div>
+        <div class="right">
+          <a href="https://mmaxence.me">mmaxence.me</a><br />
+          <a href="https://linkedin.com/in/mmaxence">linkedin.com/in/mmaxence</a><br />
+          <a href="https://mmaxence.medium.com">mmaxence.medium.com</a>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section-label">Profile</div>
+        <p class="summary">
+          Product designer with 15 years at the intersection of interaction systems, platform products, and
+          monetization, 12 of them at one company across product, system, and brand. I design in code where
+          products live, and build the systems that people and agents compose within. I have led the pivots and
+          the team that scaled the business toward IPO readiness, and I stay a hands-on IC, most effective where
+          craft, systems thinking, and speed compound.
+        </p>
+      </section>
+
+      <section class="section">
+        <div class="section-label">Professional Experience</div>
+
+        <div class="org-block">
+          <p class="org">Buzzvil | Seoul, South Korea (12 years)</p>
+
+          <div class="role">
+            <p class="role-title">Chief Design Officer (CDO) — IPO &amp; Platform Readiness</p>
+            <p class="role-date">Sept 2022 – Present</p>
+            <ul class="bullets">
+              <li>Led design and experience strategy for IPO readiness, aligning execution standards with business and engineering priorities.</li>
+              <li>Improved product delivery efficiency by reducing UI fragmentation and clarifying ownership across teams.</li>
+              <li>Shaped new monetization experiences using multi-mission rewarded interaction models to support long-term engagement and retention.</li>
+              <li>Operated on high-impact initiatives and systemic decisions, remaining hands-on where early product decisions required speed and depth.</li>
+            </ul>
+          </div>
+
+          <div class="role">
+            <p class="role-title">Product Manager &amp; Head of Design — The Strategic Pivot</p>
+            <p class="role-date">Jan 2019 – Sept 2022</p>
+            <ul class="bullets">
+              <li>Led a company-critical pivot following major platform policy changes, transitioning the business to Offerwall and SDK-based monetization.</li>
+              <li>Owned end-to-end product strategy for publisher-facing products, with KPIs centered on monetization performance.</li>
+              <li>Designed and shipped server-driven UI capabilities that reduced engineering overhead and accelerated partner integrations.</li>
+            </ul>
+          </div>
+
+          <div class="role">
+            <p class="role-title">Head of Design (Member #24) — Growth &amp; Scalability</p>
+            <p class="role-date">Nov 2014 – Dec 2018</p>
+            <ul class="bullets">
+              <li>Built and scaled the design function from early stage through hypergrowth as one of the company’s first employees.</li>
+              <li>Led the transition from B2C consumer products to B2B SDK offerings, enabling new revenue channels.</li>
+              <li>Established shared interaction standards and execution practices to support rapid growth without experience fragmentation.</li>
+              <li>Automated creative review workflows, shifting the team from production-heavy work to product innovation.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="org-block">
+          <p class="org">CMS Group (3S Informatique) | Paris, France (3+ years)</p>
+          <div class="role">
+            <p class="role-title">Service &amp; UX Design Lead</p>
+            <p class="role-date">Mar 2011 – Apr 2014</p>
+            <ul class="bullets">
+              <li>Translated academic research into a commercial SaaS EdTech platform while embedded in a research lab at Arts et Métiers ParisTech.</li>
+              <li>Built a systemic UI foundation aligned with production code to improve consistency and delivery speed.</li>
+              <li>Co-authored and presented research on co-design validation at IASDR Tokyo.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label">Education</div>
+        <ul class="edu">
+          <li>Research Master’s in Virtual Engineering &amp; Innovation, Arts et Métiers ParisTech (ENSAM), France</li>
+          <li>Master’s in Interaction Design (Hypermedia), L’École de Design Nantes Atlantique (EDNA), France</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <div class="section-label">Skills &amp; Technologies</div>
+        <ul class="skills">
+          <li>Core Capabilities
+            <ul>
+              <li>Product Strategy &amp; Execution</li>
+              <li>Interaction Systems &amp; UX Architecture</li>
+              <li>Early Product Discovery &amp; De-risking</li>
+              <li>Monetization &amp; Platform Products</li>
+              <li>Scale Readiness</li>
+            </ul>
+          </li>
+          <li>Leadership
+            <ul>
+              <li>Cross-functional Leadership</li>
+              <li>Senior IC &amp; Team Enablement</li>
+              <li>Product &amp; Design Hiring</li>
+            </ul>
+          </li>
+          <li>Tools (minimal)
+            <ul>
+              <li>Figma, Prototyping, Data-informed experimentation</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>
