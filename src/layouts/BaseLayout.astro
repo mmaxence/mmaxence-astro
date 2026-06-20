@@ -111,6 +111,9 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
       // Initialize theme immediately to prevent flash
       // Also re-apply on page transitions
       (function() {
+        // Mark JS-ready on <html> before first paint, so entrance-animated content
+        // starts hidden and fades in once, instead of flashing visible then hiding.
+        document.documentElement.classList.add('js-ready');
         const themes = {
           default: {
             '--theme-bg': '#ffffff',

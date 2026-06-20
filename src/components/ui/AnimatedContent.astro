@@ -20,15 +20,15 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
     transform: translateY(0);
   }
   
-  /* Only hide if JavaScript has initialized (has .js-ready class on body) */
-  body.js-ready .animated-content:not(.visible) {
+  /* Hide only once JS is ready (flag set on <html> in the head, before first paint) */
+  html.js-ready .animated-content:not(.visible) {
     opacity: 0;
     transform: translateY(12px);
     transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  body.js-ready .animated-content.visible {
+  html.js-ready .animated-content.visible {
     opacity: 1;
     transform: translateY(0);
   }
@@ -49,19 +49,11 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
     
     // Mark that JavaScript is ready (progressive enhancement)
     // This allows CSS to hide content only if JS is running
+    // Backup to the head guard: ensure the flag is on <html> (always exists here).
     function markJSReady() {
-      if (document.body) {
-        document.body.classList.add('js-ready');
-      } else {
-        // Wait for body to exist
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', markJSReady);
-        } else {
-          setTimeout(markJSReady, 10);
-        }
-      }
+      document.documentElement.classList.add('js-ready');
     }
-    
+
     markJSReady();
     
     let observer = null;
