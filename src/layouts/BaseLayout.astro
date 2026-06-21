@@ -19,7 +19,7 @@ const siteUrl = "https://mmaxence.me";
 const currentUrl = url || (Astro.url.pathname.endsWith('/') ? new URL(Astro.url.pathname, siteUrl).href : new URL(Astro.url.pathname + '/', siteUrl).href);
 const ogImage = featured_image
   ? (featured_image.startsWith('http') ? featured_image : new URL(featured_image, siteUrl).href)
-  : new URL('/images/mmaxence_logo.svg', siteUrl).href;
+  : new URL('/images/maxence_mauduit_portrait.jpg', siteUrl).href;
 
 // JSON-LD structured data
 const personSchema = {
@@ -252,41 +252,6 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
           });
         });
       })();
-    </script>
-    <script>
-      // SVG hover effects
-      document.addEventListener('DOMContentLoaded', () => {
-        const rect = document.getElementById('rect');
-        const poly = document.getElementById('poly');
-        const circle = document.getElementById('circle');
-
-        if (rect) {
-          rect.addEventListener('mouseenter', () => {
-            rect.setAttribute('fill', '#FF4136');
-          });
-          rect.addEventListener('mouseleave', () => {
-            rect.setAttribute('fill', 'black');
-          });
-        }
-
-        if (poly) {
-          poly.addEventListener('mouseenter', () => {
-            poly.setAttribute('fill', '#19A974');
-          });
-          poly.addEventListener('mouseleave', () => {
-            poly.setAttribute('fill', 'black');
-          });
-        }
-
-        if (circle) {
-          circle.addEventListener('mouseenter', () => {
-            circle.setAttribute('fill', '#357EDD');
-          });
-          circle.addEventListener('mouseleave', () => {
-            circle.setAttribute('fill', 'black');
-          });
-        }
-      });
     </script>
     {/* GoatCounter analytics */}
     <script data-goatcounter="https://mmaxence.goatcounter.com/count" async src="//gc.zgo.at/count.js" is:inline></script>

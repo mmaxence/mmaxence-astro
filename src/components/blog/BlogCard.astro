@@ -22,6 +22,8 @@ const featuredImage = post.data.featured_image?.startsWith('/')
         <img
           src={featuredImage}
           alt={post.data.title}
+          loading="lazy"
+          decoding="async"
           class="blog-card-image w-full h-auto transition-transform duration-300"
         />
       </div>

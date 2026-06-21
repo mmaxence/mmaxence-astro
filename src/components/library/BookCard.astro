@@ -7,22 +7,20 @@ interface Props {
 
 const { book } = Astro.props;
 
-const slug = book.slug.replace('-review', '');
-const featuredImage = book.data.featured_image?.startsWith('/') 
-  ? book.data.featured_image 
+const featuredImage = book.data.featured_image?.startsWith('/')
+  ? book.data.featured_image
   : `/images/${book.data.featured_image}`;
 ---
 
-<a 
-  href={`/library/${slug}`} 
-  class="book-item prefetch-link block no-underline hover:bg-transparent border-none"
-  data-prefetch="true"
->
-  <article class="book-card p-6 border border-theme bg-theme rounded-card shadow-theme transition-all duration-300 hover:shadow-theme-hover hover:-translate-y-1">
+{/* Display-only card — book detail pages aren't linked for now. */}
+<div class="book-card-wrap">
+  <article class="book-card p-6 border border-theme bg-theme rounded-card shadow-theme">
     {book.data.featured_image && (
       <img
         src={featuredImage}
         alt={book.data.title}
+        loading="lazy"
+        decoding="async"
         class="book-cover w-full h-auto mb-4 rounded-card-image"
       />
     )}
@@ -40,50 +38,10 @@ const featuredImage = book.data.featured_image?.startsWith('/')
       </p>
     )}
   </article>
-</a>
+</div>
 
 <style>
   .book-card {
     border-color: var(--theme-border);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  
-  .book-item:hover .book-card {
-    border-color: var(--theme-accent);
-  }
-
-  /* Block clicks on book cards - remove this class to enable clicks */
-  .book-card-disabled {
-    pointer-events: none;
-    cursor: default;
-    opacity: 0.7;
-  }
-
-  .book-card-disabled:hover .book-card {
-    border-color: var(--theme-border);
-    transform: none;
   }
 </style>
-
-<script>
-  // Function to block clicks on book cards
-  // To enable clicks, remove the 'book-card-disabled' class from the <a> tag
-  function blockBookCardClicks() {
-    const bookCards = document.querySelectorAll('.book-card-disabled');
-    bookCards.forEach(card => {
-      card.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      });
-    });
-  }  // Initialize on page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', blockBookCardClicks);
-  } else {
-    blockBookCardClicks();
-  }  // Re-initialize on page transitions
-  document.addEventListener('astro:page-load', () => {
-    setTimeout(blockBookCardClicks, 50);
-  });
-</script>

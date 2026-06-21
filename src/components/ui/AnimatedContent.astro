@@ -44,287 +44,73 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
 </style>
 
 <script>
-  (function() {
+  (function () {
     'use strict';
-    
-    // Mark that JavaScript is ready (progressive enhancement)
-    // This allows CSS to hide content only if JS is running
-    // Backup to the head guard: ensure the flag is on <html> (always exists here).
-    function markJSReady() {
-      document.documentElement.classList.add('js-ready');
+
+    // Ensure the JS-ready flag is set (the head guard sets it pre-paint; this is a backstop).
+    document.documentElement.classList.add('js-ready');
+
+    const REVEAL_SELECTOR = '.animated-content:not(.visible)';
+    const CHILD_SELECTOR = '.book-item';
+    const prefersReduced =
+      typeof matchMedia === 'function' &&
+      matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let observer = null;
+
+    function reveal(el) {
+      const delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      const show = () => {
+        el.classList.add('visible');
+        el.querySelectorAll(CHILD_SELECTOR).forEach((child) =>
+          child.classList.add('visible')
+        );
+      };
+      if (delay > 0) setTimeout(show, delay);
+      else show();
     }
 
-    markJSReady();
-    
-    let observer = null;
-    
-    function createObserver() {
-      if (observer) {
-        observer.disconnect();
+    // Reveal every not-yet-visible element. This is purely ADDITIVE and idempotent:
+    // it never removes .visible, so overlapping triggers (DOMContentLoaded + astro:page-load)
+    // can't blank the page. Above-the-fold reveals immediately with its stagger; the rest
+    // wait for the viewport.
+    function run() {
+      const els = document.querySelectorAll(REVEAL_SELECTOR);
+      if (!els.length) return;
+
+      if (prefersReduced) {
+        els.forEach((el) => el.classList.add('visible'));
+        return;
       }
-      
-      observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const delay = parseInt(entry.target.getAttribute('data-delay') || '0');
-            setTimeout(() => {
-              entry.target.classList.add('visible');
-            }, delay);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.01,
-        rootMargin: '0px 0px -20px 0px'
+
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              reveal(entry.target);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.01, rootMargin: '0px 0px -8% 0px' }
+      );
+
+      const fold = window.innerHeight * 0.92;
+      els.forEach((el) => {
+        if (el.getBoundingClientRect().top < fold) reveal(el);
+        else observer.observe(el);
       });
-      
-      return observer;
     }
-    
-    function initAnimatedContent() {
-      // Get all elements first
-      const allElements = document.querySelectorAll('.animated-content');
-      
-      if (allElements.length === 0) {
-        // No elements found yet - try again later
-        return false;
-      }
-      
-      // Check if this is first load (no observed elements yet)
-      const isFirstLoad = !document.querySelector('.animated-content.observed');
-      
-      if (!isFirstLoad) {
-        // Reset on subsequent loads (page transitions)
-        allElements.forEach((el) => {
-          el.classList.remove('visible', 'observed');
-          // Force reflow
-          void el.offsetWidth;
-        });
-      }
-      
-      // On first load, show all elements with their delays
-      // This ensures content appears right away with smooth animations
-      if (isFirstLoad && allElements.length > 0) {
-        // Mark as observed to prevent re-running
-        allElements.forEach((el) => {
-          el.classList.add('observed');
-        });
-        
-        // Show all elements with their delays for smooth staggered animation
-        allElements.forEach((el) => {
-          const delay = parseInt(el.getAttribute('data-delay') || '0');
-          setTimeout(() => {
-            el.classList.add('visible');
-            
-            // Also add visible to child elements that might need it
-            const childElements = el.querySelectorAll('.principle-card, .book-item, .qualification-item');
-            childElements.forEach((child) => {
-              child.classList.add('visible');
-            });
-          }, delay);
-        });
-        
-        return true; // Successfully initialized
-      }
-      
-      // For page transitions, show elements with delays based on viewport
-      if (!isFirstLoad && allElements.length > 0) {
-        const newObserver = createObserver();
-        
-        // Function to check and show visible elements
-        function checkAndShowVisible() {
-          allElements.forEach((el) => {
-            if (!el.classList.contains('visible')) {
-              const rect = el.getBoundingClientRect();
-              // More generous viewport check - include elements above and well below viewport
-              const isVisible = rect.top < window.innerHeight + 1000 && rect.bottom > -500;
-              if (isVisible) {
-                const delay = parseInt(el.getAttribute('data-delay') || '0');
-                setTimeout(() => {
-                  el.classList.add('visible');
-                }, delay);
-                if (newObserver) {
-                  newObserver.unobserve(el);
-                }
-              } else if (!el.classList.contains('observed')) {
-                el.classList.add('observed');
-                if (newObserver) {
-                  newObserver.observe(el);
-                }
-              }
-            }
-          });
-        }
-        
-        // Check immediately for above-the-fold content
-        checkAndShowVisible();
-        
-        // Check again after layout is complete (multiple fallbacks)
-        requestAnimationFrame(() => {
-          checkAndShowVisible();
-        });
-        
-        setTimeout(() => {
-          checkAndShowVisible();
-        }, 10);
-        
-        setTimeout(() => {
-          checkAndShowVisible();
-        }, 50);
-        
-        // Ultimate fallback: show all after 100ms if still not visible
-        setTimeout(() => {
-          allElements.forEach((el) => {
-            if (!el.classList.contains('visible')) {
-              const delay = parseInt(el.getAttribute('data-delay') || '0');
-              setTimeout(() => {
-                el.classList.add('visible');
-              }, delay);
-              if (newObserver) {
-                newObserver.unobserve(el);
-              }
-            }
-          });
-        }, 100);
-        
-        return true;
-      }
-      
-      return false; // No elements or already handled
-    }
-    
-    // Initialize with multiple strategies to ensure content shows
-    let initialized = false;
-    let mutationObserver = null;
-    
-    function runInit() {
-      // Try to initialize
-      const success = initAnimatedContent();
-      
-      if (success) {
-        initialized = true;
-        // Stop mutation observer once initialized
-        if (mutationObserver) {
-          mutationObserver.disconnect();
-          mutationObserver = null;
-        }
-      }
-      
-      return success;
-    }
-    
-    // Strategy 1: Run immediately if DOM is ready
-    if (document.readyState !== 'loading') {
-      runInit();
-    }
-    
-    // Strategy 2: Run on DOMContentLoaded
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        runInit();
-      });
-    }
-    
-    // Strategy 3: Run after window load (ensures all resources loaded)
-    window.addEventListener('load', () => {
-      setTimeout(runInit, 0);
-    });
-    
-    // Strategy 4: Use MutationObserver to watch for elements being added
-    function setupMutationObserver() {
-      if (initialized || typeof MutationObserver === 'undefined') {
-        return;
-      }
-      
-      const body = document.body || document.documentElement;
-      if (!body) {
-        // Body doesn't exist yet, try again later
-        setTimeout(setupMutationObserver, 10);
-        return;
-      }
-      
-      mutationObserver = new MutationObserver(() => {
-        if (!initialized) {
-          runInit();
-        }
-      });
-      
-      mutationObserver.observe(body, {
-        childList: true,
-        subtree: true
-      });
-    }
-    
-    // Set up mutation observer
-    if (document.body) {
-      setupMutationObserver();
+      document.addEventListener('DOMContentLoaded', run, { once: true });
     } else {
-      // Wait for body to exist
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupMutationObserver);
-      } else {
-        setTimeout(setupMutationObserver, 10);
-      }
+      run();
     }
-    
-    // Strategy 5: Run after multiple delays to catch late elements
-    setTimeout(() => {
-      if (!initialized) runInit();
-    }, 10);
-    
-    setTimeout(() => {
-      if (!initialized) runInit();
-    }, 50);
-    
-    setTimeout(() => {
-      if (!initialized) runInit();
-    }, 100);
-    
-    setTimeout(() => {
-      if (!initialized) runInit();
-    }, 200);
-    
-    setTimeout(() => {
-      if (!initialized) runInit();
-    }, 500);
-    
-    // Ultimate fallback: force initialization after 1 second
-    setTimeout(() => {
-      if (!initialized) {
-        const allElements = document.querySelectorAll('.animated-content');
-        if (allElements.length > 0) {
-          allElements.forEach((el) => {
-            if (!el.classList.contains('visible')) {
-              el.classList.add('visible', 'observed');
-            }
-          });
-          initialized = true;
-        }
-      }
-    }, 1000);
-    
-    // Re-initialize on Astro page transitions
-    document.addEventListener('astro:page-load', () => {
-      // Use requestAnimationFrame to ensure DOM is fully ready
-      requestAnimationFrame(() => {
-        setTimeout(initAnimatedContent, 10);
-      });
-    });
-    
-    // Also listen for after-swap as backup
-    document.addEventListener('astro:after-swap', () => {
-      requestAnimationFrame(() => {
-        setTimeout(initAnimatedContent, 10);
-      });
-    });
-    
-    // Also listen for view transition end as backup
-    if (document.startViewTransition) {
-      document.addEventListener('astro:after-swap', () => {
-        requestAnimationFrame(() => {
-          setTimeout(initAnimatedContent, 10);
-        });
-      });
-    }
+
+    // Astro View Transitions swap in fresh DOM (elements without .visible), so the same
+    // additive reveal handles every navigation. No reset path needed.
+    document.addEventListener('astro:page-load', run);
   })();
 </script>

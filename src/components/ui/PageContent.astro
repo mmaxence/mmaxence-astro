@@ -31,16 +31,17 @@ const { class: className = '' } = Astro.props;
   }
 </style>
 
-<script is:inline>
-  // Re-trigger animation on view transition
-  document.addEventListener('astro:page-load', () => {
+<script>
+  // Re-trigger the fade-in on real navigations only.
+  // `astro:after-swap` fires after a View Transitions navigation swaps in fresh DOM —
+  // crucially NOT on the initial page load. Using `astro:page-load` here (which DOES
+  // fire on initial load) blanked the whole page on first paint, then re-ran the fade:
+  // the load "blink". The initial load already plays the CSS animation once on its own.
+  document.addEventListener('astro:after-swap', () => {
     const pageContent = document.querySelector('.page-content');
     if (pageContent) {
-      // Reset animation
       pageContent.style.animation = 'none';
-      // Force reflow
-      void pageContent.offsetWidth;
-      // Re-apply animation
+      void pageContent.offsetWidth; // force reflow so the restart takes
       pageContent.style.animation = '';
     }
   });
