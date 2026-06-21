@@ -546,21 +546,35 @@ const featuredDeepdive = (await getCollection('deepdives'))
       }
     } catch (e) {}
 
-    back.src = photos[(index + 1) % photos.length];
+    // The disc never teleports back to 0deg; it keeps spinning forward and the two
+    // faces alternate as the front. Each flip only changes the currently HIDDEN face,
+    // then spins it into view — so the face that comes to rest was rasterized DURING
+    // the spin, and the resting frame never flashes the blurred backing. (The old
+    // reset-to-0 swapped the front face while it was backface-hidden, then snapped it
+    // forward before the browser had painted it, which blinked for one frame.)
+    let rotation = 0; // current resting rotateX, in degrees
 
-    // Spin the disc to a specific photo and bloom the shapes alongside it.
     async function flipTo(target) {
       if (busy) return;
       busy = true;
-      back.src = photos[target]; // the verso is the image the spin lands on
       try {
+        // Even multiples of 180 leave the front face forward; odd, the back face.
+        const frontForward = (((Math.round(rotation / 180) % 2) + 2) % 2) === 0;
+        const landingFace = frontForward ? back : front; // the hidden face becomes the new front
+
         if (reduce) {
           front.src = photos[target];
+          back.src = photos[target];
           document.dispatchEvent(new CustomEvent('hero-flip', { detail: { duration: 0 } }));
         } else {
-          // Odd number of half-turns so the spin lands on the back face (= target).
+          landingFace.src = photos[target];
+          // Decode the landing image up front; the spin paints it as it rotates in.
+          try { await landingFace.decode(); } catch (e) { /* fall through */ }
+
+          // Odd number of half-turns flips which face is forward, landing on the target.
           const halfTurns = [7, 9, 11][Math.floor(Math.random() * 3)];
-          const total = halfTurns * 180;
+          const from = rotation;
+          const to = rotation + halfTurns * 180;
           const duration = 900 + halfTurns * 75;
 
           // accompany the spin with the shape choreography
@@ -568,29 +582,21 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
           const spin = inner.animate(
             [
-              { offset: 0, transform: 'rotateX(0deg) scale(1)', easing: 'cubic-bezier(0.5, 0, 0.75, 0.4)' },
-              { offset: 0.08, transform: 'rotateX(-12deg) scale(0.93)', easing: 'cubic-bezier(0.16, 0.85, 0.28, 1)' },
-              { offset: 1, transform: `rotateX(${total}deg) scale(1)` },
+              { offset: 0, transform: `rotateX(${from}deg) scale(1)`, easing: 'cubic-bezier(0.5, 0, 0.75, 0.4)' },
+              { offset: 0.08, transform: `rotateX(${from - 12}deg) scale(0.93)`, easing: 'cubic-bezier(0.16, 0.85, 0.28, 1)' },
+              { offset: 1, transform: `rotateX(${to}deg) scale(1)` },
             ],
             { duration, fill: 'forwards' }
           );
           await spin.finished;
-          // Hold the landed orientation explicitly (set before cancel so there's no
-          // one-frame revert to base), then swap the front face and DECODE it before
-          // resetting to 0deg — otherwise the reveal flashes the previous photo.
-          inner.style.transform = `rotateX(${total}deg) scale(1)`;
+          // Commit the landed orientation inline before cancelling, so there's no
+          // one-frame revert to base.
+          inner.style.transform = `rotateX(${to}deg) scale(1)`;
           spin.cancel();
-          front.src = photos[target];
-          try {
-            await front.decode();
-          } catch (e) {
-            /* ignore decode errors, fall through to the reset */
-          }
-          inner.style.transform = 'rotateX(0deg) scale(1)';
+          rotation = to;
         }
         index = target;
         try { localStorage.setItem('hero-photo-index', String(index)); } catch (e) {}
-        back.src = photos[(index + 1) % photos.length]; // pre-seed the next verso
         backing.src = photos[index]; // the soft memory behind matches the new photo
       } finally {
         busy = false;
