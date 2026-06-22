@@ -42,11 +42,11 @@ export const GET: APIRoute = async () => {
 
   let content = `# Maxence Mauduit — Full Content
 
-> Product & Experience Executive with 13+ years shaping monetization and platform products, building independent teams, and maintaining experience coherence under growth pressure.
+> Product designer and Chief Design Officer at Buzzvil (Seoul). 15 years in product design, 12 at Buzzvil. Designs in code and builds agent-consumable design systems and the tooling on top of them. Focus: AI-native design, interaction systems, design-in-code.
 
 Website: https://mmaxence.me
-Role: CDO at Buzzvil, Seoul, South Korea
-Focus: Product design leadership, interaction systems, design systems, team building
+Role: Chief Design Officer at Buzzvil, Seoul, South Korea (hands-on IC)
+Focus: AI-native design, interaction systems, design systems, design-in-code (React/TypeScript), agent-consumable tooling
 
 ---
 

@@ -19,25 +19,44 @@ const siteUrl = "https://mmaxence.me";
 const currentUrl = url || (Astro.url.pathname.endsWith('/') ? new URL(Astro.url.pathname, siteUrl).href : new URL(Astro.url.pathname + '/', siteUrl).href);
 const ogImage = featured_image
   ? (featured_image.startsWith('http') ? featured_image : new URL(featured_image, siteUrl).href)
-  : new URL('/images/maxence_mauduit_portrait.jpg', siteUrl).href;
+  : new URL('/images/mmaxence-og.png', siteUrl).href;
+const ogImageAlt = featured_image ? title : 'Maxence Mauduit — Product Designer';
+const ogIsCard = !featured_image; // branded fallback card, known dimensions (2100x1193)
 
 // JSON-LD structured data
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Maxence Mauduit",
+  "alternateName": "mmaxence",
   "url": siteUrl,
+  "image": new URL('/images/mmaxence-og.png', siteUrl).href,
+  "email": "contact@mmaxence.me",
   "jobTitle": "Chief Design Officer",
+  "description": "Product designer and design leader. 15 years in product design, 12 at Buzzvil, across product, system, and brand. Designs in code and builds agent-consumable design systems and the tooling on top of them. Has led the pivots and the team that scaled the business toward IPO readiness, and remains a hands-on IC.",
   "worksFor": {
     "@type": "Organization",
     "name": "Buzzvil",
     "url": "https://www.buzzvil.com"
   },
+  "homeLocation": { "@type": "Place", "name": "Seoul, South Korea" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "Arts et Métiers ParisTech (ENSAM)" },
+    { "@type": "CollegeOrUniversity", "name": "L'École de Design Nantes Atlantique" }
+  ],
   "sameAs": [
     "https://www.linkedin.com/in/mmaxence/",
-    "https://github.com/mmaxence"
+    "https://github.com/mmaxence",
+    "https://mmaxence.medium.com",
+    "https://mmaxence.substack.com",
+    "https://x.com/mmaxence",
+    "https://bsky.app/profile/mmaxence.bsky.social"
   ],
-  "knowsAbout": ["Product Design", "Interaction Design", "Design Systems", "Product Management", "Leadership", "UX Design"]
+  "knowsAbout": [
+    "AI-native Design", "Design Engineering", "Design in Code", "Agent-consumable Design Systems",
+    "Interaction Design", "Design Systems", "Product Design", "Product Management",
+    "Server-driven UI", "React", "TypeScript", "Design Leadership", "UX Design"
+  ]
 };
 
 const websiteSchema = {
@@ -45,7 +64,7 @@ const websiteSchema = {
   "@type": "WebSite",
   "name": "Maxence Mauduit",
   "url": siteUrl,
-  "description": "Product Design Leader (CDO) specializing in building interaction systems that bridge complex business logic and high-performance user experiences.",
+  "description": "Maxence Mauduit is a product designer and design leader (CDO at Buzzvil). He designs in code, builds agent-consumable design systems, and works at the intersection of AI-native design, interaction systems, and execution.",
   "author": { "@type": "Person", "name": "Maxence Mauduit" }
 };
 
@@ -92,6 +111,9 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {ogIsCard && <meta property="og:image:width" content="2100" />}
+    {ogIsCard && <meta property="og:image:height" content="1193" />}
     {featured_image && (() => {
       // Determine image type from extension
       const ext = featured_image.split('.').pop()?.toLowerCase();
@@ -107,6 +129,7 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:src" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     
     <ViewTransitions />
     <script is:inline>
