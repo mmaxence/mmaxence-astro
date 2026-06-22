@@ -11,7 +11,7 @@ Claude is sleeping, and I take this moment to write an article about stories. LL
 
 ⸻
 
-My son stands seated on the floor, next to his bed, comfortably on a pillow he repurposes for that exact moment, every day. The evening is calm now, after the dinner storm, it’s warm like these few days before the humid and hot Korean summer starts. We are in June, the sky is getting enveloped by a dark blue coat, and 8 PM just passed.
+My son sits on the floor, next to his bed, comfortably on a pillow he repurposes for that exact moment, every day. The evening is calm now, after the dinner storm, it’s warm like these few days before the humid and hot Korean summer starts. We are in June, the sky is getting enveloped by a dark blue coat, and 8 PM just passed.
 
 He is steady, calmly waiting for what is to come. In a day, this is a rare picture. A 4-year-old isn’t meant to stand still (you will agree if you have or had kids of this age, you can trust me if you don’t).
 
@@ -65,7 +65,7 @@ I always loved working on the tiny details, the small interaction that makes a p
 
 Now, I can describe all these small details and have them integrated right inside the product. If a customer suggestion surfaces and is judged a real improvement, design can directly implement it, without the need for review, as the effort is reduced to nearly 0.
 
-To bring back my previous metaphor, it’s like if a customer was pointing out an uncomfortable part of the chair they are sitting in, and this comment triggers a short discussion quickly followed by the designer directly implementing the request as the customer is still seated (minus the awkwardness of that metaphoric situation ^^).
+To bring back my previous metaphor, it’s like if a customer was pointing out an uncomfortable part of the chair they are sitting in, and this comment triggers a short discussion quickly followed by the designer directly implementing the request as the customer is still seated (minus the awkwardness of that metaphor).
 
 From a design perspective, even if my ideas worked well in my head or in a prototype, they could never be autonomously tested on the live product. It created issues, surfaced edge cases, etc.
 
@@ -77,14 +77,14 @@ Imagine that you sit on that chair, and while you do, you can fix all the small 
 
 And so the second book closes, and he asks for one more. Every night, the same negotiation to stretch the moment a bit longer. I say no, it’s late.
 
-I look at him on his pillow and it hits me that we are doing the same thing, him and me. He listens to stories, I tell them. It just took me most of my life to figure out how to tell mine ^^.
+I look at him on his pillow and it hits me that we are doing the same thing, him and me. He listens to stories, I tell them. It just took me most of my life to figure out how to tell mine.
 
 The tool, even if for now interfaced through a terminal, has never felt more natural to use. Between the stories I have in mind and these stories tested on the product, the gap has narrowed down to only a few prompts.
 
-So if you ask me what makes a good designer today, my answer is simple.. a good story, and the guts to tell it.
+So if you ask me what makes a good designer today, my answer is simple: a good story, and the guts to tell it.
 
 Claude is still asleep. I have a few minutes left. What a time to be alive, what a time to tell stories!
 
 ⸻
 
-*P.S. Full disclosure.. I did wake Claude up in the end, just to check for typos (there were a few ^^)*
+*P.S. Full disclosure: I did wake Claude in the end, to read this over before posting.*

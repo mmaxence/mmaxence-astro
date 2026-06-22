@@ -56,12 +56,12 @@ const techStack = [
       <AnimatedContent delay="0">
         <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">About This Website</h1>
         <div class="prose prose-lg max-w-none text-base leading-relaxed mb-12 text-theme">
-          <p>This website is built with modern web technologies, focusing on performance, accessibility, and a delightful user experience. It features interactive SVG visuals, responsive design, and a unique random theme system. It's a showcase of how to build a fast, beautiful portfolio/blog using cutting-edge static site generation.</p>
+          <p>This is the colophon — the rest of the site is the bio. It's hand-built in code and open source. Below: what it runs on, and the one easter egg worth explaining.</p>
           
           <p class="mt-4">The homepage includes five distinct interactive visual components that reinforce the mental models described in each section, all built with React and SVG for smooth, performant animations.</p>
           
           <p class="mt-6 p-4 bg-theme rounded border-l-4 border-theme-accent">
-            <strong class="font-mono">✨ Open Source:</strong> This entire project is available as a <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=24" alt="" width="14" height="14" class="inline-card-icon" />public repository on GitHub</a>. Feel free to use it as a starting point for your own portfolio, blog, or website. Fork it, customize it, and make it your own!
+            <strong class="font-mono">Open source:</strong> the full source is <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=24" alt="" width="14" height="14" class="inline-card-icon" />on GitHub</a> if you want to see how any of it is put together.
           </p>
         </div>
       </AnimatedContent>
@@ -101,22 +101,6 @@ const techStack = [
 
       <AnimatedContent delay={techStack.length * 100}>
         <div class="mt-16 p-6 bg-theme rounded-lg border border-theme">
-          <h2 class="text-2xl font-mono font-light mb-4">Design Philosophy</h2>
-          <div class="prose prose-lg max-w-none text-base leading-relaxed text-theme">
-            <p>This website embodies several key principles:</p>
-            <ul class="list-disc pl-6 space-y-2 mt-4">
-              <li><strong>Performance First:</strong> Static generation, minimal JavaScript, and optimized assets ensure fast load times and smooth interactions.</li>
-              <li><strong>Design System:</strong> Consistent typography, spacing, and colors defined through CSS variables and Tailwind utilities.</li>
-              <li><strong>Accessibility:</strong> Semantic HTML, proper ARIA labels, and keyboard navigation support.</li>
-              <li><strong>Progressive Enhancement:</strong> Core content works without JavaScript, with enhancements for modern browsers.</li>
-              <li><strong>Developer Experience:</strong> Type-safe content collections, component-based architecture, and clear code organization.</li>
-            </ul>
-          </div>
-        </div>
-      </AnimatedContent>
-
-      <AnimatedContent delay={(techStack.length + 1) * 100}>
-        <div class="mt-16 p-6 bg-theme rounded-lg border border-theme">
           <h2 class="text-2xl font-mono font-light mb-4">A Hidden Pairing</h2>
           <div class="prose prose-lg max-w-none text-base leading-relaxed text-theme">
             <p>The homepage hero hides a small toy. The portrait is a flip disc, and tapping it (or the three shapes beside it) cycles through a short series of photos, each one paired with a theme that recolors the whole site to match.</p>
@@ -138,7 +122,7 @@ const techStack = [
         </div>
       </AnimatedContent>
 
-      <AnimatedContent delay={(techStack.length + 2) * 100}>
+      <AnimatedContent delay={(techStack.length + 1) * 100}>
         <div class="mt-12 text-center">
           <div class="ref-links" style="justify-content: center;">
             <span class="ref-label">Source:</span>
