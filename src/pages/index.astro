@@ -31,9 +31,9 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
 <BaseLayout title="Maxence Mauduit · Designing what should exist, and the systems that build it" description="Product designer. 15 years across product, system, and brand, 12 at one company. I build the design infrastructure people and AI agents work within, and I still design in code.">
   <Header />
-  <PageContent class="flex flex-col">
+  <PageContent class="flex flex-col pb-4">
   <!-- Hero Section - Full Viewport -->
-  <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-0">
+  <section class="min-h-screen flex flex-col items-center justify-center px-4 md:px-8 lg:px-12">
     <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
         <div
@@ -54,7 +54,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
         </div>
       </AnimatedContent>
       <AnimatedContent delay={100}>
-        <h1 class="text-center text-3xl md:text-5xl m-0 leading-tight font-heading font-normal text-theme">
+        <h1 class="text-center text-4xl md:text-5xl m-0 font-heading font-normal text-theme">
           I build the systems people and agents design within.
         </h1>
       </AnimatedContent>
@@ -68,26 +68,26 @@ const featuredDeepdive = (await getCollection('deepdives'))
   
   <!-- Main Content Sections -->
     {/* WHAT I DO */}
-    <HomeSection title="WHAT I DO" delay={0}>
-      <p slot="pre-visual" class="mt-4 max-w-2xl text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
-      <WhatIDoVisual slot="visual" client:visible />
-      <div slot="post-visual">
-        <p class="mt-4 max-w-2xl text-balance">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
-        <p class="mt-4 max-w-2xl">
+    <HomeSection title="What I do">
+      <p slot="pre-visual" class="section-lede text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
+      <div slot="aside">
+        <p class="mt-6 text-balance">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
+        <p class="mt-6">
           <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />View my resume</a> for a detailed overview of my experience and impact.
         </p>
       </div>
+      <WhatIDoVisual slot="visual" client:visible />
     </HomeSection>
     
     {/* THE CRAFT */}
-    <HomeSection title="THE CRAFT" delay={25}>
-      <p slot="pre-visual" class="mt-4">I build the systems that people and agents design within.</p>
+    <HomeSection title="The craft" flip>
+      <p slot="pre-visual" class="section-lede text-balance">The work that matters most now is not drawing screens. It is encoding judgment into systems.</p>
+      <div slot="aside">
+        <p class="mt-6 text-balance">When judgment lives in the system, good things get made without anyone standing over the work. People design with them, agents design within them.</p>
+      </div>
       <TheCraftVisual slot="visual" client:visible />
       <div slot="post-visual">
-        <div class="mt-6">
-          <p class="max-w-2xl text-balance">The work that matters most now is not drawing screens. It is encoding judgment into systems, so good things get made without anyone standing over the work. People design with them, agents design within them.</p>
-          <p class="mt-4 max-w-2xl text-balance">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use (@buzzvil/design-library), the interaction recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
-        </div>
+        <p class="max-w-3xl text-balance">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use (@buzzvil/design-library), the interaction recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
 
         <div class="craft-grid craft-grid-3 mt-10">
           <div class="craft-cell">
@@ -120,73 +120,74 @@ const featuredDeepdive = (await getCollection('deepdives'))
     </HomeSection>
 
     {/* EXPERIENCE SNAPSHOT */}
-    <HomeSection title="EXPERIENCE SNAPSHOT" delay={50}>
-      <p slot="pre-visual" class="mt-4">15 years of shaping products, building teams, and the systems that hold them together.</p>
+    <HomeSection title="Experience snapshot" label=".experience">
+      <p slot="pre-visual" class="section-lede text-balance">15 years of shaping products, building teams, and the systems that hold them together.</p>
+      <div slot="aside">
+        <p class="mt-6">Every stage feeds the next: define what should exist, systematize how it gets built, scale the people and platforms that carry it. For the full story, see my <a href="/timeline" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />experience timeline</a>.</p>
+      </div>
       <ExperienceSnapshotVisual slot="visual" client:visible />
       <div slot="post-visual">
-        <div class="mt-8">
-          <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Product Designer & Design Leader</h2>
-          <p class="text-base font-normal mt-1 text-theme-muted">Buzzvil · Seoul · 2014–Present</p>
-          
-          <ul class="mt-6 space-y-2 list-none pl-0">
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Helped shape and initiate the company's defining pivots (consumer to B2B SDK, then Offerwall), back when the right move was not yet obvious</span>
-            </li>
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Shaped the first version of nearly every major product and monetization model</span>
-            </li>
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Built a small, high-retention design team that ships through PRs</span>
-            </li>
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Now building the agent-consumable design infrastructure the team and our AI agents compose within</span>
-            </li>
-          </ul>
-          <div class="ref-links mt-6">
-            <span class="ref-label">See also:</span>
-            <a href="/blog/i-dont-like-ads" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />I Don't Like Ads</a>
-            <a href="https://www.buzzvil.com/en/company/about_us" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />About Us</a>
-            <a href="https://docs.buzzvil.com/" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=docs.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Buzzvil Docs</a>
-            <a href="https://design.buzzvil.com" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=design.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
+        <div class="craft-grid craft-grid-2">
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">Product Designer & Design Leader</h3>
+            <p class="text-sm text-theme-muted !mt-0 mb-4">Buzzvil · Seoul · 2014–Present</p>
+            <ul class="space-y-2 list-none pl-0 mb-2">
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Helped shape and initiate the company's defining pivots (consumer to B2B SDK, then Offerwall), back when the right move was not yet obvious</span>
+              </li>
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Shaped the first version of nearly every major product and monetization model</span>
+              </li>
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Built a small, high-retention design team that ships through PRs</span>
+              </li>
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Now building the agent-consumable design infrastructure the team and our AI agents compose within</span>
+              </li>
+            </ul>
+            <div class="ref-links">
+              <span class="ref-label">See also:</span>
+              <a href="/blog/i-dont-like-ads" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />I Don't Like Ads</a>
+              <a href="https://www.buzzvil.com/en/company/about_us" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />About Us</a>
+              <a href="https://docs.buzzvil.com/" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=docs.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Buzzvil Docs</a>
+              <a href="https://design.buzzvil.com" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=design.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
+            </div>
           </div>
-        </div>
-        
-        <div class="mt-12">
-          <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">UX Design Lead</h2>
-          <p class="text-base font-normal mt-1 text-theme-muted">CMS Group · Paris · 2011–2014</p>
-          
-          <ul class="mt-6 space-y-2 list-none pl-0">
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Led UX for enterprise and SaaS products</span>
-            </li>
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Co-published research on co-design validation methods</span>
-            </li>
-            <li class="flex items-start">
-              <span class="mr-2 text-theme-muted">•</span>
-              <span>Built an education SaaS bridging design intent and production code</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="mt-8">
-          <p class="text-base">For more details, see my <a href="/timeline" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />full experience timeline</a>.</p>
+          <div class="craft-cell">
+            <h3 class="text-base font-heading font-bold">UX Design Lead</h3>
+            <p class="text-sm text-theme-muted !mt-0 mb-4">CMS Group · Paris · 2011–2014</p>
+            <ul class="space-y-2 list-none pl-0 mb-2">
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Led UX for enterprise and SaaS products</span>
+              </li>
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Co-published research on co-design validation methods</span>
+              </li>
+              <li class="flex items-start">
+                <span class="mr-2 text-theme-muted">•</span>
+                <span>Built an education SaaS bridging design intent and production code</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </HomeSection>
-    
+
     {/* HOW I WORK */}
-    <HomeSection title="HOW I WORK" delay={100}>
-      <p slot="pre-visual" class="mt-4">Tight discovery loops, clear intent, and execution that doesn't depend on me.</p>
+    <HomeSection title="How I work" flip>
+      <p slot="pre-visual" class="section-lede text-balance">Tight discovery loops, clear intent, and execution that doesn't depend on me.</p>
+      <div slot="aside">
+        <p class="mt-6 text-balance">Discovery is where I spend the effort: understanding the constraint, the tradeoff, the intent. Delivery is what that effort buys: fast, clean, and without rework.</p>
+      </div>
       <HowIWorkVisual slot="visual" client:visible />
       <div slot="post-visual">
-        <div class="craft-grid mt-10">
+        <div class="craft-grid">
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Deliberate thinking, fast execution</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Investing heavily upfront to clarify constraints, tradeoffs, and intent, so execution moves quickly without rework.</p>
@@ -220,34 +221,33 @@ const featuredDeepdive = (await getCollection('deepdives'))
     </HomeSection>
     
     {/* BEYOND THE ROLE */}
-    <HomeSection title="BEYOND THE ROLE" delay={200}>
-      <p slot="pre-visual" class="mt-4">Sustainable pace, continuous learning, and systems thinking beyond work.</p>
-      <BeyondTheRoleVisual slot="visual" client:visible />
-      <div slot="post-visual">
-        <p class="mt-4 max-w-2xl text-balance">I value sustainable performance and depth over constant acceleration.</p>
-        <p class="mt-4 max-w-2xl text-balance">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>
+    <HomeSection title="Beyond the role" label=".beyond">
+      <p slot="pre-visual" class="section-lede text-balance">Sustainable pace, continuous learning, and systems thinking beyond work.</p>
+      <div slot="aside">
+        <p class="mt-6 text-balance">I value sustainable performance and depth over constant acceleration.</p>
+        <p class="mt-4 text-balance">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>
       </div>
+      <BeyondTheRoleVisual slot="visual" client:visible />
     </HomeSection>
     
     {/* Featured Deep Dive */}
     {featuredDeepdive && (
-      <section class="flex flex-col items-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <section class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-20 md:py-28">
         <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
-          <AnimatedContent delay={325}>
+          <AnimatedContent>
             <div class="w-full">
-              <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Featured Deep Dive</h2>
-              <a href={`/deepdives/${featuredDeepdive.slug}/`} class="featured-deepdive-card mt-12 block no-underline border-none hover:bg-transparent">
-                <article class="p-6 md:p-10" style="border: 1px solid var(--theme-border); border-radius: var(--theme-radius);">
-                  <p class="text-xs uppercase tracking-widest mb-4" style="color: var(--theme-text-muted);">Deep Dive</p>
-                  <h3 class="text-2xl md:text-4xl font-mono font-light mb-3" style="color: var(--theme-text);">
+              <h2 class="section-kicker">Featured deep dive</h2>
+              <a href={`/deepdives/${featuredDeepdive.slug}/`} class="featured-deepdive-card mt-8 block no-underline border-none hover:bg-transparent">
+                <article class="p-6 md:p-10">
+                  <h3 class="text-2xl md:text-4xl font-mono font-light mb-3 text-theme">
                     {featuredDeepdive.data.title}
                   </h3>
                   {featuredDeepdive.data.description && (
-                    <p class="text-base md:text-lg leading-relaxed" style="color: var(--theme-text-muted);">
+                    <p class="text-base md:text-lg leading-relaxed text-theme-muted">
                       {featuredDeepdive.data.description}
                     </p>
                   )}
-                  <p class="mt-6 text-sm font-mono" style="color: var(--theme-text);">Read the full playbook →</p>
+                  <p class="mt-6 text-sm font-mono text-theme">Read the deep dive →</p>
                 </article>
               </a>
             </div>
@@ -258,14 +258,14 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
     {/* Blog Posts */}
     {blogPosts.length > 0 && (
-      <section class="min-h-screen flex flex-col items-center justify-center px-3 md:px-8 lg:px-12 py-12 md:py-16">
+      <section class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-20 md:py-28">
         <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
-          <AnimatedContent delay={350}>
+          <AnimatedContent>
             <div class="w-full">
-              <h2 class="text-2xl md:text-3xl font-light font-body !mb-0">Selected Writing</h2>
-              <CardGrid columns={3} class="mt-12">
+              <h2 class="section-kicker">Selected writing</h2>
+              <CardGrid columns={3} class="mt-8">
                 {blogPosts.map((post, index) => (
-                  <AnimatedContent delay={400 + (index * 50)}>
+                  <AnimatedContent delay={index * 75}>
                     <BlogCard post={post} />
                   </AnimatedContent>
                 ))}
@@ -277,7 +277,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
     )}
 
     {/* Substrate Newsletter CTA */}
-    <SubstrateCTA variant="section" delay={500} />
+    <SubstrateCTA variant="section" />
 
   </PageContent>
       <Footer />
@@ -392,10 +392,16 @@ const featuredDeepdive = (await getCollection('deepdives'))
     border: 1px solid var(--theme-border);
     border-radius: var(--theme-radius);
     overflow: hidden;
+    /* 1px borders between cells via background on parent */
+    background: var(--theme-border);
   }
 
   .craft-grid-3 {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .craft-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .craft-cell {
@@ -406,25 +412,24 @@ const featuredDeepdive = (await getCollection('deepdives'))
   }
 
   .craft-cell h3 {
-    margin-bottom: 1.75rem !important;
+    margin-bottom: 0.75rem !important;
     font-size: 1.125rem;
   }
 
   .craft-cell .ref-links {
     margin-top: auto;
     padding-top: 1rem;
-    margin-top: 1rem;
     border-top: 1px solid var(--theme-border);
-  }
-
-  /* 1px borders between cells via background on parent */
-  .craft-grid {
-    background: var(--theme-border);
   }
 
   @media (max-width: 1024px) {
     .craft-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Odd cell counts: last cell spans the full row instead of leaving a hole */
+    .craft-grid-3 .craft-cell:last-child {
+      grid-column: 1 / -1;
     }
   }
 
@@ -434,62 +439,19 @@ const featuredDeepdive = (await getCollection('deepdives'))
     }
   }
 
-  /* Prevent hover effects on index content sections containing SVG images */
-  .index-content-section {
-    pointer-events: auto;
-  }
-  
-  /* Remove hover effects from principle card divs containing SVG images */
-  .index-content-section > div > div.my-8 {
-    transition: none !important;
-  }
-  
-  .index-content-section > div > div.my-8:hover {
-    box-shadow: none !important;
-    transform: none !important;
+  /* Featured deep dive card — same card language as blog/book cards */
+  .featured-deepdive-card article {
+    border: 1px solid var(--theme-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--theme-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
-  /* Section visuals styling - prevent text selection */
-  .index-content-section svg,
-  .index-content-section svg * {
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    pointer-events: none;
+  .featured-deepdive-card:hover article {
+    border-color: var(--theme-accent);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
   }
-  
-  /* Re-enable pointer events for interactive elements if needed */
-  .index-content-section svg path,
-  .index-content-section svg circle,
-  .index-content-section svg line,
-  .index-content-section svg g {
-    pointer-events: auto;
-  }
-  
-  /* Specifically target text elements */
-  .index-content-section svg text {
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    pointer-events: none !important;
-  }
-  
-  .index-content-section svg {
-    display: block;
-    width: 100% !important;
-    height: auto;
-    max-width: 100% !important;
-  }
-
-  /* Force visual wrapper divs to fill container width */
-  .index-content-section > div[class*="my-8"] {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow: visible !important;
-  }
-  
 
   /* Respect reduced motion */
   @media (prefers-reduced-motion: reduce) {
@@ -534,6 +496,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
     let index = 0;
     let busy = false;
+    let currentSpin = null; // in-flight Web Animation, so a click can fast-forward it
+    let queuedTarget = null; // () => targetIndex, queued while a spin is being fast-forwarded
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Restore the photo that pairs with the persisted theme (kept in sync on every flip).
@@ -569,7 +533,11 @@ const featuredDeepdive = (await getCollection('deepdives'))
         } else {
           landingFace.src = photos[target];
           // Decode the landing image up front; the spin paints it as it rotates in.
-          try { await landingFace.decode(); } catch (e) { /* fall through */ }
+          // decode() can hang (backgrounded tab, flaky network) — it's only an
+          // optimization, so never let it block the flip for more than a beat.
+          try {
+            await Promise.race([landingFace.decode(), new Promise((r) => setTimeout(r, 350))]);
+          } catch (e) { /* fall through */ }
 
           // Odd number of half-turns flips which face is forward, landing on the target.
           const halfTurns = [7, 9, 11][Math.floor(Math.random() * 3)];
@@ -588,7 +556,13 @@ const featuredDeepdive = (await getCollection('deepdives'))
             ],
             { duration, fill: 'forwards' }
           );
-          await spin.finished;
+          currentSpin = spin;
+          try {
+            await spin.finished;
+          } catch (e) {
+            /* cancelled mid-flight — land instantly below */
+          }
+          currentSpin = null;
           // Commit the landed orientation inline before cancelling, so there's no
           // one-frame revert to base.
           inner.style.transform = `rotateX(${to}deg) scale(1)`;
@@ -600,15 +574,37 @@ const featuredDeepdive = (await getCollection('deepdives'))
         backing.src = photos[index]; // the soft memory behind matches the new photo
       } finally {
         busy = false;
+        // A click landed while we were spinning: honor it now, so rapid taps
+        // keep advancing without waiting out each full spin.
+        if (queuedTarget) {
+          const queued = queuedTarget;
+          queuedTarget = null;
+          requestFlip(queued.getTarget, queued.withTheme);
+        }
       }
+    }
+
+    // Route every flip request through here. If a spin is in flight, fast-forward
+    // it (finish() jumps to the final frame) and queue this request — the flip's
+    // cleanup then runs it immediately. withTheme=false flips the photo only
+    // (used by Reset, where ThemeToast has already applied the default theme).
+    function requestFlip(getTarget, withTheme = true) {
+      if (busy) {
+        queuedTarget = { getTarget, withTheme };
+        if (currentSpin) currentSpin.finish();
+        return;
+      }
+      const target = getTarget();
+      if (withTheme && typeof window.applyHeroTheme === 'function') {
+        const slide = slides[target];
+        window.applyHeroTheme(slide.theme, slide.label);
+      }
+      flipTo(target);
     }
 
     // A tap advances the pair: matching theme first, then the spin + bloom.
     function advance() {
-      if (busy) return;
-      const target = (index + 1) % slides.length;
-      if (typeof window.applyHeroTheme === 'function') window.applyHeroTheme(slides[target].theme, slides[target].label);
-      flipTo(target);
+      requestFlip(() => (index + 1) % slides.length);
     }
 
     zone.addEventListener('click', advance);
@@ -619,8 +615,15 @@ const featuredDeepdive = (await getCollection('deepdives'))
       }
     });
 
+    // Hovering the hero teases the shapes with a gentler bloom.
+    zone.addEventListener('mouseenter', () => {
+      document.dispatchEvent(new CustomEvent('hero-hover'));
+    });
+
     // The Reset button (theme -> default) returns the photo to [0] too.
-    currentReset = () => flipTo(0);
+    // Photo only: ThemeToast already applied the default theme — re-applying
+    // slide 0's palette here would undo the reset.
+    currentReset = () => requestFlip(() => 0, false);
   }
 
   // Single document listener (document persists across view transitions).

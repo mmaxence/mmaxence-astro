@@ -48,7 +48,7 @@ const related = currentTags.length > 0
 <nav class="blog-post-nav mt-16 pt-8 border-t border-theme" aria-label="Blog post navigation">
   <div class="flex flex-col sm:flex-row justify-between gap-4">
     {prevPost ? (
-      <a href={`/blog/${prevPost.slug}`} class="blog-nav-link group flex-1 relative" data-nav="prev">
+      <a href={`/blog/${prevPost.slug}/`} class="blog-nav-link group flex-1 relative" data-nav="prev">
         <span class="text-sm text-theme-muted">Previous</span>
         <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors leading-snug">
           {prevPost.data.title}
@@ -62,7 +62,7 @@ const related = currentTags.length > 0
       </a>
     ) : <div class="flex-1" />}
     {nextPost ? (
-      <a href={`/blog/${nextPost.slug}`} class="blog-nav-link group flex-1 relative sm:text-right" data-nav="next">
+      <a href={`/blog/${nextPost.slug}/`} class="blog-nav-link group flex-1 relative sm:text-right" data-nav="next">
         <span class="text-sm text-theme-muted">Next</span>
         <span class="block mt-1 text-base text-theme group-hover:text-theme-accent transition-colors leading-snug">
           {nextPost.data.title}
@@ -81,7 +81,7 @@ const related = currentTags.length > 0
 {/* Related articles */}
 {related.length > 0 && (
   <section class="mt-12 pt-8 border-t border-theme">
-    <h2 class="text-lg font-mono font-light mb-6 text-theme-muted">Related</h2>
+    <h2 class="text-xl font-mono font-light text-theme mb-6">Related</h2>
     <CardGrid columns={2}>
       {related.map((post) => (
         <BlogCard post={post} />
@@ -95,7 +95,7 @@ const related = currentTags.length > 0
     text-decoration: none;
     padding: 0.75rem;
     border: 1px solid var(--theme-border);
-    border-radius: var(--theme-radius, 0.5rem);
+    border-radius: var(--radius-card-inner);
     transition: border-color 0.2s ease;
   }
 
@@ -143,7 +143,12 @@ const related = currentTags.length > 0
 </style>
 
 <script>
+  // Module-level flag: bind once per page view. astro:before-swap resets it so the
+  // astro:page-load init re-binds against the fresh DOM after client-side navs.
+  let kbNavBound = false;
+
   function initBlogKeyboardNav() {
+    if (kbNavBound) return;
     const nav = document.querySelector('.blog-post-nav');
     if (!nav) return;
 
@@ -151,8 +156,13 @@ const related = currentTags.length > 0
     const nextLink = nav.querySelector('[data-nav="next"]') as HTMLAnchorElement | null;
 
     function onKeydown(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
       // Don't navigate if user is typing in an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target instanceof HTMLElement && e.target.isContentEditable)
+      ) return;
 
       if (e.key === 'ArrowLeft' && prevLink) {
         prevLink.click();
@@ -161,21 +171,22 @@ const related = currentTags.length > 0
       }
     }
 
+    kbNavBound = true;
     document.addEventListener('keydown', onKeydown);
 
     // Cleanup on page transition
     document.addEventListener('astro:before-swap', () => {
+      kbNavBound = false;
       document.removeEventListener('keydown', onKeydown);
     }, { once: true });
   }
 
+  // Bind early on hard loads (astro:page-load only fires at window `load` there,
+  // which slow images/analytics can delay); the flag prevents double-binding.
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBlogKeyboardNav);
+    document.addEventListener('DOMContentLoaded', initBlogKeyboardNav, { once: true });
   } else {
     initBlogKeyboardNav();
   }
-
-  document.addEventListener('astro:page-load', () => {
-    setTimeout(initBlogKeyboardNav, 50);
-  });
+  document.addEventListener('astro:page-load', initBlogKeyboardNav);
 </script>

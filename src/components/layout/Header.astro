@@ -25,9 +25,9 @@ function isActive(url: string): boolean {
 ---
 
 <header class="header-sticky header-border">
-  <nav class="header-nav pt-6 md:pt-16 pb-4 px-4 md:px-4" role="navigation">
-    <div class="flex flex-col md:flex-row items-start md:items-baseline justify-between max-w-screen-xl mx-auto gap-3 md:gap-6">
-      <a href="/" class="header-logo-link flex flex-row items-center mb-0 pl-0 md:pl-2 grow md:mr-3 no-underline hover:bg-transparent border-none group">
+  <nav class="header-nav pt-6 md:pt-16 pb-4 px-4 md:px-8 lg:px-12" role="navigation">
+    <div class="flex flex-col md:flex-row items-start md:items-baseline justify-between max-w-5xl mx-auto gap-3 md:gap-6">
+      <a href="/" class="header-logo-link flex flex-row items-center mb-0 pl-0 grow md:mr-3 no-underline hover:bg-transparent border-none group">
         <svg class="header-logo-svg mr-2 flex-shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110 self-start mt-[1px]" width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="512" height="512" rx="256" class="fill-[var(--theme-bg)]"/>
           <path d="M256 58.5142L427.028 157.257V354.743L256 453.486L84.9725 354.743V157.257L256 58.5142Z" class="fill-[var(--theme-text)]"/>
@@ -81,6 +81,10 @@ function isActive(url: string): boolean {
           <circle cx="10" cy="15" r="1.5" fill="currentColor"/>
         </svg>
       </button>
+
+      {/* Backdrop rendered in the template so it carries the Astro scope attribute
+          (a JS-created node never matches the scoped .mobile-menu-backdrop rules) */}
+      <div id="mobile-menu-backdrop" class="mobile-menu-backdrop"></div>
 
       {/* Mobile Bottom Sheet */}
       <div id="mobile-menu-bottomsheet" class="mobile-menu-bottomsheet">
@@ -166,7 +170,8 @@ function isActive(url: string): boolean {
     animation: nav-giggle 4s ease-in-out 1s infinite;
   }
 
-  /* Giggle occupies first 10% of the 4s cycle (0.4s), idle for the remaining 90% */
+  /* Easter egg: hover too long without clicking and the link giggles.
+     Giggle occupies first 10% of the 4s cycle (0.4s), idle for the remaining 90% */
   @keyframes nav-giggle {
     0%   { transform: rotate(0deg) translateX(0); }
     2%   { transform: rotate(-3deg) translateX(-2px); }
@@ -374,30 +379,19 @@ function isActive(url: string): boolean {
       return;
     }
 
-    // Clean up previous document-level listeners
+    // Clean up previous listeners (all listeners below share this signal)
     if (mobileMenuAbort) mobileMenuAbort.abort();
     mobileMenuAbort = new AbortController();
+    const signal = mobileMenuAbort.signal;
 
     // Update FAB overlay color on initialization
     updateFABOverlay();
 
-    // Get or create backdrop - ensure it exists before menu operations
-    let backdrop = document.getElementById('mobile-menu-backdrop');
-    if (!backdrop) {
-      backdrop = document.createElement('div');
-      backdrop.id = 'mobile-menu-backdrop';
-      backdrop.className = 'mobile-menu-backdrop';
-      document.body.appendChild(backdrop);
-    }
+    // Backdrop is rendered in the template (it needs the Astro scope attribute)
+    const backdrop = document.getElementById('mobile-menu-backdrop');
+    if (!backdrop) return;
 
     function openMenu() {
-      // Ensure backdrop exists
-      if (!backdrop || !document.getElementById('mobile-menu-backdrop')) {
-        backdrop = document.createElement('div');
-        backdrop.id = 'mobile-menu-backdrop';
-        backdrop.className = 'mobile-menu-backdrop';
-        document.body.appendChild(backdrop);
-      }
       bottomsheet.classList.add('sheet-open');
       backdrop.classList.add('backdrop-visible');
       fab.setAttribute('aria-expanded', 'true');
@@ -420,24 +414,20 @@ function isActive(url: string): boolean {
       }
     }
 
-    // Remove existing listeners by cloning
-    const newFab = fab.cloneNode(true);
-    fab.parentNode.replaceChild(newFab, fab);
-    const newFabElement = document.getElementById('mobile-menu-fab');
-
-    // FAB click handler
-    newFabElement.addEventListener('click', (e) => {
+    // FAB click handler — listener on the live node so openMenu/closeMenu's
+    // aria-expanded updates hit the button that's actually in the DOM
+    fab.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       toggleMenu();
-    });
+    }, { signal });
 
     // Close on backdrop click
     backdrop.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       closeMenu();
-    });
+    }, { signal });
 
     // Close on click outside bottomsheet (handles clicks on backdrop and anywhere outside)
     document.addEventListener('click', (e) => {
@@ -448,14 +438,14 @@ function isActive(url: string): boolean {
           closeMenu();
         }
       }
-    }, { signal: mobileMenuAbort!.signal });
+    }, { signal });
 
     // Close on menu item click (but not reset theme button)
     const menuItems = bottomsheet.querySelectorAll('.mobile-menu-item:not(.mobile-reset-theme-btn)');
     menuItems.forEach(item => {
       item.addEventListener('click', () => {
         setTimeout(closeMenu, 150); // Small delay for navigation
-      });
+      }, { signal });
     });
 
     // Reset theme button handler
@@ -467,7 +457,7 @@ function isActive(url: string): boolean {
           (window as any).resetThemeToDefault();
         }
         setTimeout(closeMenu, 150);
-      });
+      }, { signal });
     }
 
     // Close on escape key
@@ -475,7 +465,7 @@ function isActive(url: string): boolean {
       if (e.key === 'Escape' && bottomsheet.classList.contains('sheet-open')) {
         closeMenu();
       }
-    }, { signal: mobileMenuAbort!.signal });
+    }, { signal });
   }
 
   // Initialize on DOM ready

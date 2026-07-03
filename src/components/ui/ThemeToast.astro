@@ -31,11 +31,18 @@
       return;
     }
 
-    // Default theme definition
+    // Guard against double-init on the same DOM (astro:page-load also fires on
+    // the initial hard load) — otherwise Reset binds twice and dispatches
+    // 'hero-reset' twice, which the hero's flip queue would honor as two spins.
+    // View-transition navigations swap in a fresh toast without this flag.
+    if (toast.dataset.init) return;
+    toast.dataset.init = '1';
+
+    // Default theme definition — keep in sync with global.css :root and BaseLayout themes.default
     const defaultTheme = {
       '--theme-bg': '#ffffff',
-      '--theme-text': '#1f1f1f',
-      '--theme-text-muted': 'rgba(31, 31, 31, 0.6)',
+      '--theme-text': '#1a1a1a',
+      '--theme-text-muted': 'rgba(26, 26, 26, 0.6)',
       '--theme-accent': '#000000',
       '--theme-border': '#e5e7eb',
       '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -119,9 +126,9 @@
         };
       }
 
-      // Ensure minimum contrast of 3.0:1
+      // Ensure minimum contrast of 4.5:1 (WCAG AA for small text)
       const contrast = calculateContrast(pageBgRgb, toastRgb);
-      if (contrast < 3.0) {
+      if (contrast < 4.5) {
         // Adjust to meet minimum contrast
         if (pageLum < 0.5) {
           // Make toast even lighter
@@ -183,7 +190,7 @@
     // Initialize toast colors for current theme
     function initializeToastColors() {
       const currentBg = getComputedStyle(root).getPropertyValue('--theme-bg') || '#ffffff';
-      const currentText = getComputedStyle(root).getPropertyValue('--theme-text') || '#1f1f1f';
+      const currentText = getComputedStyle(root).getPropertyValue('--theme-text') || '#1a1a1a';
       const toastColors = getToastColors(currentBg, currentText);
       root.style.setProperty('--toast-bg', toastColors.bg);
       root.style.setProperty('--toast-text', toastColors.text);
@@ -465,10 +472,6 @@
   .reset-btn:focus {
     outline: 2px solid var(--toast-text);
     outline-offset: 2px;
-  }
-
-  .toast-subtitle {
-    margin-top: 2px;
   }
 
   /* Hide toast on mobile */

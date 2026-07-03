@@ -60,7 +60,7 @@ const nextUrl = currentPage < totalPages
 <BaseLayout title="Blog" description="Essays on product design in the AI age: the systems people and agents design within, working in code, and the judgment that doesn't automate.">
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+    <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay={0}>
         <PageHeader
           title="Blog"
@@ -71,7 +71,7 @@ const nextUrl = currentPage < totalPages
       {isFirstPage && featured.length > 0 && (
         <div class="mb-16">
           <AnimatedContent delay={40}>
-            <h2 class="text-xl md:text-2xl font-light font-body !mb-1 text-theme">The AI series</h2>
+            <h2 class="text-2xl md:text-3xl font-mono font-light !mb-1 text-theme">The AI series</h2>
             <p class="text-sm text-theme-muted mb-6">Designing in the AI age, read in order.</p>
           </AnimatedContent>
           <AnimatedContent delay={60}>
@@ -97,14 +97,14 @@ const nextUrl = currentPage < totalPages
       )}
 
       {isFirstPage && (
-        <AnimatedContent delay={50}>
-          <h2 class="text-xl md:text-2xl font-light font-body mb-8 mt-4 text-theme">All writing</h2>
+        <AnimatedContent delay={80}>
+          <h2 class="text-2xl md:text-3xl font-mono font-light mb-8 text-theme">All writing</h2>
         </AnimatedContent>
       )}
 
       {heroPost && (
         <div class="mb-12 md:mb-16">
-          <AnimatedContent delay={50}>
+          <AnimatedContent delay={100}>
             <BlogCard post={heroPost} featured />
           </AnimatedContent>
         </div>
@@ -112,7 +112,7 @@ const nextUrl = currentPage < totalPages
 
       <CardGrid columns={2}>
         {gridPosts.map((post, index) => (
-          <AnimatedContent delay={(isFirstPage ? index + 1 : index) * 50 + 100}>
+          <AnimatedContent delay={Math.min(isFirstPage ? index + 1 : index, 6) * 50 + 150}>
             <BlogCard post={post} />
           </AnimatedContent>
         ))}
@@ -159,7 +159,7 @@ const nextUrl = currentPage < totalPages
     text-decoration: none;
     padding: 0.75rem 1rem;
     border: 1px solid var(--theme-border);
-    border-radius: var(--theme-radius, 0.5rem);
+    border-radius: var(--radius-card-inner);
     transition: border-color 0.2s ease;
   }
 
@@ -190,7 +190,7 @@ const nextUrl = currentPage < totalPages
     margin: 0;
     padding: 0;
     border: 1px solid var(--theme-border);
-    border-radius: var(--theme-radius, 0.5rem);
+    border-radius: var(--radius-card);
     overflow: hidden;
   }
   .start-here-item + .start-here-item {
@@ -263,7 +263,12 @@ const nextUrl = currentPage < totalPages
 </style>
 
 <script>
+  // Module-level flag: bind once per page view. astro:before-swap resets it so the
+  // astro:page-load init re-binds against the fresh DOM after client-side navs.
+  let paginationNavBound = false;
+
   function initBlogPaginationNav() {
+    if (paginationNavBound) return;
     const nav = document.querySelector('.blog-pagination');
     if (!nav) return;
 
@@ -271,7 +276,12 @@ const nextUrl = currentPage < totalPages
     const nextLink = nav.querySelector('[data-nav="next"]') as HTMLAnchorElement | null;
 
     function onKeydown(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target instanceof HTMLElement && e.target.isContentEditable)
+      ) return;
 
       if (e.key === 'ArrowLeft' && prevLink) {
         prevLink.click();
@@ -280,20 +290,21 @@ const nextUrl = currentPage < totalPages
       }
     }
 
+    paginationNavBound = true;
     document.addEventListener('keydown', onKeydown);
 
     document.addEventListener('astro:before-swap', () => {
+      paginationNavBound = false;
       document.removeEventListener('keydown', onKeydown);
     }, { once: true });
   }
 
+  // Bind early on hard loads (astro:page-load only fires at window `load` there,
+  // which slow images/analytics can delay); the flag prevents double-binding.
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBlogPaginationNav);
+    document.addEventListener('DOMContentLoaded', initBlogPaginationNav, { once: true });
   } else {
     initBlogPaginationNav();
   }
-
-  document.addEventListener('astro:page-load', () => {
-    setTimeout(initBlogPaginationNav, 50);
-  });
+  document.addEventListener('astro:page-load', initBlogPaginationNav);
 </script>

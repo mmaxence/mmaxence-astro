@@ -27,11 +27,11 @@
   --font-body: var(--theme-font-body);
   --font-heading: var(--theme-font-heading);
 
-  /* Font Sizes */
+  /* Font Sizes — strictly increasing so responsive bumps (text-base md:text-lg) actually step up */
   --text-base: 1.125rem; /* 18px - body text */
   --text-sm: 0.875rem; /* 14px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
+  --text-lg: 1.25rem; /* 20px */
+  --text-xl: 1.375rem; /* 22px */
   --text-2xl: 1.5rem; /* 24px */
   --text-3xl: 1.875rem; /* 30px */
   --text-4xl: 2.25rem; /* 36px */
@@ -129,16 +129,12 @@ body {
   font-size: var(--text-base);
   color: var(--theme-text) !important;
   background-color: var(--theme-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
-}
-
-/* Apply line-height and font-size-scale only when theme variables are set */
-[data-theme="ide"] body,
-[data-theme="pixel"] body {
-  line-height: var(--line-height-body);
-  font-size: calc(var(--text-base) * var(--font-size-scale, 1));
 }
 
 /* Force theme colors on all text elements */
@@ -151,50 +147,51 @@ li {
   color: var(--theme-text);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--theme-font-heading);
-  font-weight: 700; /* Anonymous Pro bold for all headings */
-  line-height: normal;
-  color: var(--theme-text);
-  transition:
-    font-family 0.3s ease,
-    color 0.3s ease;
-}
+/* Heading defaults live in @layer base so per-element utilities (font-light,
+   mb-4, leading-*) actually apply — the old unlayered rules silently forced
+   every heading to bold/normal-leading and defeated the declared styles.
 
-/* Apply line-height only for IDE theme headings (no font-size scaling) */
-[data-theme="ide"] h1,
-[data-theme="ide"] h2,
-[data-theme="ide"] h3,
-[data-theme="ide"] h4,
-[data-theme="ide"] h5,
-[data-theme="ide"] h6 {
-  line-height: var(--line-height-heading, normal);
-}
+   Type system: display mono is Regular (Anonymous Pro 400, tight tracking);
+   small mono labels (kickers, chips, cell titles) and article prose headings
+   stay Bold. font-light resolves to 400 — the lightest weight we ship. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--theme-font-heading);
+    font-weight: 700;
+    color: var(--theme-text);
+    text-wrap: balance;
+    transition:
+      font-family 0.3s ease,
+      color 0.3s ease;
+  }
 
-[data-theme="pixel"] h1,
-[data-theme="pixel"] h2,
-[data-theme="pixel"] h3,
-[data-theme="pixel"] h4,
-[data-theme="pixel"] h5,
-[data-theme="pixel"] h6 {
-  line-height: var(--line-height-heading);
-  font-size: calc(
-    1em * var(--font-size-scale-heading, var(--font-size-scale, 1))
-  );
-}
+  h1 {
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
 
-/* H1 and H2 headings need more bottom margin for better spacing */
-h1 {
-  margin-bottom: 2rem; /* More space after H1 headings */
-}
+  h2 {
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 2rem;
+  }
 
-h2 {
-  margin-bottom: 2rem; /* More space after H2 headings */
+  h3 {
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  h4,
+  h5,
+  h6 {
+    line-height: 1.35;
+  }
 }
 
 em {
@@ -210,50 +207,28 @@ a:visited {
   text-decoration: none;
 }
 
-/* Selection - use accent color with high contrast text */
-/* Default: white text (for dark accents like black) */
+/* Selection - accent background, page-bg text (contrasts with the accent the
+   same way page text contrasts with the page, so photo-paired themes stay legible) */
 ::selection {
   background: var(--theme-accent);
-  color: #ffffff;
+  color: var(--theme-bg);
 }
 
 ::-moz-selection {
   background: var(--theme-accent);
-  color: #ffffff;
+  color: var(--theme-bg);
 }
 
-/* Theme-specific selection text colors for light accents */
-[data-theme="ide"] ::selection,
-[data-theme="ide"] ::-moz-selection {
-  color: #1a1b26; /* Dark text for light blue accent */
-}
-
-[data-theme="pixel"] ::selection,
-[data-theme="pixel"] ::-moz-selection {
-  color: #2d5016; /* Dark green text for light green-gray accent */
-}
-
-/* Mark/highlight - use accent color as background with high contrast text */
-/* Default: white text (for dark accents like black) */
+/* Mark/highlight - accent background, page-bg text */
 mark,
 .mark {
   font-family: var(--font-body); /* Keep body font for mark tags */
   background-color: var(--theme-accent);
-  color: #ffffff;
+  color: var(--theme-bg);
   padding: 0 0.125em;
   border-radius: 0.125em;
 }
 
-/* Theme-specific mark text colors for light accents */
-[data-theme="ide"] mark,
-[data-theme="ide"] .mark {
-  color: #1a1b26; /* Dark text for light blue accent */
-}
-
-[data-theme="pixel"] mark,
-[data-theme="pixel"] .mark {
-  color: #2d5016; /* Dark green text for light green-gray accent */
-}
 
 /* HR */
 hr {
@@ -271,16 +246,10 @@ hr {
   font-size: var(--text-base);
   color: var(--color-text);
   line-height: 1.75;
-  opacity: 0.9;
   contain: inline-size;
 }
 
 /* Apply line-height and font-size-scale only when theme variables are set */
-[data-theme="ide"] .prose,
-[data-theme="pixel"] .prose {
-  line-height: var(--line-height-body);
-  font-size: calc(var(--text-base) * var(--font-size-scale, 1));
-}
 
 .prose h1,
 .prose h2,
@@ -297,23 +266,7 @@ hr {
 }
 
 /* Apply line-height only when theme variables are set */
-[data-theme="ide"] .prose h1,
-[data-theme="ide"] .prose h2,
-[data-theme="ide"] .prose h3,
-[data-theme="ide"] .prose h4,
-[data-theme="ide"] .prose h5,
-[data-theme="ide"] .prose h6 {
-  line-height: var(--line-height-heading, normal);
-}
 
-[data-theme="pixel"] .prose h1,
-[data-theme="pixel"] .prose h2,
-[data-theme="pixel"] .prose h3,
-[data-theme="pixel"] .prose h4,
-[data-theme="pixel"] .prose h5,
-[data-theme="pixel"] .prose h6 {
-  line-height: var(--line-height-heading);
-}
 
 /* H1 and H2 headings need more bottom margin for better spacing */
 .prose h1 {
@@ -342,34 +295,10 @@ hr {
 }
 
 /* IDE theme prose headings use normal sizes (no scaling) */
-[data-theme="ide"] .prose h1,
-[data-theme="ide"] .prose h2,
-[data-theme="ide"] .prose h3 {
-  /* Use default sizes - no font-size scaling for IDE headings */
-}
 
-[data-theme="pixel"] .prose h1 {
-  font-size: calc(
-    var(--text-3xl) * var(--font-size-scale-heading, var(--font-size-scale, 1))
-  );
-}
 
-[data-theme="pixel"] .prose h2 {
-  font-size: calc(
-    var(--text-2xl) * var(--font-size-scale-heading, var(--font-size-scale, 1))
-  );
-}
 
-[data-theme="pixel"] .prose h3 {
-  font-size: calc(
-    var(--text-xl) * var(--font-size-scale-heading, var(--font-size-scale, 1))
-  );
-}
 
-[data-theme="ide"] .prose p,
-[data-theme="pixel"] .prose p {
-  font-size: calc(var(--text-base) * var(--font-size-scale, 1));
-}
 
 .prose img {
   margin-top: 1.5rem;
@@ -393,41 +322,21 @@ hr {
 }
 
 /* Theme-aware link underlines */
-[data-theme="ide"] .prose a {
-  border-bottom-color: rgba(192, 202, 245, 0.3);
-}
 
-[data-theme="ide"] .prose a:hover {
-  border-bottom-color: rgba(192, 202, 245, 0.6);
-}
 
-[data-theme="pixel"] .prose a {
-  border-bottom-color: rgba(45, 80, 22, 0.3);
-}
 
-[data-theme="pixel"] .prose a:hover {
-  border-bottom-color: rgba(45, 80, 22, 0.6);
-}
 
 .prose mark,
 .prose .mark {
   font-family: var(--font-body); /* Keep body font for mark tags in prose */
   background-color: var(--theme-accent);
-  color: #ffffff;
+  color: var(--theme-bg);
   padding: 0 0.125em;
   border-radius: 0.125em;
 }
 
 /* Theme-specific prose mark text colors for light accents */
-[data-theme="ide"] .prose mark,
-[data-theme="ide"] .prose .mark {
-  color: #1a1b26; /* Dark text for light blue accent */
-}
 
-[data-theme="pixel"] .prose mark,
-[data-theme="pixel"] .prose .mark {
-  color: #2d5016; /* Dark green text for light green-gray accent */
-}
 
 .prose blockquote {
   border-left: 3px solid var(--theme-accent);
@@ -449,13 +358,7 @@ hr {
 }
 
 /* Theme-aware blockquote backgrounds */
-[data-theme="ide"] .prose blockquote {
-  background: rgba(192, 202, 245, 0.08);
-}
 
-[data-theme="pixel"] .prose blockquote {
-  background: rgba(45, 80, 22, 0.06);
-}
 
 .prose ul,
 .prose ol {
@@ -484,9 +387,10 @@ hr {
   color: inherit;
 }
 
-/* Strong/bold — use body font, full opacity */
+/* Strong/bold — use body font; 600 reads as emphasis without going heavy
+   (Plus Jakarta Sans 600 is self-hosted) */
 .prose strong {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
 }
 
@@ -501,13 +405,7 @@ hr {
   word-break: break-word;
 }
 
-[data-theme="ide"] .prose code {
-  background: rgba(192, 202, 245, 0.12);
-}
 
-[data-theme="pixel"] .prose code {
-  background: rgba(45, 80, 22, 0.1);
-}
 
 /* Code blocks — override inline code styles */
 .prose pre {
@@ -527,15 +425,7 @@ hr {
   border-radius: 0;
 }
 
-[data-theme="ide"] .prose pre {
-  background: rgba(192, 202, 245, 0.06);
-  border-color: rgba(192, 202, 245, 0.15);
-}
 
-[data-theme="pixel"] .prose pre {
-  background: rgba(45, 80, 22, 0.04);
-  border-color: rgba(45, 80, 22, 0.12);
-}
 
 
 .prose table {
@@ -569,13 +459,7 @@ hr {
   background: rgba(0, 0, 0, 0.02);
 }
 
-[data-theme="ide"] .prose tbody tr:hover {
-  background: rgba(192, 202, 245, 0.05);
-}
 
-[data-theme="pixel"] .prose tbody tr:hover {
-  background: rgba(45, 80, 22, 0.04);
-}
 
 /* Horizontal rules */
 .prose hr {
@@ -600,7 +484,6 @@ hr {
 .ref-label {
   font-size: 0.75rem;
   color: var(--theme-text-muted);
-  opacity: 0.6;
   margin-right: 0.125rem;
 }
 
@@ -613,9 +496,13 @@ hr {
   color: var(--theme-text-muted);
   text-decoration: none;
   padding: 5px;
+  padding-bottom: 5px !important; /* beats the global a:not(...) underline padding */
   border: 1px solid var(--theme-border);
   border-radius: 0.25rem;
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
@@ -625,20 +512,8 @@ hr {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-[data-theme="ide"] .ref-link:hover {
-  background-color: rgba(192, 202, 245, 0.06);
-}
-
-[data-theme="pixel"] .ref-link:hover {
-  background-color: rgba(45, 80, 22, 0.04);
-}
-
 .ref-link::after {
   display: none !important;
-}
-
-.ref-link {
-  padding-bottom: 5px !important;
 }
 
 .ref-icon {
@@ -690,13 +565,7 @@ p:has(.inline-card) {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-[data-theme="ide"] .inline-card:hover {
-  background-color: rgba(192, 202, 245, 0.06);
-}
 
-[data-theme="pixel"] .inline-card:hover {
-  background-color: rgba(45, 80, 22, 0.04);
-}
 
 .inline-card::after {
   display: none !important;
@@ -727,44 +596,75 @@ p:has(.inline-card) {
 }
 
 /* Theme-aware link underlines */
-[data-theme="ide"] .content-link {
-  border-bottom-color: rgba(192, 202, 245, 0.3);
-}
 
-[data-theme="ide"] .content-link:hover {
-  border-bottom-color: rgba(192, 202, 245, 0.6);
-}
 
-[data-theme="pixel"] .content-link {
-  border-bottom-color: rgba(45, 80, 22, 0.3);
-}
 
-[data-theme="pixel"] .content-link:hover {
-  border-bottom-color: rgba(45, 80, 22, 0.6);
-}
 
 /* ============================================
-   INDEX PAGE SPECIFIC STYLES
+   INDEX SECTION SYSTEM — kicker + lede + visual
    ============================================ */
 
-.index h1,
-.index h2,
-.index h5 {
-  font-family: var(--font-heading);
-  font-weight: 700; /* Anonymous Pro bold */
+/* Small mono uppercase section label with a hairline extending to the right edge */
+.section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--theme-font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--theme-text-muted);
 }
 
-.index h2 {
-  font-weight: 700; /* Anonymous Pro bold */
+.section-kicker::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--theme-border);
 }
 
-.index h4 {
+/* Large body-font section lede — opens the copy column under the kicker */
+.section-lede {
+  max-width: 48rem;
+  font-family: var(--theme-font-body);
+  font-size: 1.375rem;
   font-weight: 400;
-  color: var(--color-text-muted);
+  line-height: 1.42;
+  letter-spacing: -0.011em;
+  color: var(--theme-text);
 }
 
-.index h5 {
-  color: var(--color-text-muted);
+@media (min-width: 768px) {
+  .section-lede {
+    font-size: 1.5rem;
+  }
+}
+
+/* Shared wrapper for the animated section visuals — fills its frame */
+.section-visual {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-visual svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.section-visual svg,
+.section-visual svg * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.section-visual svg text {
+  pointer-events: none;
 }
 
 /* ============================================
@@ -857,7 +757,7 @@ a.credential {
   border: none;
   outline: none;
   font-size: var(--text-sm);
-  color: silver;
+  color: var(--theme-text-muted);
 }
 
 a.credential:hover {

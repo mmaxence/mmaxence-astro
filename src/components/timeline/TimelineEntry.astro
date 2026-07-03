@@ -1,6 +1,5 @@
 ---
 import TagList from '../ui/TagList.astro';
-import { Fragment } from 'astro/jsx-runtime';
 
 interface RelatedLink {
   href: string;
@@ -38,23 +37,20 @@ function parseContent(text: string) {
         currentParagraph = [];
       }
       const heading = trimmed.replace(/^####\s*/, '').trim();
-      elements.push({ type: 'h4', content: heading });
-    } else if (trimmed.startsWith('###')) {
-      // Flush current paragraph if exists
-      if (currentParagraph.length > 0) {
-        elements.push({ type: 'p', content: currentParagraph.join(' ') });
-        currentParagraph = [];
-      }
-      const heading = trimmed.replace(/^###\s*/, '').trim();
       elements.push({ type: 'h3', content: heading });
     } else if (trimmed.startsWith('•')) {
-      // Bullet point - add to current paragraph or create new one
+      // Bullet point - group consecutive bullets into one list
       const bulletText = trimmed.replace(/^•\s*/, '').trim();
       if (currentParagraph.length > 0) {
         elements.push({ type: 'p', content: currentParagraph.join(' ') });
         currentParagraph = [];
       }
-      elements.push({ type: 'li', content: bulletText });
+      const last = elements[elements.length - 1];
+      if (last && last.type === 'ul') {
+        last.items.push(bulletText);
+      } else {
+        elements.push({ type: 'ul', items: [bulletText] });
+      }
     } else if (trimmed === '') {
       // Empty line - flush current paragraph
       if (currentParagraph.length > 0) {
@@ -99,9 +95,9 @@ function parseParagraph(text: string) {
 const parsedContent = parseContent(content);
 ---
 
-<article class="flex flex-col md:flex-row gap-6 md:gap-8 pb-8 border-b border-theme last:border-b-0">
+<article class="flex flex-col md:flex-row gap-2 md:gap-8">
   <div class="w-full md:w-1/5">
-    <div class="text-base font-mono font-normal text-theme-muted">
+    <div class="text-base font-mono font-normal md:leading-9 text-theme-muted">
       {period}
     </div>
   </div>
@@ -112,51 +108,52 @@ const parsedContent = parseContent(content);
     {description && (
       <p class="mb-4 mt-0.5 text-theme-muted">{description}</p>
     )}
-    <div class={`prose prose-lg max-w-none leading-relaxed text-theme ${!description ? 'mt-4' : ''}`}>
-      {parsedContent.map((element, idx) => {
-        if (element.type === 'h4') {
-          return <h4 key={idx} class="font-mono text-xl font-normal mt-8 mb-4 first:mt-0">{element.content}</h4>;
-        }
+    <div class={`prose max-w-none leading-relaxed text-theme ${!description ? 'mt-4' : ''}`}>
+      {parsedContent.map((element) => {
         if (element.type === 'h3') {
-          return <h3 key={idx} class="font-mono text-2xl font-normal mt-8 mb-4 first:mt-0">{element.content}</h3>;
+          return <h3 class="font-mono text-xl !font-normal !mt-8 !mb-4 first:!mt-0">{element.content}</h3>;
         }
-        if (element.type === 'li') {
-          const parts = parseParagraph(element.content);
+        if (element.type === 'ul') {
           return (
-            <div key={idx} class="mb-2 flex items-start">
-              <span class="mr-2 mt-1 text-theme-muted">•</span>
-              <span class="text-base flex-1">
-                {parts.map((part, i) => {
-                  if (part.type === 'link') {
-                    const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
-                    return (
-                      <a 
-                        key={i} 
-                        href={part.url} 
-                        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                        class="content-link"
-                      >
-                        {part.text}
-                      </a>
-                    );
-                  }
-                  return <Fragment key={i}>{part.content}</Fragment>;
-                })}
-              </span>
-            </div>
+            <ul class="space-y-2 mb-4" style="list-style: none; padding-left: 0;">
+              {element.items.map((item: string) => {
+                const parts = parseParagraph(item);
+                return (
+                  <li class="items-start" style="display: flex;">
+                    <span class="mr-2 mt-1 text-theme-muted">•</span>
+                    <span class="text-base flex-1">
+                      {parts.map((part) => {
+                        if (part.type === 'link') {
+                          const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
+                          return (
+                            <a
+                              href={part.url}
+                              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                              class="content-link"
+                            >
+                              {part.text}
+                            </a>
+                          );
+                        }
+                        return part.content;
+                      })}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           );
         }
         if (element.type === 'p') {
           const parts = parseParagraph(element.content);
           return (
-            <p key={idx} class="mb-4 text-base">
-              {parts.map((part, i) => {
+            <p class="mb-4 text-base">
+              {parts.map((part) => {
                 if (part.type === 'link') {
                   const isExternal = part.url.startsWith('http://') || part.url.startsWith('https://');
                   return (
-                    <a 
-                      key={i} 
-                      href={part.url} 
+                    <a
+                      href={part.url}
                       {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       class="content-link"
                     >
@@ -164,7 +161,7 @@ const parsedContent = parseContent(content);
                     </a>
                   );
                 }
-                return <Fragment key={i}>{part.content}</Fragment>;
+                return part.content;
               })}
             </p>
           );
@@ -173,7 +170,7 @@ const parsedContent = parseContent(content);
       })}
     </div>
     {relatedLinks && relatedLinks.length > 0 && (
-      <div class="ref-links mt-8 pt-8 border-t border-theme">
+      <div class="ref-links pt-8 border-t border-theme">
         <span class="ref-label">See also:</span>
         {relatedLinks.map((link) => {
           const isExternal = link.href.startsWith('http://') || link.href.startsWith('https://');

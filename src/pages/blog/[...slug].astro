@@ -58,14 +58,14 @@ const breadcrumbSchema = {
   title={post.data.title}
   description={post.data.description || post.data.title}
   featured_image={post.data.featured_image}
-  url={new URL(`/blog/${post.slug}`, Astro.site).href}
+  url={new URL(`/blog/${post.slug}/`, Astro.site).href}
   type="article"
   date={post.data.date}
 >
   <JsonLd data={breadcrumbSchema} />
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-    <article class="max-w-3xl mx-auto px-3 md:px-6 py-12">
+    <article class="max-w-3xl mx-auto px-3 md:px-8 py-12">
       {post.data.featured_image && (() => {
         const featuredImage = post.data.featured_image.startsWith('/') 
           ? post.data.featured_image 
@@ -113,19 +113,19 @@ const breadcrumbSchema = {
         </div>
       </header>
       
-          <div class="prose prose-lg max-w-none leading-relaxed text-theme opacity-90">
+          <div class="prose max-w-none leading-relaxed text-theme">
         <Content />
       </div>
 
       {videoId && (
         <section class="mt-12 pt-8 border-t border-theme">
-          <h2 class="text-xl font-mono font-light mb-2 text-theme">Related</h2>
+          <h2 class="text-xl font-mono font-light text-theme mb-6">Related</h2>
           {post.data.related_video_context && (
             <p class="text-sm mb-4 text-theme-muted">
               {post.data.related_video_context}
             </p>
           )}
-          <div class="aspect-video w-full max-w-2xl rounded-lg overflow-hidden">
+          <div class="aspect-video w-full rounded-lg overflow-hidden">
             <iframe
               src={`https://www.youtube.com/embed/${videoId}`}
               title="Related video"

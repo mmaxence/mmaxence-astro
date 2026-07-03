@@ -49,11 +49,12 @@ const breadcrumbSchema = {
   featured_image={post.data.featured_image}
   url={new URL(`/deepdives/${post.slug}`, Astro.site).href}
   type="article"
+  date={post.data.date}
 >
   <JsonLd data={breadcrumbSchema} />
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-    <article class="max-w-3xl mx-auto px-3 md:px-6 py-12">
+    <article class="max-w-3xl mx-auto px-3 md:px-8 py-12">
       {post.data.featured_image && (
         <div class="mb-8">
           <img
@@ -69,7 +70,7 @@ const breadcrumbSchema = {
           {post.data.title}
         </h1>
         <div class="flex items-center justify-between gap-4 flex-wrap">
-          <time class="text-sm" style="color: var(--theme-text-muted);">
+          <time class="text-sm text-theme-muted">
             {post.data.date.toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -82,7 +83,7 @@ const breadcrumbSchema = {
 
       {tocHeadings.length > 2 && (
         <nav class="deepdive-toc mb-10 p-5 md:p-6" aria-label="Table of contents">
-          <p class="text-xs uppercase tracking-widest mb-3" style="color: var(--theme-text-muted);">Contents</p>
+          <p class="text-xs uppercase tracking-widest mb-3 text-theme-muted">Contents</p>
           <ol class="list-none pl-0 space-y-1.5">
             {tocHeadings.map((h) => (
               <li class={h.depth === 3 ? 'toc-sub' : 'toc-main'}>
@@ -93,11 +94,13 @@ const breadcrumbSchema = {
         </nav>
       )}
 
-      <div class="prose prose-lg max-w-none leading-relaxed" style="color: var(--theme-text); opacity: 0.9;">
+      <div class="prose max-w-none leading-relaxed" style="color: var(--theme-text); opacity: 0.9;">
         <Content />
       </div>
 
       <SubstrateCTA variant="inline" />
+
+      <a href="/deepdives/" class="inline-block mt-10 text-sm text-theme-muted hover:!text-[var(--theme-text)] no-underline">← All deep dives</a>
 
       <style>
         .deepdive-toc {
@@ -129,8 +132,10 @@ const breadcrumbSchema = {
         .deepdive-toc .toc-sub .toc-link:hover {
           color: var(--theme-text);
         }
-        :global(html) {
-          scroll-behavior: smooth;
+        @media (prefers-reduced-motion: no-preference) {
+          :global(html) {
+            scroll-behavior: smooth;
+          }
         }
         :global(.prose h2),
         :global(.prose h3) {

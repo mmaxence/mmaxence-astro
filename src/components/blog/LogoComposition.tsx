@@ -81,6 +81,9 @@ export function LogoComposition() {
         border: '1px solid rgba(128,128,128,0.2)',
         aspectRatio: '3 / 1',
       }}
+      // initial matches COLOR_PAIRS[0] so the server-rendered markup already
+      // shows the composition — without it the box is blank until hydration
+      initial={{ backgroundColor: COLOR_PAIRS[0].bg }}
       animate={{ backgroundColor: pair.bg }}
       transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] as const }}
     >
@@ -95,9 +98,9 @@ export function LogoComposition() {
       >
         <motion.svg
           viewBox="0 0 1395 887"
-          fill="none"
           xmlns="http://www.w3.org/2000/svg"
           style={{ width: '28%', height: 'auto' }}
+          initial={{ fill: COLOR_PAIRS[0].logo }}
           animate={{
             fill: pair.logo,
             rotate: vibrate ? [0, -2, 2, -1.5, 1.5, -0.5, 0.5, 0] : 0,

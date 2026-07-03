@@ -80,7 +80,7 @@ export default function CopyForAI({ mdUrl, label = 'Copy for AI' }: Props) {
         alignItems: 'center',
         gap: '0.375rem',
         padding: '0.25rem 0.625rem',
-        borderRadius: 'var(--theme-radius, 0.375rem)',
+        borderRadius: 'var(--theme-radius, 0.5rem)',
         border: '1px solid var(--theme-border)',
         background: 'transparent',
         color: 'var(--theme-text-muted)',
@@ -96,6 +96,16 @@ export default function CopyForAI({ mdUrl, label = 'Copy for AI' }: Props) {
         }
       }}
       onMouseLeave={(e) => {
+        if (status === 'idle') {
+          (e.currentTarget as HTMLButtonElement).style.color = 'var(--theme-text-muted)';
+        }
+      }}
+      onFocus={(e) => {
+        if (status === 'idle') {
+          (e.currentTarget as HTMLButtonElement).style.color = 'var(--theme-text)';
+        }
+      }}
+      onBlur={(e) => {
         if (status === 'idle') {
           (e.currentTarget as HTMLButtonElement).style.color = 'var(--theme-text-muted)';
         }

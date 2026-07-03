@@ -63,12 +63,17 @@ export function AnimatedPatterns() {
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Guard so the gentle hover tease never interrupts a running bloom (and
+    // repeated hovers don't restart mid-motion).
+    let bloomUntil = 0;
+
     // The shapes "bloom": lift + fan out with a stagger, then settle back home,
     // timed to the photo spin. Pure accompaniment — they return exactly where they were.
     const onFlip = (e: Event) => {
       if (reduce) return;
       const detail = (e as CustomEvent).detail || {};
       const duration = Math.max(700, detail.duration || 1200);
+      bloomUntil = performance.now() + duration + 2 * 55;
 
       innerRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -85,28 +90,55 @@ export function AnimatedPatterns() {
       });
     };
 
+    // Hover tease: the same choreography at ~half amplitude, quicker — an
+    // invitation to click, distinct from the full click bloom.
+    const onHover = () => {
+      if (reduce) return;
+      const now = performance.now();
+      if (now < bloomUntil) return;
+      const duration = 650;
+      bloomUntil = now + duration + 2 * 45;
+
+      innerRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const x = (FAN_X[i] ?? 0) * 0.5;
+        el.animate(
+          [
+            { transform: 'translate(0px, 0px) scale(1)', easing: 'cubic-bezier(0.3, 0, 0.35, 1)' },
+            { transform: `translate(${x}px, -8px) scale(0.97)`, offset: 0.42, easing: 'cubic-bezier(0.18, 0.7, 0.3, 1)' },
+            { transform: 'translate(0px, 0px) scale(1)', offset: 1 },
+          ],
+          { duration, delay: i * 45, easing: 'ease-out', fill: 'none' }
+        );
+      });
+    };
+
     document.addEventListener('hero-flip', onFlip);
-    return () => document.removeEventListener('hero-flip', onFlip);
+    document.addEventListener('hero-hover', onHover);
+    return () => {
+      document.removeEventListener('hero-flip', onFlip);
+      document.removeEventListener('hero-hover', onHover);
+    };
   }, []);
 
   return (
     <div
       className="flex items-center justify-center relative w-full"
       data-name="patterns"
-      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', minHeight: '86.4px' }}
+      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', minHeight: '73.4px' }}
     >
       <div className="relative origin-center shapes-container-responsive">
         <style>{`
           .shapes-container-responsive {
-            width: 268.8px;
-            height: 86.4px;
+            width: 228.5px;
+            height: 73.4px;
             position: relative;
             margin: 0 auto;
           }
           @media (max-width: 768px) {
             .shapes-container-responsive {
-              width: 179.2px;
-              height: 57.6px;
+              width: 152.3px;
+              height: 49px;
             }
           }
           .shapes-inner-container {
@@ -115,12 +147,12 @@ export function AnimatedPatterns() {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.6);
+            transform: translate(-50%, -50%) scale(0.51);
             transform-origin: center center;
           }
           @media (max-width: 768px) {
             .shapes-inner-container {
-              transform: translate(-50%, -50%) scale(0.4);
+              transform: translate(-50%, -50%) scale(0.34);
             }
           }
         `}</style>

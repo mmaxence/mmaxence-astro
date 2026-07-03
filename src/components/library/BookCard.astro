@@ -10,10 +10,12 @@ const { book } = Astro.props;
 const featuredImage = book.data.featured_image?.startsWith('/')
   ? book.data.featured_image
   : `/images/${book.data.featured_image}`;
+
+// Matches getStaticPaths in pages/library/[...slug].astro
+const bookUrl = `/library/${book.slug.replace('-review', '')}/`;
 ---
 
-{/* Display-only card — book detail pages aren't linked for now. */}
-<div class="book-card-wrap">
+<a href={bookUrl} class="book-card-link block no-underline">
   <article class="book-card p-6 border border-theme bg-theme rounded-card shadow-theme">
     {book.data.featured_image && (
       <img
@@ -21,27 +23,34 @@ const featuredImage = book.data.featured_image?.startsWith('/')
         alt={book.data.title}
         loading="lazy"
         decoding="async"
-        class="book-cover w-full h-auto mb-4 rounded-card-image"
+        class="book-cover w-full mb-4 rounded-card-image"
       />
     )}
-    <h2 class="book-title text-xl font-semibold mb-2 text-theme">
+    <h3 class="font-mono font-light text-xl md:text-2xl mb-2 text-theme">
       {book.data.title}
-    </h2>
+    </h3>
     {book.data.book_author && (
-      <h3 class="book-author font-body text-base mb-2 text-theme-muted">
+      <p class="font-body text-base text-theme-muted">
         by {book.data.book_author}
-      </h3>
-    )}
-    {book.data.book_category && (
-      <p class="book-description text-sm mb-3 text-theme-muted">
-        {book.data.book_category}
       </p>
     )}
   </article>
-</div>
+</a>
 
 <style>
   .book-card {
-    border-color: var(--theme-border);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .book-card-link:hover .book-card {
+    border-color: var(--theme-accent);
+    box-shadow: var(--shadow-hover, 0 2px 8px rgba(0, 0, 0, 0.12));
+    transform: translateY(-1px);
+  }
+
+  /* Align ragged rows without cropping covers (full-ratio display is deliberate). */
+  .book-cover {
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
   }
 </style>

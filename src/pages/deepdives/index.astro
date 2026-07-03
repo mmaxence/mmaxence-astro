@@ -20,29 +20,22 @@ const deepdives = allDeepdives
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
     <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
-        <div class="mb-12">
-          <h1 class="text-4xl md:text-5xl font-mono font-light mb-4 text-theme">
-            Deep Dives
-          </h1>
-          <p class="text-base leading-relaxed text-theme">
-            In-depth case studies on product design, systems thinking, and agentic experiences
-          </p>
-        </div>
+        <PageHeader title="Deep Dives" description="In-depth case studies on product design, systems thinking, and agentic experiences" />
       </AnimatedContent>
 
       {deepdives.length > 0 && (
         <div class="space-y-8 md:space-y-10">
           {deepdives.map((post, index) => (
-            <AnimatedContent delay={index * 50}>
+            <AnimatedContent delay={Math.min(index, 3) * 50}>
               <BlogCard post={post} section="deepdives" featured />
             </AnimatedContent>
           ))}
         </div>
       )}
 
-      <AnimatedContent delay={deepdives.length > 0 ? (deepdives.length * 50) + 50 : 100}>
-        <div class={`flex flex-col items-center text-center rounded-lg px-6 py-12 md:px-12 md:py-16 ${deepdives.length > 0 ? 'mt-16 md:mt-24' : ''}`} style="border: 1px solid var(--theme-border); background: var(--theme-bg);">
-          <p class="text-base mb-8" style="color: var(--theme-text-muted);">
+      <AnimatedContent delay={100}>
+        <div class={`flex flex-col items-center text-center rounded-[var(--radius-card)] border border-theme px-6 py-12 md:px-12 md:py-16 ${deepdives.length > 0 ? 'mt-12 md:mt-16' : ''}`}>
+          <p class="text-base mb-8 text-theme-muted">
             {deepdives.length > 0
               ? "More deep dives are being prepared. In the meantime, here's something to clear."
               : "Case studies are on the way. In the meantime, here's something to clear."}
@@ -60,7 +53,7 @@ const deepdives = allDeepdives
                 <span class="minesweeper-label">sec</span>
               </div>
             </div>
-            <p id="minesweeper-hint" class="minesweeper-hint">Click any cell to start. Right-click to flag mines.</p>
+            <p id="minesweeper-hint" class="minesweeper-hint">Click any cell to start. Right-click or long-press to flag mines.</p>
             <div id="minesweeper-grid" class="minesweeper-grid"></div>
             <p id="minesweeper-message" class="minesweeper-message">&nbsp;</p>
           </div>
@@ -131,6 +124,10 @@ const deepdives = allDeepdives
 
     .ms-cell {
       aspect-ratio: 1;
+      padding: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      font: inherit;
       border: 1.5px solid var(--theme-border);
       border-radius: 2px;
       background: var(--theme-text);
@@ -285,7 +282,9 @@ const deepdives = allDeepdives
         grid.innerHTML = '';
         for (var r = 0; r < ROWS; r++) {
           for (var c = 0; c < COLS; c++) {
-            var cell = document.createElement('div');
+            var cell = document.createElement('button');
+            cell.type = 'button';
+            cell.setAttribute('aria-label', 'cell ' + (r + 1) + ',' + (c + 1));
             cell.className = 'ms-cell';
 
             if (revealed[r] && revealed[r][c]) {
@@ -463,6 +462,8 @@ const deepdives = allDeepdives
         if (hintEl) hintEl.style.display = '';
         render();
       }
+
+      document.addEventListener('astro:before-swap', stopTimer, { once: true });
 
       reset();
     }

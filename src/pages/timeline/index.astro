@@ -13,15 +13,13 @@ import { timelineEntries } from '../../data/timeline'; // Import data from TypeS
 <BaseLayout title="Experience & Impact | Maxence Mauduit" description="12 years of product design across one company's defining pivots, from the first version of nearly every product to the agent-consumable systems they're built within.">
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+    <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
+        <PageHeader title="Experience" />
         <div class="mb-12">
-          <h1 class="text-4xl md:text-5xl font-mono font-light mb-4 text-theme">
-            Experience
-          </h1>
-          <h2 class="text-2xl md:text-3xl font-mono font-light mb-4 text-theme">
+          <p class="text-2xl md:text-3xl font-mono font-light text-theme-muted mb-4">
             From early product formation to the systems products are built within.
-          </h2>
+          </p>
           <p class="text-base leading-relaxed text-theme">
             Across one company's defining pivots, my work has centered on shaping early product decisions, deciding what should exist, and building execution systems that scale without creating long-term dependency, now extended so AI agents can build within them too.
           </p>
@@ -36,13 +34,13 @@ import { timelineEntries } from '../../data/timeline'; // Import data from TypeS
           const isBuzzvil = entry.description?.includes('Buzzvil') || entry.title.includes('Buzzvil');
           const relatedLinks = isBuzzvil ? [
             { href: '/blog/i-dont-like-ads', title: "I Don't Like Ads" },
-            { href: '/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup', title: 'Life in Sprint Mode: Raising Two Kids While Working at a Hyper-Dynamic Korean Startup' },
+            { href: '/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup', title: 'Life in Sprint Mode' },
             { href: 'https://buzzvil.com', title: 'Buzzvil' },
             { href: 'https://docs.buzzvil.com/', title: 'Buzzvil Docs' }
           ] : undefined;
           
           return (
-            <AnimatedContent delay={index * 50}>
+            <AnimatedContent delay={index * 50} class="pb-12 border-b border-theme last:border-b-0 last:pb-0">
               <TimelineEntry
                 title={entry.title}
                 date={entry.date}

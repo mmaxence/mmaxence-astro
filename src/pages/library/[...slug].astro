@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
 import PageContent from '../../components/ui/PageContent.astro';
-import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
@@ -35,14 +34,14 @@ const featuredImage = book.data.featured_image?.startsWith('/')
   type="article"
   date={book.data.date}
 >
-      <Header />
-      <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-        <article class="max-w-3xl mx-auto px-3 md:px-6 py-12">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <article class="max-w-3xl mx-auto px-3 md:px-8 py-12">
       <div class="book-header border-b border-theme pb-8 mb-8">
         <div class="flex flex-col md:flex-row gap-6 items-start">
           {book.data.featured_image && (
-            <img 
-              src={featuredImage} 
+            <img
+              src={featuredImage}
               alt={book.data.title}
               class="book-cover w-48 h-64 object-cover shadow-lg rounded-card-image"
             />
@@ -52,22 +51,22 @@ const featuredImage = book.data.featured_image?.startsWith('/')
               {book.data.title}
             </h1>
             {book.data.book_author && (
-                  <h2 class="book-author text-xl mb-2 text-theme-muted">
+              <p class="text-xl mb-2 text-theme-muted">
                 by {book.data.book_author}
-              </h2>
+              </p>
             )}
-                <div class="book-meta text-sm space-y-1 text-theme-muted">
+            <div class="book-meta text-sm space-y-1 text-theme-muted">
               {book.data.book_category && (
-                <p>Category: {book.data.book_category}</p>
+                <p class="capitalize">Category: {book.data.book_category.replace(/-/g, ' ')}</p>
               )}
               {book.data.book_year && (
                 <p>Year: {book.data.book_year}</p>
               )}
             </div>
             {book.data.amazon_link && (
-              <a 
-                href={book.data.amazon_link} 
-                target="_blank" 
+              <a
+                href={book.data.amazon_link}
+                target="_blank"
                 rel="noopener noreferrer"
                 class="amazon-button inline-block mt-4 px-4 py-2 rounded-lg transition-colors bg-[var(--theme-accent)] text-[var(--theme-bg)]"
               >
@@ -77,11 +76,11 @@ const featuredImage = book.data.featured_image?.startsWith('/')
           </div>
         </div>
       </div>
-      
-      <div class="book-content prose prose-lg max-w-none leading-relaxed text-theme">
+
+      <div class="book-content prose max-w-none leading-relaxed text-theme">
         <Content />
       </div>
-        </article>
+    </article>
   </PageContent>
   <Footer />
   <ThemeToast />

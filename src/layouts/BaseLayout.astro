@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import JsonLd from '../components/ui/JsonLd.astro';
 import '../styles/global.css';
 
@@ -12,7 +12,7 @@ interface Props {
   date?: Date;
 }
 
-const { title = "Product Designer, CDO at buzzvil", description = "Product Manager, Head of Design at buzzvil", featured_image, url, type = 'website', date } = Astro.props;
+const { title = "Product Designer, CDO at buzzvil", description = "Product designer and design leader. 15 years across product, system, and brand — designing in code and building agent-consumable design systems.", featured_image, url, type = 'website', date } = Astro.props;
 const siteTitle = "Product Designer, CDO at buzzvil";
 const author = "Maxence Mauduit";
 const siteUrl = "https://mmaxence.me";
@@ -131,7 +131,7 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     <meta name="twitter:image:src" content={ogImage} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
     
-    <ViewTransitions />
+    <ClientRouter />
     <script is:inline>
       // Initialize theme immediately to prevent flash
       // Also re-apply on page transitions
@@ -153,35 +153,8 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
             '--theme-font-heading': "'Anonymous Pro', monospace",
             '--theme-font-body': "'Plus Jakarta Sans', sans-serif",
           },
-          ide: {
-            // Tokyo Midnight theme - refined dark IDE colors
-            '--theme-bg': '#1a1b26',
-            '--theme-text': '#c0caf5',
-            '--theme-text-muted': '#565f89',
-            '--theme-accent': '#7aa2f7',
-            '--theme-border': '#2f3549',
-            '--theme-shadow': '0 4px 12px rgba(0, 0, 0, 0.6)',
-            '--theme-highlight': '#2ac3de',
-            '--theme-radius': '0',
-            '--theme-spacing': '0.75rem',
-            '--theme-font-heading': "'Courier New', monospace",
-            '--theme-font-body': "'Consolas', 'Monaco', 'Courier New', monospace",
-          },
-          pixel: {
-            // Refined retro game theme - subtle Game Boy inspired palette
-            '--theme-bg': '#e8e8d3',
-            '--theme-text': '#2d5016',
-            '--theme-text-muted': '#5a7c42',
-            '--theme-accent': '#8b956d',
-            '--theme-border': '#87986a',
-            '--theme-shadow': '2px 2px 0px #87986a, 4px 4px 0px #6b7a52',
-            '--theme-highlight': '#c4d5a1',
-            '--theme-radius': '0',
-            '--theme-spacing': '1rem',
-            '--theme-font-heading': "'Press Start 2P', cursive",
-            '--theme-font-body': "'Courier New', 'Courier', monospace",
-          }
         };
+        // Only 'default' and 'random' are ever persisted; unknown saved values fall back to default.
         
         function applyTheme(themeName) {
           try {
@@ -252,17 +225,17 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     </script>
     <script src="/js/interactions.js" defer></script>
     <script>
-      // Inline prefetch script for immediate execution
+      // Hover prefetch — rebinds after every navigation (view transitions swap in
+      // fresh DOM, so a DOMContentLoaded-only binding dies after the first swap)
       (function() {
         'use strict';
-        document.addEventListener('DOMContentLoaded', () => {
-          const prefetchLinks = document.querySelectorAll('.prefetch-link[data-prefetch="true"]');
-          const prefetchedUrls = new Set();
+        const prefetchedUrls = new Set();
 
-          prefetchLinks.forEach((link) => {
+        function bindPrefetch() {
+          document.querySelectorAll('.prefetch-link[data-prefetch="true"]').forEach((link) => {
             link.addEventListener('mouseenter', () => {
               const url = link.href || link.getAttribute('href');
-              
+
               if (url && !prefetchedUrls.has(url)) {
                 const prefetchLink = document.createElement('link');
                 prefetchLink.rel = 'prefetch';
@@ -273,7 +246,14 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
               }
             }, { once: true });
           });
-        });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', bindPrefetch, { once: true });
+        } else {
+          bindPrefetch();
+        }
+        document.addEventListener('astro:page-load', bindPrefetch);
       })();
     </script>
     {/* GoatCounter analytics */}

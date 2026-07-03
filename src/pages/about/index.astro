@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
 import PageContent from '../../components/ui/PageContent.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
 
@@ -52,28 +53,28 @@ const techStack = [
 <BaseLayout title="About" description="About this website and its tech stack">
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
-    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+    <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
-        <h1 class="text-4xl md:text-5xl font-mono font-light mb-8">About This Website</h1>
-        <div class="prose prose-lg max-w-none text-base leading-relaxed mb-12 text-theme">
+        <PageHeader title="About This Website" />
+        <div class="prose max-w-none leading-relaxed mb-12 text-theme">
           <p>This is the colophon — the rest of the site is the bio. It's hand-built in code and open source. Below: what it runs on, and the one easter egg worth explaining.</p>
           
           <p class="mt-4">The homepage includes five distinct interactive visual components that reinforce the mental models described in each section, all built with React and SVG for smooth, performant animations.</p>
           
-          <p class="mt-6 p-4 bg-theme rounded border-l-4 border-theme-accent">
+          <blockquote>
             <strong class="font-mono">Open source:</strong> the full source is <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=24" alt="" width="14" height="14" class="inline-card-icon" />on GitHub</a> if you want to see how any of it is put together.
-          </p>
+          </blockquote>
         </div>
       </AnimatedContent>
 
       <div class="space-y-12">
         {techStack.map((category, categoryIndex) => (
-          <AnimatedContent delay={categoryIndex * 100}>
-            <div class="mb-8">
+          <AnimatedContent delay={Math.min(categoryIndex, 2) * 100}>
+            <div>
               <h2 class="text-2xl md:text-3xl font-mono font-light mb-6">{category.category}</h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {category.items.map((item, itemIndex) => (
-                  <div class="p-4 border border-theme rounded-lg hover:shadow-theme-hover transition-shadow">
+                  <div class="p-6 border border-theme rounded-2xl hover:shadow-[var(--shadow-hover)] transition-shadow">
                     <h3 class="font-mono text-xl font-normal mb-2">
                       {item.link ? (
                         <a
@@ -99,10 +100,10 @@ const techStack = [
         ))}
       </div>
 
-      <AnimatedContent delay={techStack.length * 100}>
-        <div class="mt-16 p-6 bg-theme rounded-lg border border-theme">
-          <h2 class="text-2xl font-mono font-light mb-4">A Hidden Pairing</h2>
-          <div class="prose prose-lg max-w-none text-base leading-relaxed text-theme">
+      <AnimatedContent delay={0}>
+        <div class="mt-12 p-6 bg-theme rounded-2xl border border-theme">
+          <h2 class="text-2xl md:text-3xl font-mono font-light mb-6">A Hidden Pairing</h2>
+          <div class="prose max-w-none leading-relaxed text-theme">
             <p>The homepage hero hides a small toy. The portrait is a flip disc, and tapping it (or the three shapes beside it) cycles through a short series of photos, each one paired with a theme that recolors the whole site to match.</p>
 
             <h3 class="text-xl font-mono font-normal mt-6 mb-3">How It Works</h3>
@@ -122,9 +123,9 @@ const techStack = [
         </div>
       </AnimatedContent>
 
-      <AnimatedContent delay={(techStack.length + 1) * 100}>
+      <AnimatedContent delay={0}>
         <div class="mt-12 text-center">
-          <div class="ref-links" style="justify-content: center;">
+          <div class="ref-links justify-center">
             <span class="ref-label">Source:</span>
             <a href="https://github.com/mmaxence/mmaxence-astro" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=24" alt="" class="ref-icon" width="14" height="14" />View on GitHub</a>
           </div>
