@@ -10,13 +10,17 @@ import BookCard from '../../components/library/BookCard.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
 import { getCollection } from 'astro:content';
 
-// Strategic category order: Foundation > Strategic Operations > Human Leadership > Systemic Design
+// Strategic category order: Foundation > Systemic Design > Strategic Operations > Human Leadership
+// (foundation and systemic-design lead so the two pinned cornerstone books sit near the top)
 const categoryOrder: Record<string, number> = {
   'foundation': 1,
-  'strategic-operations': 2,
-  'human-leadership': 3,
-  'systemic-design': 4,
+  'systemic-design': 2,
+  'strategic-operations': 3,
+  'human-leadership': 4,
 };
+
+// Pinned first within their categories — the books the rest of the shelf builds on
+const pinnedSlugs = ['thinking-fast-and-slow-review', 'the-timeless-way-of-building-review'];
 
 const categoryTitles: Record<string, string> = {
   'foundation': 'The Foundation: Decision Science & Strategic Thinking',
@@ -38,9 +42,12 @@ allBooks.forEach(book => {
   booksByCategory[category].push(book);
 });
 
-// Sort books within each category by date (most recent first)
+// Sort books within each category: pinned first, then by date (most recent first)
 Object.keys(booksByCategory).forEach(category => {
   booksByCategory[category].sort((a, b) => {
+    const pinA = pinnedSlugs.includes(a.slug) ? 0 : 1;
+    const pinB = pinnedSlugs.includes(b.slug) ? 0 : 1;
+    if (pinA !== pinB) return pinA - pinB;
     const dateA = a.data.date?.getTime() || 0;
     const dateB = b.data.date?.getTime() || 0;
     return dateB - dateA;
@@ -61,24 +68,25 @@ Object.keys(booksByCategory).forEach(category => {
       
       {Object.keys(categoryOrder)
         .sort((a, b) => categoryOrder[a] - categoryOrder[b])
-        .map((categoryKey, categoryIndex) => {
+        .map((categoryKey) => {
           const books = booksByCategory[categoryKey] || [];
           if (books.length === 0) return null;
           
           return (
             <div class="mb-16 last:mb-0">
-              <AnimatedContent delay={categoryIndex * 100}>
-                <h2 class="text-2xl md:text-3xl font-mono font-light mb-8 text-theme">
+              <AnimatedContent>
+                <h2 class="text-2xl md:text-3xl font-mono font-light mb-4 text-theme" data-reveal style="--r: 0">
                   {categoryTitles[categoryKey] || categoryKey}
                 </h2>
+                <div class="reveal-rule mb-8" style="--r: 0" aria-hidden="true"></div>
+                <CardGrid>
+                  {books.map((book, bookIndex) => (
+                    <div data-reveal style={`--r: ${1 + Math.min(bookIndex, 5)}`}>
+                      <BookCard book={book} />
+                    </div>
+                  ))}
+                </CardGrid>
               </AnimatedContent>
-              <CardGrid>
-                {books.map((book, bookIndex) => (
-                  <AnimatedContent delay={bookIndex * 50}>
-                    <BookCard book={book} />
-                  </AnimatedContent>
-                ))}
-              </CardGrid>
             </div>
           );
         })}

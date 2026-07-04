@@ -66,12 +66,13 @@ const breadcrumbSchema = {
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
     <article class="max-w-3xl mx-auto px-3 md:px-8 py-12">
+      <AnimatedContent>
       {post.data.featured_image && (() => {
         const featuredImage = post.data.featured_image.startsWith('/') 
           ? post.data.featured_image 
           : `/blog/${post.slug}/${post.data.featured_image}`;
         return (
-          <div class="mb-8">
+          <div class="mb-8" data-reveal style="--r: 0">
             <img 
               src={featuredImage} 
               alt={post.data.title}
@@ -98,10 +99,10 @@ const breadcrumbSchema = {
       })()}
       
       <header class="mb-8">
-        <h1 class="text-4xl md:text-5xl font-mono font-light mb-4">
+        <h1 class="text-4xl md:text-5xl font-mono font-light mb-4" data-reveal style="--r: 1">
           {post.data.title}
         </h1>
-        <div class="flex items-center justify-between gap-4 flex-wrap">
+        <div class="flex items-center justify-between gap-4 flex-wrap" data-reveal style="--r: 2">
           <time class="text-sm text-theme-muted">
             {post.data.date.toLocaleDateString('en-US', {
               year: 'numeric',
@@ -111,7 +112,9 @@ const breadcrumbSchema = {
           </time>
           <CopyForAI client:load mdUrl={`/blog/${post.slug}.md`} />
         </div>
+        <div class="reveal-rule mt-6" style="--r: 2" aria-hidden="true"></div>
       </header>
+      </AnimatedContent>
       
           <div class="prose max-w-none leading-relaxed text-theme">
         <Content />

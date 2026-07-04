@@ -69,12 +69,13 @@ const techStack = [
 
       <div class="space-y-12">
         {techStack.map((category, categoryIndex) => (
-          <AnimatedContent delay={Math.min(categoryIndex, 2) * 100}>
+          <AnimatedContent>
             <div>
-              <h2 class="text-2xl md:text-3xl font-mono font-light mb-6">{category.category}</h2>
+              <h2 class="text-2xl md:text-3xl font-mono font-light mb-4" data-reveal style="--r: 0">{category.category}</h2>
+              <div class="reveal-rule mb-6" style="--r: 0" aria-hidden="true"></div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {category.items.map((item, itemIndex) => (
-                  <div class="p-6 border border-theme rounded-2xl hover:shadow-[var(--shadow-hover)] transition-shadow">
+                  <div class="p-6 border border-theme rounded-2xl hover:shadow-[var(--shadow-hover)] transition-shadow" data-reveal style={`--r: ${1 + Math.min(itemIndex, 4)}`}>
                     <h3 class="font-mono text-xl font-normal mb-2">
                       {item.link ? (
                         <a

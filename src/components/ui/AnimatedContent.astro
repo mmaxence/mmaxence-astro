@@ -20,12 +20,19 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
     transform: translateY(0);
   }
   
-  /* Hide only once JS is ready (flag set on <html> in the head, before first paint) */
+  /* Hide only once JS is ready (flag set on <html> in the head, before first paint).
+     Easing matches the data-reveal grammar in global.css so wrapper-level and
+     child-level reveals feel like one system. The transition lives on the
+     always-on state: declared only on :not(.visible) it disappears the moment
+     .visible lands, so the reveal snaps instead of easing. */
+  html.js-ready .animated-content {
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   html.js-ready .animated-content:not(.visible) {
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(14px);
   }
 
   html.js-ready .animated-content.visible {
@@ -66,8 +73,21 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
           child.classList.add('visible')
         );
       };
-      if (delay > 0) setTimeout(show, delay);
-      else show();
+      if (delay > 0) {
+        setTimeout(show, delay);
+        return;
+      }
+      // Let the hidden state paint for one frame before flipping to .visible —
+      // otherwise above-the-fold reveals (page entrances) skip their transition
+      // entirely. The timeout is a safety net for frozen/background tabs where
+      // rAF doesn't tick: content still reveals, just without the animation.
+      const fallback = setTimeout(show, 400);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          clearTimeout(fallback);
+          show();
+        })
+      );
     }
 
     // Reveal every not-yet-visible element. This is purely ADDITIVE and idempotent:

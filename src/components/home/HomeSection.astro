@@ -19,21 +19,21 @@ const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
   <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
     <AnimatedContent delay={delay}>
       <article class="w-full index-content-section">
-        <h2 class="section-kicker">{title}</h2>
+        <h2 class="section-kicker" data-reveal style="--r: 0">{title}</h2>
 
         <div class="mt-10 md:mt-14 grid items-center gap-10 lg:gap-14 lg:grid-cols-2">
-          <div class="section-copy">
+          <div class="section-copy" data-reveal style="--r: 1">
             <slot name="pre-visual" />
             <slot name="aside" />
           </div>
-          <div class={`visual-frame ${flip ? 'lg:order-first' : ''}`}>
+          <div class={`visual-frame ${flip ? 'lg:order-first' : ''}`} data-reveal style="--r: 2">
             <span class="visual-frame-label" aria-hidden="true">{frameLabel}</span>
             <slot name="visual" />
           </div>
         </div>
 
         {Astro.slots.has('post-visual') && (
-          <div class="mt-12 md:mt-16">
+          <div class="mt-12 md:mt-16" data-reveal style="--r: 3">
             <slot name="post-visual" />
           </div>
         )}

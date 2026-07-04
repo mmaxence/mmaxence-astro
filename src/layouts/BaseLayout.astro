@@ -214,6 +214,11 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
         
         // Also listen for astro:after-swap (for compatibility)
         document.addEventListener('astro:after-swap', () => {
+          // ClientRouter's swap strips runtime classes from <html>; restore the
+          // js-ready flag pre-paint so reveal hidden-states apply to the new DOM
+          // (without this, in-view choreography dies after the first client-side
+          // navigation and unrevealed content can flash).
+          document.documentElement.classList.add('js-ready');
           try {
             const savedTheme = localStorage.getItem('theme') || 'default';
             applyTheme(savedTheme);

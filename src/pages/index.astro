@@ -236,8 +236,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
         <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
           <AnimatedContent>
             <div class="w-full">
-              <h2 class="section-kicker">Featured deep dive</h2>
-              <a href={`/deepdives/${featuredDeepdive.slug}/`} class="featured-deepdive-card mt-8 block no-underline border-none hover:bg-transparent">
+              <h2 class="section-kicker" data-reveal style="--r: 0">Featured deep dive</h2>
+              <a href={`/deepdives/${featuredDeepdive.slug}/`} class="featured-deepdive-card mt-8 block no-underline border-none hover:bg-transparent" data-reveal style="--r: 1">
                 <article class="p-6 md:p-10">
                   <h3 class="text-2xl md:text-4xl font-mono font-light mb-3 text-theme">
                     {featuredDeepdive.data.title}
@@ -262,7 +262,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
         <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
           <AnimatedContent>
             <div class="w-full">
-              <h2 class="section-kicker">Selected writing</h2>
+              <h2 class="section-kicker" data-reveal style="--r: 0">Selected writing</h2>
               <CardGrid columns={3} class="mt-8">
                 {blogPosts.map((post, index) => (
                   <AnimatedContent delay={index * 75}>

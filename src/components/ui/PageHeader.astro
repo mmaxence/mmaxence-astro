@@ -9,11 +9,12 @@ const { title, description, class: className = '' } = Astro.props;
 ---
 
 <div class={`mb-12 ${className}`}>
-  <h1 class="text-4xl md:text-5xl font-mono font-light mb-4">
+  <h1 class="text-4xl md:text-5xl font-mono font-light mb-5" data-reveal style="--r: 0">
     {title}
   </h1>
+  <div class="reveal-rule" style="--r: 0" aria-hidden="true"></div>
   {description && (
-    <p class="text-base text-theme" set:html={description} />
+    <p class="text-base text-theme mt-5" set:html={description} data-reveal style="--r: 1" />
   )}
 </div>
 

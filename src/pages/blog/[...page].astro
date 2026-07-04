@@ -70,14 +70,13 @@ const nextUrl = currentPage < totalPages
 
       {isFirstPage && featured.length > 0 && (
         <div class="mb-16">
-          <AnimatedContent delay={40}>
-            <h2 class="text-2xl md:text-3xl font-mono font-light !mb-1 text-theme">The AI series</h2>
-            <p class="text-sm text-theme-muted mb-6">Designing in the AI age, read in order.</p>
-          </AnimatedContent>
-          <AnimatedContent delay={60}>
-            <ol class="start-here-path">
+          <AnimatedContent>
+            <h2 class="text-2xl md:text-3xl font-mono font-light !mb-1 text-theme" data-reveal style="--r: 0">The AI series</h2>
+            <p class="text-sm text-theme-muted mb-4" data-reveal style="--r: 1">Designing in the AI age, read in order.</p>
+            <div class="reveal-rule mb-6" style="--r: 0" aria-hidden="true"></div>
+            <ol class="start-here-path" data-reveal style="--r: 2">
               {featured.map((post, index) => (
-                <li class="start-here-item">
+                <li class="start-here-item" data-reveal style={`--r: ${3 + Math.min(index, 5)}`}>
                   <a href={`/blog/${post.slug}/`} class="start-here-link">
                     <span class="start-here-num">{index + 1}</span>
                     {post.data.featured_image && (
@@ -97,17 +96,15 @@ const nextUrl = currentPage < totalPages
       )}
 
       {isFirstPage && (
-        <AnimatedContent delay={80}>
-          <h2 class="text-2xl md:text-3xl font-mono font-light mb-8 text-theme">All writing</h2>
+        <AnimatedContent>
+          <h2 class="text-2xl md:text-3xl font-mono font-light mb-4 text-theme" data-reveal style="--r: 0">All writing</h2>
+          <div class="reveal-rule mb-8" style="--r: 0" aria-hidden="true"></div>
+          {heroPost && (
+            <div class="mb-12 md:mb-16" data-reveal style="--r: 1">
+              <BlogCard post={heroPost} featured />
+            </div>
+          )}
         </AnimatedContent>
-      )}
-
-      {heroPost && (
-        <div class="mb-12 md:mb-16">
-          <AnimatedContent delay={100}>
-            <BlogCard post={heroPost} featured />
-          </AnimatedContent>
-        </div>
       )}
 
       <CardGrid columns={2}>
