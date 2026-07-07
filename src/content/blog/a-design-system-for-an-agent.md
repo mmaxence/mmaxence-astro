@@ -74,6 +74,8 @@ The Cooker is a test kitchen. It takes a recipe, a brand's house style, and the 
 
 ![And under a streetwear brand: black, sharp, a streetwear question. Same recipe, same skeleton, opposite feel.](/blog/a-design-system-for-an-agent/ox-quiz-streetwear.jpg)
 
+<p class="caption">Both are proof-of-concept plates from the Cooker at an early stage. The shipped product is more refined.</p>
+
 ## Where the craft went
 
 Show a craftsperson a pantry and a cook allowed to improvise from it, and she flinches. It sounds like a machine plating the same dish a thousand times, the thing that makes most AI interfaces feel microwaved.
