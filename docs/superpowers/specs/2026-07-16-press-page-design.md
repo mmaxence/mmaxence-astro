@@ -47,8 +47,12 @@ interface PressItem {
 
 Discovery pass after the page ships: Korean + English web searches (Max's name in Latin and Korean renderings, 버즈빌 디자인, Buzzvil AI-native coverage, interviews, podcasts, talks). Max reviews the candidate list and picks; keepers are added to `press.ts`. Seed item: Economic Review 2026-07-14, "버즈빌 AI 네이티브 반년 디자이너가 코드를 짠다".
 
+## llms.txt
+
+`/llms.txt` hand-lists Key Pages and per-section item lists; Press is included there (Key Pages line + a "Press (third-party coverage)" section built from `press.ts`) so the agent-facing index stays consistent with the site.
+
 ## Out of scope
 
-- RSS/llms.txt integration for press items (revisit if wanted)
+- RSS integration for press items (external links don't belong in the article feed)
 - OG-image thumbnails per item
 - Homepage press strip

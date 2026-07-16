@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import DateDisplay from '../../components/ui/DateDisplay.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { pressItems } from '../../data/press';
+
+// Group by year, newest first (items within a year also newest first)
+const sorted = [...pressItems].sort((a, b) => b.date.localeCompare(a.date));
+const itemsByYear: Record<string, typeof sorted> = {};
+sorted.forEach((item) => {
+  const year = item.date.slice(0, 4);
+  (itemsByYear[year] ||= []).push(item);
+});
+const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
+---
+
+<BaseLayout title="Press" description="Articles, interviews, and coverage about Maxence Mauduit and the work of the Buzzvil design team">
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <PageHeader
+          title="Press"
+          description="Coverage from elsewhere — articles and interviews about me or the work I've been part of, none of it written by me."
+        />
+      </AnimatedContent>
+
+      {years.map((year) => (
+        <div class="mb-16 last:mb-0">
+          <AnimatedContent>
+            <h2 class="text-2xl md:text-3xl font-mono font-light mb-4 text-theme" data-reveal style="--r: 0">
+              {year}
+            </h2>
+            <div class="reveal-rule mb-8" style="--r: 0" aria-hidden="true"></div>
+            <div class="space-y-10">
+              {itemsByYear[year].map((item, itemIndex) => (
+                <article data-reveal style={`--r: ${1 + Math.min(itemIndex, 5)}`}>
+                  <p class="text-sm text-theme-muted mb-2 font-mono">
+                    {item.outlet} · <DateDisplay date={new Date(item.date)} /> · {item.type}
+                  </p>
+                  <h3 class="font-mono font-light text-xl md:text-2xl mt-0 mb-1">
+                    <a href={item.url} target="_blank" rel="noopener noreferrer">
+                      {item.title}
+                    </a>
+                  </h3>
+                  {item.titleEn && (
+                    <p class="text-base text-theme-muted italic mb-2">{item.titleEn}</p>
+                  )}
+                  {item.note && <p class="text-base leading-relaxed">{item.note}</p>}
+                </article>
+              ))}
+            </div>
+          </AnimatedContent>
+        </div>
+      ))}
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+</BaseLayout>

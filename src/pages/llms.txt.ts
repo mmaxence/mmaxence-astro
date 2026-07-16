@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { pressItems } from '../data/press';
 
 export const GET: APIRoute = async () => {
   const blogPosts = (await getCollection('blog'))
@@ -26,6 +27,11 @@ export const GET: APIRoute = async () => {
     .map((book) => `- [${book.data.title}](https://mmaxence.me/library/${book.slug}/) by ${book.data.book_author || 'Unknown'}: ${book.data.description || ''}`)
     .join('\n');
 
+  const pressList = [...pressItems]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((item) => `- [${item.titleEn || item.title}](${item.url}) — ${item.outlet}, ${item.date} (${item.type})${item.note ? `: ${item.note}` : ''}`)
+    .join('\n');
+
   const content = `# Maxence Mauduit
 
 > Product designer and Chief Design Officer at Buzzvil (Seoul). 15 years in product design, 12 at Buzzvil. Designs in code and builds agent-consumable design systems and the tooling on top of them. Focus: AI-native design, interaction systems, design-in-code.
@@ -50,6 +56,7 @@ He has led the company-critical pivots and built the team that scaled Buzzvil to
 - [Experience Timeline](https://mmaxence.me/timeline/): Detailed career timeline and impact
 - [Deep Dives](https://mmaxence.me/deepdives/): In-depth case studies on product design, systems thinking, and agentic experiences
 - [Blog](https://mmaxence.me/blog/): Articles on product design, leadership, and design systems
+- [Press](https://mmaxence.me/press/): Third-party articles and interviews about Maxence and the Buzzvil design team's work
 - [Library / Shelf](https://mmaxence.me/library/): Curated book reviews on design, leadership, and strategy
 - [About](https://mmaxence.me/about/): About this website and its tech stack
 - [Resume](https://mmaxence.me/images/Maxence-Mauduit_Resume-2026.pdf): PDF resume
@@ -61,6 +68,10 @@ ${deepdiveList}
 ## Blog Articles
 
 ${blogList}
+
+## Press (third-party coverage)
+
+${pressList}
 
 ## Book Reviews
 
