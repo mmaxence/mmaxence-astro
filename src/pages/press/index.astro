@@ -26,7 +26,7 @@ const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
       <AnimatedContent delay="0">
         <PageHeader
           title="Press"
-          description="Coverage from elsewhere — articles and interviews about me or the work I've been part of, none of it written by me."
+          description="Coverage and appearances from elsewhere: articles, interviews, talks, and publications about me or the work I've been part of."
         />
       </AnimatedContent>
 
@@ -41,7 +41,7 @@ const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
               {itemsByYear[year].map((item, itemIndex) => (
                 <article data-reveal style={`--r: ${1 + Math.min(itemIndex, 5)}`}>
                   <p class="text-sm text-theme-muted mb-2 font-mono">
-                    {item.outlet} · <DateDisplay date={new Date(item.date)} /> · {item.type}
+                    {item.outlet} · <DateDisplay date={new Date(item.date)} /> · {item.type} · {item.lang}
                   </p>
                   <h3 class="font-mono font-light text-xl md:text-2xl mt-0 mb-1">
                     <a href={item.url} target="_blank" rel="noopener noreferrer">

@@ -29,7 +29,7 @@ export const GET: APIRoute = async () => {
 
   const pressList = [...pressItems]
     .sort((a, b) => b.date.localeCompare(a.date))
-    .map((item) => `- [${item.titleEn || item.title}](${item.url}) — ${item.outlet}, ${item.date} (${item.type})${item.note ? `: ${item.note}` : ''}`)
+    .map((item) => `- [${item.titleEn || item.title}](${item.url}) · ${item.outlet}, ${item.date} (${item.type})${item.note ? `: ${item.note}` : ''}`)
     .join('\n');
 
   const content = `# Maxence Mauduit
@@ -56,7 +56,7 @@ He has led the company-critical pivots and built the team that scaled Buzzvil to
 - [Experience Timeline](https://mmaxence.me/timeline/): Detailed career timeline and impact
 - [Deep Dives](https://mmaxence.me/deepdives/): In-depth case studies on product design, systems thinking, and agentic experiences
 - [Blog](https://mmaxence.me/blog/): Articles on product design, leadership, and design systems
-- [Press](https://mmaxence.me/press/): Third-party articles and interviews about Maxence and the Buzzvil design team's work
+- [Press](https://mmaxence.me/press/): Articles, interviews, talks, and publications about Maxence and the work he's been part of
 - [Library / Shelf](https://mmaxence.me/library/): Curated book reviews on design, leadership, and strategy
 - [About](https://mmaxence.me/about/): About this website and its tech stack
 - [Resume](https://mmaxence.me/images/Maxence-Mauduit_Resume-2026.pdf): PDF resume
@@ -69,7 +69,7 @@ ${deepdiveList}
 
 ${blogList}
 
-## Press (third-party coverage)
+## Press (coverage & appearances)
 
 ${pressList}
 
