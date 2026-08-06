@@ -110,6 +110,16 @@ export const pressItems: PressItem[] = [
     note: 'Early profile interview, from VR research in France to leading the design team at Buzzvil.',
   },
   {
+    title: '"유럽 디자이너는 기술보다 인문학 먼저 배운다", 맥스 버즈빌 디자이너 인터뷰',
+    titleEn: '"European designers learn the humanities before technique": an interview with Buzzvil designer Max',
+    outlet: 'beSUCCESS (비석세스)',
+    date: '2015-06-19',
+    url: 'https://besuccess.com/%ec%9c%a0%eb%9f%bd-%eb%94%94%ec%9e%90%ec%9d%b4%eb%84%88%eb%8a%94-%ea%b8%b0%ec%88%a0%eb%b3%b4%eb%8b%a4-%ec%9d%b8%eb%ac%b8%ed%95%99-%eb%a8%bc%ec%a0%80-%eb%b0%b0%ec%9a%b4%eb%8b%a4-%eb%a7%a5%ec%8a%a4/',
+    type: 'interview',
+    lang: 'Korean',
+    note: 'Interview around the Honeyscreen redesign for global expansion: user-centered method first, and the European minimalism brought into the app.',
+  },
+  {
     title: 'Arts et sciences du design : la place des sciences humaines',
     titleEn: 'Arts and sciences of design: the place of the human sciences',
     outlet: 'Sciences du Design',
