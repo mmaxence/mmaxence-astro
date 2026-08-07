@@ -1,3 +1,9 @@
+export interface PressCoverageLink {
+  outlet: string;
+  url: string;
+  title?: string; // that outlet's original headline, kept for reference (rendered as tooltip)
+}
+
 export interface PressItem {
   title: string; // original-language headline, verbatim
   titleEn?: string; // English gloss, only when the original is not English
@@ -7,6 +13,7 @@ export interface PressItem {
   type: 'article' | 'interview' | 'podcast' | 'talk' | 'paper';
   lang: 'Korean' | 'English' | 'French'; // language of the piece, shown in the kicker
   note?: string; // one line: why it's here / what it covers
+  also?: PressCoverageLink[]; // same-story coverage from other outlets, collapsed under this lead entry
 }
 
 export const pressItems: PressItem[] = [
@@ -28,47 +35,29 @@ export const pressItems: PressItem[] = [
     url: 'https://www.econovill.com/news/articleView.html?idxno=745129',
     type: 'article',
     lang: 'Korean',
-    note: "News feature on Buzzvil's AI-native transition: designers shipping code directly, with the design team's pull requests growing from 10 to 177 in a quarter.",
-  },
-  {
-    title: "버즈빌 'AI 네이티브' 전환 6개월… 디자이너가 코드 만지고 엔지니어가 CRM 구축",
-    titleEn: "Six months into Buzzvil's AI-native shift: designers touch code, an engineer builds the CRM",
-    outlet: 'Platum (플래텀)',
-    date: '2026-07-14',
-    url: 'https://platum.kr/archives/290856',
-    type: 'article',
-    lang: 'Korean',
-    note: "Coverage of the AI-native transition, leading with the design team's move into direct code changes.",
-  },
-  {
-    title: '버즈빌, AI 네이티브 전환 6개월만 업무 전반 재편',
-    titleEn: 'Buzzvil reshapes how it works, six months into going AI-native',
-    outlet: 'Digital Daily (디지털데일리)',
-    date: '2026-07-14',
-    url: 'https://www.ddaily.co.kr/page/view/2026071410253046288',
-    type: 'article',
-    lang: 'Korean',
-    note: "Covers the design team's 18x quarter-over-quarter growth in shipped pull requests.",
-  },
-  {
-    title: '버즈빌, AI 네이티브 전환 6개월…직군 경계 허문 AI 협업 확산',
-    titleEn: 'Six months AI-native at Buzzvil: AI collaboration across role boundaries',
-    outlet: 'MADTimes (매드타임스)',
-    date: '2026-07-14',
-    url: 'https://www.madtimes.co.kr/news/articleView.html?idxno=28330',
-    type: 'article',
-    lang: 'Korean',
-    note: 'Ad-industry coverage of the transition, including designers reviewing and shipping code.',
-  },
-  {
-    title: '버즈빌, AI 네이티브 전환 6개월… 직군 경계 허문 AI 협업 확산',
-    titleEn: 'Six months AI-native at Buzzvil: AI collaboration across role boundaries',
-    outlet: 'Brand Brief (브랜드브리프)',
-    date: '2026-07-14',
-    url: 'https://www.brandbrief.co.kr/news/articleView.html?idxno=10094',
-    type: 'article',
-    lang: 'Korean',
-    note: 'Brand-industry coverage of the transition and the design team’s role in it.',
+    note: "News coverage of Buzzvil's AI-native transition, six months in: designers shipping code directly, with the design team's pull requests growing from 10 to 177 in a quarter.",
+    also: [
+      {
+        outlet: 'Platum (플래텀)',
+        url: 'https://platum.kr/archives/290856',
+        title: "버즈빌 'AI 네이티브' 전환 6개월… 디자이너가 코드 만지고 엔지니어가 CRM 구축",
+      },
+      {
+        outlet: 'Digital Daily (디지털데일리)',
+        url: 'https://www.ddaily.co.kr/page/view/2026071410253046288',
+        title: '버즈빌, AI 네이티브 전환 6개월만 업무 전반 재편',
+      },
+      {
+        outlet: 'MADTimes (매드타임스)',
+        url: 'https://www.madtimes.co.kr/news/articleView.html?idxno=28330',
+        title: '버즈빌, AI 네이티브 전환 6개월…직군 경계 허문 AI 협업 확산',
+      },
+      {
+        outlet: 'Brand Brief (브랜드브리프)',
+        url: 'https://www.brandbrief.co.kr/news/articleView.html?idxno=10094',
+        title: '버즈빌, AI 네이티브 전환 6개월… 직군 경계 허문 AI 협업 확산',
+      },
+    ],
   },
   {
     title: "'개자이너'의 시대, AI가 디자인팀을 바꾸는 법",

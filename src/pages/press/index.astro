@@ -30,36 +30,122 @@ const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
         />
       </AnimatedContent>
 
-      {years.map((year) => (
-        <div class="mb-16 last:mb-0">
+      {years.map((year, yearIndex) => (
+        <section class="mb-14 last:mb-0">
           <AnimatedContent>
-            <h2 class="text-2xl md:text-3xl font-mono font-light mb-4 text-theme" data-reveal style="--r: 0">
-              {year}
-            </h2>
-            <div class="reveal-rule mb-8" style="--r: 0" aria-hidden="true"></div>
-            <div class="space-y-10">
-              {itemsByYear[year].map((item, itemIndex) => (
-                <article data-reveal style={`--r: ${1 + Math.min(itemIndex, 5)}`}>
-                  <p class="text-sm text-theme-muted mb-2 font-mono">
-                    {item.outlet} · <DateDisplay date={new Date(item.date)} /> · {item.type} · {item.lang}
+            {yearIndex > 0 && <div class="reveal-rule mb-8 md:mb-10" style="--r: 0" aria-hidden="true"></div>}
+            <div class="md:grid md:grid-cols-[6.5rem_1fr] md:gap-x-12">
+              <div class="mb-6 md:mb-0">
+                <div class="md:sticky md:top-28">
+                  <h2 class="text-3xl md:text-4xl font-mono font-light text-theme leading-none" data-reveal style="--r: 0">
+                    {year}
+                  </h2>
+                  <p class="hidden md:block mt-3 font-mono text-[0.8125rem] text-theme-muted" data-reveal style="--r: 1">
+                    {itemsByYear[year].length} {itemsByYear[year].length === 1 ? 'item' : 'items'}
                   </p>
-                  <h3 class="font-mono font-light text-xl md:text-2xl mt-0 mb-1">
-                    <a href={item.url} target="_blank" rel="noopener noreferrer">
-                      {item.title}
-                    </a>
-                  </h3>
-                  {item.titleEn && (
-                    <p class="text-base text-theme-muted italic mb-2">{item.titleEn}</p>
-                  )}
-                  {item.note && <p class="text-base leading-relaxed">{item.note}</p>}
-                </article>
-              ))}
+                </div>
+              </div>
+              <div class="press-entries">
+                {itemsByYear[year].map((item, itemIndex) => (
+                  <article class="py-8 first:pt-0 last:pb-0" data-reveal style={`--r: ${1 + Math.min(itemIndex, 5)}`}>
+                    <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3 font-mono text-[0.8125rem]">
+                      <span class="font-bold uppercase tracking-[0.16em] text-theme">{item.outlet}</span>
+                      <span class="uppercase tracking-[0.14em] text-theme-muted">
+                        {item.type} · {item.lang}{item.also && ` · ${1 + item.also.length} outlets`}
+                      </span>
+                      <span class="sm:ml-auto"><DateDisplay date={new Date(item.date)} /></span>
+                    </p>
+                    <h3 class="font-mono font-light text-xl md:text-2xl leading-snug m-0">
+                      <a class="press-title no-underline" href={item.url} target="_blank" rel="noopener noreferrer">
+                        {item.title}<span class="press-arrow" aria-hidden="true">↗</span>
+                      </a>
+                    </h3>
+                    {item.titleEn && (
+                      <p class="text-sm md:text-base text-theme-muted italic mt-1.5 mb-0">{item.titleEn}</p>
+                    )}
+                    {item.note && <p class="text-base leading-relaxed mt-3 mb-0 max-w-3xl">{item.note}</p>}
+                    {item.also && (
+                      <p class="flex flex-wrap items-center gap-2 mt-4 mb-0">
+                        <span class="font-mono text-[0.8125rem] uppercase tracking-[0.14em] text-theme-muted">
+                          Also covered by
+                        </span>
+                        {item.also.map((c) => (
+                          <a
+                            class="press-chip no-underline"
+                            href={c.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={c.title}
+                          >
+                            {c.outlet}
+                          </a>
+                        ))}
+                      </p>
+                    )}
+                  </article>
+                ))}
+              </div>
             </div>
           </AnimatedContent>
-        </div>
+        </section>
       ))}
     </div>
   </PageContent>
   <Footer />
   <ThemeToast />
 </BaseLayout>
+
+<style>
+  .press-entries article + article {
+    border-top: 1px solid var(--theme-border);
+  }
+
+  /* Hover follows the site's mark idiom (accent bg, page-bg text — same pair as
+     ::selection); backgrounds paint per line fragment, so wrapped titles work. */
+  .press-title {
+    color: var(--theme-text);
+    text-decoration: none;
+    padding: 0.05em 0.15em;
+    margin: -0.05em -0.15em;
+    border-radius: 0.125em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .press-title:hover {
+    background-color: var(--theme-accent);
+    color: var(--theme-bg);
+  }
+
+  .press-arrow {
+    display: inline-block;
+    margin-left: 0.4em;
+    font-size: 0.7em;
+    color: var(--theme-text-muted);
+    transform: translateY(-0.15em);
+    transition: transform 0.2s ease, color 0.15s ease;
+  }
+
+  .press-title:hover .press-arrow {
+    transform: translate(0.15em, -0.35em);
+    color: var(--theme-bg);
+  }
+
+  .press-chip {
+    font-family: var(--theme-font-heading);
+    font-size: 0.8125rem;
+    line-height: 1;
+    padding: 5px 8px;
+    border: 1px solid var(--theme-border);
+    border-radius: 0.25rem;
+    color: var(--theme-text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .press-chip:hover {
+    color: var(--theme-text);
+    border-color: var(--theme-accent);
+  }
+</style>
