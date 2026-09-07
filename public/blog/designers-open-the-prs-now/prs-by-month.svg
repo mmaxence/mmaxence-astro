@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" width="720" height="340" role="img" aria-label="Design team pull requests per month in 2026, with the share of the team contributing: March 10 PRs from 17% of the team, April 34 from 50%, May 36 from 67%, June 107 from 100%, July 145 from 100%, August 89 from 100%">
+<title>Design team pull requests per month, 2026</title>
+<style>
+.surface { fill: #ffffff; }
+.bar { fill: #1a1a1a; }
+.val { fill: #1a1a1a; font: 700 17px ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+.lab { fill: #6b6b6b; font: 400 13px ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif; }
+.axis { stroke: #1a1a1a; stroke-opacity: 0.15; }
+</style>
+<rect class="surface" x="0" y="0" width="720" height="340" rx="8"/>
+<line class="axis" x1="40" y1="272" x2="680" y2="272" stroke-width="1"/>
+<g class="bar">
+<rect x="60" y="257" width="76" height="15" rx="4"/>
+<rect x="166" y="221" width="76" height="51" rx="4"/>
+<rect x="272" y="218" width="76" height="54" rx="4"/>
+<rect x="378" y="112" width="76" height="160" rx="4"/>
+<rect x="484" y="55" width="76" height="217" rx="4"/>
+<rect x="590" y="139" width="76" height="133" rx="4"/>
+</g>
+<g class="val" text-anchor="middle">
+<text x="98" y="247">10</text>
+<text x="204" y="211">34</text>
+<text x="310" y="208">36</text>
+<text x="416" y="102">107</text>
+<text x="522" y="45">145</text>
+<text x="628" y="129">89</text>
+</g>
+<g class="lab" text-anchor="middle">
+<text x="98" y="294">Mar</text>
+<text x="204" y="294">Apr</text>
+<text x="310" y="294">May</text>
+<text x="416" y="294">Jun</text>
+<text x="522" y="294">Jul</text>
+<text x="628" y="294">Aug</text>
+<text x="98" y="314">17% of team</text>
+<text x="204" y="314">50%</text>
+<text x="310" y="314">67%</text>
+<text x="416" y="314">100%</text>
+<text x="522" y="314">100%</text>
+<text x="628" y="314">100%</text>
+</g>
+</svg>
