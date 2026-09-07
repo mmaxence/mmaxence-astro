@@ -3,8 +3,6 @@ title: "The Job Description Is Wrong"
 description: "Most design job descriptions are optimized for a role that is quietly disappearing. The five traits that actually matter now, and how to hire and apply for the work that's replacing it."
 date: 2026-03-25T12:00:00+09:00
 draft: false
-featured: true
-featured_order: 4
 featured_image: "/images/the-job-description-is-wrong.png"
 tags: ["career", "design-leadership", "ai-design"]
 ---

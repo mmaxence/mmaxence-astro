@@ -4,7 +4,7 @@ description: "How Buzzvil's design team unified every web property under a singl
 date: 2026-04-14T10:00:00+09:00
 draft: false
 featured: true
-featured_order: 5
+featured_order: 4
 featured_image: "/blog/nobody-owned-the-website-now-everybody-does/cover.png"
 tags: ["ai-design", "design-systems", "product-strategy"]
 ---

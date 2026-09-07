@@ -5,7 +5,7 @@ date: 2026-06-17T10:00:00+09:00
 featured_image: "/images/a-design-system-for-an-agent.png"
 draft: false
 featured: true
-featured_order: 6
+featured_order: 5
 tags: ["ai-design", "design-systems", "agents", "product-strategy"]
 ---
 

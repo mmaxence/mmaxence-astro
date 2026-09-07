@@ -4,6 +4,8 @@ description: "6 months. 432 pull requests. One design team. What got better, and
 date: 2026-09-07T10:00:00+09:00
 featured_image: "/images/designers-open-the-prs-now.jpg"
 draft: false
+featured: true
+featured_order: 6
 tags: ["ai-design", "design-systems", "workflow", "craft"]
 ---
 
