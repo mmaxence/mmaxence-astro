@@ -6,31 +6,45 @@ import AnimatedContent from '../ui/AnimatedContent.astro';
 
 interface Props {
   title: string;
+  id?: string;
   label?: string; // corner label on the visual frame; defaults to ".kebab-cased-title"
   flip?: boolean;
+  openVisual?: boolean;
   delay?: number;
 }
 
-const { title, label, flip = false, delay = 0 } = Astro.props;
+const { title, id, label, flip = false, openVisual = false, delay = 0 } = Astro.props;
 const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
-<section class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-20 md:py-28">
+<section id={id} class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-20 md:py-28">
   <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
     <AnimatedContent delay={delay}>
       <article class="w-full index-content-section">
         <h2 class="section-kicker" data-reveal style="--r: 0">{title}</h2>
 
-        <div class="mt-10 md:mt-14 grid items-center gap-10 lg:gap-14 lg:grid-cols-2">
-          <div class="section-copy" data-reveal style="--r: 1">
-            <slot name="pre-visual" />
-            <slot name="aside" />
+        {openVisual ? (
+          <>
+            <div class="visual-study" data-reveal style="--r: 1">
+              <slot name="visual" />
+            </div>
+            <div class="section-copy study-copy" data-reveal style="--r: 2">
+              <slot name="pre-visual" />
+              <slot name="aside" />
+            </div>
+          </>
+        ) : (
+          <div class="mt-10 md:mt-14 grid items-center gap-10 lg:gap-14 lg:grid-cols-2">
+            <div class="section-copy" data-reveal style="--r: 1">
+              <slot name="pre-visual" />
+              <slot name="aside" />
+            </div>
+            <div class={`visual-frame ${flip ? 'lg:order-first' : ''}`} data-reveal style="--r: 2">
+              <span class="visual-frame-label" aria-hidden="true">{frameLabel}</span>
+              <slot name="visual" />
+            </div>
           </div>
-          <div class={`visual-frame ${flip ? 'lg:order-first' : ''}`} data-reveal style="--r: 2">
-            <span class="visual-frame-label" aria-hidden="true">{frameLabel}</span>
-            <slot name="visual" />
-          </div>
-        </div>
+        )}
 
         {Astro.slots.has('post-visual') && (
           <div class="mt-12 md:mt-16" data-reveal style="--r: 3">
@@ -43,6 +57,16 @@ const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
 </section>
 
 <style>
+  section { scroll-margin-top: 96px; }
+
+  .visual-study {
+    width: clamp(220px, 28vw, 300px);
+    max-width: 100%;
+    margin-block: 24px;
+  }
+
+  .study-copy { max-width: 42rem; }
+
   /* Soft framed panel for the section visual */
   .visual-frame {
     position: relative;

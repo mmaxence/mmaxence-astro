@@ -11,7 +11,17 @@ const svgPaths = {
 function Wrapper({ children }: React.PropsWithChildren<{}>) {
   return (
     <div className="relative shrink-0 size-[144px]">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 144 144">
+      <svg
+        className="block size-full"
+        style={{ overflow: 'visible' }}
+        fill="none"
+        stroke="var(--theme-bg)"
+        strokeWidth="8"
+        strokeLinejoin="round"
+        paintOrder="stroke fill"
+        preserveAspectRatio="none"
+        viewBox="0 0 144 144"
+      >
         {children}
       </svg>
     </div>
@@ -30,9 +40,9 @@ function Diamond() {
 
 function Circle() {
   return (
-    <div className="relative shrink-0 size-[144px]">
-      <div className="absolute bg-[var(--theme-text,currentColor)] left-[8px] rounded-[72px] size-[128px] top-[8px]" />
-    </div>
+    <Wrapper>
+      <circle cx="72" cy="72" r="64" fill="var(--theme-text, currentColor)" />
+    </Wrapper>
   );
 }
 
@@ -52,125 +62,180 @@ const SHAPES = [
   { id: 'hexagon', component: Hexagon },
 ];
 
-// Horizontal fan-out per slot during the bloom (outer shapes spread, centre lifts straight)
-const FAN_X = [-12, 0, 12];
+// Separate orbital and bloom layers keep cursor motion continuous during a flip.
+const ORBITS = [
+  { angle: -1.18, radius: 105, size: 40, phase: 0, speed: 0.095 },
+  { angle: 1.02, radius: 102, size: 30, phase: 2.1, speed: 0.078 },
+  { angle: 3.4, radius: 108, size: 50, phase: 4.3, speed: 0.086 },
+];
+
+// Layered, incommensurate waves give each orbit a wandering path without jitter.
+// A per-mount seed varies the motion while the initial render stays stable.
+function projectOrbit(orbit: typeof ORBITS[number], time: number, dx = 0, dy = 0, seed = 0, reach = 112) {
+  const phase = orbit.phase + seed;
+  const easeIn = Math.min(1, time / 4);
+  const wander = (Math.sin(time * 0.19 + phase) * 0.48
+    + Math.sin(time * 0.37 + phase * 1.7) * 0.22) * easeIn;
+  const angle = orbit.angle + time * orbit.speed + wander;
+  const depth = Math.sin(angle + 0.55 + orbit.phase * 0.12
+    + Math.sin(time * 0.23 + phase) * 0.48 * easeIn);
+  const scale = 1 + depth * 0.32;
+  const breathing = (Math.sin(time * 0.27 + phase) * 20
+    + Math.sin(time * 0.43 + phase * 2.3) * 11) * easeIn;
+  const radius = orbit.radius * (1 + depth * 0.20) + breathing;
+  const tilt = 0.83 + Math.sin(time * 0.17 + phase) * 0.13 * easeIn;
+  let x = Math.cos(angle) * radius + dx;
+  let y = Math.sin(angle) * radius * tilt + dy;
+  const distance = Math.hypot(x, y);
+  // More room sideways on desktop; preserve the headline and narrow-screen gutters.
+  const outer = distance / Math.max(Math.hypot(x / reach, y / 112), 0.001);
+  const bounded = Math.max(90 - orbit.size * scale * 0.12, Math.min(outer, distance));
+  x *= bounded / Math.max(distance, 1);
+  y *= bounded / Math.max(distance, 1);
+  const tumble = Math.sin(time * 0.31 + phase) * 22 * easeIn;
+  return { x: 140 + x, y: 132 + y, depth, scale, angle, tumble };
+}
+
+function orbitTransform(orbit: typeof ORBITS[number], position: ReturnType<typeof projectOrbit>) {
+  const rotation = Math.sin(position.angle * 0.7 + orbit.phase) * 32 + position.tumble;
+  return `translate(${position.x - orbit.size / 2}px, ${position.y - orbit.size / 2}px) rotate(${rotation}deg) scale(${position.scale})`;
+}
 
 export function AnimatedPatterns() {
-  // refs to each shape's inner (choreography) element — animated on `hero-flip`,
-  // always returning to its exact resting position.
-  const innerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const orbitRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const bloomRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const root = rootRef.current;
+    const hero = root?.closest('.home-hero');
+    const zone = root?.closest('.hero-profile-wrapper');
+    if (!hero || !zone) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const seeds = ORBITS.map(() => Math.random() * Math.PI * 2);
+    const wide = window.matchMedia('(min-width: 768px)');
+    const springs = ORBITS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+    let pointer: { x: number; y: number } | null = null;
+    let frame = 0;
+    let last = 0;
+    let time = 0;
+    let visible = true;
+    const animations = new Set<Animation>();
 
-    // Guard so the gentle hover tease never interrupts a running bloom (and
-    // repeated hovers don't restart mid-motion).
-    let bloomUntil = 0;
-
-    // The shapes "bloom": lift + fan out with a stagger, then settle back home,
-    // timed to the photo spin. Pure accompaniment — they return exactly where they were.
-    const onFlip = (e: Event) => {
-      if (reduce) return;
-      const detail = (e as CustomEvent).detail || {};
-      const duration = Math.max(700, detail.duration || 1200);
-      bloomUntil = performance.now() + duration + 2 * 55;
-
-      innerRefs.current.forEach((el, i) => {
+    const move = (event: Event) => {
+      const e = event as PointerEvent;
+      if (!fine.matches || e.pointerType === 'touch') return;
+      const rect = zone.getBoundingClientRect();
+      pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const leave = () => { pointer = null; };
+    const tick = (now: number) => {
+      frame = 0;
+      const dt = Math.min((now - (last || now)) / 1000, 0.032);
+      last = now;
+      if (!reduced.matches) time += dt;
+      ORBITS.forEach((orbit, i) => {
+        const el = orbitRefs.current[i];
         if (!el) return;
-        const x = FAN_X[i] ?? 0;
-        el.animate(
-          [
-            { transform: 'translate(0px, 0px) scale(1)', easing: 'cubic-bezier(0.3, 0, 0.35, 1)' },
-            { transform: `translate(${x * 0.6}px, -16px) scale(0.92)`, offset: 0.3 },
-            { transform: `translate(${x}px, -9px) scale(0.96)`, offset: 0.56, easing: 'cubic-bezier(0.18, 0.7, 0.3, 1)' },
-            { transform: 'translate(0px, 0px) scale(1)', offset: 1 },
-          ],
-          { duration, delay: i * 55, easing: 'ease-out', fill: 'none' }
-        );
+        const { x, y } = projectOrbit(orbit, time, 0, 0, seeds[i], wide.matches ? 156 : 112);
+        let tx = 0;
+        let ty = 0;
+        if (pointer && !reduced.matches) {
+          const dx = pointer.x - x;
+          const dy = pointer.y - y;
+          const distance = Math.hypot(dx, dy);
+          // A small attraction from nearby, turning into a soft repulsion up close.
+          const influence = Math.max(0, 1 - distance / 280);
+          const force = 20 * influence - 38 * Math.exp(-Math.pow(distance / 65, 2));
+          tx = dx / Math.max(distance, 1) * force;
+          ty = dy / Math.max(distance, 1) * force;
+        }
+        const spring = springs[i];
+        if (reduced.matches) spring.x = spring.y = spring.vx = spring.vy = 0;
+        else {
+          const stiffness = 38 + i * 7;
+          spring.vx += ((tx - spring.x) * stiffness - spring.vx * 11) * dt;
+          spring.vy += ((ty - spring.y) * stiffness - spring.vy * 11) * dt;
+          spring.x += spring.vx * dt;
+          spring.y += spring.vy * dt;
+        }
+        const position = projectOrbit(orbit, time, spring.x, spring.y, seeds[i], wide.matches ? 156 : 112);
+        el.style.transform = orbitTransform(orbit, position);
+        el.style.zIndex = position.depth >= 0 ? '2' : '0';
+        el.style.opacity = String(0.88 + (position.depth + 1) * 0.06);
+
+      });
+      if (visible && !document.hidden && !reduced.matches) frame = requestAnimationFrame(tick);
+    };
+    const resume = () => {
+      if (reduced.matches) {
+        animations.forEach(a => a.cancel());
+        animations.clear();
+      }
+      cancelAnimationFrame(frame);
+      last = 0;
+      tick(performance.now());
+    };
+    const onFlip = () => {
+      if (reduced.matches) return;
+      animations.forEach(a => a.cancel());
+      animations.clear();
+      bloomRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const animation = el.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(0.82)', offset: 0.22 },
+          { transform: 'scale(1.12)', offset: 0.56 },
+          { transform: 'scale(1)' },
+        ], { duration: 1100, delay: i * 65, easing: 'cubic-bezier(.22,.61,.36,1)' });
+        animations.add(animation);
+        animation.finished.then(() => animations.delete(animation)).catch(() => {});
       });
     };
-
-    // Hover tease: the same choreography at ~half amplitude, quicker — an
-    // invitation to click, distinct from the full click bloom.
-    const onHover = () => {
-      if (reduce) return;
-      const now = performance.now();
-      if (now < bloomUntil) return;
-      const duration = 650;
-      bloomUntil = now + duration + 2 * 45;
-
-      innerRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const x = (FAN_X[i] ?? 0) * 0.5;
-        el.animate(
-          [
-            { transform: 'translate(0px, 0px) scale(1)', easing: 'cubic-bezier(0.3, 0, 0.35, 1)' },
-            { transform: `translate(${x}px, -8px) scale(0.97)`, offset: 0.42, easing: 'cubic-bezier(0.18, 0.7, 0.3, 1)' },
-            { transform: 'translate(0px, 0px) scale(1)', offset: 1 },
-          ],
-          { duration, delay: i * 45, easing: 'ease-out', fill: 'none' }
-        );
-      });
-    };
-
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      resume();
+    });
+    observer.observe(hero);
+    hero.addEventListener('pointermove', move, { passive: true });
+    hero.addEventListener('pointerleave', leave);
     document.addEventListener('hero-flip', onFlip);
-    document.addEventListener('hero-hover', onHover);
+    document.addEventListener('visibilitychange', resume);
+    reduced.addEventListener('change', resume);
+    resume();
     return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      animations.forEach(a => a.cancel());
+      hero.removeEventListener('pointermove', move);
+      hero.removeEventListener('pointerleave', leave);
       document.removeEventListener('hero-flip', onFlip);
-      document.removeEventListener('hero-hover', onHover);
+      document.removeEventListener('visibilitychange', resume);
+      reduced.removeEventListener('change', resume);
     };
   }, []);
 
   return (
-    <div
-      className="flex items-center justify-center relative w-full"
-      data-name="patterns"
-      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', minHeight: '73.4px' }}
-    >
-      <div className="relative origin-center shapes-container-responsive">
-        <style>{`
-          .shapes-container-responsive {
-            width: 228.5px;
-            height: 73.4px;
-            position: relative;
-            margin: 0 auto;
-          }
-          @media (max-width: 768px) {
-            .shapes-container-responsive {
-              width: 152.3px;
-              height: 49px;
-            }
-          }
-          .shapes-inner-container {
-            width: 448px;
-            height: 144px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.51);
-            transform-origin: center center;
-          }
-          @media (max-width: 768px) {
-            .shapes-inner-container {
-              transform: translate(-50%, -50%) scale(0.34);
-            }
-          }
-        `}</style>
-
-        <div className="shapes-inner-container" style={{ position: 'relative' }}>
-          {SHAPES.map((shape, i) => {
-            const Component = shape.component;
-            const translateX = i * 152; // 144 shape + 8 gap
-            return (
-              <div key={shape.id} className="absolute top-0 left-0" style={{ transform: `translateX(${translateX}px)` }}>
-                <div ref={(el) => (innerRefs.current[i] = el)} style={{ willChange: 'transform' }}>
-                  <Component />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+    <div ref={rootRef} aria-hidden="true" style={{ position: 'absolute', inset: 0 }}>
+      {SHAPES.map((shape, i) => {
+        const Component = shape.component;
+        const orbit = ORBITS[i];
+        const position = projectOrbit(orbit, 0);
+        return (
+          <div key={shape.id} ref={el => { orbitRefs.current[i] = el; }} style={{
+            position: 'absolute', top: 0, left: 0, width: orbit.size, height: orbit.size,
+            transform: orbitTransform(orbit, position),
+            zIndex: position.depth >= 0 ? 2 : 0,
+            opacity: 0.88 + (position.depth + 1) * 0.06,
+            willChange: 'transform',
+          }}>
+            <div ref={el => { bloomRefs.current[i] = el; }} style={{ width: '100%', height: '100%' }}>
+              <div style={{ transform: `scale(${orbit.size / 144})`, transformOrigin: 'top left' }}><Component /></div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

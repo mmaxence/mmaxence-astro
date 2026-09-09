@@ -32,9 +32,10 @@ const featuredDeepdive = (await getCollection('deepdives'))
 <BaseLayout title="Maxence Mauduit · Designing what should exist, and the systems that build it" description="Product designer. 15 years across product, system, and brand, 12 at one company. I build the design infrastructure people and AI agents work within, and I still design in code.">
   <Header />
   <PageContent class="flex flex-col pb-4">
-  <!-- Hero Section - Full Viewport -->
-  <section class="min-h-screen flex flex-col items-center justify-center px-4 md:px-8 lg:px-12">
-    <div class="w-full max-w-2xl mx-auto text-center">
+  <!-- Hero: composed within the space below the header -->
+  <section class="home-hero px-4 md:px-8 lg:px-12" aria-labelledby="hero-title">
+    <div class="hero-content max-w-5xl">
+      <div class="hero-art">
       <AnimatedContent delay={0}>
         <div
           class="hero-profile-wrapper"
@@ -53,22 +54,24 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <HeroShapes />
         </div>
       </AnimatedContent>
+      </div>
+      <div class="hero-copy">
       <AnimatedContent delay={100}>
-        <h1 class="text-center text-4xl md:text-5xl m-0 font-heading font-normal text-theme">
-          Crafting delight, shipping systems.
+        <h1 id="hero-title" class="hero-title">
+          <span>Crafting delight,</span>
+          <span>shipping systems.</span>
         </h1>
       </AnimatedContent>
       <AnimatedContent delay={200}>
-        <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4 text-theme text-pretty">
-          15 years in, and a new project still feels like a Lego box. 15 years sharpening judgment on what works and what does not. 12 years ago, a hard problem: make ads feel magical. We are getting there. I lead, but I still deliver in code, more than ever with AI.
-        </p>
+        <p class="hero-description">15 years in, and a new project still feels like a Lego box. I shape products, build the systems behind them, and lead a team that ships. Still hands-on, still delivering in code, more than ever with AI.</p>
       </AnimatedContent>
+      </div>
     </div>
   </section>
   
   <!-- Main Content Sections -->
     {/* WHAT I DO */}
-    <HomeSection title="What I do">
+    <HomeSection title="What I do" id="what-i-do" openVisual>
       <p slot="pre-visual" class="section-lede text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
       <div slot="aside">
         <p class="mt-6 text-balance">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
@@ -80,7 +83,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
     </HomeSection>
     
     {/* THE CRAFT */}
-    <HomeSection title="The craft" flip>
+    <HomeSection title="The craft" flip openVisual>
       <p slot="pre-visual" class="section-lede text-balance">The work that matters most now is not drawing screens. It is encoding judgment into systems.</p>
       <div slot="aside">
         <p class="mt-6 text-balance">When judgment lives in the system, good things get made without anyone standing over the work. People design with them, agents design within them.</p>
@@ -285,11 +288,68 @@ const featuredDeepdive = (await getCollection('deepdives'))
     </BaseLayout>
 
 <style>
+  .home-hero {
+    display: grid;
+    place-items: center;
+    min-height: min(820px, calc(100svh - 132px));
+    padding-block: 24px 40px;
+    color: var(--theme-text);
+  }
+
+  .hero-content {
+    width: 100%;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: 32px;
+  }
+
+  .hero-art, .hero-copy { min-width: 0; }
+
+  .hero-title {
+    margin: 0;
+    font-family: var(--theme-font-heading);
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1.04;
+  }
+
+  .hero-title span { display: block; }
+
+  .hero-description {
+    max-width: 34rem;
+    margin: 28px 0 0;
+    color: var(--theme-text-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 767px) {
+    .home-hero {
+      min-height: calc(100svh - 100px);
+      padding-block: 36px 48px;
+    }
+    .hero-content {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+      text-align: left;
+    }
+    .hero-description { margin: 24px 0 0; }
+  }
+
   .hero-profile-wrapper {
+    width: 280px;
+    max-width: 100%;
+    height: 264px;
+    isolation: isolate;
+    margin: 0;
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     cursor: pointer;
     outline: none;
   }
@@ -302,11 +362,13 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
   /* Pinch-to-spin easter egg: a suspended, two-faced disc */
   .profile-flip {
-    width: 33%;
+    width: 180px;
     aspect-ratio: 1 / 1;
     position: relative;
-    z-index: 0;
-    margin-bottom: -3.5rem;
+    z-index: 1;
+    margin-left: 50px;
+    margin-top: 42px;
+    margin-bottom: 0;
     perspective: 1100px;
     cursor: pointer;
     outline: none;
@@ -380,8 +442,12 @@ const featuredDeepdive = (await getCollection('deepdives'))
   }
 
   .hero-profile-wrapper :global(.hero-shapes-wrapper) {
-    position: relative;
-    z-index: 1;
+    margin: 0;
+    position: absolute;
+    inset: 0;
+    /* No stacking context: individual shapes pass behind and before the photo. */
+    z-index: auto;
+    pointer-events: none;
   }
 
   /* Craft dimensions grid — 4 > 2 > 1 columns */
