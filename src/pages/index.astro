@@ -34,7 +34,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
   <PageContent class="flex flex-col pb-4">
   <!-- Hero Section - Full Viewport -->
   <section class="min-h-screen flex flex-col items-center justify-center px-4 md:px-8 lg:px-12">
-    <div class="w-full max-w-4xl mx-auto text-center">
+    <div class="w-full max-w-2xl mx-auto text-center">
       <AnimatedContent delay={0}>
         <div
           class="hero-profile-wrapper"
@@ -55,12 +55,12 @@ const featuredDeepdive = (await getCollection('deepdives'))
       </AnimatedContent>
       <AnimatedContent delay={100}>
         <h1 class="text-center text-4xl md:text-5xl m-0 font-heading font-normal text-theme">
-          Crafting delightful experiences, shipping the systems behind them.
+          Crafting delight, shipping systems.
         </h1>
       </AnimatedContent>
       <AnimatedContent delay={200}>
-        <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-3xl mx-auto px-4 text-theme text-pretty">
-          15 years in, and I still open a project the way my son opens a Lego box. 15 years sharpening judgment on what works and what does not. 12 years ago I was handed a hard problem: make ads feel magical. We are getting there. I lead, and I am still an IC, more than ever with AI. I explore freely, but I deliver in code, where our products live.
+        <p class="text-center mt-4 text-base md:text-lg font-body font-normal max-w-2xl mx-auto px-4 text-theme text-pretty">
+          15 years in, and a new project still feels like a Lego box. 15 years sharpening judgment on what works and what does not. 12 years ago, a hard problem: make ads feel magical. We are getting there. I lead, but I still deliver in code, more than ever with AI.
         </p>
       </AnimatedContent>
     </div>
@@ -302,8 +302,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
 
   /* Pinch-to-spin easter egg: a suspended, two-faced disc */
   .profile-flip {
-    /* caps at the size it had when the hero column was max-w-2xl */
-    width: min(33%, 222px);
+    width: 33%;
     aspect-ratio: 1 / 1;
     position: relative;
     z-index: 0;
