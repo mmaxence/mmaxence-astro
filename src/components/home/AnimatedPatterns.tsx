@@ -69,6 +69,10 @@ const ORBITS = [
   { angle: 3.4, radius: 108, size: 50, phase: 4.3, speed: 0.086 },
 ];
 
+// Keep almost the entire silhouette outside the portrait, including the largest
+// click bloom. Using the same clearance at every depth avoids a jump at z-index changes.
+const portraitClearance = (size: number, scale: number) => 90 + size * scale * 0.45 * 1.12;
+
 // Layered, incommensurate waves give each orbit a wandering path without jitter.
 // A per-mount seed varies the motion while the initial render stays stable.
 function projectOrbit(orbit: typeof ORBITS[number], time: number, dx = 0, dy = 0, seed = 0, reach = 112) {
@@ -89,7 +93,7 @@ function projectOrbit(orbit: typeof ORBITS[number], time: number, dx = 0, dy = 0
   const distance = Math.hypot(x, y);
   // More room sideways on desktop; preserve the headline and narrow-screen gutters.
   const outer = distance / Math.max(Math.hypot(x / reach, y / 112), 0.001);
-  const bounded = Math.max(90 - orbit.size * scale * 0.12, Math.min(outer, distance));
+  const bounded = Math.max(portraitClearance(orbit.size, scale), Math.min(outer, distance));
   x *= bounded / Math.max(distance, 1);
   y *= bounded / Math.max(distance, 1);
   const tumble = Math.sin(time * 0.31 + phase) * 22 * easeIn;
@@ -115,56 +119,120 @@ export function AnimatedPatterns() {
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
     const seeds = ORBITS.map(() => Math.random() * Math.PI * 2);
     const wide = window.matchMedia('(min-width: 768px)');
-    const springs = ORBITS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+    const creatures = ORBITS.map((orbit, i) => ({
+      ...projectOrbit(orbit, 0), vx: 0, vy: 0, away: false,
+      readyAt: 3 + i * 1.7 + Math.random() * 2,
+      decideAt: 0, speed: 0, bearing: 0, distance: 60, paused: false,
+    }));
     let pointer: { x: number; y: number } | null = null;
+    let previousPointer: { x: number; y: number; at: number } | null = null;
     let frame = 0;
     let last = 0;
     let time = 0;
     let visible = true;
     const animations = new Set<Animation>();
 
+    const startle = () => {
+      creatures.forEach(creature => {
+        creature.readyAt = time + 5 + Math.random() * 6;
+        creature.decideAt = 0;
+      });
+    };
     const move = (event: Event) => {
       const e = event as PointerEvent;
       if (!fine.matches || e.pointerType === 'touch') return;
-      const rect = zone.getBoundingClientRect();
-      pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      const at = performance.now();
+      if (previousPointer) {
+        const elapsed = at - previousPointer.at;
+        const distance = Math.hypot(e.clientX - previousPointer.x, e.clientY - previousPointer.y);
+        if (elapsed >= 24 && elapsed < 150 && distance > 14 && distance / elapsed > 1.05) startle();
+      } else {
+        creatures.forEach((creature, i) => {
+          creature.readyAt = Math.max(creature.readyAt, time + 2.5 + i * 1.7);
+        });
+      }
+      if (!previousPointer || at - previousPointer.at >= 24) {
+        previousPointer = { x: e.clientX, y: e.clientY, at };
+      }
+      pointer = { x: e.clientX, y: e.clientY };
     };
-    const leave = () => { pointer = null; };
+    const leave = () => { pointer = null; previousPointer = null; };
     const tick = (now: number) => {
       frame = 0;
       const dt = Math.min((now - (last || now)) / 1000, 0.032);
       last = now;
       if (!reduced.matches) time += dt;
+      const rect = zone.getBoundingClientRect();
+      const bounds = hero.getBoundingClientRect();
+      const curious = pointer && fine.matches && !reduced.matches && visible && !document.hidden
+        && pointer.x >= bounds.left && pointer.x <= bounds.right
+        && pointer.y >= bounds.top && pointer.y <= bounds.bottom;
       ORBITS.forEach((orbit, i) => {
         const el = orbitRefs.current[i];
         if (!el) return;
-        const { x, y } = projectOrbit(orbit, time, 0, 0, seeds[i], wide.matches ? 156 : 112);
-        let tx = 0;
-        let ty = 0;
-        if (pointer && !reduced.matches) {
-          const dx = pointer.x - x;
-          const dy = pointer.y - y;
-          const distance = Math.hypot(dx, dy);
-          // A small attraction from nearby, turning into a soft repulsion up close.
-          const influence = Math.max(0, 1 - distance / 280);
-          const force = 20 * influence - 38 * Math.exp(-Math.pow(distance / 65, 2));
-          tx = dx / Math.max(distance, 1) * force;
-          ty = dy / Math.max(distance, 1) * force;
+        const home = projectOrbit(orbit, time, 0, 0, seeds[i], wide.matches ? 156 : 112);
+        const creature = creatures[i];
+        const following = curious && time > creature.readyAt;
+        if (following && pointer) {
+          creature.away = true;
+          // Decisions last seconds, not frames: each creature hesitates independently.
+          if (time >= creature.decideAt) {
+            creature.decideAt = time + 1.2 + Math.random() * 3.8;
+            creature.paused = Math.random() < 0.28;
+            creature.speed = 22 + Math.random() * 44;
+            creature.bearing = Math.random() * Math.PI * 2;
+            creature.distance = 38 + Math.random() * 66;
+          }
+          const targetX = Math.max(bounds.left + 42, Math.min(bounds.right - 42,
+            pointer.x + Math.cos(creature.bearing) * creature.distance)) - rect.left;
+          const targetY = Math.max(bounds.top + 42, Math.min(bounds.bottom - 42,
+            pointer.y + Math.sin(creature.bearing) * creature.distance)) - rect.top;
+          const dx = targetX - creature.x;
+          const dy = targetY - creature.y;
+          const distance = Math.max(1, Math.hypot(dx, dy));
+          const courage = Math.min(1, (time - creature.readyAt) / 3);
+          const speed = creature.paused ? 0 : Math.min(creature.speed, distance * 0.65) * courage;
+          // Sideways meanders and soft momentum create uncertain, occasionally overshooting steps.
+          const wobble = Math.sin(time * 1.3 + seeds[i]) * 0.8
+            + Math.sin(time * 0.57 + seeds[i] * 2) * 0.45;
+          const vx = (dx - dy * wobble) / distance * speed;
+          const vy = (dy + dx * wobble) / distance * speed;
+          const response = 1 - Math.exp(-dt * (creature.paused ? 2.8 : 1.3));
+          creature.vx += (vx - creature.vx) * response;
+          creature.vy += (vy - creature.vy) * response;
+          creature.x += creature.vx * dt;
+          creature.y += creature.vy * dt;
+        } else if (creature.away && !reduced.matches) {
+          // A startle sends them straight home; curiosity has a separate, slower clock.
+          creature.vx += ((home.x - creature.x) * 22 - creature.vx * 9) * dt;
+          creature.vy += ((home.y - creature.y) * 22 - creature.vy * 9) * dt;
+          creature.x += creature.vx * dt;
+          creature.y += creature.vy * dt;
+          if (Math.hypot(home.x - creature.x, home.y - creature.y) < 2) creature.away = false;
+        } else {
+          creature.x = home.x;
+          creature.y = home.y;
+          creature.vx = creature.vy = 0;
+          creature.away = false;
         }
-        const spring = springs[i];
-        if (reduced.matches) spring.x = spring.y = spring.vx = spring.vy = 0;
-        else {
-          const stiffness = 38 + i * 7;
-          spring.vx += ((tx - spring.x) * stiffness - spring.vx * 11) * dt;
-          spring.vy += ((ty - spring.y) * stiffness - spring.vy * 11) * dt;
-          spring.x += spring.vx * dt;
-          spring.y += spring.vy * dt;
+        // Follow and retreat paths slide around the photo instead of disappearing behind it.
+        const fromPhotoX = creature.x - 140;
+        const fromPhotoY = creature.y - 132;
+        const fromPhotoDistance = Math.hypot(fromPhotoX, fromPhotoY);
+        const clearance = portraitClearance(orbit.size, home.scale);
+        if (fromPhotoDistance < clearance) {
+          const nx = fromPhotoDistance > 0.001 ? fromPhotoX / fromPhotoDistance : Math.cos(home.angle);
+          const ny = fromPhotoDistance > 0.001 ? fromPhotoY / fromPhotoDistance : Math.sin(home.angle);
+          creature.x = 140 + nx * clearance;
+          creature.y = 132 + ny * clearance;
+          const inwardSpeed = Math.min(0, creature.vx * nx + creature.vy * ny);
+          creature.vx -= inwardSpeed * nx;
+          creature.vy -= inwardSpeed * ny;
         }
-        const position = projectOrbit(orbit, time, spring.x, spring.y, seeds[i], wide.matches ? 156 : 112);
+        const position = { ...home, x: creature.x, y: creature.y };
         el.style.transform = orbitTransform(orbit, position);
         el.style.zIndex = position.depth >= 0 ? '2' : '0';
         el.style.opacity = String(0.88 + (position.depth + 1) * 0.06);
-
       });
       if (visible && !document.hidden && !reduced.matches) frame = requestAnimationFrame(tick);
     };
@@ -195,11 +263,13 @@ export function AnimatedPatterns() {
     };
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      if (!visible) leave();
       resume();
     });
     observer.observe(hero);
     hero.addEventListener('pointermove', move, { passive: true });
     hero.addEventListener('pointerleave', leave);
+    hero.addEventListener('click', startle);
     document.addEventListener('hero-flip', onFlip);
     document.addEventListener('visibilitychange', resume);
     reduced.addEventListener('change', resume);
@@ -210,6 +280,7 @@ export function AnimatedPatterns() {
       animations.forEach(a => a.cancel());
       hero.removeEventListener('pointermove', move);
       hero.removeEventListener('pointerleave', leave);
+      hero.removeEventListener('click', startle);
       document.removeEventListener('hero-flip', onFlip);
       document.removeEventListener('visibilitychange', resume);
       reduced.removeEventListener('change', resume);
