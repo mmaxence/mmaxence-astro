@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import AnimatedContent from '../../components/ui/AnimatedContent.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import { workEntries } from '../../data/work';
+
+const description = 'Five products, told as a design leader’s work: the call, the foundation built so it could exist more than once, and what shipped on it.';
+---
+
+<BaseLayout title="Work" description={description}>
+  <Header />
+  <PageContent class="flex flex-col items-center pb-4 min-h-screen">
+    <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
+      <AnimatedContent delay="0">
+        <PageHeader title="Work" description={description} />
+      </AnimatedContent>
+
+      <div class="space-y-16 md:space-y-24">
+        {workEntries.map((w, i) => (
+          <AnimatedContent delay={Math.min(i, 3) * 50}>
+            <article id={w.slug} class="work-entry">
+              <header class="mb-6">
+                <p class="font-mono text-xs text-theme-muted mb-2">0{i + 1} · {w.years}</p>
+                <h2 class="text-2xl md:text-3xl font-mono font-light mb-2">{w.title}</h2>
+                <p class="text-base text-theme-muted">{w.kicker}</p>
+              </header>
+
+              {w.image ? (
+                <div class={`work-media ${w.imagePair ? 'work-media-pair' : ''}`}>
+                  <img src={w.image} alt={w.imageAlt || w.title} loading="lazy" />
+                  {w.imagePair && <img src={w.imagePair} alt="" loading="lazy" />}
+                </div>
+              ) : (
+                <div class="work-placeholder" aria-hidden="true">screen to add</div>
+              )}
+
+              <dl class="work-lines">
+                <div><dt>The call</dt><dd>{w.call}</dd></div>
+                <div><dt>The foundation</dt><dd>{w.foundation}</dd></div>
+                <div><dt>What shipped on it</dt><dd>{w.shipped}</dd></div>
+              </dl>
+
+              {w.links && w.links.length > 0 && (
+                <p class="work-links">
+                  {w.links.map((l) => (
+                    <a href={l.url} target={l.url.startsWith('http') ? '_blank' : undefined} rel={l.url.startsWith('http') ? 'noopener noreferrer' : undefined}>{l.label} ↗</a>
+                  ))}
+                </p>
+              )}
+            </article>
+          </AnimatedContent>
+        ))}
+      </div>
+    </div>
+  </PageContent>
+  <Footer />
+  <ThemeToast />
+
+  <style>
+    .work-media { border: 1px solid var(--color-border, rgba(0,0,0,.12)); border-radius: var(--radius-card, 12px); overflow: hidden; margin-bottom: 1.75rem; background: var(--color-bg, #fff); }
+    .work-media img { display: block; width: 100%; height: auto; }
+    .work-media-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--color-border, rgba(0,0,0,.12)); }
+    .work-media-pair img { background: var(--color-bg, #fff); }
+    .work-placeholder { border: 1px dashed var(--color-border, rgba(0,0,0,.2)); border-radius: var(--radius-card, 12px); aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono, monospace); font-size: .8rem; opacity: .55; margin-bottom: 1.75rem; }
+    .work-lines { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin: 0; }
+    .work-lines dt { font-family: var(--font-mono, monospace); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; opacity: .6; margin-bottom: .4rem; }
+    .work-lines dd { margin: 0; font-size: .95rem; line-height: 1.55; }
+    .work-links { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-family: var(--font-mono, monospace); font-size: .8rem; }
+    @media (max-width: 767px) { .work-lines { grid-template-columns: 1fr; gap: 1rem; } .work-media-pair { grid-template-columns: 1fr; } }
+  </style>
+</BaseLayout>

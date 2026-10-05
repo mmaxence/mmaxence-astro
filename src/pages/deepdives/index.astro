@@ -35,11 +35,9 @@ const deepdives = allDeepdives
 
       <AnimatedContent delay={100}>
         <div class={`flex flex-col items-center text-center rounded-[var(--radius-card)] border border-theme px-6 py-12 md:px-12 md:py-16 ${deepdives.length > 0 ? 'mt-12 md:mt-16' : ''}`}>
-          <p class="text-base mb-8 text-theme-muted">
-            {deepdives.length > 0
-              ? "More deep dives are being prepared. In the meantime, here's something to clear."
-              : "Case studies are on the way. In the meantime, here's something to clear."}
-          </p>
+          <p class="text-base mb-8 text-theme-muted" set:html={deepdives.length > 0
+              ? "More deep dives are being prepared. The shipped work is on the <a href=\"/work/\">Work</a> page. In the meantime, here's something to clear."
+              : "The shipped work is on the <a href=\"/work/\">Work</a> page. In the meantime, here's something to clear."} />
 
           <!-- Minesweeper -->
           <div class="minesweeper-wrapper">
