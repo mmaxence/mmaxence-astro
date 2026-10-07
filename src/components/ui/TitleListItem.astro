@@ -1,0 +1,21 @@
+---
+interface Props { title: string; href: string; meta?: string; date?: Date; number?: number; heading?: 'h2' | 'h3' }
+const { title, href, meta, date, number, heading: Heading = 'h3' } = Astro.props;
+---
+<div class="title-row">
+  {number !== undefined && <span class="sequence" aria-hidden="true">{String(number).padStart(2, '0')}</span>}
+  <Heading><a href={href} class="title-link prefetch-link" data-prefetch="true">{title}</a></Heading>
+  {date ? <time datetime={date.toISOString()}>{date.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}</time> : meta && <span class="meta">{meta}</span>}
+</div>
+<style>
+.title-row { display:flex; align-items:baseline; gap:1.25rem; padding:1.35rem 0; border-bottom:1px solid var(--theme-border); }
+h2, h3 { font-family:var(--font-mono, monospace); font-weight:400; font-size:1.35rem; line-height:1.4; margin:0; min-width:0; }
+.title-link, .title-link:hover { color:var(--theme-text); background:none; border:0; border-radius:0; box-shadow: none; text-decoration:none; }
+.title-link::before, .title-link::after { display:none; }
+.title-link:hover { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.22em; }
+.title-link:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+time, .meta, .sequence { font-family:var(--font-mono, monospace); font-size:.75rem; color:var(--theme-text-muted); }
+time, .meta { margin-left:auto; flex-shrink:0; }
+.sequence { flex-shrink:0; }
+@media(max-width:600px) { .title-row { flex-wrap:wrap; gap:.35rem .75rem; } h2, h3 { font-size:1.15rem; flex:1; } time, .meta { width:100%; margin-left:0; } }
+</style>

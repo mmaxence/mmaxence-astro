@@ -4,7 +4,7 @@
 ---
 
 <div id="theme-toast" class="theme-toast fixed bottom-4 right-4 z-50 hidden md:block">
-  <div class="toast-content rounded-lg shadow-lg px-4 py-3 flex items-center gap-3" style="background-color: var(--toast-bg); box-shadow: var(--toast-shadow);">
+  <div class="toast-content rounded-lg px-4 py-3 flex items-center gap-3" style="background-color: var(--toast-bg); box-shadow: none;">
     <div class="flex flex-col flex-1">
       <span class="toast-message text-sm font-semibold" style="color: var(--toast-text);">Theme</span>
     </div>
@@ -45,7 +45,7 @@
       '--theme-text-muted': 'rgba(26, 26, 26, 0.6)',
       '--theme-accent': '#000000',
       '--theme-border': '#e5e7eb',
-      '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+      '--theme-shadow': 'none',
       '--theme-highlight': '#FBF1A9',
       '--theme-radius': '0.5rem',
       '--theme-spacing': '1rem',
@@ -155,7 +155,7 @@
       const bgRgb = hexToRgb(themeBg);
       if (!bgRgb) {
         // Fallback
-        return { bg: '#000000', text: '#ffffff', buttonBg: '#ffffff', buttonText: '#000000', shadow: '0 4px 12px rgba(0, 0, 0, 0.3)' };
+        return { bg: '#000000', text: '#ffffff', buttonBg: '#ffffff', buttonText: '#000000', shadow: 'none' };
       }
 
       // Generate contrasting toast background
@@ -172,11 +172,7 @@
       const buttonBgHex = toastTextHex;
       const buttonTextHex = toastBgHex;
 
-      // Determine shadow based on toast brightness
-      const toastLum = getLuminance(toastBgRgb.r, toastBgRgb.g, toastBgRgb.b);
-      const shadow = toastLum < 0.5 
-        ? '0 4px 12px rgba(0, 0, 0, 0.3)'
-        : '0 4px 12px rgba(0, 0, 0, 0.15)';
+      const shadow = 'none';
 
       return {
         bg: toastBgHex,
@@ -348,7 +344,7 @@
         '--theme-text-muted': c.muted,
         '--theme-accent': c.accent,
         '--theme-border': c.border,
-        '--theme-shadow': isDark ? '0 4px 12px rgba(0, 0, 0, 0.6)' : '0 2px 8px rgba(0, 0, 0, 0.08)',
+        '--theme-shadow': 'none',
         '--theme-highlight': c.highlight || (isDark ? '#2ac3de' : '#FBF1A9'),
         '--theme-radius': '0.5rem',
         '--theme-spacing': '1rem',
@@ -466,7 +462,7 @@
 
   .reset-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
   }
 
   .reset-btn:focus {

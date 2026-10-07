@@ -4,12 +4,10 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import PageContent from '../components/ui/PageContent.astro';
 import AnimatedContent from '../components/ui/AnimatedContent.astro';
-import CardGrid from '../components/ui/CardGrid.astro';
-import BlogCard from '../components/blog/BlogCard.astro';
+import TitleListItem from '../components/ui/TitleListItem.astro';
 import ThemeToast from '../components/ui/ThemeToast.astro';
 import HeroShapes from '../components/home/HeroShapes.astro';
 import {
-  WhatIDoVisual,
   TheCraftVisual,
   HowIWorkVisual,
   BeyondTheRoleVisual,
@@ -71,7 +69,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
   
   <!-- Main Content Sections -->
     {/* WHAT I DO */}
-    <HomeSection title="What I do" id="what-i-do" openVisual>
+    <HomeSection title="What I do" id="what-i-do" openVisual wideVisual>
       <p slot="pre-visual" class="section-lede text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
       <div slot="aside">
         <p class="mt-6 text-balance">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
@@ -79,7 +77,18 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />View my resume</a> for a detailed overview of my experience and impact.
         </p>
       </div>
-      <WhatIDoVisual slot="visual" client:visible />
+      <img
+        slot="visual"
+        class="what-i-do-photo"
+        src="/images/home/what-i-do-1280.webp"
+        srcset="/images/home/what-i-do-640.webp 640w, /images/home/what-i-do-1280.webp 1280w, /images/home/what-i-do-1600.webp 1600w"
+        sizes="(max-width: 735px) calc(100vw - 64px), 672px"
+        width="1280"
+        height="799"
+        alt="Handwritten notes and sticky notes grouped on a whiteboard, mapping design systems, collaboration and team priorities."
+        loading="lazy"
+        decoding="async"
+      />
     </HomeSection>
     
     {/* THE CRAFT */}
@@ -240,19 +249,9 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <AnimatedContent>
             <div class="w-full">
               <h2 class="section-kicker" data-reveal style="--r: 0">Featured deep dive</h2>
-              <a href={`/deepdives/${featuredDeepdive.slug}/`} class="featured-deepdive-card mt-8 block no-underline border-none hover:bg-transparent" data-reveal style="--r: 1">
-                <article class="p-6 md:p-10">
-                  <h3 class="text-2xl md:text-4xl font-mono font-light mb-3 text-theme">
-                    {featuredDeepdive.data.title}
-                  </h3>
-                  {featuredDeepdive.data.description && (
-                    <p class="text-base md:text-lg leading-relaxed text-theme-muted">
-                      {featuredDeepdive.data.description}
-                    </p>
-                  )}
-                  <p class="mt-6 text-sm font-mono text-theme">Read the deep dive →</p>
-                </article>
-              </a>
+              <div class="mt-8" data-reveal style="--r: 1">
+                <TitleListItem title={featuredDeepdive.data.title} href={`/deepdives/${featuredDeepdive.slug}/`} date={featuredDeepdive.data.date} />
+              </div>
             </div>
           </AnimatedContent>
         </div>
@@ -266,13 +265,12 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <AnimatedContent>
             <div class="w-full">
               <h2 class="section-kicker" data-reveal style="--r: 0">Selected writing</h2>
-              <CardGrid columns={3} class="mt-8">
-                {blogPosts.map((post, index) => (
-                  <AnimatedContent delay={index * 75}>
-                    <BlogCard post={post} />
-                  </AnimatedContent>
+              <div class="mt-8">
+                {blogPosts.map(post => (
+                  <TitleListItem title={post.data.title} href={`/blog/${post.slug}/`} date={post.data.date} />
                 ))}
-              </CardGrid>
+              </div>
+              <p class="mt-6 text-sm font-mono"><a href="/blog/">All writing →</a></p>
             </div>
           </AnimatedContent>
         </div>
@@ -288,6 +286,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
     </BaseLayout>
 
 <style>
+  .what-i-do-photo { display: block; width: 100%; height: auto; border-radius: var(--theme-radius); }
   .home-hero {
     display: grid;
     place-items: center;
@@ -438,7 +437,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
   }
 
   .profile-flip:focus-visible {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-text) 30%, transparent);
+    outline: 2px solid var(--theme-text);
+    outline-offset: 3px;
   }
 
   .hero-profile-wrapper :global(.hero-shapes-wrapper) {
@@ -503,20 +503,6 @@ const featuredDeepdive = (await getCollection('deepdives'))
     .craft-grid {
       grid-template-columns: 1fr;
     }
-  }
-
-  /* Featured deep dive card — same card language as blog/book cards */
-  .featured-deepdive-card article {
-    border: 1px solid var(--theme-border);
-    border-radius: var(--radius-card);
-    box-shadow: var(--theme-shadow);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-  }
-
-  .featured-deepdive-card:hover article {
-    border-color: var(--theme-accent);
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-1px);
   }
 
   /* Respect reduced motion */

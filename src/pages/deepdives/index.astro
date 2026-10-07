@@ -2,11 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import SectionLinks from '../../components/ui/SectionLinks.astro';
 import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
-import BlogCard from '../../components/blog/BlogCard.astro';
+import TitleListItem from '../../components/ui/TitleListItem.astro';
 import { getCollection } from 'astro:content';
 
 const allDeepdives = await getCollection('deepdives');
@@ -21,13 +22,14 @@ const deepdives = allDeepdives
     <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
         <PageHeader title="Deep Dives" description="In-depth case studies on product design, systems thinking, and agentic experiences" />
+      <SectionLinks group="writing" />
       </AnimatedContent>
 
       {deepdives.length > 0 && (
-        <div class="space-y-8 md:space-y-10">
+        <div class="deepdive-list">
           {deepdives.map((post, index) => (
             <AnimatedContent delay={Math.min(index, 3) * 50}>
-              <BlogCard post={post} section="deepdives" featured />
+              <TitleListItem title={post.data.title} href={`/deepdives/${post.slug}/`} date={post.data.date} heading="h2" />
             </AnimatedContent>
           ))}
         </div>

@@ -10,10 +10,11 @@ interface Props {
   label?: string; // corner label on the visual frame; defaults to ".kebab-cased-title"
   flip?: boolean;
   openVisual?: boolean;
+  wideVisual?: boolean; // full photographic composition instead of a small visual study
   delay?: number;
 }
 
-const { title, id, label, flip = false, openVisual = false, delay = 0 } = Astro.props;
+const { title, id, label, flip = false, openVisual = false, wideVisual = false, delay = 0 } = Astro.props;
 const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
@@ -25,7 +26,7 @@ const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
 
         {openVisual ? (
           <>
-            <div class="visual-study" data-reveal style="--r: 1">
+            <div class:list={["visual-study", { "visual-study-wide": wideVisual }]} data-reveal style="--r: 1">
               <slot name="visual" />
             </div>
             <div class="section-copy study-copy" data-reveal style="--r: 2">
@@ -65,6 +66,8 @@ const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
     margin-block: 24px;
   }
 
+  .visual-study-wide { width: 100%; max-width: 42rem; }
+
   .study-copy { max-width: 42rem; }
 
   /* Soft framed panel for the section visual */
@@ -73,7 +76,7 @@ const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
     border: 1px solid var(--theme-border);
     border-radius: var(--radius-card);
     background: color-mix(in srgb, var(--theme-text) 2.5%, var(--theme-bg));
-    box-shadow: var(--theme-shadow);
+    box-shadow: none;
     padding: 2.5rem 1.5rem;
   }
 

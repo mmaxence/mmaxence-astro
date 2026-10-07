@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
 import PageContent from '../../components/ui/PageContent.astro';
+import SectionLinks from '../../components/ui/SectionLinks.astro';
 import PageHeader from '../../components/ui/PageHeader.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
@@ -56,6 +57,7 @@ const techStack = [
     <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
         <PageHeader title="About This Website" />
+      <SectionLinks group="work" />
         <div class="prose max-w-none leading-relaxed mb-12 text-theme">
           <p>This is the colophon — the rest of the site is the bio. It's hand-built in code and open source. Below: what it runs on, and the one easter egg worth explaining.</p>
           
@@ -75,7 +77,7 @@ const techStack = [
               <div class="reveal-rule mb-6" style="--r: 0" aria-hidden="true"></div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {category.items.map((item, itemIndex) => (
-                  <div class="p-6 border border-theme rounded-2xl hover:shadow-[var(--shadow-hover)] transition-shadow" data-reveal style={`--r: ${1 + Math.min(itemIndex, 4)}`}>
+                  <div class="p-6 border border-theme rounded-2xl transition-shadow" data-reveal style={`--r: ${1 + Math.min(itemIndex, 4)}`}>
                     <h3 class="font-mono text-xl font-normal mb-2">
                       {item.link ? (
                         <a

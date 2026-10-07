@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import SectionLinks from '../../components/ui/SectionLinks.astro';
 import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
@@ -28,6 +29,7 @@ const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
           title="Press"
           description="Coverage and appearances from elsewhere: articles, interviews, talks, and publications about me or the work I've been part of."
         />
+      <SectionLinks group="background" />
       </AnimatedContent>
 
       {years.map((year, yearIndex) => (

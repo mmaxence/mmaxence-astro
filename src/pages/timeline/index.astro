@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import SectionLinks from '../../components/ui/SectionLinks.astro';
 import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
@@ -16,6 +17,7 @@ import { timelineEntries } from '../../data/timeline'; // Import data from TypeS
     <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay="0">
         <PageHeader title="Experience" />
+      <SectionLinks group="background" />
         <div class="mb-12">
           <p class="text-2xl md:text-3xl font-mono font-light text-theme-muted mb-4">
             From early product formation to the systems products are built within.
