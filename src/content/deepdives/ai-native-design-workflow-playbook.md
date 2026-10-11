@@ -15,7 +15,7 @@ tags: ["ai-design", "design-systems", "product-strategy", "workflow", "engineeri
 
 ## Preface
 
-At Buzzvil, a team of six designers shipped 5 web applications and 344 commits in a single month, with near-zero Figma usage. No engineering sprint allocation. No handoff tickets. No waiting. My own time in Figma dropped to roughly 10%.
+At Buzzvil, our design team shipped 5 web applications and 344 commits in a single month, with near-zero Figma usage. No engineering sprint allocation. No handoff tickets. No waiting. My own time in Figma dropped to roughly 10%.
 
 This playbook is how we got here, and how you can get here too.
 
@@ -341,9 +341,9 @@ The best preparation isn't a portfolio of polished case studies. It's evidence o
 
 If designers ship through PRs, measure PRs.
 
-At Buzzvil, we track design team pull requests as a key result: 30+ PRs from 3+ designers in Q2 2026. The Q1 baseline was 16 PRs from 2 contributors (14 of them mine).
+At Buzzvil, we track the pull requests the design team opens as a team metric.
 
-This is a novel metric. No other design team we've found tracks PR count as an OKR. But it's the most honest measure of the workflow shift, and it answers one question directly: *are designers actually shipping, or are they still handing off?*
+This is a novel metric. No other design team we've found tracks PR count as a team metric. But it's the most honest measure of the workflow shift, and it answers one question directly: *are designers actually shipping, or are they still handing off?*
 
 The number isn't the point. The trend is. Week over week, the count should grow and the contributors should diversify.
 
@@ -359,7 +359,7 @@ Speed with iteration beats perfection with delay. This applies to both discovery
 
 ### Tempo
 
-AI makes individuals fast. Without shared rhythm, that speed produces chaos. Five people shipping 20 PRs a day with no coordination is not productivity. It's noise.
+AI makes individuals fast. Without shared rhythm, that speed produces chaos. A team shipping 20 PRs a day with no coordination is not productivity. It's noise.
 
 Creative teams need tempo the way an orchestra needs a conductor. Not to control what each musician plays, but to ensure the parts make sense together. The music happens in the space between the notes.
 
@@ -371,15 +371,15 @@ At Buzzvil, we rebuilt the cadence around what AI actually produces: commits, PR
 No standups. Work is visible through commits and open PRs. If you need to know what someone is working on, check the branch. If you need to give feedback, comment on the PR. The artifact *is* the status update.
 
 **Weekly: generated reviews.**
-Every week, the system scans git logs across all active projects and generates a progress report. KR completion percentages move (or don't). This replaces the "what did you do this week" meeting with evidence. It also surfaces connections: a commit on the interaction library affects the design library docs, which affects the SDK docs. Those dependencies are visible in the data, not in someone's head.
+Every week, the system scans git logs across all active projects and generates a progress report. This replaces the "what did you do this week" meeting with evidence. It also surfaces connections: a commit on the interaction library affects the design library docs, which affects the SDK docs. Those dependencies are visible in the data, not in someone's head.
 
 **Monthly: stakeholder alignment.**
 1:1s with the people who consume the design team's output: product managers, group leads, engineering partners. These are not status meetings. They're alignment checks: are we building the right things? Has the priority shifted? What's coming next quarter that we should prepare for?
 
-**Quarterly: OKR reset with real numbers.**
-Every key result has a completion percentage measured from artifacts, not self-reported. "Storybook coverage" is 92% because we counted the story files. "Design team PRs" is 16 because we queried GitHub. The quarterly review is a conversation about what the numbers mean, not a debate about what they are.
+**Quarterly: a review with counted numbers.**
+Every number is measured from artifacts, such as merged PRs and published pages, not self-reported. The quarterly review is a conversation about what the numbers mean, not a debate about what they are.
 
-The cadence serves two purposes. For the individual, it provides checkpoints: moments to step back from the speed of daily AI-assisted work and ask if the direction is still right. For the team, it provides coherence: the assurance that six people shipping independently are building one product, not six.
+The cadence serves two purposes. For the individual, it provides checkpoints: moments to step back from the speed of daily AI-assisted work and ask if the direction is still right. For the team, it provides coherence: the assurance that everyone shipping independently is building one product.
 
 AI accelerates individual output. Tempo keeps it coherent.
 
