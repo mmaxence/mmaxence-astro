@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="760" height="360" preserveAspectRatio="xMinYMin meet" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="760" height="360"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-360)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="760" height="360" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="24" y="326" style="font-family: Helvetica-Bold; font-size: 22px;fill: rgb(14%,14%,14%); stroke:none;" transform="translate(0,652) scale(1,-1)">A smaller Figma bill on Professional</text>
+			<text x="24" y="302" style="font-family: Helvetica; font-size: 12px;fill: rgb(37%,37%,37%); stroke:none;" transform="translate(0,604) scale(1,-1)">Recurring seat costs in USD per year</text>
+			<text x="24" y="252" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(14%,14%,14%); stroke:none;" transform="translate(0,504) scale(1,-1)">Current allocation</text>
+			<text x="614" y="252" style="font-family: Helvetica-Bold; font-size: 17px;fill: rgb(14%,14%,14%); stroke:none;" transform="translate(0,504) scale(1,-1)">$15,180</text>
+			<rect x="24" y="210" width="680.0" height="28" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(48%,52%,57%); fill-rule: evenodd;"/>
+			<text x="24" y="154" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(14%,14%,14%); stroke:none;" transform="translate(0,308) scale(1,-1)">Planned Professional allocation</text>
+			<text x="614" y="154" style="font-family: Helvetica-Bold; font-size: 17px;fill: rgb(14%,14%,14%); stroke:none;" transform="translate(0,308) scale(1,-1)">$3,540</text>
+			<rect x="24" y="112" width="158.57707509881425" height="28" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(11%,36%,56%); fill-rule: evenodd;"/>
+			<text x="24" y="193" style="font-family: Helvetica; font-size: 11px;fill: rgb(37%,37%,37%); stroke:none;" transform="translate(0,386) scale(1,-1)">Organization: 6 Full, 24 Dev, 67 Collab</text>
+			<text x="24" y="95" style="font-family: Helvetica; font-size: 11px;fill: rgb(37%,37%,37%); stroke:none;" transform="translate(0,190) scale(1,-1)">Professional: 6 Full, 0 Dev, 35 Collab. $295/month, annualized.</text>
+			<text x="24" y="52" style="font-family: Helvetica-Bold; font-size: 17px;fill: rgb(14%,14%,14%); stroke:none;" transform="translate(0,104) scale(1,-1)">Projected reduction: $11,640 / year (about 77%)</text>
+			<text x="24" y="27" style="font-family: Helvetica; font-size: 10px;fill: rgb(33%,33%,33%); stroke:none;" transform="translate(0,54) scale(1,-1)">September contract rates; Pro prices checked October 12, 2026.</text>
+			<text x="24" y="11" style="font-family: Helvetica; font-size: 10px;fill: rgb(33%,33%,33%); stroke:none;" transform="translate(0,22) scale(1,-1)">Same target seats and rates for 12 months. Before taxes, fees and labor.</text>
+		</g>
+	</g>
+</svg>
