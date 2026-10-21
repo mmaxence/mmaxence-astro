@@ -1,0 +1,105 @@
+---
+interface Props { kind: 'brand' | 'system' | 'shortcuts' | 'accessibility' }
+const { kind } = Astro.props;
+const shortcuts = [ ['⌘ / Ctrl K', 'Find an issue or view'], ['j / k', 'Move through issues'], ['Enter', 'Open the selection'], ['c', 'Move to the comment'], ['⌘ / Ctrl Enter', 'Send the instruction'] ];
+---
+<figure class={`design-plate ${kind}`}>
+  {kind === 'brand' && <>
+    <div class="brand-sheet">
+      <div class="mark-study">
+        <svg viewBox="0 0 512 512" aria-label="Hanji’s mark, based on the Korean letter hieut" role="img">
+          <path d="M256 256C311.228 256 356 300.772 356 356C356 411.228 311.228 456 256 456C200.772 456 156 411.228 156 356C156 300.772 200.772 256 256 256ZM256 336C244.954 336 236 344.954 236 356C236 367.046 244.954 376 256 376C267.046 376 276 367.046 276 356C276 344.954 267.046 336 256 336Z"/><path d="M105 152H381C394.255 152 405 162.745 405 176V232H105V152Z"/><path d="M306 152L206 152L206 72L282 72C295.255 72 306 82.7452 306 96L306 152Z"/>
+        </svg>
+        <span>ㅎ → Hanji</span>
+      </div>
+      <div class="brand-type"><span class="eyebrow">A surface for shared thought</span><p class="wordmark">Hanji</p><div class="product-names"><span>Think</span><span>Write <i class="celadon"></i></span><span>Work <i class="orchid"></i></span></div></div>
+    </div>
+    <figcaption>Brand specimen · The existing mark and reading type, with Write’s celadon and Work’s orchid accents. A shared identity, with room for different kinds of work.</figcaption>
+  </>}
+  {kind === 'system' && <>
+    <div class="system-sheet">
+      <div class="type-study"><span class="eyebrow">Reading / Newsreader</span><p class="reading-type">Keep the work<br />worth reading.</p><span class="eyebrow">Interface / quiet sans</span><p class="interface-type">One clear next action.<br /><small>The interface gives the content room.</small></p></div>
+      <div class="palette-study">
+        <div class="swatch" style="--swatch:#fcfcf8"><i></i><span>Write / Paper</span><code>#FCFCF8</code></div>
+        <div class="swatch" style="--swatch:#1e8485"><i></i><span>Write / Celadon</span><code>#1E8485</code></div>
+        <div class="swatch" style="--swatch:#f7f7f5"><i></i><span>Work / Paper</span><code>#F7F7F5</code></div>
+        <div class="swatch" style="--swatch:#8d43b8"><i></i><span>Work / Orchid</span><code>#8D43B8</code></div>
+      </div>
+    </div>
+    <div class="mode-pair">
+      <div class="mode light"><span class="eyebrow">Work / Light roles</span><div class="sample-row"><span class="status-symbol">◉</span><span>Review the proposal</span><span class="status-text">In progress</span></div><p>Paper → sheet → ink → intent</p></div>
+      <div class="mode dark"><span class="eyebrow">Work / Dark roles</span><div class="sample-row"><span class="status-symbol">◉</span><span>Review the proposal</span><span class="status-text">In progress</span></div><p>Paper → sheet → ink → intent</p></div>
+    </div>
+    <figcaption>System specimen · Seed colors from the local builds; light and dark Work roles shown together. Sample content illustrates the hierarchy, not a captured screen.</figcaption>
+  </>}
+  {kind === 'shortcuts' && <>
+    <div class="shortcut-sheet" id="hanji-shortcuts">
+      <div class="shortcut-heading"><span class="eyebrow">Work / an expert path</span><p>Find.<br />Inspect.<br />Direct.</p><span class="hint">One task, hands on the keyboard.</span></div>
+      <ol>{shortcuts.map(([key,action],i) => <li><span class="step">0{i+1}</span><span>{action}</span><kbd>{key}</kbd></li>)}</ol>
+    </div>
+    <div class="shortcut-foot"><span><kbd>?</kbd> Discover shortcuts</span><span><kbd>g</kbd> Grouped / dependencies</span><span><kbd>f</kbd> Fit the traced chain</span></div>
+    <figcaption>Interaction study · Existing Work shortcuts, composed into a repeat-use path. Write also keeps editing close with ⌘ / Ctrl E.</figcaption>
+  </>}
+  {kind === 'accessibility' && <>
+    <div class="access-sheet">
+      <div><span class="eyebrow">Focus stays visible</span><a class="focus-sample" href="#hanji-shortcuts">Keyboard shortcuts</a><p>A visible boundary makes the active control legible. Tab to this link to try it.</p></div>
+      <div><span class="eyebrow">State has more than color</span><div class="state-study"><span><b>◯</b> To do</span><span><b>◉</b> In progress</span><span><b>✓</b> Done</span></div><p>Names and distinct marks accompany status colors.</p></div>
+      <div><span class="eyebrow">Typing keeps its meaning</span><div class="typing-study"><span>Write a comment</span><span class="caret" aria-hidden="true"></span><kbd>j</kbd><kbd>k</kbd></div><p>Navigation shortcuts pause in text inputs, selects, and overlays.</p></div>
+      <div><span class="eyebrow">Activity can be followed</span><div class="announcement"><span aria-hidden="true">↳</span> Session updates</div><p>Live sessions expose a polite activity log and status announcements. Reduced-motion styles quiet transitions.</p></div>
+    </div>
+    <figcaption>Accessibility details · Design specimens grounded in the current implementation. These demonstrate specific provisions, not a claim of full accessibility conformance.</figcaption>
+  </>}
+</figure>
+<style>
+@font-face { font-family:HanjiSpecimen; src:url('/work/hanji/fonts/newsreader.woff2') format('woff2'); font-display:swap; }
+.design-plate { margin:1.5rem 0 2rem; }
+figcaption { margin:.8rem 0 0; color:var(--theme-text-muted); font: .75rem/1.7 var(--font-mono,monospace); max-width:48rem; }
+.eyebrow { display:block; font: .68rem/1.5 var(--font-mono,monospace); letter-spacing:.06em; }
+.brand-sheet,.system-sheet,.shortcut-sheet,.access-sheet { border:1px solid var(--theme-border); }
+.brand-sheet { min-height:330px; background:#fcfcf8; color:#2c2e32; display:grid; grid-template-columns:1fr 1.6fr; align-items:center; padding:3rem; gap:3rem; }
+.mark-study { display:grid; justify-items:center; gap:1.5rem; border-right:1px solid #dddeda; padding-right:3rem; }
+.mark-study svg { width:130px; max-width:100%; fill:currentColor; }
+.mark-study span { font: .8rem var(--font-mono,monospace); }
+.wordmark { font:clamp(4rem,9vw,7rem)/1.1 HanjiSpecimen,Georgia,serif; margin:1rem 0; }
+.product-names { display:flex; flex-wrap:wrap; gap:1rem 2rem; font:1.4rem HanjiSpecimen,Georgia,serif; }
+.product-names span { display:flex; align-items:center; gap:.7rem; }
+i.celadon,i.orchid { display:block; width:9px; height:9px; border-radius:50%; background:#1e8485; }
+i.orchid { background:#8d43b8; }
+.system-sheet { display:grid; grid-template-columns:1.2fr 1fr; gap:2rem; padding:2rem; }
+.reading-type { font:clamp(2.1rem,5vw,3.3rem)/1.1 HanjiSpecimen,Georgia,serif; margin:1.1rem 0 2rem; }
+.interface-type { font:1rem/1.7 system-ui,sans-serif; margin:.8rem 0 0; }
+.interface-type small { color:var(--theme-text-muted); }
+.palette-study { display:flex; flex-direction:column; justify-content:center; }
+.swatch { display:grid; grid-template-columns:38px 1fr auto; gap:.75rem; align-items:center; padding:.8rem 0; border-bottom:1px solid var(--theme-border); font-size:.75rem; }
+.swatch i { background:var(--swatch); width:38px; height:38px; border:1px solid #aaa6; }
+.swatch code { font-size:.65rem; color:var(--theme-text-muted); }
+.mode-pair { display:grid; grid-template-columns:1fr 1fr; }
+.mode { padding:1.5rem; background:#f7f7f5; color:#242522; }
+.mode.dark { background:#1b1c1b; color:#eeefea; }
+.sample-row { background:#fefefd; border:1px solid #d9dad5; padding:.9rem; display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; font:.8rem/1.6 system-ui,sans-serif; margin:1rem 0; }
+.dark .sample-row { background:#232423; border-color:#3b3e38; }
+.status-symbol,.status-text { color:#793899; }
+.dark .status-symbol,.dark .status-text { color:#dda7fa; }
+.status-text { font-size:.65rem; margin-left:auto; }
+.mode p { font:.7rem/1.6 var(--font-mono,monospace); margin:0; }
+.shortcut-sheet { display:grid; grid-template-columns:1fr 1.6fr; gap:2rem; padding:2rem; }
+.shortcut-heading p { font:clamp(2rem,5vw,3rem)/1.1 HanjiSpecimen,Georgia,serif; margin:1rem 0; }
+.hint { font-size:.75rem; color:var(--theme-text-muted); }
+ol { list-style:none; margin:0; padding:0; }
+li { display:flex; gap:.75rem; align-items:center; padding:1rem 0; border-bottom:1px solid var(--theme-border); font-size:.8rem; }
+li kbd { margin-left:auto; }
+.step { color:var(--theme-text-muted); font:.65rem var(--font-mono,monospace); }
+kbd { display:inline-block; border:1px solid var(--theme-border); border-radius:3px; padding:.2rem .4rem; font:.7rem/1.4 var(--font-mono,monospace); white-space:nowrap; }
+.shortcut-foot { display:flex; flex-wrap:wrap; gap:1rem 1.5rem; margin-top:1rem; font-size:.75rem; }
+.access-sheet { display:grid; grid-template-columns:1fr 1fr; }
+.access-sheet > div { padding:1.5rem; }
+.access-sheet p { font-size:.85rem; line-height:1.7; color:var(--theme-text-muted); margin:1rem 0 0; }
+.focus-sample { display:flex; justify-content:space-between; gap:1rem; margin:1.3rem .2rem; padding:.75rem; border:1px solid var(--theme-text); outline:2px solid var(--theme-text); outline-offset:3px; font-size:.85rem; }
+.focus-sample:focus-visible { outline-width:4px; }
+.state-study { display:flex; gap:.85rem; flex-wrap:wrap; margin:1.5rem 0; font-size:.8rem; }
+.state-study b { font-weight:400; }
+.typing-study { border-bottom:1px solid var(--theme-border); display:flex; gap:.5rem; align-items:center; padding:1rem 0; font-size:.8rem; }
+.caret { height:1.2rem; width:1px; background:var(--theme-text); margin-right:auto; }
+.announcement { padding:1.15rem 0; font:.9rem var(--font-mono,monospace); }
+@media(max-width:640px) { .brand-sheet { grid-template-columns:65px minmax(0,1fr); padding:1rem; gap:1rem; min-height:250px; } .mark-study { padding-right:1rem; } .mark-study svg { width:60px; } .wordmark { font-size:clamp(2.8rem,14vw,3.6rem); } .product-names { gap:1rem; font-size:1.1rem; } .system-sheet,.shortcut-sheet,.access-sheet,.mode-pair { grid-template-columns:1fr; } .system-sheet,.shortcut-sheet { padding:1.25rem; } .shortcut-heading p br { display:none; } .shortcut-heading p { font-size:2rem; } .access-sheet > div { border-bottom:1px solid var(--theme-border); } .swatch { gap:.5rem; } }
+</style>

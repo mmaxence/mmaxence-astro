@@ -1,0 +1,52 @@
+---
+import type { WorkLink } from '../../data/work';
+interface Props {
+  title: string;
+  intro: string;
+  links?: WorkLink[];
+  caption?: string;
+}
+const { title, intro, links = [], caption } = Astro.props;
+---
+<header class="story-hero" data-story-hero>
+  <div class="story-hero-copy">
+    <h1 data-story-intro="heading"><slot name="title">{title.split('\n').map(line => <span>{line}</span>)}</slot></h1>
+    <p data-story-intro="lead">{intro}</p>
+    {links.length > 0 && <nav class="story-project-links" data-story-intro="action" aria-label="Project links">
+      {links.map((link, index) => <a class:list={['no-underline', { primary: index === 0 }]} href={link.url}>{link.label}</a>)}
+    </nav>}
+  </div>
+  <div class="story-hero-visual" data-story-intro="visual">
+    <slot name="visual" />
+    {caption && <p class="story-hero-caption">{caption}</p>}
+  </div>
+</header>
+<style>
+  .story-hero { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: clamp(2rem, 4vw, 4rem); min-height: min(730px, calc(100svh - 100px)); padding: 2rem 0 5rem; }
+  .story-hero-copy, .story-hero-visual { min-width: 0; }
+  h1 { margin: 0; font: var(--story-heading-weight, 400) clamp(3rem, 5vw, 5.1rem)/1.06 var(--story-display, var(--font-heading)); letter-spacing: -.045em; overflow-wrap: normal; text-wrap: balance; }
+  /* Navigation focuses this reading target; only interactive controls need a ring. */
+  h1[tabindex="-1"]:focus { outline: none; }
+  h1 > span { display: block; }
+  h1 :global(em) { font: inherit; font-style: italic; color: var(--theme-accent); }
+  .story-hero-copy > p { max-width: 42ch; margin: 1.6rem 0 2rem; font: 1.05rem/1.75 var(--font-body); color: var(--theme-text-muted); }
+  .story-project-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; }
+  .story-project-links a { display: inline-flex; align-items: center; min-height: 50px; font: 500 .95rem/1.4 var(--font-body); color: var(--theme-text); text-underline-offset: 5px; }
+  .story-project-links a:not(.primary) { text-decoration: underline; text-decoration-color: var(--theme-border); }
+  .story-project-links .primary { justify-content: center; padding: .85rem 1.25rem; border: 1px solid var(--theme-accent); border-radius: 6px; background: var(--theme-accent); color: var(--theme-bg); text-decoration: none; transition: background .2s ease, border-color .2s ease; }
+  .story-project-links .primary:hover { background: var(--theme-text); border-color: var(--theme-text); }
+  .story-project-links a:focus-visible { outline: 2px solid var(--theme-text); outline-offset: 5px; }
+  .story-hero-caption { margin: 1rem 0 0; font: .8rem/1.65 var(--font-body); color: var(--theme-text-muted); max-width: 75ch; }
+  @media(max-width:1000px) {
+    .story-hero { grid-template-columns: 1fr; min-height: 0; gap: 2.5rem; padding-top: 1rem; }
+    .story-hero-copy { max-width: 760px; }
+    h1 { font-size: clamp(3.2rem, 7vw, 5rem); }
+    .story-hero-copy > p { max-width: 52ch; }
+  }
+  @media(max-width:650px) {
+    .story-hero { padding: .5rem 0 3.5rem; }
+    h1 { font-size: clamp(2.45rem, 9.3vw, 4rem); }
+    .story-hero-copy > p { font-size: 1rem; margin: 1.4rem 0 1.6rem; }
+  }
+  @media(prefers-reduced-motion:reduce) { .story-project-links .primary { transition: none; } }
+</style>

@@ -1,0 +1,34 @@
+---
+import type { ProjectVisual } from '../../data/work';
+interface Props { milestones: NonNullable<ProjectVisual['timeline']> }
+const { milestones } = Astro.props;
+---
+<div class="progress-timeline" aria-label="Goals and delivery timeline">
+  <p class="timeline-label">The plan, and the evidence <span>Expand a milestone</span></p>
+  {milestones.map((milestone, index) => <details open={index === milestones.length - 1}>
+    <summary><span class="date">{milestone.date}</span><span class="title">{milestone.title}</span><span class="state">{milestone.state}</span></summary>
+    <dl>
+      <div><dt>Goal</dt><dd>{milestone.goal}</dd></div>
+      <div><dt>Achieved</dt><dd>{milestone.achieved}</dd></div>
+      <div><dt>Next</dt><dd>{milestone.next}</dd></div>
+    </dl>
+  </details>)}
+</div>
+<style>
+.progress-timeline { margin:2.5rem 0; border-top:1px solid var(--theme-border); }
+.timeline-label { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem; margin:1rem 0; font:.7rem/1.6 var(--font-mono,monospace); }
+.timeline-label span,.date,.state,dt { color:var(--theme-text-muted); }
+details { border-bottom:1px solid var(--theme-border); }
+summary { display:grid; grid-template-columns:9rem 1fr auto; align-items:baseline; gap:1rem; padding:1.25rem 0; cursor:pointer; list-style:none; }
+summary::-webkit-details-marker { display:none; }
+summary::after { content:'+'; grid-column:3; grid-row:1; margin-left:auto; }
+details[open] summary::after { content:'−'; }
+summary:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+.date,.state,dt { font:.7rem/1.6 var(--font-mono,monospace); }
+.state { grid-column:2; grid-row:2; }
+.title { line-height:1.5; }
+dl { margin:0 0 1.5rem 10rem; display:grid; gap:1rem; max-width:38rem; }
+dl div { display:grid; grid-template-columns:5rem 1fr; gap:1rem; }
+dd { margin:0; font-size:.9rem; line-height:1.7; }
+@media(max-width:640px) { summary { grid-template-columns:1fr auto; gap:.4rem; } .date { grid-column:1; } .title { grid-column:1; } .state { grid-column:1; grid-row:auto; } summary::after { grid-column:2; } dl { margin-left:0; } dl div { grid-template-columns:1fr; gap:.2rem; } }
+</style>

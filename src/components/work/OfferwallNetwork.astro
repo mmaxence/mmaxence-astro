@@ -1,0 +1,72 @@
+---
+import OfferwallPublisher from './OfferwallPublisher.astro';
+import OfferwallFeed from './OfferwallFeed.astro';
+const entrances = [
+  { id: 'native', label: 'Native ad' },
+  { id: 'button', label: 'Rewards button' },
+  { id: 'sheet', label: 'Bottom sheet' },
+];
+---
+<figure class="network-figure">
+  <offerwall-network class="network-board" data-entry="native">
+    <header><span>1 feed 4 all</span><span>Many ways in. One destination.</span></header>
+    <div class="entry-controls" role="group" aria-label="Explore routes into the Feed">{entrances.map((entry,index)=><button type="button" data-entry-choice={entry.id} aria-pressed={index===0}>{entry.label}</button>)}</div>
+    <div class="network-composition">
+      <div class="source-side"><p class="screen-label">Inside a publisher app</p><OfferwallPublisher /></div>
+      <div class="connection" aria-hidden="true"><i></i><span></span><i></i></div>
+      <div class="destination-side" data-network-destination><p class="screen-label">The shared Feed</p><OfferwallFeed compact /></div>
+    </div>
+    <p class="entry-note" data-entry-note aria-live="polite">A campaign in the app. A direct route to more offers.</p>
+  </offerwall-network>
+</figure>
+<script>
+class OfferwallNetwork extends HTMLElement {
+  connectedCallback() {
+    if (this.dataset.ready) return;
+    this.dataset.ready = 'true';
+    const copy: Record<string,string> = {
+      native: 'A campaign in the app. A direct route to more offers.',
+      button: 'A permanent entry point makes rewards easy to find again.',
+      sheet: 'A lighter opening keeps the publisher’s app in view.',
+    };
+    this.querySelectorAll<HTMLButtonElement>('[data-entry-choice]').forEach(button=>button.addEventListener('click',()=>{
+      const id=button.dataset.entryChoice;
+      if(!id||!copy[id])return;
+      this.dataset.entry=id;
+      this.querySelectorAll('[data-entry-choice]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      this.querySelectorAll<HTMLElement>('[data-placement]').forEach(item=>{
+        if(item.dataset.placement==='native'){
+          // Preserve the phone's layout while another placement occupies this space.
+          item.dataset.placementHidden=String(id!=='native');
+          item.inert=id!=='native';
+        }else item.hidden=item.dataset.placement!==id;
+      });
+      const dimmer=this.querySelector<HTMLElement>('[data-sheet-dimmer]');
+      if(dimmer)dimmer.hidden=id!=='sheet';
+      const note=this.querySelector('[data-entry-note]');
+      if(note)note.textContent=copy[id];
+    }));
+    this.querySelector('.source-side')?.addEventListener('click',event=>{
+      const target=(event.target as Element).closest<HTMLButtonElement>('[data-open-feed],[data-offer]');
+      if(!target)return;
+      const feed=this.querySelector<HTMLElement>('offerwall-feed');
+      if(!feed)return;
+      const id=target.dataset.offer;
+      feed.dispatchEvent(new CustomEvent(id?'offerwall:open-offer':'offerwall:reset',{detail:{id}}));
+      if(!id){feed.tabIndex=-1;feed.focus({preventScroll:true});}
+      const rect=feed.getBoundingClientRect();
+      if(rect.top<65||rect.bottom>innerHeight)feed.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
+      const note=this.querySelector('[data-entry-note]');
+      if(note)note.textContent=id?'The same campaign, opened in the Feed.':'The Feed brings the available offers together.';
+    });
+  }
+}
+if(!customElements.get('offerwall-network'))customElements.define('offerwall-network',OfferwallNetwork);
+</script>
+<style>
+.network-figure{margin:0;min-width:0}.network-board{display:block;background:#e9ede4;color:#293b2d;padding:clamp(15px,2vw,26px);--theme-text:#293b2d;--theme-text-muted:#5d6d56;container-type:inline-size}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:17px;border-bottom:1px solid #c4cfbc;font:10px/1.5 var(--font-mono,monospace)}header>span:first-child{font-size:14px;white-space:nowrap}header>span:last-child{color:#64745a;text-align:right;font:11px/1.5 var(--font-body,sans-serif)}
+.entry-controls{display:flex;gap:5px;margin:20px 0 19px}.entry-controls button{flex:1;min-height:44px;border:1px solid #b6c4ad;border-radius:5px;padding:8px 5px;background:transparent;color:#3d5333;font:11px/1.4 var(--font-body,sans-serif);cursor:pointer}.entry-controls button[aria-pressed=true]{background:#345f4c;border-color:#345f4c;color:#fff}.entry-controls button:hover{border-color:#345f4c}.entry-controls button:focus-visible{outline:2px solid #345f4c;outline-offset:3px}
+.network-composition{display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);align-items:center;gap:0}.source-side,.destination-side{min-width:0}.screen-label{margin:0 0 12px;font:10px/1.5 var(--font-body,sans-serif);text-align:center;color:#617255}.connection{display:flex;align-items:center;gap:3px;margin-top:30px}.connection span{height:1px;background:#8b9e7f;flex:1}.connection i{height:4px;width:4px;border-radius:50%;background:#789269}.entry-note{border-top:1px solid #c4cfbc;margin:21px 0 0;padding-top:15px;font:12px/1.65 var(--font-body,sans-serif);color:#526449;min-height:3em}.destination-side :global(offerwall-feed:focus){outline:2px solid #61835a;outline-offset:5px}
+@container(max-width:430px){.network-composition{grid-template-columns:1fr;max-width:310px;margin:auto}.connection{flex-direction:column;height:35px;margin:15px 0;gap:4px}.connection span{width:1px;height:auto}.entry-controls{gap:5px}.entry-controls button{font-size:11px;padding-inline:6px}.screen-label{font-size:12px}.entry-note{min-height:0}header>span:last-child{max-width:16ch}}
+</style>

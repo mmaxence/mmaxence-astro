@@ -84,7 +84,6 @@ ${libraryList}
 - LinkedIn: https://www.linkedin.com/in/mmaxence/
 - GitHub: https://github.com/mmaxence
 - X: https://x.com/mmaxence
-- Substack: https://mmaxence.substack.com
 - Medium: https://mmaxence.medium.com
 
 ## Optional

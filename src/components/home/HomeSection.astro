@@ -52,6 +52,7 @@ const frameLabel = label ?? '.' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-'
             <slot name="post-visual" />
           </div>
         )}
+        <slot name="reading-note" />
       </article>
     </AnimatedContent>
   </div>

@@ -2,43 +2,33 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
-import SectionLinks from '../../components/ui/SectionLinks.astro';
-import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
-import TitleListItem from '../../components/ui/TitleListItem.astro';
-import { workEntries } from '../../data/work';
+import WorkStoryNavigation from '../../components/work/WorkStoryNavigation.astro';
+import WorkStoryTransition from '../../components/work/WorkStoryTransition.astro';
+import WorkQuest from '../../components/work/WorkQuest.astro';
+import WorkContributions from '../../components/work/WorkContributions.astro';
 
-const description = 'Products, systems and experiments. The calls behind them, the foundations that made them possible, and where they stand.';
-const groups = [
-  { id: 'independent', title: 'Independent experiments', description: 'Exploring how people and agents work together.' },
-  { id: 'company', title: 'Building at Buzzvil', description: 'From the surfaces people use to the systems behind them.' },
-];
+const description = 'Selected products, systems and experiments. How I frame a problem, shape the interactions, and refine what ships.';
 ---
 
 <BaseLayout title="Work" description={description}>
   <Header />
-  <PageContent>
-    <div class="max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
-      <PageHeader title="Work" description="Selected products, systems and experiments. The thinking behind them, and what took shape." />
-      <SectionLinks group="work" />
-      {groups.map(group => (
-        <section class="work-group" aria-labelledby={group.id}>
-          <header class="group-heading"><h2 id={group.id}>{group.title}</h2></header>
-          {workEntries.filter(w => w.group === group.id).map(w => (
-            <article id={w.slug}>
-              <TitleListItem title={w.title} href={`/work/${w.slug}/`} meta={w.years} />
-            </article>
-          ))}
-        </section>
-      ))}
+  <PageContent class="work-index-content">
+    <div class="work-index-wrap">
+      <WorkQuest />
+      <div class="work-context"><p>Selected work from my 12 years at <a href="https://www.buzzvil.com/en/">Buzzvil</a>, designing for a network serving <a href="https://www.newswire.co.kr/newsRead.php?no=933111" title="Buzzvil reported 20 million monthly users in October 2021">millions of people each month</a>, alongside personal projects and <a href="#open-source">open-source contributions</a>.</p></div>
+      <WorkContributions />
     </div>
   </PageContent>
-  <Footer /><ThemeToast />
+  <Footer /><ThemeToast /><WorkStoryNavigation /><WorkStoryTransition />
 </BaseLayout>
 <style>
-.work-group + .work-group { margin-top:3rem; }
-.group-heading { margin-bottom:.5rem; }
-.group-heading h2 { font-family:var(--font-mono, monospace); font-size:.75rem; font-weight:400; color:var(--theme-text-muted); margin:0; }
-article { scroll-margin-top:8rem; }
+/* The continuous world owns its entrance and reaches the edges of the page. */
+:global(main.page-content.work-index-content) { animation:none; opacity:1; transform:none; }
+.work-index-wrap { width:100%; margin-inline:auto; padding:0 0 4rem; }
+.work-context { margin:4rem auto 0;padding:2rem 0;width:calc(100% - 40px);max-width:64rem;border-block:1px solid var(--theme-border); }
+.work-context p { font:.9rem/1.8 var(--font-body); margin:0; color:var(--theme-text-muted); }
+.work-context a { color:var(--theme-text); text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--theme-border); }
+@media(max-width:650px) { .work-context { margin-top:2.5rem; } }
 </style>

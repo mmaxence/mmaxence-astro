@@ -28,4 +28,4 @@ Even in the "hard times" of the 2018 pivot, finding meaning in the mission kept 
 
 ## How It Shaped My Work
 
-Frankl's emphasis on finding meaning in suffering has been invaluable during difficult periods, particularly the 2018 pivot. By helping the team find purpose in the mission—building sustainable monetization for publishers—we maintained morale and focus even when the path forward was unclear.
+Frankl's emphasis on finding meaning in suffering has been invaluable during difficult periods, particularly the 2018 pivot. By helping the team find purpose in the mission of building sustainable monetization for publishers, we maintained morale and focus even when the path forward was unclear.

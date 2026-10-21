@@ -26,7 +26,7 @@ export async function GET(context: APIContext) {
   );
 
   return rss({
-    title: 'Maxence Mauduit — Blog & Deep Dives',
+    title: 'Maxence Mauduit: Blog & Deep Dives',
     description: 'Product Design Leader (CDO) writing about product design, interaction systems, leadership, and design systems.',
     site: context.site!,
     items,

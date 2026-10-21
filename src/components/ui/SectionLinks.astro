@@ -1,18 +1,46 @@
 ---
 import { navigationGroups } from '../../data/navigation';
-interface Props { group: 'work' | 'writing' | 'background' }
-const { group } = Astro.props;
+interface Props { group: 'work' | 'writing' | 'background'; sticky?: boolean }
+const { group, sticky = false } = Astro.props;
 const section = navigationGroups.find(item => item.id === group)!;
 const current = Astro.url.pathname;
 ---
-<nav class="section-links" aria-label={`${section.title} sections`}>
+<nav class:list={["section-links", { "section-links-sticky": sticky }]} aria-label={`${section.title} sections`}>
   {section.links.map(link => <a href={link.href} aria-current={current === link.href ? 'page' : undefined}>{link.label}</a>)}
 </nav>
 <style>
 .section-links { display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; margin:-1rem 0 2.5rem; font-family:var(--font-mono, monospace); font-size:.8rem; }
+.section-links-sticky { position:sticky; top:var(--section-links-top, 0px); z-index:20; background:var(--theme-bg); padding:.6rem 0; border-bottom:1px solid var(--theme-border); }
 a { display:inline-block; padding:.4rem 0; border:0; color:var(--theme-text-muted); text-decoration:none; }
 a[aria-current], a:hover { color:var(--theme-text); }
 a:hover { background:none; text-decoration:underline; text-underline-offset:.25em; }
 a::after { display:none; }
 a:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
 </style>
+
+<script>
+  let cleanup: (() => void) | undefined;
+  function syncSectionNavigation() {
+    cleanup?.();
+    const nav = document.querySelector<HTMLElement>('.section-links-sticky');
+    const header = document.querySelector<HTMLElement>('.header-sticky');
+    if (!nav || !header) return;
+    // The desktop header contracts on scroll; mobile has no sticky header.
+    const update = () => {
+      const isSticky = getComputedStyle(header).position === 'sticky';
+      nav.style.setProperty('--section-links-top', `${isSticky ? header.getBoundingClientRect().height : 0}px`);
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    window.addEventListener('resize', update);
+    update();
+    cleanup = () => {
+      observer.disconnect();
+      window.removeEventListener('resize', update);
+      cleanup = undefined;
+    };
+  }
+  syncSectionNavigation();
+  document.addEventListener('astro:page-load', syncSectionNavigation);
+  document.addEventListener('astro:before-swap', () => cleanup?.());
+</script>

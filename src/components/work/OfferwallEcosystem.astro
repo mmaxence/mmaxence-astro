@@ -1,0 +1,19 @@
+<figure class="ecosystem">
+  <figcaption>1 feed 4 all <span>Reconstructed product logic</span></figcaption>
+  <div class="entry-points"><span>Native placements</span><span>In-app buttons</span><span>Bottom sheet</span></div>
+  <div class="connections" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="destination"><span>Shared destination</span><h3>The offerwall</h3><p>One feed, connected to the places people already encounter our campaigns.</p></div>
+  <div class="stem" aria-hidden="true"></div>
+  <section class="carousel"><div class="carousel-heading"><h3>A new way in: native carousel</h3><span>Offerwall link</span></div>
+    <ol aria-label="Horizontal native carousel, ending with an offerwall entry"><li><span>Native ad</span><div class="creative one"></div><b>Ad 01</b></li><li><span>Native ad</span><div class="creative two"></div><b>Ad 02</b></li><li><span>Native ad</span><div class="creative three"></div><b>Ad 03</b></li><li class="see-more"><span>Final card</span><b>Explore more campaigns</b><small>Open the offerwall</small></li></ol>
+  </section>
+  <p class="note">The feed link and final card both lead to the same destination. Diagram only: sample campaigns explain the structure, not the historical UI.</p>
+</figure>
+<style>
+.ecosystem{margin:2rem 0 3rem;padding:clamp(1rem,4vw,2.5rem);border:1px solid var(--theme-border);font-family:var(--font-mono,monospace)}
+figcaption{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;margin-bottom:2rem}figcaption span,.note{font-size:.7rem;color:var(--theme-text-muted)}
+.entry-points,.connections{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.entry-points span{text-align:center;border:1px solid var(--theme-border);padding:1rem .4rem;font-size:.75rem}.connections i{height:2rem;border-left:1px solid var(--theme-border);margin-left:50%}
+.destination{text-align:center;border:1px solid var(--theme-text);padding:1.5rem;background:color-mix(in srgb,var(--theme-text) 3%,transparent)}.destination span{font-size:.65rem;color:var(--theme-text-muted)}.destination h3{font-size:1.5rem;font-weight:400;margin:.5rem 0}.destination p{font-size:.8rem;line-height:1.7;margin:.5rem auto 0;max-width:30rem}.stem{height:2rem;width:1px;background:var(--theme-border);margin:auto}
+.carousel{border:1px solid var(--theme-border);padding:1rem}.carousel-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}.carousel h3{font-size:.8rem;font-weight:400;margin:0}.carousel-heading>span{font-size:.65rem;text-decoration:underline;text-underline-offset:4px}ol{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin:0;padding:0}li{min-width:0;border:1px solid var(--theme-border);padding:.75rem}li span,small{display:block;font-size:.6rem;color:var(--theme-text-muted)}li b{font-weight:400;font-size:.8rem}.creative{aspect-ratio:1.4;background:color-mix(in srgb,var(--theme-text) 9%,transparent);margin:.75rem 0;border-radius:50% 50% 0 0}.two{border-radius:0 50% 50% 0}.three{border-radius:50%}.see-more{display:flex;flex-direction:column;justify-content:space-between;gap:1rem;background:color-mix(in srgb,var(--theme-text) 4%,transparent)}.note{line-height:1.8;margin:1rem 0 0}
+@media(max-width:600px){figcaption,.carousel-heading{flex-direction:column;align-items:flex-start}.entry-points{gap:.4rem}.entry-points span{font-size:.6rem}ol{gap:.3rem}li{padding:.4rem}li b{font-size:.65rem}.carousel{padding:.6rem}.see-more{gap:.5rem}}
+</style>

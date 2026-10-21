@@ -1,0 +1,49 @@
+---
+import OfferwallPublisher from './OfferwallPublisher.astro';
+import OfferwallFeed from './OfferwallFeed.astro';
+---
+<figure class="carousel-figure">
+  <offerwall-carousel class="carousel-board">
+    <div class="carousel-heading"><span>A small selection, inside the app.</span><span>A full Feed, one tap away.</span></div>
+    <div class="carousel-scene">
+      <div class="placement-side"><OfferwallPublisher carousel /><div class="rail-controls"><button type="button" data-start aria-label="Show the first native ad">First ad</button><button type="button" data-end>Show final card</button></div></div>
+      <div class="connection" aria-hidden="true"><i></i><span></span><i></i></div>
+      <div class="feed-side"><OfferwallFeed /><p class="feed-state" aria-live="polite" data-feed-state>Try “See all offers” in the placement.</p></div>
+    </div>
+  </offerwall-carousel>
+  <figcaption>Browse the campaigns, then open the Feed from the final card. Reimagined with fictional campaigns.</figcaption>
+</figure>
+<script>
+class OfferwallCarousel extends HTMLElement {
+  connectedCallback(){
+    if(this.dataset.ready)return;
+    this.dataset.ready='true';
+    const rail=this.querySelector<HTMLElement>('.carousel-rail');
+    const scroll=(end:boolean)=>rail?.scrollTo({left:end?rail.scrollWidth:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    this.querySelector('[data-start]')?.addEventListener('click',()=>scroll(false));
+    this.querySelector('[data-end]')?.addEventListener('click',()=>scroll(true));
+    rail?.addEventListener('scroll',()=>{
+      const index=Math.round(rail.scrollLeft/((rail.scrollWidth-rail.clientWidth)/2));
+      this.querySelectorAll('.carousel-position i').forEach((dot,i)=>dot.classList.toggle('active',index===i));
+    },{passive:true});
+    this.querySelector('.placement-side')?.addEventListener('click',event=>{
+      const target=(event.target as Element).closest<HTMLButtonElement>('[data-open-feed],[data-offer]');
+      if(!target)return;
+      const feed=this.querySelector<HTMLElement>('offerwall-feed');
+      if(!feed)return;
+      const id=target.dataset.offer;
+      feed.dispatchEvent(new CustomEvent(id?'offerwall:open-offer':'offerwall:reset',{detail:{id}}));
+      if(!id){feed.tabIndex=-1;feed.focus({preventScroll:true});}
+      const state=this.querySelector('[data-feed-state]');
+      if(state)state.textContent=id?'Campaign opened in the Feed.':'Feed opened. The same offers, with more to explore.';
+      const rect=feed.getBoundingClientRect();
+      if(rect.top<65||rect.bottom>innerHeight)feed.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
+    });
+  }
+}
+if(!customElements.get('offerwall-carousel'))customElements.define('offerwall-carousel',OfferwallCarousel);
+</script>
+<style>
+.carousel-figure{margin:0;min-width:0}.carousel-board{display:block;background:#e8ece3;padding:clamp(20px,4vw,48px);color:#31452d;--theme-text:#31452d;--theme-text-muted:#63745a}.carousel-heading{display:grid;grid-template-columns:1fr 1fr;gap:60px;text-align:center;font:15px/1.5 var(--font-body,sans-serif);margin-bottom:28px}.carousel-scene{display:grid;grid-template-columns:minmax(0,1fr) 65px minmax(0,1fr);max-width:880px;margin:auto;align-items:center}.placement-side,.feed-side{min-width:0}.connection{display:flex;align-items:center;gap:4px;margin-bottom:55px;padding-inline:9px}.connection span{height:1px;background:#a4b59a;flex:1}.connection i{width:5px;height:5px;border-radius:50%;background:#6f885f}.rail-controls{display:flex;justify-content:space-between;gap:10px;max-width:330px;margin:12px auto 0}.rail-controls button{border:0;background:none;min-height:44px;color:#3a5830;text-decoration:underline;text-underline-offset:4px;padding:6px 0;font:12px/1.4 var(--font-body,sans-serif);cursor:pointer}.rail-controls button:focus-visible{outline:2px solid #345f4c;outline-offset:4px}.feed-state{font:12px/1.5 var(--font-body,sans-serif);min-height:44px;margin:12px auto 0;padding:9px 0 0;max-width:330px;text-align:center;color:#5a6c50}.feed-side :global(offerwall-feed:focus){outline:2px solid #61835a;outline-offset:6px}figcaption{font:12px/1.7 var(--font-body,sans-serif);color:var(--case-muted,var(--theme-text-muted));margin-top:14px;max-width:90ch}
+@media(max-width:650px){.carousel-scene{grid-template-columns:1fr}.carousel-heading{grid-template-columns:1fr;gap:5px;margin-bottom:23px;font-size:14px}.carousel-heading>span:last-child{color:#67765d}.connection{height:35px;flex-direction:column;margin:22px 0}.connection span{width:1px;height:auto}.carousel-board{padding-inline:16px}.feed-state{margin-top:10px}}
+</style>

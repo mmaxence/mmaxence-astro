@@ -1,0 +1,177 @@
+<work-story-image-viewer>
+  <dialog class="story-image-dialog" aria-labelledby="story-image-title" aria-describedby="story-image-caption">
+    <header class="viewer-header">
+      <h2 id="story-image-title">Image detail</h2>
+      <button class="viewer-close" type="button" data-viewer-close autofocus>Back to story <kbd>Esc</kbd></button>
+    </header>
+    <figure class="viewer-figure">
+      <div class="viewer-stage" data-viewer-stage>
+        <p class="viewer-status" data-viewer-status role="status">Loading full-size image…</p>
+        <img data-viewer-image alt="" decoding="async" hidden />
+      </div>
+      <figcaption class="viewer-caption">
+        <p id="story-image-caption" data-viewer-caption></p>
+        <div class="viewer-actions">
+          <a class="no-underline" data-viewer-original target="_blank" rel="noopener" aria-label="Open original image in a new tab">Open original</a>
+        </div>
+      </figcaption>
+    </figure>
+  </dialog>
+</work-story-image-viewer>
+
+<script>
+  class WorkStoryImageViewer extends HTMLElement {
+    private controller?: AbortController;
+    private enhancedLinks: { link: HTMLAnchorElement; cue: HTMLElement; popup: string | null }[] = [];
+
+    connectedCallback() {
+      this.controller?.abort();
+      const story = this.closest<HTMLElement>('[data-work-story]');
+      const dialog = this.querySelector<HTMLDialogElement>('dialog');
+      const image = this.querySelector<HTMLImageElement>('[data-viewer-image]');
+      const stage = this.querySelector<HTMLElement>('[data-viewer-stage]');
+      const caption = this.querySelector<HTMLElement>('[data-viewer-caption]');
+      const status = this.querySelector<HTMLElement>('[data-viewer-status]');
+      const original = this.querySelector<HTMLAnchorElement>('[data-viewer-original]');
+      const close = this.querySelector<HTMLButtonElement>('[data-viewer-close]');
+      if (!story || !dialog || !image || !stage || !caption || !status || !original || !close || typeof dialog.showModal !== 'function') return;
+      this.controller = new AbortController();
+      const { signal } = this.controller;
+      let opener: HTMLAnchorElement | null = null;
+      let backdropPress = false;
+
+      const imageTarget = (link: HTMLAnchorElement) => {
+        if (link.hasAttribute('download') || (link.target && link.target !== '_self') || link.closest('[data-work-story]') !== story) return null;
+        const thumbnail = link.querySelector<HTMLImageElement>('img');
+        if (!thumbnail) return null;
+        try {
+          const url = new URL(link.href, location.href);
+          return url.origin === location.origin && /\.(?:webp|png|jpe?g)$/i.test(url.pathname) ? { thumbnail, url } : null;
+        } catch { return null; }
+      };
+      story.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
+        if (!imageTarget(link) || link.querySelector('[data-story-image-cue]')) return;
+        const cue = document.createElement('span');
+        cue.className = 'story-image-inspect';
+        cue.dataset.storyImageCue = '';
+        cue.setAttribute('aria-hidden', 'true');
+        cue.textContent = 'Inspect image';
+        this.enhancedLinks.push({ link, cue, popup: link.getAttribute('aria-haspopup') });
+        link.setAttribute('aria-haspopup', 'dialog');
+        link.append(cue);
+      });
+
+      image.addEventListener('load', () => {
+        const loaded = image.naturalWidth > 0;
+        image.hidden = !loaded;
+        status.hidden = loaded;
+      }, { signal });
+      image.addEventListener('error', () => {
+        image.hidden = true;
+        status.hidden = false;
+        status.textContent = 'This image could not be loaded. You can open the original image or return to the story.';
+      }, { signal });
+
+      story.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || dialog.open) return;
+        const target = event.target instanceof Element ? event.target : null;
+        const link = target?.closest<HTMLAnchorElement>('a[href]');
+        if (!link) return;
+        const destination = imageTarget(link);
+        if (!destination) return;
+        try {
+          const { thumbnail, url } = destination;
+          image.hidden = true;
+          status.hidden = false;
+          status.textContent = 'Loading full-size image…';
+          image.alt = thumbnail.alt || 'Full-size project image';
+          const sourceCaption = link.closest('figure')?.querySelector('figcaption')?.cloneNode(true) as HTMLElement | undefined;
+          sourceCaption?.querySelectorAll('a').forEach(anchor => anchor.remove());
+          caption.textContent = sourceCaption?.textContent?.trim() || thumbnail.alt || 'Full-size image from this project.';
+          original.href = url.href;
+          opener = link;
+          image.src = url.href;
+          dialog.showModal();
+          // Only replace navigation after the native viewer opened successfully.
+          event.preventDefault();
+        } catch {
+          // An ordinary full-image link remains the fallback if setup fails.
+          if (dialog.open) dialog.close();
+        }
+      }, { signal });
+
+      close.addEventListener('click', () => dialog.close(), { signal });
+      dialog.addEventListener('close', () => {
+        if (opener?.isConnected) opener.focus({ preventScroll: true });
+        opener = null;
+      }, { signal });
+      // Escape uses the dialog's native cancel behavior. The surrounding story
+      // sees the open dialog and leaves its own Escape shortcut untouched.
+      const outsideDialog = (event: MouseEvent) => {
+        const bounds = dialog.getBoundingClientRect();
+        return event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+      };
+      dialog.addEventListener('pointerdown', event => {
+        backdropPress = event.target === dialog && outsideDialog(event);
+      }, { signal });
+      dialog.addEventListener('click', event => {
+        if (backdropPress && event.target === dialog && outsideDialog(event)) dialog.close();
+        backdropPress = false;
+      }, { signal });
+
+    }
+
+    disconnectedCallback() {
+      this.controller?.abort();
+      const dialog = this.querySelector<HTMLDialogElement>('dialog');
+      if (dialog?.open) dialog.close();
+      this.querySelector<HTMLImageElement>('[data-viewer-image]')?.removeAttribute('src');
+      this.enhancedLinks.forEach(({ link, cue, popup }) => {
+        cue.remove();
+        if (popup === null) link.removeAttribute('aria-haspopup');
+        else link.setAttribute('aria-haspopup', popup);
+      });
+      this.enhancedLinks = [];
+    }
+  }
+  if (!customElements.get('work-story-image-viewer')) customElements.define('work-story-image-viewer', WorkStoryImageViewer);
+</script>
+
+<style>
+  work-story-image-viewer { display: contents; }
+  .story-image-dialog {
+    position: fixed; inset: 0; width: min(1600px, calc(100vw - 48px)); height: calc(100dvh - 48px); max-width: none; max-height: none; margin: auto; padding: 0;
+    border: 1px solid var(--theme-border); border-radius: 12px; background: var(--theme-bg); color: var(--theme-text); box-shadow: none; overflow: hidden; overscroll-behavior: contain;
+  }
+  .story-image-dialog:not([open]) { display: none; }
+  .story-image-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+  .story-image-dialog::backdrop { background: color-mix(in srgb, var(--theme-text, #1a1a1a) 45%, transparent); }
+  :global(html:has(.story-image-dialog[open])) { overflow: hidden; scrollbar-gutter: stable; }
+  :global([data-work-story] .story-image-inspect) { display: block; padding: .45rem .65rem; background: var(--theme-bg); color: var(--theme-text-muted); text-align: right; font: .7rem/1.5 var(--font-body, sans-serif); }
+  .viewer-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 14px 20px; border-bottom: 1px solid var(--theme-border); }
+  .viewer-header h2 { margin: 0; color: var(--theme-text-muted); font: .75rem/1.5 var(--font-body, sans-serif); letter-spacing: 0; }
+  .viewer-close { display: inline-flex; align-items: center; gap: .8rem; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--theme-border); border-radius: 99px; color: var(--theme-text); background: var(--theme-bg); font: .8rem/1.4 var(--font-body, sans-serif); cursor: pointer; }
+  .viewer-close kbd { color: var(--theme-text-muted); font: .65rem/1.4 var(--font-mono, monospace); }
+  .viewer-figure { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; margin: 0; }
+  .viewer-stage { display: grid; place-items: center; min-width: 0; min-height: 0; padding: 20px; overflow: auto; overscroll-behavior: contain; background: color-mix(in srgb, var(--theme-text) 3%, var(--theme-bg)); }
+  .viewer-stage > img { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
+  .viewer-stage > img[hidden], .viewer-status[hidden] { display: none; }
+  .viewer-status { max-width: 34ch; margin: 2rem; color: var(--theme-text-muted); text-align: center; font: .9rem/1.7 var(--font-body, sans-serif); }
+  .viewer-caption { display: flex; align-items: start; justify-content: space-between; gap: 1.5rem; padding: 16px 20px; border-top: 1px solid var(--theme-border); }
+  .viewer-caption > p { max-width: 85ch; max-height: 7rem; overflow: auto; margin: 0; color: var(--theme-text-muted); font: .75rem/1.7 var(--font-body, sans-serif); }
+  .viewer-actions { display: flex; align-items: center; flex-shrink: 0; gap: .75rem; }
+  .viewer-actions a { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem .65rem; border: 1px solid var(--theme-border); border-radius: 6px; color: var(--theme-text); background: var(--theme-bg); font: .75rem/1.5 var(--font-body, sans-serif); text-decoration: none; white-space: nowrap; cursor: pointer; }
+  .viewer-close:hover, .viewer-actions a:hover { border-color: var(--theme-text-muted); background: color-mix(in srgb, var(--theme-text) 4%, var(--theme-bg)); }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--theme-text); outline-offset: 3px; }
+  @media(max-width:600px) {
+    .story-image-dialog { width: calc(100vw - 20px); height: calc(100dvh - 24px); border-radius: 10px; }
+    .viewer-header { padding: 10px 12px; gap: .5rem; }
+    .viewer-header h2 { font-size: .7rem; }
+    .viewer-close { font-size: .75rem; padding-inline: .7rem; gap: .5rem; }
+    .viewer-stage { padding: 10px; }
+    .viewer-caption { flex-direction: column; gap: .6rem; padding: 12px; }
+    .viewer-caption > p { max-height: 5.5rem; font-size: .7rem; }
+    .viewer-actions { width: 100%; justify-content: flex-end; gap: .5rem; }
+    .viewer-actions a { font-size: .7rem; }
+  }
+</style>

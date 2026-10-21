@@ -1,0 +1,104 @@
+---
+import { contributionProjects, contributionsChecked } from '../../data/contributions';
+---
+<work-contributions>
+      <section id="open-source" class="work-group" aria-labelledby="open-source-title">
+        <header class="group-heading"><div><span>The workshop</span><h2 id="open-source-title">Open-source contributions</h2></div><button type="button" data-close-contributions hidden aria-label="Close contributions">Close <kbd>Esc</kbd></button></header>
+        <p class="contribution-intro">Contributions focused on accessibility, interaction details and documentation.</p>
+        {contributionProjects.map(project => (
+          <div class="contribution-project">
+            <h3>{project.name}</h3>
+            <ul>
+              {project.contributions.map(pr => (
+                <li>
+                  <a href={`https://github.com/${project.repository}/pull/${pr.number}`}>{pr.title}</a>
+                  <span class="pr-meta">#{pr.number} · {pr.status}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <p class="contribution-note">Status last reviewed <time datetime={contributionsChecked}>October 7, 2026</time>. Open PRs in that snapshot had not been merged.</p>
+      </section>
+</work-contributions>
+<script>
+  class WorkContributions extends HTMLElement {
+    private controller?: AbortController;
+    private dialog?: HTMLDialogElement;
+    private opener: HTMLElement | null = null;
+    connectedCallback() {
+      this.controller?.abort();this.controller=new AbortController();
+      const {signal}=this.controller;
+      const section=this.querySelector<HTMLElement>('#open-source');if(!section)return;
+      const dialog=document.createElement('dialog');this.dialog=dialog;
+      dialog.id='open-source-dialog';dialog.setAttribute('aria-labelledby','open-source-title');
+      dialog.append(section);this.append(dialog);
+      const close=section.querySelector<HTMLButtonElement>('[data-close-contributions]')!;close.hidden=false;
+      const open=()=>{
+        if(dialog.open)return;
+        this.opener=document.activeElement instanceof HTMLElement?document.activeElement:null;
+        dialog.showModal();close.focus({preventScroll:true});
+        document.dispatchEvent(new CustomEvent('work-contributions-toggle',{detail:true}));
+      };
+      close.addEventListener('click',()=>dialog.close(),{signal});
+      dialog.addEventListener('close',()=>{
+        document.dispatchEvent(new CustomEvent('work-contributions-toggle',{detail:false}));
+        if(this.opener?.isConnected)this.opener.focus({preventScroll:true});
+        if(location.hash==='#open-source')history.replaceState(history.state,'',location.pathname+location.search);
+      },{signal});
+      // Only a complete backdrop click dismisses, never a drag out of the list.
+      let backdropDown=false;
+      dialog.addEventListener('pointerdown',event=>{backdropDown=event.target===dialog&&outside(event);},{signal});
+      const outside=(event:PointerEvent|MouseEvent)=>{const r=dialog.getBoundingClientRect();return event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom;};
+      dialog.addEventListener('click',event=>{if(backdropDown&&event.target===dialog&&outside(event))dialog.close();backdropDown=false;},{signal});
+      document.addEventListener('work-contributions-open',open,{signal});
+      document.addEventListener('click',event=>{
+        if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+        const link=(event.target instanceof Element?event.target:null)?.closest<HTMLAnchorElement>('a[href]');
+        if(!link||link.target==='_blank')return;
+        const url=new URL(link.href,location.href);
+        if(url.origin===location.origin&&url.pathname===location.pathname&&url.hash==='#open-source'){event.preventDefault();open();}
+      },{signal});
+      window.addEventListener('hashchange',()=>{if(location.hash==='#open-source')open();},{signal});
+      if(location.hash==='#open-source')open();
+    }
+    disconnectedCallback(){if(this.dialog?.open)this.dialog.close();this.controller?.abort();}
+  }
+  if(!customElements.get('work-contributions'))customElements.define('work-contributions',WorkContributions);
+</script>
+<style>
+#open-source { width:calc(100% - 40px); max-width:64rem; margin:4rem auto 0; }
+.group-heading>span { display:block; font:.7rem/1.5 var(--font-mono); color:var(--theme-text-muted); margin-bottom:.6rem; }
+
+.group-heading { margin-bottom:.5rem; }
+.group-heading h2 { font:400 1.5rem/1.3 var(--font-body); letter-spacing:-.03em; margin:0; }
+
+.contribution-project { display:grid; grid-template-columns:9rem minmax(0,1fr); gap:2rem; padding:1.25rem 0; border-bottom:1px solid var(--theme-border); }
+.contribution-project h3 { font-family:var(--font-mono, monospace); font-size:1.15rem; font-weight:400; margin:.3rem 0; }
+.contribution-project ul { list-style:none; padding:0; margin:0; }
+.contribution-project li { display:flex; align-items:baseline; gap:1rem; padding:.35rem 0; margin:0; font-size:.85rem; line-height:1.6; }
+.contribution-project a { color:var(--theme-text); border:0; background:none; text-decoration:none; }
+.contribution-project a:hover { background:none; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.22em; }
+.contribution-project a::after { display:none; }
+.contribution-project a:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+.pr-meta { margin-left:auto; flex-shrink:0; font-family:var(--font-mono, monospace); font-size:.7rem; color:var(--theme-text-muted); }
+.contribution-intro { font-size:.9rem; line-height:1.7; margin:1rem 0; max-width:40rem; }
+.contribution-note { font-size:.7rem; line-height:1.6; color:var(--theme-text-muted); margin:1rem 0 0; }
+#open-source { scroll-margin-top:8rem; }
+@media(max-width:767px) { .contribution-project { grid-template-columns:1fr; gap:.5rem; } .contribution-project li { flex-wrap:wrap; gap:.15rem .75rem; padding:.55rem 0; } .pr-meta { width:100%; margin-left:0; } }
+
+  :global(#open-source-dialog) { margin:auto;padding:0;border:1px solid #c9c9c9;border-radius:18px;background:#fff;color:#252525;width:min(800px,calc(100vw - 48px));max-height:calc(100svh - 64px);overscroll-behavior:contain; }
+  :global(#open-source-dialog)::backdrop { background:rgba(25,25,25,.3);backdrop-filter:blur(3px); }
+  :global(#open-source-dialog[open]) { animation:workshop-arrival .2s ease-out; }
+  :global(#open-source-dialog) #open-source { width:100%;max-width:none;margin:0;padding:28px 32px; }
+  .group-heading { display:flex;align-items:start;justify-content:space-between;gap:20px; }
+  .group-heading div>span { display:block;font:.7rem var(--font-mono);color:#777;margin-bottom:8px; }
+  [data-close-contributions] { flex-shrink:0;border:1px solid #ccc;border-radius:20px;padding:10px 14px;background:#fff;cursor:pointer;font:.75rem var(--font-body);color:#333; }
+  [data-close-contributions] kbd { font:.65rem var(--font-mono);color:#777;margin-left:7px; }
+  [data-close-contributions]:hover { background:#eee; } [data-close-contributions]:active { transform:scale(.96); }
+  [data-close-contributions]:focus-visible { outline:2px solid #333;outline-offset:3px; }
+  :global(html:has(#open-source-dialog[open])) { overflow:hidden; }
+  @keyframes workshop-arrival { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none} }
+  @media(max-width:600px){:global(#open-source-dialog){width:calc(100vw - 24px);max-height:calc(100svh - 32px);border-radius:14px}:global(#open-source-dialog) #open-source{padding:22px 20px}.group-heading h2{font-size:1.3rem}[data-close-contributions] kbd{display:none}}
+  @media(prefers-reduced-motion:reduce){:global(#open-source-dialog[open]){animation:none}}
+</style>

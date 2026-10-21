@@ -40,7 +40,7 @@ export const GET: APIRoute = async () => {
     .filter((book) => !book.data.draft)
     .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 
-  let content = `# Maxence Mauduit — Full Content
+  let content = `# Maxence Mauduit: Full Content
 
 > Product designer and Chief Design Officer at Buzzvil (Seoul). 15 years in product design, 12 at Buzzvil. Designs in code and builds agent-consumable design systems and the tooling on top of them. Focus: AI-native design, interaction systems, design-in-code.
 

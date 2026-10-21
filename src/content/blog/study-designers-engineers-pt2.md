@@ -9,7 +9,7 @@ credentiallink: ""
 tags: ["craft", "design-systems", "tools"]
 ---
 
-We’ve shared a [first story](/blog/posts/studydesigners+engineers-%EF%B8%8F-pt1/) about how we started a study between engineers and designers. The outcome was a lot of fun and a CI pipeline from Figma to Android environment called Phantom Box. This story is about the second act of our study.
+We’ve shared a [first story](/blog/study-designers-engineers-pt1/) about how we started a study between engineers and designers. The outcome was a lot of fun and a CI pipeline from Figma to Android environment called Phantom Box. This story is about the second act of our study.
 
 This time we’ve decided to pinpoint a problem within our company and try fixing it. It needed to be a small scale project just for us to be incubating the whole development process altogether.
 
@@ -62,3 +62,5 @@ Aside the fun time, we’ve learnt a few things that, left alone, are already wo
 3. Designers don’t have to be engineers and reciprocally, but **having a great understanding on each side is mandatory**. For this there are many ways to get there but we found **direct communication and co-work** one of the best approach so far.
 
 4. There are a lot of insights for both fields to be learning from such study. Recent design approaches such as Atomic design systems are highly inspired from how things work in object oriented coding structure. Similarly Design thinking process is a pretty healthy method for engineers to follow as well when working on architecture designs.
+
+The [Offerwall design-system story](/work/offerwall/#offerwall-system) shows how this work continued to evolve across partner apps.

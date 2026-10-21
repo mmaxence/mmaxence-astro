@@ -12,7 +12,7 @@ interface Props {
   date?: Date;
 }
 
-const { title = "Product Designer, CDO at buzzvil", description = "Product designer and design leader. 15 years across product, system, and brand — designing in code and building agent-consumable design systems.", featured_image, url, type = 'website', date } = Astro.props;
+const { title = "Product Designer, CDO at buzzvil", description = "Product designer and design leader. 15 years across product, system, and brand, designing in code and building agent-consumable design systems.", featured_image, url, type = 'website', date } = Astro.props;
 const siteTitle = "Product Designer, CDO at buzzvil";
 const author = "Maxence Mauduit";
 const siteUrl = "https://mmaxence.me";
@@ -20,7 +20,7 @@ const currentUrl = url || (Astro.url.pathname.endsWith('/') ? new URL(Astro.url.
 const ogImage = featured_image
   ? (featured_image.startsWith('http') ? featured_image : new URL(featured_image, siteUrl).href)
   : new URL('/images/mmaxence-og.png', siteUrl).href;
-const ogImageAlt = featured_image ? title : 'Maxence Mauduit — Product Designer';
+const ogImageAlt = featured_image ? title : 'Maxence Mauduit: Product Designer';
 const ogIsCard = !featured_image; // branded fallback card, known dimensions (2100x1193)
 
 // JSON-LD structured data
@@ -48,7 +48,6 @@ const personSchema = {
     "https://www.linkedin.com/in/mmaxence/",
     "https://github.com/mmaxence",
     "https://mmaxence.medium.com",
-    "https://mmaxence.substack.com",
     "https://x.com/mmaxence",
     "https://bsky.app/profile/mmaxence.bsky.social"
   ],
@@ -98,7 +97,7 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content={author} />
     <link rel="canonical" href={currentUrl} />
-    <link rel="alternate" type="application/rss+xml" title="Maxence Mauduit — Blog" href={new URL('/rss.xml', siteUrl).href} />
+    <link rel="alternate" type="application/rss+xml" title="Maxence Mauduit: Blog" href={new URL('/rss.xml', siteUrl).href} />
     <title>{title === siteTitle ? title : `${title} | ${siteTitle}`}</title>
 
     {/* JSON-LD Structured Data */}

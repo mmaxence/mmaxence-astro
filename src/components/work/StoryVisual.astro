@@ -1,0 +1,80 @@
+---
+import type { ProjectVisual } from '../../data/work';
+import RewardJourney from './RewardJourney.astro';
+import LockscreenPresentation from './LockscreenPresentation.astro';
+import ProjectMedia from './ProjectMedia.astro';
+import OfferwallEcosystem from './OfferwallEcosystem.astro';
+import ProgressTimeline from './ProgressTimeline.astro';
+import HanjiDesignPlate from './HanjiDesignPlate.astro';
+import HanjiDetailPlate from './HanjiDetailPlate.astro';
+import HanjiPalette from './HanjiPalette.astro';
+import HanjiComments from './HanjiComments.astro';
+interface Props { visual: ProjectVisual }
+const { visual } = Astro.props;
+---
+{visual.rewardJourney && <RewardJourney kind={visual.rewardJourney} />}
+{visual.lockscreenPresentation && <LockscreenPresentation kind={visual.lockscreenPresentation} />}
+{visual.ecosystem && <OfferwallEcosystem />}
+{visual.timeline && <ProgressTimeline milestones={visual.timeline} />}
+{visual.metrics && <dl class="story-metrics">{visual.metrics.map(metric => <div><dt>{metric.label}</dt><dd><strong>{metric.value}</strong><span>{metric.context}</span></dd></div>)}</dl>}
+{visual.frames && <details class="pending-visual"><summary>Visual to add · {visual.frames.map(frame => frame.title).join(" / ")}</summary><figure class="visual-reservation">
+  <div class:list={['frame-grid', { 'frame-pair': visual.frames.length > 1 }]}>
+    {visual.frames.map(frame => <div class="reserved-frame">
+      <span class="frame-format">{frame.format} · To add</span>
+      <div class="frame-label"><h3>{frame.title}</h3><p>{frame.brief}</p></div>
+      <span class="frame-footnote">Visual pending</span>
+    </div>)}
+  </div>
+</figure></details>}
+{visual.media && !visual.archive && <div class:list={['story-media', { paired: visual.paired }]}>{visual.media.map(media => <ProjectMedia media={media} />)}</div>}
+{visual.media && visual.archive && <details class="archive-evidence"><summary>See the original Figma screens</summary><div class:list={['story-media', { paired: visual.paired }]}>{visual.media.map(media => <ProjectMedia media={media} />)}</div></details>}
+{visual.plate && <HanjiDesignPlate kind={visual.plate} />}
+{visual.detailPlate && <HanjiDetailPlate kind={visual.detailPlate} />}
+{visual.showcase === 'palette' && <HanjiPalette />}
+{visual.showcase === 'performance' && <HanjiComments kind="performance" />}
+{visual.table && <figure class="evidence-table">
+  <div class="table-scroll" role="region" aria-label={visual.table.title} tabindex="0">
+    <table>
+      <caption>{visual.table.title}</caption>
+      <thead><tr>{visual.table.columns.map(column => <th scope="col">{column}</th>)}</tr></thead>
+      <tbody>{visual.table.rows.map(row => <tr>{row.map((cell,i) => i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+  <figcaption>{visual.table.caption}</figcaption>
+</figure>}
+<style>
+.pending-visual{margin:1rem 0 2rem;padding:.75rem 0;border-bottom:1px solid var(--theme-border)}.pending-visual summary{cursor:pointer;font:.75rem/1.7 var(--font-mono,monospace);color:var(--theme-text-muted)}.pending-visual summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.archive-evidence{margin:1.25rem 0 2rem;border-block:1px solid var(--theme-border);padding:.75rem 0}.archive-evidence summary{cursor:pointer;width:fit-content;font:.75rem/1.7 var(--font-mono,monospace);color:var(--theme-text-muted)}.archive-evidence summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+
+.story-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr)); gap:2rem; margin:2rem 0 2.5rem; padding:1.5rem 0; border-block:1px solid var(--theme-border); }
+.story-metrics dt { font:.75rem/1.6 var(--font-mono,monospace); color:var(--theme-text-muted); }
+.story-metrics dd { margin:0; }
+.story-metrics strong { display:block; margin:.65rem 0; font:400 clamp(2rem,5vw,3rem)/1.2 var(--font-mono,monospace); }
+.story-metrics span { display:block; max-width:25rem; font:.75rem/1.7 var(--font-mono,monospace); color:var(--theme-text-muted); }
+
+.visual-reservation { margin:2rem 0 2.5rem; }
+.frame-grid { display:grid; gap:1rem; }
+.frame-pair { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.reserved-frame { position:relative; display:flex; flex-direction:column; justify-content:space-between; gap:2rem; min-width:0; aspect-ratio:16/9; padding:1.5rem; border:1px solid var(--theme-border); background:color-mix(in srgb,var(--theme-text) 2%,transparent); }
+.frame-pair .reserved-frame { aspect-ratio:4/5; }
+.frame-format,.frame-footnote { font:.65rem/1.6 var(--font-mono,monospace); color:var(--theme-text-muted); }
+.frame-footnote { text-align:right; }
+.frame-label { max-width:25rem; margin:auto; text-align:center; }
+.frame-label h3 { margin:0 0 .65rem; font:400 1rem/1.5 var(--font-mono,monospace); }
+.frame-label p { margin:0; color:var(--theme-text-muted); font:.8rem/1.7 var(--font-mono,monospace); }
+@media(max-width:600px) { .frame-pair { grid-template-columns:1fr; } .reserved-frame,.frame-pair .reserved-frame { aspect-ratio:auto; min-height:18rem; padding:1rem; } }
+
+.story-media { margin:2rem 0; }
+.paired { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1rem; }
+.paired :global(figure) { margin:0; min-width:0; }
+.evidence-table { margin:2rem auto 2.5rem; max-width:48rem; }
+.table-scroll { overflow-x:auto; }
+.table-scroll:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+table { width:100%; border-collapse:collapse; font-size:.9rem; line-height:1.6; }
+caption { text-align:left; font-family:var(--font-mono,monospace); font-size:.8rem; padding-bottom:1rem; }
+th,td { text-align:left; padding:.9rem .75rem; border-bottom:1px solid var(--theme-border); vertical-align:top; }
+thead th { font-size:.7rem; font-weight:400; color:var(--theme-text-muted); font-family:var(--font-mono,monospace); }
+tbody th { font-weight:400; }
+figcaption { margin-top:.75rem; font:.75rem/1.7 var(--font-mono,monospace); color:var(--theme-text-muted); }
+@media(max-width:767px) { .paired { grid-template-columns:1fr; gap:2rem; } th,td { padding:.75rem .45rem; } table { font-size:.8rem; } }
+</style>

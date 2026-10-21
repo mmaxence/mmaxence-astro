@@ -24,7 +24,7 @@ amazon_link: "https://www.amazon.com/s?k=thinking+fast+and+slow+by+daniel+kahnem
 
 ### The System 1 vs. System 2 Tension
 
-This is the bedrock of my "Think Slow, Do Fast" philosophy. In AdTech, we often design for System 1 (quick, intuitive clicks), but as a leader, I must reside in System 2—the slow, effortful, logical processing required to interpret complex data.
+This is the bedrock of my "Think Slow, Do Fast" philosophy. In AdTech, we often design for System 1 (quick, intuitive clicks), but as a leader, I must reside in System 2: the slow, effortful, logical processing required to interpret complex data.
 
 ## Leadership Lessons
 

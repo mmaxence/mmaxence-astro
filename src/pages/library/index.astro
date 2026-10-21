@@ -65,8 +65,8 @@ Object.keys(booksByCategory).forEach(category => {
           title="Shelf" 
           description="My Library is my Blueprint. These works have shaped my 'Think Slow, Do Fast' philosophy, bridging the gap between cognitive science, business operations, and systemic design." 
         />
-      <SectionLinks group="writing" />
       </AnimatedContent>
+      <SectionLinks group="writing" sticky />
       
       {Object.keys(categoryOrder)
         .sort((a, b) => categoryOrder[a] - categoryOrder[b])

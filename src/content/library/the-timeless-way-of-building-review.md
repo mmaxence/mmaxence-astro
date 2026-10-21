@@ -30,7 +30,7 @@ That feeling when a system feels "right" and the interface becomes invisible.
 
 ### Interaction Primitives
 
-We build loading states and transitions first—these are the "living patterns" Alexander describes.
+We build loading states and transitions first. These are the "living patterns" Alexander describes.
 
 ## How It Shaped My Work
 

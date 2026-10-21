@@ -1,0 +1,75 @@
+---
+interface Props { kind: 'mark' | 'scale' | 'motion' }
+const {kind} = Astro.props;
+const shapes = [
+'M306 152L206 152L206 72L282 72C295.255 72 306 82.7452 306 96L306 152Z',
+'M105 152H381C394.255 152 405 162.745 405 176V232H105V152Z',
+'M256 256C311.228 256 356 300.772 356 356C356 411.228 311.228 456 256 456C200.772 456 156 411.228 156 356C156 300.772 200.772 256 256 256ZM256 336C244.954 336 236 344.954 236 356C236 367.046 244.954 376 256 376C267.046 376 276 367.046 276 356C276 344.954 267.046 336 256 336Z'];
+---
+<figure>
+{kind === 'mark' && <>
+  <div class="mark-construction">
+    <div class="construction"><svg viewBox="0 0 512 512" role="img" aria-label="Construction study of the existing Hanji mark"><g class="guides"><path d="M105 30V482M405 30V482M256 30V482M55 72H460M55 152H460M55 232H460M55 356H460M55 456H460"/><circle cx="256" cy="356" r="100"/></g>{shapes.map(d=><path d={d} fill="currentColor"/>)}</svg><span>ㅎ / Existing mark, construction overlay</span></div>
+    <div class="parts">{shapes.map((d,i)=><div><svg viewBox="0 0 512 512" aria-hidden="true"><path d={d} fill="currentColor"/></svg><span>{['A short stroke','A horizontal bar','An open ring'][i]}</span></div>)}</div>
+  </div>
+  <div class="mark-uses"><div><span class="micro">Interface scale</span><div class="sizes">{[24,40,64].map(size=><svg width={size} height={size} viewBox="0 0 512 512" aria-hidden="true">{shapes.map(d=><path d={d} fill="currentColor"/>)}</svg>)}</div></div><div class="reverse"><span class="micro">Reversed on ink</span><svg width="64" height="64" viewBox="0 0 512 512" aria-hidden="true">{shapes.map(d=><path d={d} fill="currentColor"/>)}</svg></div></div>
+  <figcaption>Brand detail · Original vector paths, shown with an explanatory construction overlay. The charcoal mark holds its own weight; celadon and orchid belong to product interaction.</figcaption>
+</>}
+{kind === 'scale' && <>
+  <div class="zoom-studies">
+    <div><span class="micro">01 / Overview</span><div class="zoom-stage far"><span>Project</span><div class="tiles">{Array.from({length:12},()=> <i />)}</div></div><h3>Read the territory</h3><p>Project labels and grouped work carry the picture at a distance.</p></div>
+    <div><span class="micro">02 / Relationships</span><div class="zoom-stage mid"><svg viewBox="0 0 240 160" role="img" aria-label="Three issue identifiers connected by dependency lines"><path d="M65 55C110 55 90 110 135 110M65 55H170"/><g><rect x="10" y="35" width="65" height="40"/><rect x="155" y="35" width="75" height="40"/><rect x="110" y="95" width="80" height="40"/></g><text x="23" y="59">LAB-1</text><text x="169" y="59">LAB-2</text><text x="126" y="119">LAB-3</text></svg></div><h3>Trace what depends on what</h3><p>Identifiers stay legible while secondary card content recedes.</p></div>
+    <div><span class="micro">03 / Detail</span><div class="zoom-stage near"><div class="issue"><span>LAB-3 · In progress</span><strong>Review the next step</strong><span>Assignee · Due date</span></div></div><h3>Decide on one piece</h3><p>Titles, status, and metadata return when the card has room.</p></div>
+  </div>
+  <figcaption>Interaction study · Semantic zoom states drawn from Work’s canvas implementation. Fictional examples explain the information hierarchy; these are not screenshots.</figcaption>
+</>}
+{kind === 'motion' && <>
+  <div class="motion-study"><div><span class="micro">Shared surface choreography</span><div class="timing"><b>360<small>ms</small></b><span>Enter<br />fast start, soft landing</span></div><div class="timing"><b>220<small>ms</small></b><span>Exit<br />a quicker departure</span></div></div><details><summary>Open the motion study</summary><div class="sheet-demo"><span class="micro">A surface enters</span><p>Keep the context.<br />Bring the decision closer.</p><span>Reading → focused action</span></div></details></div>
+  <figcaption>Motion study · Existing sheet timing tokens, with a simplified entrance demonstration. Open and close to replay; reduced-motion preferences disable the entrance animation.</figcaption>
+</>}
+</figure>
+<style>
+figure { margin:1.5rem 0 2rem; }
+figcaption { margin:.85rem 0 0; color:var(--theme-text-muted); font:.75rem/1.7 var(--font-mono,monospace); max-width:48rem; }
+.micro { display:block; font:.65rem/1.6 var(--font-mono,monospace); }
+.mark-construction { background:#fcfcf8; color:#2c2e32; display:grid; grid-template-columns:1.3fr 1fr; border:1px solid var(--theme-border); }
+.construction { padding:2rem; text-align:center; }
+.construction svg { width:100%; max-width:300px; }
+.construction span { display:block; font:.7rem/1.6 var(--font-mono,monospace); }
+.guides { fill:none; stroke:#b5b9b1; stroke-width:1; stroke-dasharray:3 5; }
+.parts { display:grid; padding:1rem 2rem; }
+.parts div { display:flex; align-items:center; gap:1rem; border-bottom:1px solid #ddded8; font-size:.85rem; }
+.parts svg { width:85px; height:85px; }
+.mark-uses { display:grid; grid-template-columns:1fr 1fr; }
+.mark-uses > div { padding:1.5rem; }
+.sizes { display:flex; align-items:center; gap:2rem; min-height:90px; }
+.reverse { background:#2c2e32; color:#fcfcf8; }
+.reverse svg { margin-top:1rem; }
+.zoom-studies { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.25rem; border-block:1px solid var(--theme-border); padding:1.5rem 0; }
+.zoom-stage { height:170px; margin:1rem 0; background:var(--theme-bg); border:1px solid var(--theme-border); display:flex; flex-direction:column; justify-content:center; padding:1rem; }
+.far > span { font-size:.9rem; }
+.tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:1rem; }
+.tiles i { height:16px; background:color-mix(in srgb,var(--theme-text) 20%,var(--theme-bg)); }
+.mid svg { width:100%; height:100%; overflow:visible; }
+.mid path { fill:none; stroke:var(--theme-text-muted); stroke-width:1; }
+.mid rect { fill:var(--theme-bg); stroke:var(--theme-text-muted); }
+.mid text { fill:var(--theme-text); font:12px monospace; }
+.issue { display:grid; gap:1rem; border-left:2px solid var(--theme-text); padding-left:.75rem; }
+.issue span { font:.65rem/1.5 var(--font-mono,monospace); color:var(--theme-text-muted); }
+.issue strong { font-size:.85rem; font-weight:400; }
+h3 { font-size:.9rem; font-weight:400; margin:.75rem 0; }
+.zoom-studies p { font-size:.8rem; line-height:1.7; color:var(--theme-text-muted); margin:0; }
+.motion-study { display:grid; grid-template-columns:1fr 1.4fr; gap:2rem; border:1px solid var(--theme-border); padding:2rem; }
+.timing { display:flex; gap:1rem; align-items:center; margin-top:1.5rem; }
+.timing b { font:2.5rem/1.1 var(--font-mono,monospace); }
+.timing small { font-size:.75rem; }
+.timing > span { font-size:.75rem; line-height:1.6; }
+summary { cursor:pointer; font-size:.85rem; padding:.65rem 0; }
+summary:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+.sheet-demo { padding:1.5rem; margin-top:1rem; border:1px solid var(--theme-border); animation:sheet-in 360ms cubic-bezier(.32,.72,0,1); }
+.sheet-demo p { font:1.6rem/1.4 HanjiSpecimen,Georgia,serif; margin:1.5rem 0; }
+.sheet-demo > span:last-child { font-size:.75rem; }
+@keyframes sheet-in { from { transform:translateX(18px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .sheet-demo { animation:none; } }
+@media(max-width:640px) { .mark-construction,.motion-study,.zoom-studies { grid-template-columns:1fr; } .parts { grid-template-columns:repeat(3,1fr); padding:1rem; gap:.5rem; } .parts div { flex-direction:column; gap:.25rem; text-align:center; font-size:.7rem; border:0; } .parts svg { width:65px; height:65px; } .construction { padding:1rem; } .sizes { gap:1rem; } .motion-study { padding:1.25rem; } .zoom-stage { height:150px; } }
+</style>

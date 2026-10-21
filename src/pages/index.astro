@@ -13,8 +13,8 @@ import {
   BeyondTheRoleVisual,
   ExperienceSnapshotVisual
 } from '../components/home/SectionVisuals.tsx';
+import ReadingNote from '../components/home/ReadingNote.astro';
 import HomeSection from '../components/home/HomeSection.astro';
-import SubstrateCTA from '../components/ui/SubstrateCTA.astro';
 import { getCollection } from 'astro:content';
 
 const blogPosts = (await getCollection('blog'))
@@ -40,7 +40,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
           id="hero-flip-zone"
           role="button"
           tabindex="0"
-          aria-label="Maxence Mauduit — tap to flip the photo and theme"
+          aria-label="Maxence Mauduit: tap to flip the photo and theme"
         >
           <div class="profile-flip" id="profile-flip">
             <img class="profile-flip-backing" id="profile-flip-backing" src="/images/profile.jpeg" alt="" draggable="false" aria-hidden="true" />
@@ -73,9 +73,6 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <p slot="pre-visual" class="section-lede text-balance">Most of the work happens before the screen. The hard part is deciding what should exist, and what does not deserve to.</p>
       <div slot="aside">
         <p class="mt-6 text-balance">My strength is taking problems that are still undefined, strategically sensitive, or technically constrained, and turning them into products teams can actually build and scale. Thanks to extensive domain knowledge and a strong craft DNA, I join frontier squads, building when there is nothing. Learning from these experiences, I build systems for designers, now also PMs, FEs, and agents, to build upon.</p>
-        <p class="mt-6">
-          <a href="/images/Maxence-Mauduit_Resume-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />View my resume</a> for a detailed overview of my experience and impact.
-        </p>
       </div>
       <img
         slot="visual"
@@ -89,6 +86,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
         loading="lazy"
         decoding="async"
       />
+      <ReadingNote slot="reading-note" label="Background" links={[{"title": "Resume (PDF)", "href": "/images/Maxence-Mauduit_Resume-2026.pdf"}]} />
     </HomeSection>
     
     {/* THE CRAFT */}
@@ -105,37 +103,25 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Discernment</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Deciding what deserves to exist, before anything is drawn or built.</p>
-            <div class="ref-links">
-              <a href="/blog/designing-above-the-interface" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Designing Above the Interface</a>
-              <a href="/blog/the-job-description-is-wrong" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />The Job Description Is Wrong</a>
-            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Systems for agents</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Design infrastructure that people and AI agents compose within, without losing the plot.</p>
-            <div class="ref-links">
-              <a href="/blog/the-flip" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />The Flip</a>
-              <a href="/blog/when-the-interface-assembles-itself" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />When the Interface Assembles Itself</a>
-              <a href="https://design.buzzvil.com" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=design.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
-            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">In the codebase</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Shaping products where they actually live, not in a mockup of them.</p>
-            <div class="ref-links">
-              <a href="/blog/from-paper-to-code" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />From Paper to Code</a>
-              <a href="/blog/harnessing-ai-coding-agents" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Harnessing AI Coding Agents</a>
-            </div>
           </div>
         </div>
       </div>
+      <ReadingNote slot="reading-note" label="Further reading" links={[{"title": "Designing Above the Interface", "href": "/blog/designing-above-the-interface/"}, {"title": "Interaction composer: the project", "href": "/work/interaction-composer/"}]} />
     </HomeSection>
 
     {/* EXPERIENCE SNAPSHOT */}
     <HomeSection title="Experience snapshot" label=".experience">
       <p slot="pre-visual" class="section-lede text-balance">15 years of shaping products, building teams, and the systems that hold them together.</p>
       <div slot="aside">
-        <p class="mt-6">Every stage feeds the next: define what should exist, systematize how it gets built, scale the people and platforms that carry it. For the full story, see my <a href="/timeline" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />experience timeline</a>.</p>
+        <p class="mt-6">Every stage feeds the next: define what should exist, systematize how it gets built, scale the people and platforms that carry it.</p>
       </div>
       <ExperienceSnapshotVisual slot="visual" client:visible />
       <div slot="post-visual">
@@ -161,13 +147,6 @@ const featuredDeepdive = (await getCollection('deepdives'))
                 <span>Now building the agent-consumable design infrastructure the team and our AI agents compose within</span>
               </li>
             </ul>
-            <div class="ref-links">
-              <span class="ref-label">See also:</span>
-              <a href="/blog/i-dont-like-ads" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />I Don't Like Ads</a>
-              <a href="https://www.buzzvil.com/en/company/about_us" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />About Us</a>
-              <a href="https://docs.buzzvil.com/" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=docs.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Buzzvil Docs</a>
-              <a href="https://design.buzzvil.com" target="_blank" rel="noopener noreferrer" class="ref-link"><img src="https://www.google.com/s2/favicons?domain=design.buzzvil.com&sz=24" alt="" class="ref-icon" width="14" height="14" />Design Buzzvil</a>
-            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">UX Design Lead</h3>
@@ -189,6 +168,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
           </div>
         </div>
       </div>
+      <ReadingNote slot="reading-note" label="Explore" links={[{"title": "Selected work", "href": "/work/"}, {"title": "Experience timeline", "href": "/timeline/"}]} />
     </HomeSection>
 
     {/* HOW I WORK */}
@@ -203,33 +183,22 @@ const featuredDeepdive = (await getCollection('deepdives'))
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Deliberate thinking, fast execution</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Investing heavily upfront to clarify constraints, tradeoffs, and intent, so execution moves quickly without rework.</p>
-            <div class="ref-links">
-              <a href="/blog/design-tempo" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Design Tempo</a>
-            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Systems over screens</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Interaction models, primitives, and patterns that hold together across teams and iterations.</p>
-            <div class="ref-links">
-              <a href="/blog/design-system-at-buzzvil" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Design System at Buzzvil</a>
-            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Product ownership mindset</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Designing with unit economics, engineering cost, and long-term maintainability in mind.</p>
-            <div class="ref-links">
-              <a href="/blog/high-output-management" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />High Output Management</a>
-            </div>
           </div>
           <div class="craft-cell">
             <h3 class="text-base font-heading font-bold">Building teams that don't need me</h3>
             <p class="text-base leading-relaxed text-theme-muted !mt-0">Small teams designed to operate without constant oversight. Removing ambiguity early and becoming unnecessary over time.</p>
-            <div class="ref-links">
-              <a href="/blog/design-peer-reviews-to-support-our-team-growth" class="ref-link"><img src="/images/favicon.png" alt="" class="ref-icon" width="14" height="14" />Design Peer Reviews</a>
-            </div>
           </div>
         </div>
       </div>
+      <ReadingNote slot="reading-note" label="Further reading" links={[{"title": "Design Tempo", "href": "/blog/design-tempo/"}, {"title": "Design Peer Reviews", "href": "/blog/design-peer-reviews-to-support-our-team-growth/"}]} />
     </HomeSection>
     
     {/* BEYOND THE ROLE */}
@@ -237,35 +206,23 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <p slot="pre-visual" class="section-lede text-balance">Sustainable pace, continuous learning, and systems thinking beyond work.</p>
       <div slot="aside">
         <p class="mt-6 text-balance">I value sustainable performance and depth over constant acceleration.</p>
-        <p class="mt-4 text-balance">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I wrote about that balance: <a href="/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup" class="inline-card"><img src="/images/favicon.png" alt="" width="14" height="14" class="inline-card-icon" />Life in Sprint Mode</a>.</p>
+        <p class="mt-4 text-balance">Outside of work, I'm a parent of two and spend my time learning how complex systems behave, from interaction design to human psychology. I also build <a href="/work/hanji/">Hanji</a>, a personal exploration of how people work with agents.</p>
       </div>
       <BeyondTheRoleVisual slot="visual" client:visible />
+      <ReadingNote slot="reading-note" label="Further reading" links={[{"title": "Life in Sprint Mode", "href": "/blog/life-in-sprint-mode-raising-two-kids-while-working-at-a-hyper-dynamic-korean-startup/"}]} />
     </HomeSection>
     
-    {/* Featured Deep Dive */}
-    {featuredDeepdive && (
-      <section class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-20 md:py-28">
+    {/* Selected writing */}
+    {(featuredDeepdive || blogPosts.length > 0) && (
+      <section aria-labelledby="selected-writing" class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-12 md:py-16">
         <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
           <AnimatedContent>
             <div class="w-full">
-              <h2 class="section-kicker" data-reveal style="--r: 0">Featured deep dive</h2>
-              <div class="mt-8" data-reveal style="--r: 1">
-                <TitleListItem title={featuredDeepdive.data.title} href={`/deepdives/${featuredDeepdive.slug}/`} date={featuredDeepdive.data.date} />
-              </div>
-            </div>
-          </AnimatedContent>
-        </div>
-      </section>
-    )}
-
-    {/* Blog Posts */}
-    {blogPosts.length > 0 && (
-      <section class="flex flex-col items-center px-4 md:px-8 lg:px-12 py-20 md:py-28">
-        <div class="w-full max-w-5xl mx-auto text-base leading-relaxed index text-theme">
-          <AnimatedContent>
-            <div class="w-full">
-              <h2 class="section-kicker" data-reveal style="--r: 0">Selected writing</h2>
-              <div class="mt-8">
+              <h2 id="selected-writing" class="section-kicker" data-reveal style="--r: 0">Selected writing</h2>
+              <div class="mt-4">
+                {featuredDeepdive && (
+                  <TitleListItem title={featuredDeepdive.data.title} href={`/deepdives/${featuredDeepdive.slug}/`} meta="Deep dive" />
+                )}
                 {blogPosts.map(post => (
                   <TitleListItem title={post.data.title} href={`/blog/${post.slug}/`} date={post.data.date} />
                 ))}
@@ -277,8 +234,6 @@ const featuredDeepdive = (await getCollection('deepdives'))
       </section>
     )}
 
-    {/* Substrate Newsletter CTA */}
-    <SubstrateCTA variant="section" />
 
   </PageContent>
       <Footer />
@@ -482,11 +437,6 @@ const featuredDeepdive = (await getCollection('deepdives'))
     font-size: 1.125rem;
   }
 
-  .craft-cell .ref-links {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid var(--theme-border);
-  }
 
   @media (max-width: 1024px) {
     .craft-grid {
@@ -541,10 +491,14 @@ const featuredDeepdive = (await getCollection('deepdives'))
       { src: '/images/profile-garden.jpg',  label: 'Garden',      theme: { bg: '#eaf1e6', text: '#27401f', muted: '#52704a', accent: '#3f6f8f', border: '#d6e3cf' } }, // garden
     ];
     const photos = slides.map((s) => s.src);
-    photos.forEach((src) => {
-      const pre = new Image();
-      pre.src = src;
-    });
+    // Load the next portrait on intent instead of downloading every hidden
+    // variation during the initial page load. flipTo also decodes before moving.
+    const warmNextPhoto = () => {
+      const image = new Image();
+      image.src = photos[(index + 1) % photos.length];
+    };
+    zone.addEventListener('pointerenter', warmNextPhoto);
+    zone.addEventListener('focus', warmNextPhoto);
 
     let index = 0;
     let busy = false;

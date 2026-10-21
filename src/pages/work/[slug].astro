@@ -1,66 +1,27 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/layout/Header.astro';
-import Footer from '../../components/layout/Footer.astro';
-import PageHeader from '../../components/ui/PageHeader.astro';
-import PageContent from '../../components/ui/PageContent.astro';
-import ThemeToast from '../../components/ui/ThemeToast.astro';
+import WorkStoryLayout from '../../layouts/WorkStoryLayout.astro';
 import { workEntries } from '../../data/work';
+import ComposerCase from '../../components/work/ComposerCase.astro';
+import HanjiCase from '../../components/work/HanjiCase.astro';
+import OfferwallCase from '../../components/work/OfferwallCase.astro';
+import LockscreenCase from '../../components/work/LockscreenCase.astro';
+import GameUACase from '../../components/work/GameUACase.astro';
+import BuzzvilMediumsCase from '../../components/work/BuzzvilMediumsCase.astro';
 
-import WorkMedia from '../../components/work/WorkMedia.astro';
 export function getStaticPaths() {
   return workEntries.map((work, index) => ({ params: { slug: work.slug }, props: { work, next: workEntries[(index + 1) % workEntries.length] } }));
 }
-const { work: w, next } = Astro.props;
-const sections = [
-  { title: 'The call', paragraphs: [w.call] },
-  { title: w.group === 'independent' ? 'The approach' : 'The foundation', paragraphs: [w.foundation] },
-  ...(w.sections || []),
-  { title: w.group === 'independent' ? 'Where it stands' : 'What shipped', paragraphs: [w.shipped] },
-];
+const { work, next } = Astro.props;
+const cases = {
+  'interaction-composer': ComposerCase,
+  'hanji': HanjiCase,
+  'offerwall': OfferwallCase,
+  'lockscreen': LockscreenCase,
+  'game-ua-multi-mission': GameUACase,
+  'buzzvil-mediums': BuzzvilMediumsCase,
+};
+const CasePage = cases[work.slug as keyof typeof cases];
 ---
-<BaseLayout title={w.title} description={w.kicker}>
-  <Header />
-  <PageContent>
-    <article class="work-detail max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
-      <a class="work-back" href={`/work/#${w.slug}`}>← All work</a>
-      <header class="detail-header">
-        <p class="metadata"><span>{w.context}</span><span>{w.years}</span></p>
-        <PageHeader title={w.title} description={w.kicker} />
-      </header>
-      <WorkMedia work={w} />
-      <div class="story">
-        {sections.map(section => (
-          <section>
-            <h2>{section.title}</h2>
-            {section.paragraphs.map(paragraph => <p>{paragraph}</p>)}
-          </section>
-        ))}
-        {w.links?.length && <aside aria-label="Related reading and links" class="related">
-          <h2>Explore further</h2>
-          <ul>{w.links.map(link => <li><a href={link.url}>{link.label} <span aria-hidden="true">{link.url.startsWith('http') ? '↗' : '→'}</span></a></li>)}</ul>
-        </aside>}
-      </div>
-      <nav class="project-navigation" aria-label="Project navigation">
-        <a href={`/work/#${w.slug}`}>← All work</a>
-        <a href={`/work/${next.slug}/`}><span>Next project</span>{next.title} →</a>
-      </nav>
-    </article>
-  </PageContent>
-  <Footer /><ThemeToast />
-</BaseLayout>
-<style>
-.work-back { display: inline-block; font-family: var(--font-mono, monospace); font-size: .85rem; margin-bottom: 2.5rem; padding-block: .5rem; }
-.metadata { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem 1rem; font-family:var(--font-mono, monospace); font-size:.75rem; color:var(--theme-text-muted); margin:0 0 1.25rem; }
-.story { max-width: 40rem; margin-inline:auto; }
-.story section { margin-bottom:2.5rem; }
-.story h2 { font-family:var(--font-mono, monospace); font-weight:400; font-size:1.35rem; margin:0 0 1rem; }
-.story p { font-size:1rem; line-height:1.85; margin:0 0 1rem; }
-.related { border-top:1px solid var(--theme-border); padding-top:2rem; }
-.related ul { list-style:none; padding:0; }
-.related li { margin:.7rem 0; }
-.project-navigation { border-top:1px solid var(--theme-border); margin-top:4rem; padding-top:1.5rem; display:flex; justify-content:space-between; gap:2rem; font-family:var(--font-mono, monospace); font-size:.9rem; }
-.project-navigation a:last-child { text-align:right; max-width:65%; }
-.project-navigation span { display:block; font-size:.75rem; color:var(--theme-text-muted); margin-bottom:.5rem; }
-.work-detail a:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
-</style>
+<WorkStoryLayout {work} {next}>
+  <CasePage {work} />
+</WorkStoryLayout>

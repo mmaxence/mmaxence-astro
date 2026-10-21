@@ -16,11 +16,11 @@ export const timelineEntries: TimelineEntry[] = [
 • Led the organization's preparation for public listing by institutionalizing execution standards that maintain experience quality at scale.
 • Reduced dependency on individual contributors by clarifying ownership, decision frameworks, and shared interaction primitives across teams.
 • Improved UI delivery efficiency by aligning design intent more closely with engineering constraints and code-level abstractions.
-• Shaped and launched new monetization experiences based on multi-mission rewarded interactions, supporting long-term engagement and retention.
+• Shaped and launched new monetization experiences based on [multi-mission rewarded interactions](/work/game-ua-multi-mission/), supporting long-term engagement and retention.
 • Strengthened senior design leadership and succession to ensure continuity, autonomy, and organizational resilience.
 
 #### Product Pivot & Monetization Strategy (2019–2022)
-• Led a critical company-wide pivot following a major platform policy change, transitioning the business from consumer-facing products to a diversified Offerwall and SDK-based monetization model.
+• Led a critical company-wide pivot following a major platform policy change, transitioning the business from consumer-facing products to a diversified [Offerwall and SDK-based monetization model](/work/offerwall/).
 • Owned product strategy end-to-end, from discovery through delivery, during a period of high execution pressure and strategic uncertainty.
 • Designed and shipped server-driven UI capabilities that reduced engineering overhead and significantly accelerated partner integrations.
 • Maintained experience quality as a competitive advantage while scaling delivery across multiple mission teams.
@@ -28,7 +28,7 @@ export const timelineEntries: TimelineEntry[] = [
 
 #### Early Scaling & Foundation Building (2014–2018)
 • Built the design function from the ground up as one of the company's earliest members.
-• Redesigned the flagship consumer product and leveraged its success to create the first lockscreen SDK, enabling Buzzvil's entry into the B2B ecosystem.
+• Redesigned the flagship consumer product and leveraged its success to create the first [lockscreen SDK](/work/lockscreen/), enabling Buzzvil's entry into the B2B ecosystem.
 • Established shared interaction standards, hiring principles, and execution practices that supported rapid growth without fragmentation.
 • Identified and removed operational bottlenecks in creative production by designing automated review and validation workflows, allowing the team to shift focus from asset production to product innovation.
 • Expanded design capabilities internationally, including hiring and supporting teams in Taiwan while maintaining system-level consistency across markets.`
@@ -47,8 +47,8 @@ export const timelineEntries: TimelineEntry[] = [
     date: "2005 – 2010",
     description: "",
     tags: [],
-    content: `• Master's in Hypermedia Design (Interaction Design) — L'École de design Nantes Atlantique
-• Research Master's in Virtual Reality & Innovation — Arts et Métiers ParisTech
+    content: `• Master's in Hypermedia Design (Interaction Design), L'École de design Nantes Atlantique
+• Research Master's in Virtual Reality & Innovation, Arts et Métiers ParisTech
 • Founded an independent design practice while studying, delivering brand identities and web products for early-stage startups and learning client, technical, and delivery constraints firsthand.`
   }
 ].sort((a, b) => {

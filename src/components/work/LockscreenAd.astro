@@ -1,0 +1,133 @@
+---
+interface Props {
+  brand?: 'forme' | 'fieldwork';
+  compact?: boolean;
+  eager?: boolean;
+}
+
+const { brand = 'forme', compact = false, eager = false } = Astro.props;
+const campaigns = {
+  forme: {
+    name: 'FORME',
+    headline: 'A quieter kind of care.',
+    copy: 'Meet your everyday essentials.',
+    image: '/work/composer/forme-campaign-768.webp',
+    alt: 'Fictional FORME skincare bottles on warm stone beside water.',
+  },
+  fieldwork: {
+    name: 'FIELDWORK',
+    headline: 'Made for the everyday outside.',
+    copy: 'Explore the new city layers.',
+    image: '/work/composer/fieldwork-campaign-768.webp',
+    alt: 'Fictional FIELDWORK outerwear campaign against a concrete building.',
+  },
+};
+const campaign = campaigns[brand];
+---
+
+<div class:list={['lockscreen-ad', brand, { compact }]} aria-label={`Illustrative lockscreen with a fictional ${campaign.name} advertisement`}>
+  <div class="ad-screen">
+    <div class="phone-status" aria-hidden="true">
+      <span>9:41</span>
+      <span class="status-symbols">
+        <svg viewBox="0 0 18 12"><path d="M1 11V8M5 11V6M9 11V3M13 11V1" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 21 12"><rect x="1" y="1" width="16" height="10" rx="2" fill="none" stroke="currentColor"/><path d="M19 4v4" stroke="currentColor" stroke-width="2"/><rect x="3" y="3" width="12" height="6" rx="1" fill="currentColor"/></svg>
+      </span>
+    </div>
+
+    <div class="phone-clock">
+      <span class="clock-time">09:41</span>
+      <span class="clock-date">Monday, June 24</span>
+    </div>
+
+    <div class="campaign-image">
+      <img src={campaign.image} alt={campaign.alt} width="768" height="512" loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding="async" />
+    </div>
+
+    <div class="campaign-copy">
+      <div class="campaign-label"><span class="brand-name">{campaign.name}</span><span class="sponsored">Sponsored</span></div>
+      <p class="campaign-headline">{campaign.headline}</p>
+      <p class="campaign-description">{campaign.copy}</p>
+    </div>
+
+    <div class="gesture-actions">
+      <div class="gesture-label"><span><b aria-hidden="true">‹</b> Explore</span><small>Swipe left</small></div>
+      <span class="lock-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="10" width="12" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 14v3" stroke="currentColor" stroke-width="1.3"/></svg></span>
+      <div class="gesture-label unlock-label"><span>Unlock <b aria-hidden="true">›</b></span><small>Swipe right</small></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lockscreen-ad {
+    width: 100%;
+    max-width: 280px;
+    padding: 6px;
+    border: 1px solid var(--theme-border, #d8d8d3);
+    border-radius: 34px;
+    background: var(--theme-bg, #fafaf8);
+    box-sizing: border-box;
+  }
+  .lockscreen-ad.compact { max-width: 242px; }
+  .ad-screen {
+    --ad-paper: #eee8dc;
+    --ad-ink: #292c24;
+    --ad-secondary: #606153;
+    --ad-rule: #d0cabd;
+    --theme-text: var(--ad-ink);
+    --theme-text-muted: var(--ad-secondary);
+    aspect-ratio: 360 / 700;
+    container-type: inline-size;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--ad-paper);
+    color: var(--ad-ink);
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+  }
+  .fieldwork .ad-screen {
+    --ad-paper: #e7e8e4;
+    --ad-ink: #202621;
+    --ad-secondary: #505b51;
+    --ad-rule: #c6ccc3;
+  }
+  .phone-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5cqw 7cqw 1cqw;
+    font-size: 3cqw;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: .02em;
+  }
+  .status-symbols { display: flex; gap: 1.4cqw; align-items: center; }
+  .status-symbols svg { width: 4.5cqw; height: 3cqw; }
+  .status-symbols svg:last-child { width: 5.2cqw; }
+  .phone-clock { padding: 4cqw 7cqw 6cqw; }
+  .clock-time { display: block; font-size: 20cqw; font-weight: 300; line-height: 1; letter-spacing: -.065em; }
+  .clock-date { display: block; margin-top: 2cqw; font-size: 3.5cqw; line-height: 1.4; color: var(--ad-secondary); }
+  .campaign-image { min-height: 0; overflow: hidden; }
+  .campaign-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 68% center; }
+  .fieldwork .campaign-image img { object-position: 61% center; }
+  .campaign-copy { padding: 6cqw 7cqw 5cqw; }
+  .campaign-label { display: flex; justify-content: space-between; align-items: center; gap: 3cqw; }
+  .brand-name { font-size: 3.5cqw; letter-spacing: .18em; line-height: 1.4; }
+  .forme .brand-name { font-family: Georgia, 'Times New Roman', serif; }
+  .fieldwork .brand-name { font-size: 3.1cqw; letter-spacing: .12em; font-weight: 700; }
+  .sponsored { color: var(--ad-secondary); font-size: 2.8cqw; line-height: 1.4; }
+  .campaign-headline { margin: 3.2cqw 0 0; max-width: 16ch; color: var(--ad-ink); font-size: 8cqw; font-weight: 400; letter-spacing: -.045em; line-height: 1.08; }
+  .forme .campaign-headline { font-family: Georgia, 'Times New Roman', serif; letter-spacing: -.035em; }
+  .fieldwork .campaign-headline { max-width: 15ch; font-size: 7.3cqw; font-weight: 500; }
+  .campaign-description { margin: 3cqw 0 0; color: var(--ad-secondary); font-size: 3.5cqw; line-height: 1.45; }
+  .gesture-actions { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; background: var(--ad-ink); color: var(--ad-paper); margin: 0; padding: 6cqw 7cqw 7cqw; }
+  .gesture-label { display: flex; flex-direction: column; gap: 1cqw; }
+  .gesture-label > span { color: var(--ad-paper); font-size: 4.2cqw; font-weight: 600; line-height: 1.3; }
+  .gesture-label small { color: var(--ad-paper); opacity: .8; font-size: 3cqw; line-height: 1.4; }
+  .gesture-label b { font-weight: 400; font-size: 6cqw; line-height: .5; vertical-align: -.2cqw; }
+  .unlock-label { text-align: right; }
+  .lock-symbol { display: grid; place-items: center; flex: 0 0 16cqw; width: 16cqw; height: 16cqw; border: 1px solid var(--ad-paper); border-radius: 50%; background: var(--ad-paper); color: var(--ad-ink); }
+  .lock-symbol svg { width: 7cqw; height: 7cqw; }
+</style>

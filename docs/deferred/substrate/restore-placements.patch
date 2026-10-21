@@ -1,0 +1,85 @@
+--- a/src/pages/index.astro
++++ b/src/pages/index.astro
+@@ -15,6 +15,7 @@
+ } from '../components/home/SectionVisuals.tsx';
+ import ReadingNote from '../components/home/ReadingNote.astro';
+ import HomeSection from '../components/home/HomeSection.astro';
++import SubstrateCTA from '../components/ui/SubstrateCTA.astro';
+ import { getCollection } from 'astro:content';
+ 
+ const blogPosts = (await getCollection('blog'))
+@@ -247,6 +248,8 @@
+       </section>
+     )}
+ 
++    {/* Substrate Newsletter CTA */}
++    <SubstrateCTA variant="section" />
+ 
+   </PageContent>
+       <Footer />
+--- a/src/pages/blog/[...slug].astro
++++ b/src/pages/blog/[...slug].astro
+@@ -8,6 +8,7 @@
+ import BlogPostNav from '../../components/blog/BlogPostNav.astro';
+ import CopyForAI from '../../components/blog/CopyForAI.tsx';
+ import JsonLd from '../../components/ui/JsonLd.astro';
++import SubstrateCTA from '../../components/ui/SubstrateCTA.astro';
+ import { getCollection } from 'astro:content';
+ import type { CollectionEntry } from 'astro:content';
+ 
+@@ -147,6 +148,7 @@
+         </section>
+       )}
+ 
++      <SubstrateCTA variant="inline" />
+ 
+       <BlogPostNav currentPost={post} allPosts={allPosts} />
+         </article>
+--- a/src/pages/deepdives/[...slug].astro
++++ b/src/pages/deepdives/[...slug].astro
+@@ -7,6 +7,7 @@
+ import ThemeToast from '../../components/ui/ThemeToast.astro';
+ import CopyForAI from '../../components/blog/CopyForAI.tsx';
+ import JsonLd from '../../components/ui/JsonLd.astro';
++import SubstrateCTA from '../../components/ui/SubstrateCTA.astro';
+ import { getCollection } from 'astro:content';
+ import type { CollectionEntry } from 'astro:content';
+ 
+@@ -101,6 +102,7 @@
+         <Content />
+       </div>
+ 
++      <SubstrateCTA variant="inline" />
+ 
+       <a href="/deepdives/" class="inline-block mt-10 text-sm text-theme-muted hover:!text-[var(--theme-text)] no-underline">← All deep dives</a>
+ 
+--- a/src/components/layout/Footer.astro
++++ b/src/components/layout/Footer.astro
+@@ -4,6 +4,7 @@
+ const elsewhere = [
+   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mmaxence/' },
+   { label: 'GitHub', href: 'https://github.com/mmaxence' },
++  { label: 'Substrate', href: 'https://mmaxence.substack.com/' },
+   { label: 'Bluesky', href: 'https://bsky.app/profile/mmaxence.bsky.social' },
+   { label: 'X', href: 'https://x.com/mmaxence' },
+ ];
+--- a/src/layouts/BaseLayout.astro
++++ b/src/layouts/BaseLayout.astro
+@@ -48,6 +48,7 @@
+     "https://www.linkedin.com/in/mmaxence/",
+     "https://github.com/mmaxence",
+     "https://mmaxence.medium.com",
++    "https://mmaxence.substack.com",
+     "https://x.com/mmaxence",
+     "https://bsky.app/profile/mmaxence.bsky.social"
+   ],
+--- a/src/pages/llms.txt.ts
++++ b/src/pages/llms.txt.ts
+@@ -84,6 +84,7 @@
+ - LinkedIn: https://www.linkedin.com/in/mmaxence/
+ - GitHub: https://github.com/mmaxence
+ - X: https://x.com/mmaxence
++- Substack: https://mmaxence.substack.com
+ - Medium: https://mmaxence.medium.com
+ 
+ ## Optional

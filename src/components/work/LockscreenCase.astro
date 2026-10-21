@@ -1,0 +1,158 @@
+---
+import type { WorkEntry } from '../../data/work';
+import EditorialCase from './EditorialCase.astro';
+import StoryChapter from './StoryChapter.astro';
+import BuzzvilScale from './BuzzvilScale.astro';
+import LockscreenAd from './LockscreenAd.astro';
+import RewardJourney from './RewardJourney.astro';
+interface Props { work: WorkEntry }
+const { work } = Astro.props;
+const lessons = [
+  { title: 'Design what repeats.', body: 'The valuable output was not another finished creative. It was a set of rules that advertisers could use without returning to our team. Later, the ad system could use those same rules.' },
+  { title: 'Consistency needs room for variation.', body: 'Images, copy, brands and point systems changed. A shared hierarchy and a predictable way to unlock gave those differences a common foundation.' },
+  { title: 'Distribution is part of the experience.', body: 'The policy change made installation and opt-in as important as the lockscreen itself. Keeping an interface alive meant designing the journey that reached it.' },
+];
+---
+<lockscreen-case>
+  <EditorialCase {work}
+    headline={'Making the lockscreen\nwork at scale.'}
+    intro="I joined Buzzvil in 2014 and redesigned Honeyscreen, an app that lets people earn points from campaigns on their phone’s lockscreen. As it gained traction, we turned the experience into a software development kit (SDK) that other companies could add to their apps. It began my 12+ years of scaling products and navigating pivots at Buzzvil, which now generates around ₩100 billion in annual revenue."
+    role="Interaction design, advertiser guidelines and template systems. Later, migration flows and design coordination."
+    coverNote="Reimagined lockscreens with fictional campaigns."
+    websites={[...(work.links?.slice(0, 1) ?? []), { label: 'Honeyscreen · live app', url: 'https://play.google.com/store/apps/details?id=com.buzzvil.adhours&hl=en_US' }]}
+    lessons={lessons}>
+    <div slot="cover" class="cover-phone">
+      <LockscreenAd eager />
+    </div>
+
+    <BuzzvilScale stage="lockscreen" />
+
+    <StoryChapter id="operations" scope="Zoom in · The production bottleneck" title={'Templates freed our team\nfrom adapting every campaign.'} intro="The product could reach more apps, but preparing campaign artwork still depended on two marketing designers adapting every campaign by hand. I introduced templates and guidelines that let advertisers prepare their own lockscreen creatives, so growth no longer meant repeating the same production work." class="operations-chapter">
+      <figure class="operations-study">
+        <div class="operations-grid">
+          <div class="operation before">
+            <span class="operation-label">Every campaign needed our team</span>
+            <div class="campaign-pile" aria-hidden="true">{['forme','fieldwork','forme'].map(brand => <div><img src={`/work/composer/${brand}-campaign-768.webp`} width="768" height="512" alt="" loading="lazy" decoding="async"/><i></i><i></i></div>)}</div>
+            <div class="production-line" aria-hidden="true"></div>
+            <div class="designer-pair"><span class="designer-symbol" aria-hidden="true"><i></i></span><span class="designer-symbol" aria-hidden="true"><i></i></span><p>Two marketing<br/>designers</p></div>
+            <p class="operation-result">Adapt. Export. Repeat.</p>
+          </div>
+          <div class="operation after">
+            <span class="operation-label">Give advertisers a usable system</span>
+            <div class="creative-sheet" aria-label="Reconstructed creative specification with image formats and separate message fields">
+              <div class="sheet-heading"><span>CREATIVE SPECIFICATION</span><strong>One campaign.<br/>A repeatable format.</strong></div>
+              <div class="sheet-formats">
+                <figure><img src="/work/composer/forme-campaign-768.webp" width="768" height="512" alt="Square crop of the fictional FORME campaign" loading="lazy"/><figcaption>Square</figcaption></figure>
+                <figure><img src="/work/composer/forme-campaign-768.webp" width="768" height="512" alt="Landscape crop of the same fictional FORME campaign" loading="lazy"/><figcaption>Landscape</figcaption></figure>
+              </div>
+              <dl class="sheet-fields"><div><dt>Brand</dt><dd>FORME</dd></div><div><dt>Headline</dt><dd>A quieter kind of care.</dd></div><div><dt>Description</dt><dd>Meet your everyday essentials.</dd></div></dl>
+              <p class="sheet-rule">Supply the image and message.<br/>The layout handles the hierarchy.</p>
+            </div>
+            <div class="capacity-shift"><span>Design capacity</span><div><strong>Brand</strong><strong>Product</strong></div></div>
+          </div>
+        </div>
+        <figcaption>We designed the rules; advertisers prepared the campaign artwork. Reconstructed guide with fictional content.</figcaption>
+      </figure>
+      <div class="outcome-note"><h3>We eventually stopped<br/>adapting campaign artwork ourselves.</h3><p>The marketing design resources moved into brand and product design. This was more than a quicker production process: it changed what the team could spend its time on.</p></div>
+    </StoryChapter>
+
+    <StoryChapter id="template" scope="The same problem, at network scale" title={'Ad networks turned those\nrules into automation.'} intro="Ads arriving automatically from advertising networks could not each pass through a designer. We built reusable layouts around the image, headline and description in each native ad: the same design logic, now assembled automatically." class="template-chapter">
+      <figure class="template-study">
+        <div class="assembly-notes">
+          <h3>Let the brand change.<br/>Keep the experience clear.</h3>
+          <dl>
+            <div><dt>Image</dt><dd>A defined area for different creative formats.</dd></div>
+            <div><dt>Message</dt><dd>A readable hierarchy for copy and sponsorship.</dd></div>
+            <div><dt>Interaction</dt><dd>Exploring the campaign stays distinct from unlocking.</dd></div>
+          </dl>
+        </div>
+        <div class="template-phones"><LockscreenAd /><LockscreenAd brand="fieldwork" /></div>
+        <figcaption>Different brands, one adaptable layout. Fictional campaigns.</figcaption>
+      </figure>
+      <div class="outcome-note"><h3>Nearly eight years later,<br/>the templates still run.</h3><p>The team built several treatments and refined them over time. The lasting work was an adaptable system, not one campaign or one finished screen.</p></div>
+    </StoryChapter>
+
+    <StoryChapter id="migration" scope="Back to the business · A distribution crisis" title={'Two months to pivot.\nWithout losing our customers.'} intro="In late 2017, Google’s policy disrupted our embedded lockscreen model. We had two months to change distribution. I mapped the installation and opt-in routes and coordinated the migration design so publishers could keep their lockscreen service running." class="pivot-beat">
+      <div class="migration-visual"><RewardJourney kind="migration" /></div>
+      <div class="outcome-note"><h3>An imperfect bridge.<br/>An essential one.</h3><p>A separate app added friction. It was not the experience we wanted long term, but it helped us keep our customers while we prepared the Offerwall. Most later made that transition with us.</p></div>
+    </StoryChapter>
+
+    <StoryChapter id="next" title={'The next reward experience\nmoved inside the app.'} intro="The next direction was already taking shape: bring rewards inside the publisher’s app. We introduced in-app rewards in April 2018. My work shifted toward the Offerwall, a page of offers where people earn rewards, and responsibility for the products used by our partner apps." class="next-chapter">
+      <div class="next-timeline" aria-label="The distribution change came before the expansion into in-app rewards"><span>2017<br/><strong>Companion apps</strong></span><i aria-hidden="true"></i><span>April 2018<br/><strong>In-app rewards</strong></span></div>
+      <p class="next-question">The question carried forward: how could one system serve different publishers without rebuilding it for each one?</p>
+      <a class="next-link" href="/work/offerwall/">Continue with Offerwall: rewards inside the app</a>
+    </StoryChapter>
+  </EditorialCase>
+</lockscreen-case>
+<style>
+  lockscreen-case { display: block; color: var(--theme-text); }
+  .cover-phone { background: var(--case-soft); border: 1px solid var(--theme-border); padding: 2rem 1.5rem 1.5rem; }
+  .cover-phone :global(.lockscreen-ad) { max-width: 278px; margin-inline: auto; }
+  :global(lockscreen-case .journey-board :where(div,p,span,h3,h4)) { color: inherit; }
+  .operations-study { margin: 0; }
+  .operations-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); border: 1px solid var(--theme-border); }
+  .operation { padding: clamp(1.5rem,3.5vw,3rem); min-width: 0; }
+  .operation.before { background: var(--case-soft); }
+  .operation.after { border-left: 1px solid var(--theme-border); }
+  .operation-label { display: block; font: .85rem/1.6 var(--font-body,sans-serif); max-width: 27ch; color: var(--theme-text-muted); }
+  .campaign-pile { display: flex; width: 87%; margin: 2.5rem auto 0; align-items: center; }
+  .campaign-pile>div { flex: 0 0 38%; min-width: 0; padding: 8px; border: 1px solid var(--theme-border); background: var(--theme-bg); transform: rotate(-8deg); }
+  .campaign-pile>div:nth-child(2) { transform: translateY(-8px); z-index: 1; margin-left: -7%; }
+  .campaign-pile>div:nth-child(3) { transform: rotate(8deg); margin-left: -7%; }
+  .campaign-pile img { display: block; width: 100%; aspect-ratio: 5/4; height: auto; object-fit: cover; }
+  .campaign-pile i { display: block; width: 75%; height: 3px; background: var(--theme-border); margin-top: 8px; }
+  .campaign-pile i:last-child { width: 50%; margin-top: 5px; margin-bottom: 4px; }
+  .production-line { width: 1px; height: 2.25rem; margin: 1rem auto; background: var(--theme-border); }
+  .designer-pair { display: flex; align-items: center; justify-content: center; gap: .6rem; }
+  .designer-symbol { display: block; width: 45px; height: 45px; border: 1px solid var(--theme-border); border-radius: 50%; position: relative; overflow: hidden; }
+  .designer-symbol::before { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--theme-text-muted); top: 8px; left: 15px; }
+  .designer-symbol i { position: absolute; background: var(--theme-text-muted); width: 28px; height: 18px; border-radius: 20px 20px 0 0; bottom: 3px; left: 7px; }
+  .designer-pair>p { font: .75rem/1.5 var(--font-body,sans-serif); margin: 0 0 0 .5rem; }
+  .operation-result { margin: 1.5rem 0 0; font: .8rem/1.5 var(--font-mono,monospace); text-align: center; }
+  .creative-sheet { --theme-text: #29342e; --theme-text-muted: #526056; margin-top: 1.75rem; padding: clamp(1rem,2vw,1.75rem); background: #eeeae0; color: #29342e; border: 1px solid #b4b9aa; }
+  .creative-sheet :is(span,strong,dd) { color: #29342e; }
+  .sheet-heading { display: grid; gap: .7rem; }
+  .sheet-heading>span { font: .55rem/1.5 var(--font-mono,monospace); letter-spacing: .08em; }
+  .sheet-heading strong { font: 400 clamp(1.1rem,2vw,1.65rem)/1.15 var(--font-body,sans-serif); letter-spacing: -.035em; }
+  .sheet-formats { display: grid; grid-template-columns: .85fr 1.15fr; gap: 1rem; margin-block: 1.3rem; align-items: end; }
+  .sheet-formats figure { margin: 0; min-width: 0; }
+  .sheet-formats img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block; }
+  .sheet-formats figure+figure img { aspect-ratio: 1.6; }
+  .sheet-formats figcaption { margin-top: .4rem; color: #526056; font: .6rem/1.4 var(--font-mono,monospace); }
+  .sheet-fields { margin: 0; }
+  .sheet-fields>div { display: grid; grid-template-columns: 5.5rem 1fr; gap: .5rem; padding: .65rem 0; border-top: 1px solid #c5c9bd; font: .65rem/1.5 var(--font-body,sans-serif); }
+  .sheet-fields dt { color: #526056; }
+  .sheet-fields dd { margin: 0; }
+  .sheet-rule { margin: .8rem 0 0; font: .6rem/1.6 var(--font-mono,monospace); color: #526056; }
+  .capacity-shift { margin-top: 2.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font: .65rem/1.5 var(--font-mono,monospace); }
+  .capacity-shift>span { max-width: 12ch; color: var(--theme-text-muted); }
+  .capacity-shift>div { display: flex; gap: .75rem; }
+  .capacity-shift strong { border-bottom: 1px solid var(--theme-text); padding-bottom: .3rem; font-weight: 400; }
+  figcaption,.archive-note { font: .8rem/1.7 var(--font-body,sans-serif); color: var(--theme-text-muted); margin: 1rem 0 0; }
+  .outcome-note { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem; }
+  .outcome-note h3 { margin: 0; font: 400 1.15rem/1.4 var(--font-mono,monospace); letter-spacing: -.025em; }
+  .outcome-note p { margin: 0; max-width: 45ch; font: .9rem/1.8 var(--font-body,sans-serif); color: var(--theme-text-muted); }
+  .template-study { margin: 0; display: grid; grid-template-columns: minmax(0,.85fr) minmax(0,1.3fr); gap: 2.5rem; align-items: center; background: var(--case-soft); padding: clamp(1.5rem,3.5vw,3rem); border: 1px solid var(--theme-border); }
+  .assembly-notes { min-width: 0; }
+  .assembly-notes h3 { font: 400 clamp(1.3rem,2.2vw,2rem)/1.2 var(--font-mono,monospace); letter-spacing: -.04em; margin: 0 0 2rem; }
+  .assembly-notes dl { margin: 0; }
+  .assembly-notes dl>div { padding: 1rem 0; border-top: 1px solid var(--theme-border); }
+  .assembly-notes dt { font: .9rem/1.6 var(--font-body,sans-serif); }
+  .assembly-notes dd { margin: .4rem 0 0; font: .85rem/1.7 var(--font-body,sans-serif); color: var(--theme-text-muted); max-width: 29ch; }
+  .template-phones { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: center; gap: 1.25rem; }
+  .template-phones :global(.lockscreen-ad) { width: 100%; }
+  .template-study figcaption { grid-column: 1/-1; margin: 0; }
+  .migration-visual :global(.reward-journey) { margin: 0; }
+  .migration-visual :global(.journey-board>header),.migration-visual :global(.journey-board>h3),.migration-visual :global(.journey-board>footer) { display: none; }
+  .next-timeline { display: flex; align-items: center; gap: 2rem; font: .85rem/1.7 var(--font-mono,monospace); padding-block: 2rem; border-block: 1px solid var(--theme-border); }
+  .next-timeline strong { display: block; color: var(--theme-text); font-weight: 400; font-size: clamp(1rem,2vw,1.4rem); margin-top: .5rem; }
+  .next-question { max-width: 56ch; font: 1rem/1.8 var(--font-body,sans-serif); color: var(--theme-text-muted); margin: 1.5rem 0 0; }
+  .next-timeline span { color: var(--theme-text-muted); }
+  .next-timeline i { height: 1px; background: var(--theme-border); flex: 1; }
+  .next-link { display: inline-block; font: .8rem/1.7 var(--font-mono,monospace); margin-top: 1.5rem; text-decoration: underline; text-underline-offset: 5px; }
+  a { color: inherit; text-underline-offset: 4px; }
+  a:focus-visible,summary:focus-visible { outline: 2px solid var(--theme-text); outline-offset: 4px; }
+  @media(max-width:1000px) { .template-study { grid-template-columns: 1fr; } .assembly-notes dl { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; } .assembly-notes h3 { margin-bottom: 1.5rem; } .template-phones { max-width: 540px; width: 100%; margin-inline: auto; } }
+  @media(max-width:700px) { .outcome-note { grid-template-columns: 1fr; gap: 1.25rem; } .outcome-note p { max-width: 55ch; font-size: .9rem; } .operations-grid { grid-template-columns: 1fr; } .operation { padding: 1.5rem; } .operation.after { border-left: 0; border-top: 1px solid var(--theme-border); } .campaign-pile { max-width: 270px; margin-top: 1.75rem; } .production-line { height: 1.5rem; } .capacity-shift { max-width: 320px; margin-inline: auto; } .next-timeline { align-items: start; gap: 1rem; font-size: .75rem; } .next-timeline i { min-width: 20px; margin-top: .5rem; } .next-timeline span { max-width: 19ch; } .assembly-notes dl { grid-template-columns: 1fr; gap: 0; } .assembly-notes dd { max-width: none; } .template-study { gap: 2rem; } .template-phones { grid-template-columns: 1fr; gap: 1.5rem; } .template-phones :global(.lockscreen-ad) { max-width: 260px; margin-inline: auto; } }
+  @media(max-width:400px) { .cover-phone { padding: 1.25rem .75rem; } .cover-phone :global(.lockscreen-ad) { max-width: 260px; } .state-cell { padding: .85rem .65rem; } .state-cell strong { font-size: .7rem; } .state-lock { font-size: .6rem; gap: .35rem; } }
+</style>

@@ -1,0 +1,80 @@
+---
+interface Props { stage: 'lockscreen' | 'offerwall' }
+const { stage } = Astro.props;
+const lockscreen = stage === 'lockscreen';
+const title = lockscreen
+  ? 'One app became a\nplatform for other apps.'
+  : 'The audience grew\nbeyond our own app.';
+const metrics = lockscreen
+  ? [
+      { date: 'November 2014', value: '2.5M', label: 'Korean users', detail: 'Honeyscreen era. Activity period unspecified.' },
+      { date: 'August 2018', value: '50+', label: 'Publishing partners', detail: 'Apps carrying the lockscreen platform.' },
+      { date: 'August 2018', value: '5.4B', label: 'Monthly ad impressions', detail: 'Across Buzzvil’s lockscreen network.' },
+    ]
+  : [
+      { date: 'May 2019', value: '10M', label: 'Monthly active users', detail: 'Across the Buzzvil network.' },
+      { date: 'October 2021', value: '20M', label: 'Monthly users', detail: 'Across more than 150 publishers.' },
+      { date: 'Q3 2021', value: '₩22.3B', label: 'Company revenue (KRW)', detail: '₩12.3B in Q3 2020; +81% year on year.' },
+    ];
+const sources = lockscreen
+  ? [
+      { label: 'Company history', url: 'https://www.buzzvil.com/en/company/about_us' },
+      { label: '2018 company release', url: 'https://www.prnewswire.com/news-releases/largest-lockscreen-media-platform-buzzvil-acquires-india-and-pakistans-slideapp-300703902.html' },
+    ]
+  : [
+      { label: 'Company history', url: 'https://www.buzzvil.com/en/company/about_us' },
+      { label: '2021 company release', url: 'https://www.newswire.co.kr/newsRead.php?no=933111' },
+    ];
+---
+<section class="buzzvil-scale" aria-labelledby={`${stage}-scale-title`}>
+  <div class="scale-introduction">
+    <h2 id={`${stage}-scale-title`}>{title.split('\n').map(line => <span>{line}</span>)}</h2>
+    {lockscreen
+      ? <p>Buzzvil’s own app became a platform that other companies could integrate. Advertisers fund campaigns, publisher apps earn revenue, and people earn points.</p>
+      : <p>Buzzvil’s software brought reward-based campaigns into partner apps, where publishers earned revenue and people earned points. <a href="https://play.google.com/store/apps/details?id=com.buzzvil.adhours&hl=en_US">Honeyscreen</a>, our own app, remained a place to try new experiences.</p>}
+  </div>
+  <dl class="scale-metrics">
+    {metrics.map(metric => <div class="scale-metric">
+      <dt><span class="metric-date">{metric.date}</span><span class="metric-label">{metric.label}</span></dt>
+      <dd><strong>{metric.value}</strong><span class="metric-detail">{metric.detail}</span></dd>
+    </div>)}
+  </dl>
+  <p class="scale-source">Company-reported figures. Business growth reflects work across teams. {sources.map((source, index) => <><a href={source.url}>{source.label}</a>{index < sources.length - 1 && <span aria-hidden="true"> · </span>}</>)}</p>
+</section>
+<style>
+  .buzzvil-scale { margin: 0 0 clamp(2.5rem,4vw,4rem); color: var(--theme-text); min-width: 0; }
+  .scale-introduction { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(2rem,4vw,4rem); align-items: start; }
+  h2 { margin: 0; font: var(--story-heading-weight,400) clamp(1.8rem,3vw,2.6rem)/1.16 var(--story-display,var(--font-heading)); letter-spacing: -.035em; text-wrap: balance; }
+  h2 > span { display: block; }
+  .scale-introduction p { margin: 0; max-width: 49ch; font: 1rem/1.75 var(--font-body); color: var(--theme-text-muted); }
+  .scale-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(1.5rem,4vw,4rem); margin: 2rem 0 0; padding: 1.5rem 0; border-block: 1px solid var(--theme-border); }
+  .scale-metric { display: grid; gap: .45rem; align-content: start; min-width: 0; }
+  dt { display: contents; }
+  .metric-date { display: block; order: 0; margin-bottom: .5rem; font: .8rem/1.5 var(--font-mono); color: var(--theme-text-muted); }
+  .metric-label { display: block; order: 2; font: 1rem/1.5 var(--font-body); }
+  dd { display: contents; margin: 0; }
+  dd strong { display: block; order: 1; margin-bottom: .5rem; font: 400 clamp(2.7rem,4.4vw,4rem)/1 var(--font-heading); letter-spacing: -.055em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .metric-detail { display: block; order: 3; font: .875rem/1.6 var(--font-body); color: var(--theme-text-muted); max-width: 29ch; }
+  .scale-source { margin: .9rem 0 0; font: .8rem/1.7 var(--font-body); color: var(--theme-text-muted); }
+  .scale-source a { white-space: nowrap; }
+  a { color: var(--theme-text); text-decoration: underline; text-decoration-color: var(--theme-border); text-underline-offset: 4px; }
+  a:hover { text-decoration-color: currentColor; }
+  a:focus-visible { outline: 2px solid var(--theme-text); outline-offset: 4px; }
+  @media(max-width:1000px) {
+    .scale-introduction { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .metric-label { font-size: .9rem; }
+    dd strong { font-size: 2.7rem; }
+    .metric-detail { font-size: .85rem; }
+  }
+  @media(max-width:650px) {
+    .scale-introduction { grid-template-columns: 1fr; gap: 1rem; }
+    .scale-introduction p { max-width: 54ch; }
+    .scale-metrics { grid-template-columns: 1fr; gap: 1.4rem; padding-block: 1.4rem; margin-top: 1.5rem; }
+    .scale-metric + .scale-metric { border-top: 1px solid var(--theme-border); padding-top: 1.4rem; }
+    .scale-metric { grid-template-columns: minmax(8.75rem,.8fr) minmax(0,1fr); gap: .3rem 1rem; }
+    .metric-date { grid-column: 1/-1; margin-bottom: .6rem; font-size: .75rem; }
+    .metric-label { grid-column: 2; grid-row: 2; font-size: 1rem; }
+    dd strong { grid-column: 1; grid-row: 2/4; margin: 0; font-size: clamp(2.25rem,8.5vw,2.8rem); }
+    .metric-detail { grid-column: 2; grid-row: 3; font-size: .875rem; max-width: 25ch; }
+  }
+</style>

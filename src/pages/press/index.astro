@@ -59,7 +59,7 @@ const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
                     </p>
                     <h3 class="font-mono font-light text-xl md:text-2xl leading-snug m-0">
                       <a class="press-title no-underline" href={item.url} target="_blank" rel="noopener noreferrer">
-                        {item.title}<span class="press-arrow" aria-hidden="true">↗</span>
+                        {item.title}
                       </a>
                     </h3>
                     {item.titleEn && (
@@ -117,20 +117,6 @@ const years = Object.keys(itemsByYear).sort((a, b) => b.localeCompare(a));
 
   .press-title:hover {
     background-color: var(--theme-accent);
-    color: var(--theme-bg);
-  }
-
-  .press-arrow {
-    display: inline-block;
-    margin-left: 0.4em;
-    font-size: 0.7em;
-    color: var(--theme-text-muted);
-    transform: translateY(-0.15em);
-    transition: transform 0.2s ease, color 0.15s ease;
-  }
-
-  .press-title:hover .press-arrow {
-    transform: translate(0.15em, -0.35em);
     color: var(--theme-bg);
   }
 

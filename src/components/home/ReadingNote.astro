@@ -1,0 +1,23 @@
+---
+interface Props {
+  label?: string;
+  links: { title: string; href: string }[];
+}
+const { label = 'Further reading', links } = Astro.props;
+---
+<aside class="reading-note" aria-label={label}>
+  <p class="note-label">{label}</p>
+  <ul>
+    {links.map(link => <li><a href={link.href}>{link.title}</a></li>)}
+  </ul>
+</aside>
+<style>
+.reading-note { margin-top:2rem; max-width:42rem; }
+.note-label { margin:0 0 .45rem; font-family:var(--font-mono, monospace); font-size:.7rem; color:var(--theme-text-muted); }
+ul { display:flex; flex-wrap:wrap; column-gap:1.25rem; row-gap:.3rem; padding:0; margin:0; list-style:none; }
+li { margin:0; font-size:.8rem; line-height:1.6; }
+a { color:var(--theme-text-muted); text-decoration:none; border:0; background:none; padding:.15rem 0; }
+a:hover { color:var(--theme-text); background:none; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.22em; }
+a::before, a::after { display:none; }
+a:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+</style>

@@ -1,0 +1,136 @@
+<mediums-publishing data-state="synced">
+  <header class="publishing-heading">
+    <strong>Try the release check</strong>
+    <span>Illustration of the repository check</span>
+  </header>
+  <div class="publishing-controls" role="group" aria-label="Choose a publishing state">
+    <button type="button" data-state="synced" aria-pressed="true">In sync</button>
+    <button type="button" data-state="edited" aria-pressed="false">Source edited</button>
+    <button type="button" data-state="updated" aria-pressed="false">Both updated</button>
+  </div>
+  <div class="release-check">
+    <div class="release-status" role="status" aria-live="polite" aria-atomic="true">
+      <span class="status-symbol" data-status-symbol aria-hidden="true">✓</span>
+      <div><strong data-status-title>Edition check passed</strong><p data-status-description>The edition was prepared from the current source. People still review meaning and claims.</p></div>
+    </div>
+    <div class="release-rule"><span>Simplified SHA-256 check</span><code>edition.sourceHash <b data-hash-comparison>===</b> sha256(sourceBytes)</code></div>
+  </div>
+  <div class="edition-pair">
+    <article class="edition source-edition" aria-label="Illustrative Korean source">
+      <div class="edition-heading"><span>Korean / Source</span><span lang="ko">가</span></div>
+      <div class="edition-content" lang="ko">
+        <h3>하나의 브랜드,<br />일관된 경험.</h3>
+        <p>모든 웹사이트는 같은 디자인 규칙<span data-source-addition hidden>과 검토 절차</span>에 따라 운영됩니다.</p>
+      </div>
+      <div class="edition-version"><span data-source-version>Source · v1</span><span>Original Markdown</span></div>
+    </article>
+    <article class="edition counterpart-edition" aria-label="Illustrative English counterpart">
+      <div class="edition-heading"><span>English / Counterpart</span><span>Aa</span></div>
+      <div class="edition-content" lang="en">
+        <h3>One brand.<br />A consistent experience.</h3>
+        <p>Every website follows the same design rules<span data-counterpart-addition hidden> and review process</span>.</p>
+      </div>
+      <div class="edition-version"><span data-counterpart-version>Translated from v1</span><span>Prepared before build</span></div>
+    </article>
+  </div>
+  <footer class="publishing-footnote">
+    <span>Code and link destinations stay intact.</span>
+    <span>Prepared by an agent. Reviewed by a person. Served as static pages.</span>
+  </footer>
+</mediums-publishing>
+
+<script>
+  class MediumsPublishing extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const buttons = Array.from(this.querySelectorAll<HTMLButtonElement>('.publishing-controls button'));
+      const sourceAddition = this.querySelector<HTMLElement>('[data-source-addition]');
+      const counterpartAddition = this.querySelector<HTMLElement>('[data-counterpart-addition]');
+      const setText = (selector: string, text: string) => {
+        const target = this.querySelector(selector);
+        if (target) target.textContent = text;
+      };
+      buttons.forEach(button => button.addEventListener('click', () => {
+        const state = button.dataset.state;
+        const edited = state !== 'synced';
+        const stale = state === 'edited';
+        this.dataset.state = state;
+        buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        if (sourceAddition) sourceAddition.hidden = !edited;
+        if (counterpartAddition) counterpartAddition.hidden = state !== 'updated';
+        setText('[data-source-version]', `Source · ${edited ? 'v2' : 'v1'}`);
+        setText('[data-counterpart-version]', `Translated from ${state === 'updated' ? 'v2' : 'v1'}`);
+        setText('[data-hash-comparison]', stale ? '!==' : '===');
+        setText('[data-status-symbol]', stale ? '!' : '✓');
+        setText('[data-status-title]', stale ? 'Release blocked' : 'Edition check passed');
+        setText('[data-status-description]', stale
+          ? 'The source changed. Refresh the counterpart before the build can pass.'
+          : state === 'updated'
+            ? 'Both editions reference the current source. People still review meaning and claims.'
+            : 'The edition was prepared from the current source. People still review meaning and claims.');
+      }));
+    }
+  }
+  if (!customElements.get('mediums-publishing')) customElements.define('mediums-publishing', MediumsPublishing);
+</script>
+
+<style>
+  mediums-publishing {
+    --publishing-line: var(--theme-border);
+    --publishing-muted: var(--theme-text-muted);
+    --publishing-soft: color-mix(in srgb, var(--theme-text) 3%, var(--theme-bg));
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--publishing-line);
+    background: var(--theme-bg);
+    color: var(--theme-text);
+    font-family: var(--font-body, sans-serif);
+  }
+  mediums-publishing *, mediums-publishing *::before { box-sizing: border-box; }
+  .publishing-heading { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem 2rem; padding: 1.4rem 1.75rem; }
+  .publishing-heading strong { font-size: 1rem; font-weight: 500; }
+  .publishing-heading > span { color: var(--publishing-muted); font: .7rem/1.6 var(--font-mono, monospace); }
+  .publishing-controls { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--publishing-line); }
+  .publishing-controls button { min-height: 48px; padding: .8rem .5rem; border: 0; border-right: 1px solid var(--publishing-line); border-radius: 0; background: var(--publishing-soft); color: var(--publishing-muted); font: .8rem/1.5 var(--font-mono, monospace); cursor: pointer; }
+  .publishing-controls button:last-child { border-right: 0; }
+  .publishing-controls button:hover { color: var(--theme-text); }
+  .publishing-controls button[aria-pressed='true'] { background: var(--theme-text); color: var(--theme-bg); }
+  .publishing-controls button:focus-visible { outline: 2px solid currentColor; outline-offset: -5px; }
+  .edition-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .edition { min-width: 0; padding: clamp(1.25rem, 3vw, 2.5rem); }
+  .source-edition { border-right: 1px solid var(--publishing-line); }
+  .edition-heading { display: flex; justify-content: space-between; align-items: baseline; color: var(--publishing-muted); font: .7rem/1.5 var(--font-mono, monospace); }
+  .edition-heading > span:last-child { color: var(--theme-text); font: 1.25rem/1 var(--font-body, sans-serif); }
+  .edition-content { min-height: 240px; padding-top: 2.5rem; }
+  .edition-content h3 { margin: 0 0 1.5rem; color: var(--theme-text); font: 400 clamp(1.55rem, 2.8vw, 2.6rem)/1.15 var(--font-body, sans-serif); letter-spacing: -.04em; }
+  .edition-content[lang='ko'] h3 { line-height: 1.3; letter-spacing: -.055em; word-break: keep-all; }
+  .edition-content p { max-width: 29ch; margin: 0; color: var(--publishing-muted); font-size: .95rem; line-height: 1.7; word-break: keep-all; }
+  .edition-content p span { color: var(--theme-text); text-decoration: underline; text-decoration-color: var(--theme-accent); text-underline-offset: 4px; }
+  .edition-version { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .4rem 1rem; padding-top: 1rem; border-top: 1px solid var(--publishing-line); font: .65rem/1.6 var(--font-mono, monospace); }
+  .edition-version > span:last-child { color: var(--publishing-muted); }
+  [data-state='edited'] .counterpart-edition .edition-version > span:first-child { color: #efbb83; }
+  .release-check { padding: 1.5rem 1.75rem; border-bottom: 1px solid var(--publishing-line); background: var(--publishing-soft); }
+  .release-status { display: flex; align-items: flex-start; gap: 1rem; }
+  .status-symbol { display: grid; flex: 0 0 26px; place-items: center; height: 26px; margin-top: .1rem; border: 1px solid var(--publishing-line); border-radius: 50%; font: .85rem/1 var(--font-mono, monospace); }
+  .release-status strong { font-weight: 500; font-size: 1rem; line-height: 1.5; }
+  .release-status p { margin: .35rem 0 0; color: var(--publishing-muted); font-size: .85rem; line-height: 1.65; }
+  [data-state='edited'] .status-symbol { border-color: #efbb83; color: #efbb83; }
+  .release-rule { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .5rem 1rem; padding-top: 1.25rem; font: .65rem/1.6 var(--font-mono, monospace); }
+  .release-rule > span { color: var(--publishing-muted); }
+  .release-rule code { padding: 0; background: transparent; color: var(--theme-text); font: inherit; overflow-wrap: anywhere; }
+  .release-rule b { font-weight: 400; }
+  [data-state='edited'] .release-rule b { color: #efbb83; }
+  .publishing-footnote { display: flex; justify-content: space-between; gap: .65rem 2rem; flex-wrap: wrap; padding: 1rem 1.75rem; border-top: 1px solid var(--publishing-line); color: var(--publishing-muted); font: .65rem/1.7 var(--font-mono, monospace); }
+  @media (max-width: 640px) {
+    .publishing-heading { flex-direction: column; gap: .35rem; padding: 1.2rem; }
+    .publishing-controls button { font-size: .75rem; padding-inline: .25rem; }
+    .edition-pair { grid-template-columns: 1fr; }
+    .source-edition { border-right: 0; border-bottom: 1px solid var(--publishing-line); }
+    .edition-content { min-height: 0; padding-block: 1.75rem; }
+    .edition-content h3 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .edition-content p { font-size: .85rem; }
+    .release-check { padding: 1.25rem; }
+    .publishing-footnote { padding: 1rem 1.25rem; }
+  }
+</style>

@@ -1,0 +1,14 @@
+---
+interface Props { variant?: number }
+const { variant = 0 } = Astro.props;
+const colors = [['#ece1c9','#bb5c3c','#733f35'],['#dce7db','#3f7467','#1b4946'],['#e3dff0','#8473a8','#514065']][variant % 3];
+---
+<svg viewBox="0 0 400 240" role="img" aria-label="Illustrative campaign artwork: abstract architectural forms">
+  <rect width="400" height="240" fill={colors[0]}/>
+  <circle cx="308" cy="65" r="38" fill={colors[1]} opacity=".6"/>
+  <path d="M65 240V112a65 65 0 0 1 130 0v128Z" fill={colors[1]}/>
+  <path d="M94 240V114a36 36 0 0 1 72 0v126Z" fill={colors[0]}/>
+  <path d="M208 240V152h35v-35h35V82h35v158Z" fill={colors[2]}/>
+  <path d="M0 218h400" stroke={colors[2]} stroke-width="1" opacity=".3"/>
+</svg>
+<style>svg{display:block;width:100%;height:100%;object-fit:cover}</style>
