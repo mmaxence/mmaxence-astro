@@ -289,9 +289,12 @@ const featuredDeepdive = (await getCollection('deepdives'))
     .hero-content {
       grid-template-columns: minmax(0, 1fr);
       gap: 36px;
-      text-align: left;
+      text-align: center;
     }
-    .hero-description { margin: 24px 0 0; }
+    .hero-art { display: grid; justify-items: center; }
+    .hero-copy { width: 100%; }
+    .hero-description { max-width: 34ch; margin: 24px auto 0; }
+    .hero-art .hero-profile-wrapper { margin-inline: auto; }
   }
 
   .hero-profile-wrapper {

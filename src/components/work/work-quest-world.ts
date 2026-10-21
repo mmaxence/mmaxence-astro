@@ -369,7 +369,6 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
   const globeSphere=new THREE.Sphere(new THREE.Vector3(),radius),rayPoint=new THREE.Vector3(),localRay=new THREE.Ray(),planetInverse=new THREE.Matrix4(),planetNormals=new THREE.Matrix3();
   const worldNormal=new THREE.Vector3(),worldPoint=new THREE.Vector3(),projected=new THREE.Vector3(),cameraDirection=new THREE.Vector3(0,0,1);
   const modelView=new THREE.Vector3(),modelQuaternion=new THREE.Quaternion();
-  const labelCorners=Array.from({length:8},(_,i)=>new THREE.Vector3(i&1?1.65:-1.65,i&2?3.2:0,i&4?1.25:-1.25));
   const hoverValue=new Float32Array(6),hoverVelocity=new Float32Array(6);
   const floatBases=floating.map(object=>object.position.y);
   const visibleProjects=new Uint8Array(6);
@@ -404,11 +403,12 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
   const project=()=>{
     const points=places.map((place,index)=>{
       worldNormal.copy(normals[index]).applyMatrix3(planetNormals).normalize();
-      let minX=Infinity,maxX=-Infinity,maxY=-Infinity;
-      labelCorners.forEach(corner=>{place.localToWorld(worldPoint.copy(corner).multiplyScalar(placeScale/place.scale.x));projected.copy(worldPoint).project(camera);const px=(projected.x*.5+.5)*width,py=(-projected.y*.5+.5)*height;minX=Math.min(minX,px);maxX=Math.max(maxX,px);maxY=Math.max(maxY,py);});
-      const x=(minX+maxX)/2,y=maxY+12;
-      const front=worldNormal.dot(cameraDirection)>.20;
-      const inFrame=x>20&&x<width-22&&y>65&&y<height-82;
+      planet.localToWorld(worldPoint.copy(normals[index]).multiplyScalar(radius + .015));
+      projected.copy(worldPoint).project(camera);
+      const x=(projected.x*.5+.5)*width,y=(-projected.y*.5+.5)*height+24;
+      // Separate enter/leave thresholds prevent horizon chatter while dragging.
+      const front=worldNormal.dot(cameraDirection)>(visibleProjects[index] ? .12 : .20);
+      const inFrame=x>-90&&x<width+90&&y>-70&&y<height;
       visibleProjects[index]=front&&inFrame?1:0;
       return{slug:chapters[index],x,y,visible:front&&inFrame};
     });
