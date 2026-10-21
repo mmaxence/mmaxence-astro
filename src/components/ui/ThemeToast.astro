@@ -4,7 +4,7 @@
 ---
 
 <div id="theme-toast" class="theme-toast fixed bottom-4 right-4 z-50 hidden md:block">
-  <div class="toast-content rounded-lg shadow-lg px-4 py-3 flex items-center gap-3" style="background-color: var(--toast-bg); box-shadow: var(--toast-shadow);">
+  <div class="toast-content rounded-lg px-4 py-3 flex items-center gap-3" style="background-color: var(--toast-bg); box-shadow: none;">
     <div class="flex flex-col flex-1">
       <span class="toast-message text-sm font-semibold" style="color: var(--toast-text);">Theme</span>
     </div>
@@ -21,13 +21,24 @@
 </div>
 
 <script>
+  // Theme controls still work when browser storage is unavailable.
+  const themeStorage = {
+    getItem(key: string): string | null {
+      try { return window.localStorage.getItem(key); } catch { return null; }
+    },
+    setItem(key: string, value: string): void {
+      try { window.localStorage.setItem(key, value); } catch { /* Use this page's theme without persistence. */ }
+    },
+    removeItem(key: string): void {
+      try { window.localStorage.removeItem(key); } catch { /* There is no stored preference to clear. */ }
+    },
+  };
   function initThemeToast() {
     const toast = document.getElementById('theme-toast');
     const resetBtn = document.getElementById('reset-theme-btn');
     const root = document.documentElement;
     
     if (!toast || !resetBtn) {
-      setTimeout(initThemeToast, 50);
       return;
     }
 
@@ -45,7 +56,7 @@
       '--theme-text-muted': 'rgba(26, 26, 26, 0.6)',
       '--theme-accent': '#000000',
       '--theme-border': '#e5e7eb',
-      '--theme-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+      '--theme-shadow': 'none',
       '--theme-highlight': '#FBF1A9',
       '--theme-radius': '0.5rem',
       '--theme-spacing': '1rem',
@@ -155,7 +166,7 @@
       const bgRgb = hexToRgb(themeBg);
       if (!bgRgb) {
         // Fallback
-        return { bg: '#000000', text: '#ffffff', buttonBg: '#ffffff', buttonText: '#000000', shadow: '0 4px 12px rgba(0, 0, 0, 0.3)' };
+        return { bg: '#000000', text: '#ffffff', buttonBg: '#ffffff', buttonText: '#000000', shadow: 'none' };
       }
 
       // Generate contrasting toast background
@@ -172,11 +183,7 @@
       const buttonBgHex = toastTextHex;
       const buttonTextHex = toastBgHex;
 
-      // Determine shadow based on toast brightness
-      const toastLum = getLuminance(toastBgRgb.r, toastBgRgb.g, toastBgRgb.b);
-      const shadow = toastLum < 0.5 
-        ? '0 4px 12px rgba(0, 0, 0, 0.3)'
-        : '0 4px 12px rgba(0, 0, 0, 0.15)';
+      const shadow = 'none';
 
       return {
         bg: toastBgHex,
@@ -222,12 +229,12 @@
         
         if (isRandomTheme) {
           root.setAttribute('data-theme', 'random');
-          localStorage.setItem('theme', 'random');
-          localStorage.setItem('random-theme-data', JSON.stringify(themeObj));
+          themeStorage.setItem('theme', 'random');
+          themeStorage.setItem('random-theme-data', JSON.stringify(themeObj));
         } else {
           root.setAttribute('data-theme', 'default');
-          localStorage.setItem('theme', 'default');
-          localStorage.removeItem('random-theme-data');
+          themeStorage.setItem('theme', 'default');
+          themeStorage.removeItem('random-theme-data');
         }
         
         // Update SVG shape colors to match theme
@@ -241,7 +248,7 @@
     function resetToDefault() {
       applyTheme(defaultTheme, true, false);
       hideToast();
-      localStorage.removeItem('hero-theme-label');
+      themeStorage.removeItem('hero-theme-label');
       // Photo + theme are a pair: resetting the theme returns the photo too.
       document.dispatchEvent(new CustomEvent('hero-reset'));
     }
@@ -269,7 +276,7 @@
 
     // Restore the contextual label (e.g. "Ocean") when a persisted theme is re-applied.
     function restoreToastLabel() {
-      const savedLabel = localStorage.getItem('hero-theme-label');
+      const savedLabel = themeStorage.getItem('hero-theme-label');
       const el = toast && toast.querySelector('.toast-message');
       if (savedLabel && el) el.textContent = savedLabel;
     }
@@ -284,9 +291,9 @@
 
 
     // Check if we're on a random theme on load
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = themeStorage.getItem('theme');
     if (savedTheme === 'random') {
-      const savedThemeData = localStorage.getItem('random-theme-data');
+      const savedThemeData = themeStorage.getItem('random-theme-data');
       if (savedThemeData) {
         try {
           const themeObj = JSON.parse(savedThemeData);
@@ -312,9 +319,10 @@
     document.addEventListener('astro:page-load', () => {
       // Small delay to ensure DOM is ready
       setTimeout(() => {
-        const currentTheme = localStorage.getItem('theme');
+        if (!toast.isConnected || document.querySelector('[data-work-story]')) return;
+        const currentTheme = themeStorage.getItem('theme');
         if (currentTheme === 'random') {
-          const savedThemeData = localStorage.getItem('random-theme-data');
+          const savedThemeData = themeStorage.getItem('random-theme-data');
           if (savedThemeData) {
             try {
               const themeObj = JSON.parse(savedThemeData);
@@ -348,7 +356,7 @@
         '--theme-text-muted': c.muted,
         '--theme-accent': c.accent,
         '--theme-border': c.border,
-        '--theme-shadow': isDark ? '0 4px 12px rgba(0, 0, 0, 0.6)' : '0 2px 8px rgba(0, 0, 0, 0.08)',
+        '--theme-shadow': 'none',
         '--theme-highlight': c.highlight || (isDark ? '#2ac3de' : '#FBF1A9'),
         '--theme-radius': '0.5rem',
         '--theme-spacing': '1rem',
@@ -358,7 +366,7 @@
       applyTheme(theme, true, true);
       // contextual toast label for this photo's theme (e.g. "Ocean", "Porto")
       if (label) {
-        localStorage.setItem('hero-theme-label', label);
+        themeStorage.setItem('hero-theme-label', label);
         const msgEl = document.querySelector('#theme-toast .toast-message');
         if (msgEl) msgEl.textContent = label;
       }
@@ -466,7 +474,7 @@
 
   .reset-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
   }
 
   .reset-btn:focus {

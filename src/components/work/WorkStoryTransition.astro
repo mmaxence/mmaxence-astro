@@ -1,0 +1,259 @@
+<script>
+  import type { TransitionBeforePreparationEvent, TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const storySlug = (path: string) => path.match(/^\/work\/([^/]+)\/?$/)?.[1];
+  const indexPath = (path: string) => /^\/work\/?$/.test(path);
+  let transitionId = 0;
+  let activeId = 0;
+  let globeMode: 'open' | 'close' | null = null;
+  const animations = new Set<Animation>();
+  const veils = new Set<HTMLElement>();
+  const animate = (element: Element, frames: Keyframe[], timing: KeyframeAnimationOptions) => {
+    const animation = element.animate(frames, { ...timing, fill: 'both' });
+    animations.add(animation);
+    return animation.finished.then(() => {}, () => {});
+  };
+  const veil = (doc: Document, opacity = '0') => {
+    const layer = doc.createElement('div');
+    layer.className = 'story-travel-veil';
+    layer.setAttribute('aria-hidden', 'true');
+    layer.style.opacity = opacity;
+    doc.body.append(layer);
+    veils.add(layer);
+    return layer;
+  };
+  const waitForWorld = (quest: HTMLElement | null) => new Promise<void>(resolve => {
+    if (!quest || quest.dataset.world) return resolve();
+    const observer = new MutationObserver(() => { if (quest.dataset.world) finish(); });
+    const timeout = setTimeout(finish, 1800);
+    function finish() { clearTimeout(timeout); observer.disconnect(); resolve(); }
+    observer.observe(quest, { attributes: true, attributeFilter: ['data-world'] });
+  });
+
+  function clearTransition() {
+    animations.forEach(animation => animation.cancel());
+    animations.clear();
+    globeMode = null;
+    delete document.documentElement.dataset.storyTravel;
+    veils.forEach(layer => layer.remove());
+    veils.clear();
+    document.querySelectorAll('.story-travel-veil').forEach(layer => layer.remove());
+    document.querySelector<HTMLElement>('.quest-stage')?.style.removeProperty('transform-origin');
+    delete document.documentElement.dataset.storyMotion;
+    document.querySelectorAll<HTMLElement>('[data-story-transition-content]').forEach(content => {
+      content.style.removeProperty('view-transition-name');
+      delete content.dataset.storyTransitionContent;
+    });
+  }
+
+  motion.addEventListener('change', () => { if (motion.matches) { ++transitionId; clearTransition(); } });
+
+  document.addEventListener('astro:before-preparation', rawEvent => {
+    const event = rawEvent as TransitionBeforePreparationEvent;
+    const id = ++transitionId;
+    activeId = 0;
+    clearTransition();
+    if (motion.matches) return;
+    const from = storySlug(event.from.pathname);
+    const to = storySlug(event.to.pathname);
+    const mode = indexPath(event.from.pathname) && to ? 'open'
+      : from && indexPath(event.to.pathname) ? 'close'
+      : from && to && from !== to ? 'next' : null;
+    if (!mode) return;
+
+    const loader = event.loader;
+    if (mode === 'open' || mode === 'close') {
+      globeMode = mode;
+      document.documentElement.dataset.storyTravel = mode;
+      activeId = id;
+      const stage = document.querySelector<HTMLElement>('.quest-stage');
+      if (mode === 'open' && stage) {
+        const bounds = stage.getBoundingClientRect();
+        const stop = document.getElementById(to!)?.getBoundingClientRect();
+        const origin = stop ? [
+          Math.max(5, Math.min(95, (stop.x + stop.width / 2 - bounds.x) / bounds.width * 100)),
+          Math.max(10, Math.min(90, (stop.y - 55 - bounds.y) / bounds.height * 100)),
+        ] : [50, 47];
+        history.replaceState({ ...history.state, workStoryZoomOrigin: origin }, '');
+        stage.style.transformOrigin = `${origin[0]}% ${origin[1]}%`;
+      }
+      const layer = veil(document);
+      const outward = mode === 'open';
+      const zoom = outward && stage ? animate(stage, [{ transform: 'scale(1)' }, { transform: 'scale(1.65)' }], {
+        duration: 660, easing: 'cubic-bezier(.55,0,.9,.35)',
+      }) : Promise.resolve();
+      const darken = animate(layer, [{ opacity: 0 }, { opacity: 1 }], {
+        duration: outward ? 550 : 180, delay: outward ? 110 : 0, easing: 'cubic-bezier(.4,0,.65,1)',
+      });
+      event.signal.addEventListener('abort', () => { if (id === transitionId) clearTransition(); }, { once: true });
+      event.loader = async () => {
+        try {
+          await Promise.all([loader(), zoom, darken]);
+          if (event.signal.aborted || event.defaultPrevented || id !== transitionId) return;
+          // Carry a solid cover across the DOM swap. The returning WebGL scene
+          // gets time to draw before it is revealed, without a blank snapshot.
+          event.newDocument.documentElement.dataset.storyTravel = mode;
+          veil(event.newDocument, '1');
+        } catch (error) {
+          if (id === transitionId) clearTransition();
+          throw error;
+        }
+      };
+      return;
+    }
+    if (typeof document.startViewTransition !== 'function') return;
+    event.loader = async () => {
+      await loader();
+      if (event.signal.aborted || event.defaultPrevented || id !== transitionId) return;
+      activeId = id;
+      const newRoot = event.newDocument.documentElement;
+      document.documentElement.dataset.storyMotion = mode;
+      newRoot.dataset.storyMotion = mode;
+      event.newDocument.querySelector<HTMLElement>('.story-content, .page-content')?.setAttribute('data-story-arrival', '');
+      // Capture the destination content separately from its background. The
+      // portfolio dims first; every case then uses the same short entrance.
+      if (mode === 'next') {
+        const content = event.newDocument.querySelector<HTMLElement>('.story-content');
+        const nameCapture = (element: HTMLElement | null, name: string) => {
+          if (!element) return;
+          element.dataset.storyTransitionContent = '';
+          element.style.setProperty('view-transition-name', name);
+        };
+        nameCapture(content, 'work-story-content');
+        nameCapture(event.newDocument.querySelector('.story-exit'), 'story-exit');
+        const hero = event.newDocument.querySelector<HTMLElement>('[data-story-hero]');
+        if (hero) {
+          nameCapture(hero.querySelector('[data-story-intro="heading"]'), 'story-heading');
+          nameCapture(hero.querySelector('[data-story-intro="lead"]'), 'story-lead');
+          nameCapture(hero.querySelector('[data-story-intro="action"]'), 'story-action');
+          nameCapture(hero.querySelector('[data-story-intro="visual"]'), 'story-visual');
+        }
+      }
+      event.signal.addEventListener('abort', () => {
+        if (id === transitionId) clearTransition();
+      }, { once: true });
+    };
+  });
+
+  document.addEventListener('astro:before-swap', rawEvent => {
+    const event = rawEvent as TransitionBeforeSwapEvent;
+    const id = activeId;
+    if (!id) return;
+    if (globeMode) {
+      void event.viewTransition.ready.catch(() => {});
+      event.viewTransition.skipTransition();
+      return;
+    }
+    // Case-to-case navigation keeps the shared native hero cascade.
+    void event.viewTransition.finished.catch(() => {}).finally(() => {
+      if (id === transitionId) clearTransition();
+    });
+  });
+
+  document.addEventListener('astro:after-swap', () => {
+    const mode = globeMode, id = activeId;
+    if (!mode || !id) return;
+    void (async () => {
+      if (mode === 'close') await waitForWorld(document.querySelector('work-quest'));
+      if (id !== transitionId) return;
+      const layer = document.querySelector<HTMLElement>('.story-travel-veil');
+      if (!layer) return;
+      const stage = document.querySelector<HTMLElement>('.quest-stage');
+      let zoom = Promise.resolve();
+      if (mode === 'close' && stage) {
+        const saved = history.state?.workStoryZoomOrigin;
+        const origin = Array.isArray(saved) && saved.length === 2 && saved.every(Number.isFinite) ? saved : [50, 47];
+        stage.style.transformOrigin = `${origin[0]}% ${origin[1]}%`;
+        zoom = animate(stage, [{ transform: 'scale(1.65)' }, { transform: 'scale(1)' }], {
+          duration: 760, easing: 'cubic-bezier(.1,.65,.25,1)',
+        });
+      }
+      await Promise.all([zoom, animate(layer, [{ opacity: 1 }, { opacity: 0 }], {
+        duration: mode === 'close' ? 540 : 220, easing: 'ease-out',
+      })]);
+      if (id === transitionId) clearTransition();
+    })();
+  });
+</script>
+
+<style is:global>
+  /* One reading order on arrival: title, explanation, action, then image.
+     Keep the intervals perceptible and the type sharp throughout. */
+  html[data-story-travel] work-quest { overflow: clip; }
+  html[data-story-travel] .quest-stage { pointer-events: none; }
+  html[data-story-travel='close'] .quest-stop { transition: none; }
+  html[data-story-travel='close'] [data-world='ready'] .quest-canvas { transition: none; opacity: 1; }
+  .story-travel-veil { position: fixed; inset: 0; z-index: 2147483646; background: #10120f; pointer-events: none; }
+  :root { --story-intro-ease: cubic-bezier(.22, .61, .36, 1); }
+  html[data-story-motion]::view-transition { background: #10120f; }
+  html[data-story-motion]::view-transition-group(root) { animation-duration: 320ms; }
+  html[data-story-motion]::view-transition-old(root),
+  html[data-story-motion]::view-transition-new(root) {
+    mix-blend-mode: normal;
+    animation-fill-mode: both;
+  }
+  html[data-story-motion='open']::view-transition-old(root),
+  html[data-story-motion='next']::view-transition-old(root) {
+    z-index: 2;
+    animation: story-lights-out 320ms cubic-bezier(.4, 0, .2, 1) both;
+  }
+  html[data-story-motion='open']::view-transition-new(root),
+  html[data-story-motion='next']::view-transition-new(root) {
+    z-index: 1;
+    animation: story-fade-in 160ms linear 160ms both;
+  }
+  html[data-story-motion]::view-transition-group(work-story-content) { z-index: 3; animation: none; }
+  html[data-story-motion]::view-transition-group(story-heading),
+  html[data-story-motion]::view-transition-group(story-lead),
+  html[data-story-motion]::view-transition-group(story-action),
+  html[data-story-motion]::view-transition-group(story-visual),
+  html[data-story-motion]::view-transition-group(story-exit) { z-index: 4; animation: none; }
+  html[data-story-motion]::view-transition-new(work-story-content) { animation: story-fade-in 600ms var(--story-intro-ease) 800ms both; }
+  html[data-story-motion]::view-transition-new(story-exit) { animation: story-fade-in 560ms var(--story-intro-ease) 320ms both; }
+  html[data-story-motion]::view-transition-new(story-heading) { animation: story-heading-in 560ms var(--story-intro-ease) 320ms both; }
+  html[data-story-motion]::view-transition-new(story-lead) { animation: story-copy-in 560ms var(--story-intro-ease) 480ms both; }
+  html[data-story-motion]::view-transition-new(story-action) { animation: story-copy-in 560ms var(--story-intro-ease) 640ms both; }
+  html[data-story-motion]::view-transition-new(story-visual) { animation: story-visual-in 600ms var(--story-intro-ease) 800ms both; }
+  html[data-story-motion='close']::view-transition-group(root) { animation-duration: 300ms; }
+  html[data-story-motion='close']::view-transition-old(root) { z-index: 2; animation: story-lights-out 280ms ease-out both; }
+  html[data-story-motion='close']::view-transition-new(root) { z-index: 1; animation: story-fade-in 300ms ease-out both; }
+
+  /* A direct visit uses the same rhythm, without replaying the lights-down.
+     Native arrivals already animate snapshots, so must not animate DOM twice. */
+  .story-content:not([data-story-arrival]) [data-story-intro="heading"] {
+    animation: story-heading-in 560ms var(--story-intro-ease) 80ms both;
+  }
+  .story-content:not([data-story-arrival]) [data-story-intro="lead"] {
+    animation: story-copy-in 560ms var(--story-intro-ease) 240ms both;
+  }
+  .story-content:not([data-story-arrival]) [data-story-intro="action"] {
+    animation: story-copy-in 560ms var(--story-intro-ease) 400ms both;
+  }
+  .story-content:not([data-story-arrival]) [data-story-intro="visual"] {
+    animation: story-visual-in 600ms var(--story-intro-ease) 560ms both;
+  }
+  [data-story-arrival] { animation: none !important; opacity: 1 !important; transform: none !important; }
+  @keyframes story-lights-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes story-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes story-heading-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes story-copy-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes story-visual-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media(prefers-reduced-motion: reduce) {
+    .work-index-content,
+    .story-content [data-story-hero] *,
+    html[data-story-motion]::view-transition-group(*),
+    html[data-story-motion]::view-transition-old(*),
+    html[data-story-motion]::view-transition-new(*) { animation: none !important; }
+    .work-index-content { opacity: 1 !important; transform: none !important; }
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+import WorkStoryLayout from '../../layouts/WorkStoryLayout.astro';
+import { workEntries } from '../../data/work';
+import ComposerCase from '../../components/work/ComposerCase.astro';
+import HanjiCase from '../../components/work/HanjiCase.astro';
+import OfferwallCase from '../../components/work/OfferwallCase.astro';
+import LockscreenCase from '../../components/work/LockscreenCase.astro';
+import GameUACase from '../../components/work/GameUACase.astro';
+import BuzzvilMediumsCase from '../../components/work/BuzzvilMediumsCase.astro';
+
+export function getStaticPaths() {
+  return workEntries.map((work, index) => ({ params: { slug: work.slug }, props: { work, next: workEntries[(index + 1) % workEntries.length] } }));
+}
+const { work, next } = Astro.props;
+const cases = {
+  'interaction-composer': ComposerCase,
+  'hanji': HanjiCase,
+  'offerwall': OfferwallCase,
+  'lockscreen': LockscreenCase,
+  'game-ua-multi-mission': GameUACase,
+  'buzzvil-mediums': BuzzvilMediumsCase,
+};
+const CasePage = cases[work.slug as keyof typeof cases];
+---
+<WorkStoryLayout {work} {next}>
+  <CasePage {work} />
+</WorkStoryLayout>

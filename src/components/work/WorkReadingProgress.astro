@@ -1,0 +1,143 @@
+---
+interface Props { slug: string }
+const { slug } = Astro.props;
+---
+<work-reading-progress data-slug={slug} hidden>
+  <div class="reading-track" aria-hidden="true"><span data-reading-fill></span></div>
+  <div class="reading-pill" role="progressbar" aria-label="Story explored" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% explored" data-reading-meter>
+    <span class="reading-mark" aria-hidden="true" data-reading-mark>◌</span>
+    <span data-reading-label>Explored</span>
+    <span class="reading-value" data-reading-value>0%</span>
+  </div>
+  <span class="reading-announcement" role="status" aria-live="polite" data-reading-announcement></span>
+</work-reading-progress>
+
+<script>
+  import { getProgress, saveProgress, WORK_SLUGS, type WorkSlug, type WorkProgressDetail } from '../../lib/work-progress';
+
+  class WorkReadingProgress extends HTMLElement {
+    private controller?: AbortController;
+    private frame = 0;
+    private readyFrame = 0;
+    private ready = false;
+    private hasScrolled = false;
+    private slug = '';
+    private percent = 0;
+
+    connectedCallback() {
+      this.controller?.abort();
+      this.controller = new AbortController();
+      const { signal } = this.controller;
+      this.slug = this.dataset.slug || '';
+      if (!WORK_SLUGS.includes(this.slug as WorkSlug)) return;
+      this.ready = false;
+      this.hasScrolled = false;
+      this.render(getProgress()[this.slug] || 0, false);
+      this.hidden = false;
+
+      // Astro restores scroll as it swaps pages. Wait until that work is done
+      // before measuring, so the previous page's position cannot award progress.
+      const settle = () => {
+        cancelAnimationFrame(this.readyFrame);
+        this.readyFrame = requestAnimationFrame(() => {
+          this.readyFrame = requestAnimationFrame(() => { this.ready = true; });
+        });
+      };
+      document.addEventListener('astro:page-load', settle, { signal });
+      window.addEventListener('pageshow', settle, { signal });
+      if (document.readyState === 'complete') settle();
+      else window.addEventListener('load', settle, { once: true, signal });
+
+      window.addEventListener('scroll', () => {
+        if (!this.ready || this.isObscured()) return;
+        this.hasScrolled = true;
+        this.schedule();
+      }, { passive: true, signal });
+      window.addEventListener('resize', () => this.schedule(), { passive: true, signal });
+      window.addEventListener('work-progress', event => {
+        const detail = (event as CustomEvent<WorkProgressDetail>).detail;
+        this.render(detail.progress[this.slug] || 0, true);
+      }, { signal });
+      document.addEventListener('work-story-save-progress',()=>this.measure(),{signal});
+      document.addEventListener('astro:before-preparation',()=>this.measure(),{signal});
+      window.addEventListener('pagehide', () => this.measure(), { signal });
+      document.addEventListener('astro:before-swap', () => {
+        this.measure();
+        this.ready = false;
+      }, { signal });
+    }
+
+    private isObscured() {
+      if (document.querySelector('dialog[open]')) return true;
+      if (document.fullscreenElement) return true;
+      if (getComputedStyle(document.body).position === 'fixed') return true;
+      if (['hidden', 'clip'].includes(getComputedStyle(document.documentElement).overflowY)) return true;
+      return [...document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]')]
+        .some(dialog => dialog.getClientRects().length > 0 && getComputedStyle(dialog).visibility !== 'hidden');
+    }
+
+    private schedule() {
+      if (this.frame) return;
+      this.frame = requestAnimationFrame(() => {
+        this.frame = 0;
+        this.measure();
+      });
+    }
+
+    private measure() {
+      if (!this.ready || !this.hasScrolled || !this.isConnected || this.isObscured()) return;
+      const root = document.scrollingElement || document.documentElement;
+      const ending=document.querySelector<HTMLElement>('.story-ending');
+      const documentRange=root.scrollHeight-window.innerHeight;
+      const range=ending?Math.min(documentRange,ending.getBoundingClientRect().top+window.scrollY-window.innerHeight+24):documentRange;
+      // Never complete an unloaded or momentarily collapsed story.
+      if (range < Math.max(64, window.innerHeight * .25)) return;
+      const position = Math.max(0, Math.min(range, window.scrollY));
+      if (position <= 0) return;
+      const next = range - position <= 8 ? 100 : Math.min(99, Math.floor(position / range * 100));
+      if (next > this.percent) saveProgress(this.slug, next);
+    }
+
+    private render(next: number, announce: boolean) {
+      const wasComplete = this.percent === 100;
+      this.percent = next;
+      this.style.setProperty('--reading-progress', String(next / 100));
+      this.querySelector('[data-reading-meter]')?.setAttribute('aria-valuenow', String(next));
+      this.querySelector('[data-reading-meter]')?.setAttribute('aria-valuetext', next === 100 ? 'Story complete' : `${next}% explored`);
+      const value = this.querySelector('[data-reading-value]');
+      const label = this.querySelector('[data-reading-label]');
+      const mark = this.querySelector('[data-reading-mark]');
+      if (value) value.textContent = `${next}%`;
+      if (label) label.textContent = next === 100 ? 'Complete' : 'Explored';
+      if (mark) mark.textContent = next === 100 ? '✓' : '◌';
+      this.toggleAttribute('data-complete', next === 100);
+      const status = this.querySelector('[data-reading-announcement]');
+      if (status && announce && next === 100 && !wasComplete) status.textContent = 'Story complete. 100 exploration XP saved to your path.';
+      else if (status && next < 100) status.textContent = '';
+    }
+
+    disconnectedCallback() {
+      this.controller?.abort();
+      cancelAnimationFrame(this.frame);
+      cancelAnimationFrame(this.readyFrame);
+      this.frame = 0;
+      this.ready = false;
+    }
+  }
+  if (!customElements.get('work-reading-progress')) customElements.define('work-reading-progress', WorkReadingProgress);
+</script>
+
+<style>
+  work-reading-progress { --reading-progress: 0; display: contents; }
+  work-reading-progress[hidden] { display: none; }
+  .reading-track { position: fixed; top: 0; left: 0; width: 100%; height: 2px; z-index: 91; pointer-events: none; }
+  .reading-track > span { display: block; width: 100%; height: 100%; background: var(--theme-accent); transform: scaleX(var(--reading-progress)); transform-origin: left; transition: transform .2s ease; }
+  .reading-pill { position: fixed; top: max(20px, env(safe-area-inset-top)); left: max(28px, env(safe-area-inset-left)); z-index: 89; display: flex; align-items: center; gap: .5rem; min-height: 44px; padding: .65rem .85rem; border: 1px solid var(--theme-border); border-radius: 99px; background: var(--theme-bg); color: var(--theme-text-muted); font: .7rem/1.3 var(--font-mono, monospace); pointer-events: none; }
+  .reading-mark { color: var(--theme-accent); font-size: .9rem; }
+  .reading-value { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; color: var(--theme-text); }
+  .reading-announcement { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+  @media (max-width: 600px) {
+    .reading-pill { top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); width: 120px; justify-content: space-between; gap: .3rem; padding-inline: .65rem; font-size: .65rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .reading-track > span { transition: none; } }
+</style>

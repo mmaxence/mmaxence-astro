@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import PageContent from '../../components/ui/PageContent.astro';
+import ThemeToast from '../../components/ui/ThemeToast.astro';
+import WorkStoryNavigation from '../../components/work/WorkStoryNavigation.astro';
+import WorkStoryTransition from '../../components/work/WorkStoryTransition.astro';
+import WorkQuest from '../../components/work/WorkQuest.astro';
+import WorkContributions from '../../components/work/WorkContributions.astro';
+
+const description = 'Selected products, systems and experiments. How I frame a problem, shape the interactions, and refine what ships.';
+---
+
+<BaseLayout title="Work" description={description}>
+  <Header />
+  <PageContent class="work-index-content">
+    <div class="work-index-wrap">
+      <WorkQuest />
+      <div class="work-context"><p>Selected work from my 12 years at <a href="https://www.buzzvil.com/en/">Buzzvil</a>, designing for a network serving <a href="https://www.newswire.co.kr/newsRead.php?no=933111" title="Buzzvil reported 20 million monthly users in October 2021">millions of people each month</a>, alongside personal projects and <a href="#open-source">open-source contributions</a>.</p></div>
+      <WorkContributions />
+    </div>
+  </PageContent>
+  <Footer /><ThemeToast /><WorkStoryNavigation /><WorkStoryTransition />
+</BaseLayout>
+<style>
+/* The continuous world owns its entrance and reaches the edges of the page. */
+:global(main.page-content.work-index-content) { animation:none; opacity:1; transform:none; }
+.work-index-wrap { width:100%; margin-inline:auto; padding:0 0 4rem; }
+.work-context { margin:4rem auto 0;padding:2rem 0;width:calc(100% - 40px);max-width:64rem;border-block:1px solid var(--theme-border); }
+.work-context p { font:.9rem/1.8 var(--font-body); margin:0; color:var(--theme-text-muted); }
+.work-context a { color:var(--theme-text); text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--theme-border); }
+@media(max-width:650px) { .work-context { margin-top:2.5rem; } }
+</style>

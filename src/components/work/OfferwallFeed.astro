@@ -1,0 +1,173 @@
+---
+interface Props {
+  tone?: 'light' | 'dark';
+  accent?: string;
+  compact?: boolean;
+}
+const { tone = 'light', accent = '#356253', compact = false } = Astro.props;
+const campaigns = [
+  { id: 'forme', brand: 'FORME', mark: 'F', category: 'visit', title: 'Find your daily ritual', task: 'Visit the brand', points: '20', image: '/work/composer/forme-campaign-768.webp', alt: 'Fictional FORME daily wash bottles on warm stone beside water.', description: 'Thoughtful essentials for an everyday routine.', steps: ['Open the FORME brand page.', 'Explore the daily care collection.', 'Return to the Feed after your visit.'] },
+  { id: 'fieldwork', brand: 'FIELDWORK', mark: 'W', category: 'visit', title: 'Meet your everyday uniform', task: 'Explore the collection', points: '30', image: '/work/composer/fieldwork-campaign-768.webp', alt: 'Fictional FIELDWORK outerwear campaign with a dark technical jacket.', description: 'Considered layers for days in motion.', steps: ['Open the FIELDWORK collection.', 'Discover the everyday outerwear range.', 'Return to the Feed after exploring.'] },
+  { id: 'forme-shop', brand: 'FORME', mark: 'F', category: 'shop', title: 'Daily care, delivered', task: 'Shop the daily wash', points: '250', image: '/work/composer/forme-campaign-768.webp', alt: 'Fictional FORME daily wash bottles.', description: 'A daily wash for a simpler routine.', steps: ['Explore the daily wash on the brand site.', 'Complete an eligible first purchase.', 'Points would follow purchase confirmation.'] },
+];
+---
+<offerwall-feed class:list={['offerwall-feed', { compact }]} data-preview data-tone={tone} style={`--feed-accent:${accent}`} aria-label="Interactive reconstructed Feed with fictional offers">
+  <div class="feed-screen">
+    <div class="phone-status" aria-hidden="true"><span>9:41</span><div><svg viewBox="0 0 17 12"><path d="M1 11V8h2v3zm4 0V6h2v5zm4 0V3h2v8zm4 0V0h2v11z"/></svg><svg viewBox="0 0 17 12"><path d="M1 3.5a11.8 11.8 0 0 1 15 0l-1.4 1.6a9.7 9.7 0 0 0-12.2 0zm3.1 3.3a7.2 7.2 0 0 1 8.8 0l-1.4 1.6a5 5 0 0 0-6 0zM7 10l1.5-1.6L10 10l-1.5 1.6z"/></svg><svg viewBox="0 0 23 12"><rect x="1" y="1" width="18" height="10" rx="2" fill="none" stroke="currentColor"/><rect x="3" y="3" width="14" height="6" rx="1"/><path d="M21 4h2v4h-2z"/></svg></div></div>
+    <div class="app-bar"><svg class="back-glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="m11.5 4-6 6 6 6M5.5 10H17"/></svg><strong>Rewards</strong><span class="wallet">12,440<span>P</span></span></div>
+    <div class="feed-list" data-feed-list>
+      <div class="product-tabs"><span class="current">Earn points</span><span>My activity</span></div>
+      <div class="feed-content">
+        <div class="filter-bar" role="group" aria-label="Filter sample offers"><button type="button" data-filter="all" aria-pressed="true">All</button><button type="button" data-filter="visit" aria-pressed="false">Visit</button><button type="button" data-filter="shop" aria-pressed="false">Shop</button></div>
+        <div class="offer-list">
+          {campaigns.map((campaign, index) => <article class:list={['campaign-card', { 'compact-offer': index === 2 }]} data-campaign-card data-category={campaign.category}>
+            <button class="campaign-open" type="button" data-open-campaign={campaign.id} aria-label={`${campaign.title}, ${campaign.task}, ${campaign.points} sample points. View offer details.`}>
+              <div class="campaign-creative"><img src={campaign.image} width="768" height="512" alt={campaign.alt} loading="lazy" decoding="async"/><span class="advertiser">{campaign.brand}</span></div>
+              <div class="campaign-body"><div class="campaign-copy"><strong>{campaign.title}</strong><small>{campaign.task} <span>· Ad</span></small></div><span class="points"><span class="coin">P</span> {campaign.points}<span class="points-unit">P</span></span></div>
+            </button>
+          </article>)}
+        </div>
+        <p class="feed-end">Offers selected for you <span aria-hidden="true">·</span> Updated daily</p>
+      </div>
+    </div>
+    <section class="offer-detail" data-offer-detail hidden aria-label="Sample offer details" tabindex="-1">
+      <div class="detail-bar"><button type="button" data-close-campaign><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m11.5 4-6 6 6 6M5.5 10H17"/></svg>All offers</button><span>Offer details</span></div>
+      {campaigns.map(campaign => <div class="campaign-detail" data-campaign-detail={campaign.id} hidden>
+        <div class="detail-creative"><img src={campaign.image} width="768" height="512" alt={campaign.alt} loading="lazy" decoding="async"/><span class="advertiser">{campaign.brand}</span></div>
+        <div class="detail-body"><small class="detail-brand">{campaign.brand} <span>· Sponsored</span></small><h4>{campaign.title}</h4><p class="detail-description">{campaign.description}</p><div class="detail-reward"><span>{campaign.task}</span><strong>+{campaign.points}P</strong></div><h5>How it works</h5><ol>{campaign.steps.map(step => <li>{step}</li>)}</ol><p class="preview-note">Fictional offer preview. No points are awarded.</p><button class="return-button" type="button" data-close-campaign>Back to the Feed</button></div>
+      </div>)}
+    </section>
+    <div class="home-indicator" aria-hidden="true"></div>
+  </div>
+</offerwall-feed>
+<script>
+  class OfferwallFeed extends HTMLElement {
+    private opener: HTMLElement | null = null;
+    showOffer(id: string) {
+      const list = this.querySelector<HTMLElement>('[data-feed-list]');
+      const detail = this.querySelector<HTMLElement>('[data-offer-detail]');
+      const campaign = Array.from(this.querySelectorAll<HTMLElement>('[data-campaign-detail]')).find(item => item.dataset.campaignDetail === id);
+      if (!list || !detail || !campaign) return;
+      const active = document.activeElement;
+      this.opener = active instanceof HTMLElement && active !== document.body && !this.contains(active) ? active : Array.from(this.querySelectorAll<HTMLButtonElement>('[data-open-campaign]')).find(button => button.dataset.openCampaign === id) ?? null;
+      this.querySelectorAll<HTMLElement>('[data-campaign-detail]').forEach(item => { item.hidden = item !== campaign; });
+      list.hidden = true;
+      detail.hidden = false;
+      detail.focus({ preventScroll: true });
+    }
+    closeOffer() {
+      const list = this.querySelector<HTMLElement>('[data-feed-list]');
+      const detail = this.querySelector<HTMLElement>('[data-offer-detail]');
+      if (!list || !detail) return;
+      detail.hidden = true;
+      list.hidden = false;
+      const target = this.opener?.getClientRects().length ? this.opener : this.querySelector<HTMLButtonElement>('[data-filter][aria-pressed=true]');
+      target?.focus({ preventScroll: true });
+    }
+    reset() {
+      const list = this.querySelector<HTMLElement>('[data-feed-list]');
+      const detail = this.querySelector<HTMLElement>('[data-offer-detail]');
+      if (detail) detail.hidden = true;
+      if (list) list.hidden = false;
+      this.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === 'all')));
+      this.querySelectorAll<HTMLElement>('[data-campaign-card]').forEach(card => { card.hidden = false; });
+      this.opener = null;
+    }
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      this.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(button => button.addEventListener('click', () => {
+        this.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        this.querySelectorAll<HTMLElement>('[data-campaign-card]').forEach(card => { card.hidden = button.dataset.filter !== 'all' && card.dataset.category !== button.dataset.filter; });
+      }));
+      this.querySelectorAll<HTMLButtonElement>('[data-open-campaign]').forEach(button => button.addEventListener('click', () => this.showOffer(button.dataset.openCampaign ?? '')));
+      this.querySelectorAll('[data-close-campaign]').forEach(button => button.addEventListener('click', () => this.closeOffer()));
+      this.addEventListener('offerwall:open-offer', event => this.showOffer((event as CustomEvent<{id:string}>).detail?.id));
+      this.addEventListener('offerwall:reset', () => this.reset());
+      this.addEventListener('keydown', event => {
+        const detail = this.querySelector<HTMLElement>('[data-offer-detail]');
+        if (event.key !== 'Escape' || !detail || detail.hidden) return;
+        event.stopPropagation();
+        event.preventDefault();
+        this.closeOffer();
+      });
+    }
+  }
+  if (!customElements.get('offerwall-feed')) customElements.define('offerwall-feed', OfferwallFeed);
+</script>
+<style>
+  .offerwall-feed{--theme-text:var(--feed-ink);--feed-surface:#fff;--feed-ground:#f1f3f1;--feed-ink:#222b26;--feed-muted:#69736d;--feed-line:#e3e8e3;--feed-chip:#e5eae5;display:block;width:100%;max-width:330px;min-width:0;container-type:inline-size;color:var(--feed-ink);font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0;line-height:1.4;border:5px solid #2b302c;border-radius:31px;background:#2b302c;overflow:hidden;box-sizing:border-box;isolation:isolate}
+  .offerwall-feed[data-tone=dark]{--feed-surface:#242b27;--feed-ground:#1c231f;--feed-ink:#f2f5ef;--feed-muted:#b0bcb2;--feed-line:#39443c;--feed-chip:#36413a}
+  .feed-screen{background:var(--feed-surface);border-radius:25px;overflow:hidden;position:relative;min-height:625px}
+  .offerwall-feed *{box-sizing:border-box}
+  .offerwall-feed [hidden]{display:none!important}
+  .offerwall-feed button{appearance:none;font:inherit;letter-spacing:inherit;color:inherit;cursor:pointer;margin:0;box-shadow:none}
+  .offerwall-feed button:focus-visible{outline:2px solid var(--feed-accent);outline-offset:-3px}
+  .phone-status{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 9px;font-size:11px;font-weight:700;line-height:1}
+  .phone-status>div{display:flex;align-items:center;gap:3px}
+  .phone-status svg{height:9px;width:auto;fill:currentColor}
+  .app-bar{height:43px;padding:0 15px;display:flex;align-items:center;gap:10px;background:var(--feed-surface)}
+  .back-glyph{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .app-bar>strong{font-size:15px;letter-spacing:-.03em;font-weight:700}
+  .wallet{margin-left:auto;font-size:11px;line-height:1.4;font-weight:700;background:var(--feed-chip);border-radius:20px;padding:6px 9px;white-space:nowrap}
+  .wallet>span{padding-left:3px;font-size:9px}
+  .product-tabs{display:flex;align-items:center;gap:22px;border-bottom:1px solid var(--feed-line);padding:3px 16px 0;font-size:10px;font-weight:600;color:var(--feed-muted)}
+  .product-tabs>span{padding:10px 0 9px}
+  .product-tabs>.current{color:var(--feed-ink);border-bottom:2px solid var(--feed-accent)}
+  .feed-content{background:var(--feed-ground);padding:11px 11px 8px;min-height:502px}
+  .filter-bar{display:flex;gap:6px;margin:0 0 11px}
+  .filter-bar button{min-height:44px;min-width:44px;border:1px solid var(--feed-line);background:var(--feed-surface);font-size:12px;padding:5px 11px;border-radius:7px;line-height:1.4}
+  .filter-bar button[aria-pressed=true]{background:var(--feed-ink);color:var(--feed-surface);border-color:var(--feed-ink)}
+  .offer-list{display:grid;gap:10px}
+  .campaign-card{margin:0;padding:0;background:var(--feed-surface);border-radius:10px;overflow:hidden;border:1px solid var(--feed-line);min-width:0}
+  .campaign-open{display:block;width:100%;padding:0;border:0;text-align:left;background:transparent}
+  .campaign-creative{position:relative;overflow:hidden;aspect-ratio:1.95;background:#d3c8ad}
+  .campaign-creative img,.detail-creative img{display:block;width:100%;height:100%;object-fit:cover;max-width:none;margin:0;border:0;border-radius:0}
+  .advertiser{position:absolute;left:12px;top:11px;background:#fffef1e8;border:1px solid #fff9;color:#243127;font-size:8px;font-weight:600;letter-spacing:.09em;padding:4px 6px;border-radius:2px}
+  .campaign-card:nth-child(2) .advertiser{background:#19201de8;border-color:#ffffff38;color:#fff}
+  .campaign-body{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:11px 10px}
+  .campaign-copy{min-width:0}
+  .campaign-copy>strong{display:block;font-size:13px;font-weight:700;letter-spacing:-.025em;line-height:1.4;color:var(--feed-ink)}
+  .campaign-copy>small{display:block;font-size:10px;line-height:1.5;color:var(--feed-muted);margin-top:3px}
+  .campaign-copy>small>span{white-space:nowrap}
+  .points{display:flex;align-items:center;justify-content:center;flex:none;gap:2px;border-radius:6px;background:var(--feed-accent);color:#fff;font-size:17px;font-weight:700;line-height:1.2;padding:9px 7px;white-space:nowrap}
+  .points>span{color:#fff}
+  .points-unit{font-size:10px}
+  .coin{display:flex;align-items:center;justify-content:center;border:1px solid #ffffff8c;width:12px;height:12px;border-radius:50%;font-size:7px;font-weight:600;margin-right:2px}
+  .compact-offer .campaign-open{display:flex;align-items:center;gap:1px;padding:9px}
+  .compact-offer .campaign-creative{flex:none;aspect-ratio:1;width:46px;border-radius:6px}
+  .compact-offer .advertiser{display:none}
+  .compact-offer .campaign-body{flex:1;padding:3px 0 3px 8px}
+  .compact-offer .campaign-copy>strong{font-size:11px}
+  .compact-offer .points{padding:6px;font-size:12px;background:var(--feed-chip);color:var(--feed-ink)}
+  .compact-offer .points>span{color:var(--feed-ink)}
+  .compact-offer .coin{display:none}
+  .feed-end{font-size:9px;text-align:center;color:var(--feed-muted);margin:12px 0 2px;line-height:1.5}
+  .feed-end span{margin:0 3px}
+  .home-indicator{height:19px;background:var(--feed-surface);position:relative}
+  .home-indicator:after{content:'';position:absolute;width:83px;height:3px;border-radius:4px;background:var(--feed-ink);left:50%;top:9px;transform:translateX(-50%)}
+  .offer-detail{min-height:545px;background:var(--feed-surface);outline:none}
+  .detail-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:9px;color:var(--feed-muted);padding:9px 13px;border-top:1px solid var(--feed-line);border-bottom:1px solid var(--feed-line)}
+  .detail-bar button{min-height:44px;display:flex;align-items:center;gap:5px;border:0;background:transparent;padding:4px 0;font-size:12px;color:var(--feed-ink)}
+  .detail-bar svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7}
+  .detail-creative{position:relative;height:155px;overflow:hidden}
+  .detail-body{padding:18px 16px 12px}
+  .detail-brand{display:block;font-size:8px;font-weight:700;letter-spacing:.05em;color:var(--feed-ink)}
+  .detail-brand span{font-weight:400;letter-spacing:0;color:var(--feed-muted)}
+  .detail-body h4{font:700 21px/1.12 Arial,Helvetica,sans-serif;letter-spacing:-.04em;color:var(--feed-ink);margin:10px 0 8px}
+  .detail-description{font-size:12px;line-height:1.6;color:var(--feed-muted);margin:0}
+  .detail-reward{display:flex;justify-content:space-between;align-items:center;gap:12px;border-block:1px solid var(--feed-line);margin-top:16px;padding:12px 0;font-size:12px;color:var(--feed-ink)}
+  .detail-reward strong{font-size:21px;letter-spacing:-.04em}
+  .detail-body h5{font:700 13px/1.5 Arial,Helvetica,sans-serif;color:var(--feed-ink);margin:15px 0 8px;letter-spacing:0}
+  .detail-body ol{display:grid;gap:7px;counter-reset:steps;padding:0;margin:0;list-style:none}
+  .detail-body li{display:flex;gap:8px;font-size:11px;line-height:1.6;color:var(--feed-muted);margin:0;padding:0}
+  .detail-body li:before{counter-increment:steps;content:counter(steps);display:flex;align-items:center;justify-content:center;flex:none;width:16px;height:16px;border-radius:50%;background:var(--feed-chip);color:var(--feed-ink);font-size:8px}
+  .preview-note{font-size:10px;line-height:1.6;color:var(--feed-muted);margin:16px 0 9px}
+  .return-button{min-height:44px;background:var(--feed-accent);border:0;border-radius:7px;color:#fff!important;width:100%;padding:11px;font-size:12px!important;font-weight:600!important}
+  .compact .feed-screen{min-height:0}
+  .compact .feed-content{min-height:0}
+  .compact .campaign-creative{aspect-ratio:2.15}
+  .compact .compact-offer .campaign-creative{aspect-ratio:1}
+  @container (max-width:280px){.phone-status{padding:12px 14px 8px}.app-bar{padding:0 12px}.app-bar>strong{font-size:14px}.wallet{font-size:10px;padding:5px 7px}.feed-content{padding:10px 9px 8px}.campaign-body{padding:9px 8px;gap:5px}.campaign-copy>strong{font-size:11.5px}.campaign-copy>small{font-size:9.3px}.points{font-size:16px;padding:8px 6px}.coin{display:none}.compact-offer .campaign-creative{width:38px}.compact-offer .campaign-copy>strong{font-size:10.5px}.compact-offer .campaign-body{padding-left:6px}.advertiser{font-size:7px}.detail-body{padding:14px 12px 12px}.detail-body h4{font-size:20px}.feed-screen{min-height:0}.feed-content{min-height:0}}
+  @media(prefers-reduced-motion:no-preference){.campaign-open img{transition:filter .18s ease}.campaign-open:hover img{filter:brightness(1.04)}}
+</style>

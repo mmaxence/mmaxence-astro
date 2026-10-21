@@ -1,0 +1,28 @@
+---
+interface Props { id: string; title: string; intro?: string; scope?: string; class?: string }
+const { id, title, intro, scope, class: className } = Astro.props;
+---
+<section id={id} class:list={['story-chapter', className]} aria-labelledby={`${id}-title`}>
+  <header class="story-chapter-heading">
+    {scope && <span class="chapter-scope">{scope}</span>}
+    <h2 id={`${id}-title`}>{title.split('\n').map(line => <span>{line}</span>)}</h2>
+    {intro && <p>{intro}</p>}
+    <slot name="after-heading" />
+  </header>
+  <div class="story-chapter-content"><slot /></div>
+</section>
+<style>
+  .story-chapter { margin: 0 0 clamp(4rem, 7vw, 7rem); padding-top: clamp(3rem, 5vw, 5rem); border-top: 1px solid var(--theme-border); scroll-margin-top: 80px; min-width: 0; }
+  .story-chapter-heading { max-width: 1000px; margin: 0 auto 2.5rem; text-align: center; }
+  .chapter-scope { display: block; margin-bottom: 1rem; font: .75rem/1.5 var(--font-mono,monospace); color: var(--theme-text-muted); }
+  h2 { margin: 0; font: var(--story-heading-weight, 400) clamp(2.3rem, 4.2vw, 4.1rem)/1.12 var(--story-display, var(--font-heading)); letter-spacing: -.035em; text-wrap: balance; }
+  h2 > span { display: block; }
+  .story-chapter-heading > p { max-width: 62ch; margin: 1.5rem auto 0; font: 1rem/1.8 var(--font-body); color: var(--theme-text-muted); }
+  .story-chapter-content { min-width: 0; }
+  @media(max-width:650px) {
+    .story-chapter-heading { text-align: left; margin-bottom: 2rem; }
+    .chapter-scope { display: block; margin-bottom: 1rem; font: .75rem/1.5 var(--font-mono,monospace); color: var(--theme-text-muted); }
+  h2 { font-size: clamp(2rem, 8vw, 3.2rem); }
+    .story-chapter-heading > p { margin-top: 1.3rem; }
+  }
+</style>

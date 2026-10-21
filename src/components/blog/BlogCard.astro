@@ -53,13 +53,13 @@ const featuredImage = post.data.featured_image?.startsWith('/')
     color: var(--theme-text);
     border: 1px solid var(--theme-border);
     border-radius: var(--radius-card);
-    box-shadow: var(--theme-shadow);
+    box-shadow: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .blog-card-link:hover .blog-card {
     border-color: var(--theme-accent);
-    box-shadow: var(--shadow-hover, 0 2px 8px rgba(0, 0, 0, 0.12));
+    box-shadow: none;
     transform: translateY(-1px);
   }
 

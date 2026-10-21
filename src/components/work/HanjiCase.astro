@@ -1,0 +1,158 @@
+---
+import StoryHero from './StoryHero.astro';
+import StoryChapter from './StoryChapter.astro';
+import StoryFocus from './StoryFocus.astro';
+import StoryLearnings from './StoryLearnings.astro';
+import ProjectMedia from './ProjectMedia.astro';
+import HanjiPalette from './HanjiPalette.astro';
+import HanjiDesignPlate from './HanjiDesignPlate.astro';
+import HanjiConnections from './HanjiConnections.astro';
+import type { WorkEntry, ProjectEvidence } from '../../data/work';
+interface Props { work: WorkEntry }
+const { work } = Astro.props;
+const evidence = work.project?.sections.flatMap(section => section.visuals?.flatMap(visual => visual.media ?? []) ?? []) ?? [];
+function media(src: string, caption: string, displayWidth = 1200): ProjectEvidence {
+  const item = evidence.find(item => item.src === src);
+  if (!item) throw new Error(`Hanji evidence missing: ${src}`);
+  return { ...item, caption, displayWidth, description: undefined };
+}
+---
+<article class="hanji-story">
+  <StoryHero title="I built Hanji to review and direct agent work."
+    intro="AI agents were writing documents and carrying out more of my tasks. I needed clearer ways to read their output, judge it and decide what happened next."
+    links={[{ label: 'Visit Hanji’s live website', url: 'https://hanji.ink/' }]}>
+    <Fragment slot="title">I built Hanji to<br />review and direct<br /><em>agent work.</em></Fragment>
+    <figure slot="visual" class="opening-visual">
+      <img src="/work/hanji/tracker-canvas.webp" width="1440" height="960" alt="Hanji Work in a local alpha build: fictional issues arranged in a dependency canvas, with an agent composer below." decoding="async" fetchpriority="high" />
+    </figure>
+  </StoryHero>
+
+  <div class="hanji-journey">
+    <StoryChapter id="hanji-write" class="hanji-chapter" title={'Write made agent documents\nreadable and reviewable.'} intro="Agent-created documents were easy for agents to use. I needed people to read, question and revise them together. Write became a shared surface for the words, the discussion and the decision to accept a change.">
+        <Fragment slot="after-heading"><a class="product-access" href="https://hanji.ink/projects/write/#get-started">Write · Private test · Request access</a></Fragment>
+      <ProjectMedia media={media('/work/hanji/write-inline-comments.webp', 'Write: reviewing a document together. Demo content.')} />
+      <StoryFocus topic="Reviewing concurrent edits" problem="People and agents could change the same document. How could I keep my draft and still judge an agent’s proposal?">
+      <div class="detail-spread">
+        <div class="detail-copy">
+          <h3>People decide<br />which changes belong.</h3>
+          <p>I kept the proposed edit beside its author and controls to reject or accept it. Human discussion stays attached to the passage being judged.</p>
+          <p>When an agent changed a document I was editing, preserving my draft became the priority. Independent edits can merge; overlapping changes need a choice.</p>
+        </div>
+        <ProjectMedia media={media('/work/hanji/write-proposal.mp4', 'Reviewing an agent’s proposed edit. Demo content.', 800)} />
+      </div>
+      </StoryFocus>
+    </StoryChapter>
+
+    <StoryChapter id="hanji-work" class="hanji-chapter" title={'Work let agents execute\nwhile I judged the plan.'} intro="Readable documents were only the start. I needed to see how the work connected. In Work, agents create issues, organize views and carry out tasks. I inspect the whole picture and direct them at workspace or issue level.">
+        <Fragment slot="after-heading"><a class="product-access" href="https://hanji.ink/projects/work/#get-started">Work · Early build · Request access</a></Fragment>
+      <ProjectMedia media={media('/work/hanji/work-conductor.webp', 'Work: the overall plan and the task conversation, together. Demo content.')} />
+      <StoryFocus topic="Directing an agent on an issue" problem="Instructions in a separate conversation lost the context of the task. Where should the conversation live?">
+      <div class="detail-spread thread-beat">
+        <div class="detail-copy">
+          <h3>Commands moved<br />into issue comments.</h3>
+          <p>I tried terminals, then a separate in-app conversation. Bringing the AI assistants Claude and GPT into the task’s comment thread kept the instruction, response and next decision beside the work.</p>
+          <p>Organizing a task should not silently trigger an agent. I replaced label-driven requests with explicit commands.</p>
+        </div>
+        <ProjectMedia media={media('/work/hanji/work-agent-comments.webp', 'Claude and GPT in the task thread. Staged conversation in the working interface.', 800)} />
+      </div>
+      </StoryFocus>
+    </StoryChapter>
+
+    <StoryChapter id="hanji-think" class="hanji-chapter" title={'Think connects sketches\nto documents and tasks.'} intro="My early thinking still lived in Figma and FigJam. In my setup, FigJam’s agent connection did not give me the control I needed, and moving ideas into product management meant plugins and workarounds. I started Think to connect that stage to Write and Work.">
+        <Fragment slot="after-heading"><p class="product-state">Think is a local prototype.</p></Fragment>
+      <ProjectMedia media={media('/work/hanji/think-canvas.webp', 'Think: an early canvas prototype with sample notes.')} />
+      <div class="connections-section" id="hanji-connections">
+        <h3>Carry the idea into execution<br />without losing its source.</h3>
+        <div class="artifact-paper"><HanjiConnections /></div>
+        <p class="implementation-note">These connections are implemented locally and still being tested together.</p>
+      </div>
+    </StoryChapter>
+
+    <StoryChapter id="hanji-design" class="hanji-chapter identity-beat" title={'Daily use shaped\na calmer, faster interface.'} intro="I use Write and Work at Buzzvil every day. That made small frictions hard to ignore: unreadable color, a lost cursor, an unnecessary wait. The visual system and the interaction details grew together.">
+      <div class="artifact-paper identity-plate"><HanjiDesignPlate kind="brand" /></div>
+      <div class="artifact-paper palette-plate"><HanjiPalette /></div>
+      <p class="design-note">Write builds its light and dark color schemes from three starting colors. Work uses carefully selected purple palettes. I tested both in the interface: text, transparent highlights, focus and action.</p>
+      <StoryFocus topic="Repeated actions" problem="Daily use made small interruptions add up. Moving between reading, editing and directing needed to stay quick.">
+      <div class="detail-spread speed-row">
+        <div class="detail-copy">
+          <h3>Repeated actions<br />need fewer interruptions.</h3>
+          <p>I kept reading-to-editing inside the same page and prepared the editor on hover or focus. Opening another Work issue preserves the board underneath.</p>
+          <p>Shortcuts grew from the actions I repeated. They stay out of the way when someone is typing.</p>
+          <dl class="shortcut-list"><div><dt>Find an issue</dt><dd><kbd>⌘ / Ctrl K</kbd></dd></div><div><dt>Reach its comment</dt><dd><kbd>c</kbd></dd></div><div><dt>Send an instruction</dt><dd><kbd>⌘ / Ctrl Enter</kbd></dd></div></dl>
+        </div>
+        <ProjectMedia media={media('/work/hanji/write-formatting.mp4', 'Formatting as you type in Write.', 800)} />
+      </div>
+      </StoryFocus>
+    </StoryChapter>
+  </div>
+
+  <StoryLearnings title={'What I learned:\njudgment needs context.'}>
+    <p>A document, an issue and a sketch each make something easier to see. The important design work was keeping the reasoning intact as it moved between them and keeping people oriented while agents changed the work.</p>
+    <p>Daily use gives me a close feedback loop. The next step is to extend it to roughly five to ten people, and learn which decisions hold up outside my own workflow.</p>
+    <p>Write is being tested privately with a small group. Work is an early build, and Think remains a local prototype. Open source is a direction; there has been no public source release.</p>
+  </StoryLearnings>
+
+
+</article>
+
+<style>
+  .hanji-story { --hanji-celadon: #1e8485; --hanji-orchid: #8d43b8; font-family: var(--story-body, sans-serif); min-width: 0; }
+  .hanji-story a { color: inherit; text-underline-offset: 5px; }
+  .hanji-story a:focus-visible, summary:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+  .hanji-story em { font: inherit; font-style: italic; color: #c6c6bc; }
+  .opening-visual { min-width: 0; margin: 0; }
+  .opening-visual img { display: block; width: 100%; height: auto; border: 1px solid #44473d; border-radius: 5px; }
+  .hanji-story h3 { margin: 0 0 1.25rem; font: 400 clamp(1.85rem, 2.6vw, 2.65rem)/1.15 var(--story-display, Georgia, serif); letter-spacing: -.02em; }
+  .hanji-journey p, .research-content p, .research-content li { font: 1rem/1.8 var(--story-body, sans-serif); color: var(--theme-text-muted); }
+  .product-access { display: inline-block; margin-top: 1rem; padding: .55rem 0; font: .95rem/1.5 var(--story-body, sans-serif); text-decoration: underline; text-decoration-color: #72776a; }
+  .product-state { margin: 1rem 0 0; font-size: .95rem; }
+  .hanji-journey :global(figure) { margin-block: 1.5rem; }
+  .hanji-journey :global(figcaption) { max-width: 88ch; font: .8rem/1.65 var(--story-body, sans-serif); color: var(--theme-text-muted); }
+  .hanji-journey :global(.image-link) { padding-bottom: 0 !important; }
+  .hanji-journey :global(img), .hanji-journey :global(video) { border-radius: 5px; }
+  .detail-spread { display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: clamp(2.5rem, 6vw, 6rem); margin: 4rem auto 0; }
+  .detail-copy { max-width: 40ch; }
+  .detail-copy p { margin: 1.2rem 0; }
+  .connections-section { margin-top: 4rem; }
+  .connections-section > h3 { margin-bottom: 2rem; }
+  .artifact-paper {
+    --theme-bg: #f8f7f4; --theme-text: #343330; --theme-text-muted: #68675e; --theme-border: #d8d8cf;
+    --color-bg: var(--theme-bg); --color-text: var(--theme-text); --color-text-muted: var(--theme-text-muted); --color-border: var(--theme-border);
+    background: var(--theme-bg); color: var(--theme-text); border-radius: 5px; padding: clamp(1.25rem, 3vw, 3rem);
+  }
+  .artifact-paper :global(figure) { margin: 0; }
+  .artifact-paper :global(figcaption) { color: #68675e; }
+  .connections-section .implementation-note { margin-top: 1rem; font-size: .85rem; }
+  .identity-plate :global(.brand-sheet) { min-height: 240px; grid-template-columns: 120px 1fr; padding: 1rem; gap: 3rem; background: transparent; border: 0; }
+  .identity-plate :global(.mark-study) { padding-right: 2rem; gap: .8rem; }
+  .identity-plate :global(.mark-study svg) { width: 80px; }
+  .identity-plate :global(.wordmark) { font-size: clamp(3rem, 6vw, 5rem); margin: .6rem 0; }
+  .palette-plate { margin-top: 2rem; }
+  .palette-plate :global(.mode) { --theme-text: var(--ink); --theme-text-muted: var(--ink); }
+  .design-note { max-width: 70ch; margin: 1.5rem auto 0; }
+  .shortcut-list { margin: 2rem 0 0; }
+  .shortcut-list > div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--theme-border); font: .9rem/1.5 var(--story-body, sans-serif); }
+  .shortcut-list dd { margin: 0; }
+  .shortcut-list kbd { font: .8rem/1.4 var(--font-mono, monospace); white-space: nowrap; }
+  .case-research { border-block: 1px solid var(--theme-border); }
+  .case-research > summary { padding: 1.5rem 0; font-size: .95rem; cursor: pointer; }
+  .research-content { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 4rem; padding: 1.5rem 0; }
+  .research-content h3 { font-size: 1.8rem; }
+  .research-content h4 { font-size: 1rem; font-weight: 500; }
+  .research-content p, .research-content li { font-size: .95rem; }
+  @media(max-width:1000px) {
+    .opening-visual { max-width: 100%; }
+    .detail-spread { gap: 2.5rem; grid-template-columns: .9fr 1.1fr; }
+  }
+  @media(max-width:650px) {
+    .hanji-story h3 { font-size: 1.9rem; }
+    .hanji-journey p { font-size: 1rem; }
+    .detail-spread, .research-content { grid-template-columns: 1fr; gap: 1.5rem; }
+    .detail-spread { margin-top: 3rem; }
+    .detail-copy { max-width: none; }
+    .connections-section { margin-top: 3rem; }
+    .identity-plate :global(.brand-sheet) { grid-template-columns: 60px 1fr; padding: 0; gap: 1.25rem; min-height: 190px; }
+    .identity-plate :global(.mark-study) { padding-right: 1rem; }
+    .identity-plate :global(.mark-study svg) { width: 42px; }
+  }
+</style>

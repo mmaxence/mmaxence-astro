@@ -9,7 +9,7 @@ featured_order: 5
 tags: ["ai-design", "design-systems", "agents", "product-strategy"]
 ---
 
-As a Frenchman, I love spending time in the kitchen, cooking things for the fam. As a designer, I love crafting delightful interactions. So in the first half of 2026, I spent a crazy amount of time in an interaction cooker. What did I do in there? I taught agents how to cook. How did I do it? This article will tell you. :)
+As a Frenchman, I love spending time in the kitchen, cooking things for the fam. As a designer, I love crafting delightful interactions. So in the first half of 2026, I spent a crazy amount of time in an [interaction cooker](/work/interaction-composer/). What did I do in there? I taught agents how to cook. How did I do it? This article will tell you. :)
 
 For twenty years a design system was a kitchen built for people. Tokens, components, guidelines: a shared pantry and a shared way of working, so designers and engineers could make the same dish without standing over each other's shoulder.
 
@@ -119,10 +119,10 @@ The cookbook held. Writing the recipe down as data, where a cook that cannot tas
 The honest part: our first recipes were written in our own accent, too shaped by how we think about rewards. An agent following them needed more than we had put on the card, and we learned it by watching it reach for the wrong ingredient at the right moment. The fix lived in the recipe, in sharper words on the card.
 
 ```ts
-// before — written in our accent, the agent reached wrong
+// before: written in our accent, the agent reached wrong
 constraints: 'Use as the reward.'
 
-// after — the words do the work, the agent stops guessing
+// after: the words do the work, the agent stops guessing
 constraints: 'Use as the reward reveal after a discovery interaction. Always pair with a CTA so users can act on the coupon.'
 ```
 

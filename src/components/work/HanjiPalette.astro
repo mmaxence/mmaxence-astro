@@ -1,0 +1,73 @@
+---
+import palettes from '../../data/hanji-palettes.json';
+const roles = ['paper','sheet','well','ink','accent','accentText','onAccent'] as const;
+const names = ['Paper','Sheet','Inset','Text','Accent fill','Accent text','Label on accent'];
+---
+<figure>
+  <fieldset>
+    <legend>Write and Work, one visual family</legend>
+    {palettes.map((p,i)=><><input type="radio" id={`palette-${p.id}`} name="hanji-palette" checked={i===0}/><label for={`palette-${p.id}`}><i style={`background:${p.seeds.accent}`}></i>{p.name}</label></>)}
+    <div class="examples">{palettes.map(p=><div class="example" data-palette={p.id}>
+      <div class="seed-line"><span>{p.generated ? "Three starting colors" : "Product colors"}</span><div>{Object.entries(p.seeds).map(([role,color])=><span><i style={`background:${color}`}></i>{role}</span>)}</div><span class="derived-label">{p.generated ? "Light + dark, derived together" : "Light + dark, tuned by role"}</span></div>
+      <div class="modes">{(['light','dark'] as const).map(mode=>{const c=p[mode]; return <div class="mode" style={`--paper:${c.paper};--sheet:${c.sheet};--well:${c.well};--ink:${c.ink};--accent:${c.accent};--accent-text:${c.accentText};--on-accent:${c.onAccent}`}>
+        <div class="mode-label"><span>{mode}</span><span>{p.product}</span></div>
+        <div class="surface-study">
+          <span class="surface-label">Paper / workspace</span>
+          <div class="sheet-study">
+            <span class="surface-label">Sheet / content</span>
+            <p class="reading">Color gives<br />attention a place.</p>
+            {p.product === 'Write' ? <div class="annotation-study">
+              <p>Keep the <mark>shared context</mark> visible.</p>
+              <p>Bring <mark class="focused">a decision</mark> into focus.</p>
+              <div class="state-key"><span>Highlight · 30%</span><span>Focused · 55%</span></div>
+            </div> : <div class="agent-study">
+              <div class="agent-line"><span class="agent-avatar">C</span><span>Agent contribution</span><small>10% tint</small></div>
+              <div class="recipient"><span>Claude</span><span class="chosen">GPT</span><small>Recipient · 9%</small></div>
+              <div class="focus-study">Direct the next step <span>Focus border · 45%</span></div>
+            </div>}
+            <div class="sample-actions"><span class="text-accent">Accent text</span><span class="fill-accent">Action</span></div>
+          </div>
+          <div class="inset-study"><span>Inset / supporting context</span><span>Color changes. Hierarchy stays.</span></div>
+        </div>
+      </div>})}</div>
+      <details><summary>Inspect the color roles</summary><div class="table-scroll"><table><thead><tr><th>Role</th><th>Light</th><th>Dark</th></tr></thead><tbody>{roles.map((role,i)=><tr><th>{names[i]}</th><td><code>{p.light[role]}</code></td><td><code>{p.dark[role]}</code></td></tr>)}</tbody></table></div></details>
+    </div>)}</div>
+  </fieldset>
+  <figcaption>Write’s celadon uses its theme generator; Work’s orchid uses its curated sRGB light and dark palettes. Surface layers and interaction tints use current product tokens. Write’s highlights mix the accent with transparency in OKLCH; Work’s tints mix it with the sheet in sRGB. These are design specimens, not screenshots.</figcaption>
+</figure>
+<style>
+figure { margin:1.5rem 0 2rem; } fieldset { border:0; padding:0; margin:0; min-width:0; } legend { font:.75rem var(--font-mono,monospace); margin-bottom:1rem; color:var(--theme-text-muted); }
+input { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } label { display:inline-flex; align-items:center; gap:.6rem; padding:.6rem .3rem; margin-right:1.4rem; border-bottom:1px solid transparent; cursor:pointer; font-size:.85rem; } label i { width:9px; height:9px; border-radius:50%; }
+input:checked + label { border-color:var(--theme-text); } input:focus-visible + label { outline:2px solid var(--theme-text); outline-offset:4px; }
+.example { display:none; } #palette-celadon:checked ~ .examples [data-palette="celadon"],#palette-orchid:checked ~ .examples [data-palette="orchid"] { display:block; }
+.seed-line { display:flex; align-items:center; flex-wrap:wrap; gap:.75rem 1.25rem; padding:1.1rem 0; font:.65rem/1.6 var(--font-mono,monospace); color:var(--theme-text-muted); } .seed-line > div { display:flex; flex-wrap:wrap; gap:.8rem; } .seed-line > div > span { display:flex; gap:.4rem; align-items:center; } .seed-line i { width:14px; height:14px; border:1px solid #8885; border-radius:50%; } .derived-label { margin-left:auto; }
+.modes { display:grid; grid-template-columns:1fr 1fr; } .mode { --theme-text:var(--ink); --theme-text-muted:var(--ink); padding:1.5rem 2rem; background:var(--paper); color:var(--ink); min-width:0; } .mode-label { display:flex; justify-content:space-between; gap:.8rem; font:.6rem/1.5 var(--font-mono,monospace); text-transform:uppercase; letter-spacing:.07em; }
+.sample { margin:2.5rem 0 2rem; } .sample-label { font:.65rem var(--font-mono,monospace); } .reading { font:clamp(2rem,3.7vw,3.2rem)/1.06 HanjiSpecimen,Georgia,serif; letter-spacing:-.025em; margin:1rem 0 1.3rem; } .body-copy { font:.8rem/1.8 system-ui,sans-serif; margin:0; }
+.sample-actions { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:1.5rem; } .text-accent { color:var(--accent-text); font-size:.75rem; } .fill-accent { background:var(--accent); color:var(--on-accent); padding:.5rem .8rem; font-size:.75rem; border-radius:3px; }
+.ramp { display:grid; grid-template-columns:repeat(7,1fr); height:36px; border:1px solid color-mix(in srgb,var(--ink) 15%,var(--paper)); } .ramp-labels { display:flex; justify-content:space-between; margin-top:.6rem; font:.55rem var(--font-mono,monospace); text-transform:uppercase; letter-spacing:.05em; }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } details { margin-top:1rem; } summary { cursor:pointer; font-size:.75rem; padding:.5rem 0; } summary:focus-visible { outline:2px solid var(--theme-text); outline-offset:3px; } .table-scroll { overflow-x:auto; } table { width:100%; border-collapse:collapse; margin-top:.75rem; font-size:.65rem; } th,td { padding:.65rem; text-align:left; border-bottom:1px solid var(--theme-border); } th { font-weight:400; } code { white-space:nowrap; font-size:.6rem; }
+figcaption { font:.75rem/1.7 var(--font-mono,monospace); color:var(--theme-text-muted); margin-top:.85rem; }
+@media(max-width:640px) { .modes { grid-template-columns:1fr; } .mode { padding:1.5rem; } .reading { font-size:2.8rem; } .derived-label { display:none; } }
+</style>
+
+<style>
+.surface-study { margin-top:2rem; }
+.surface-label { font: .6rem/1.5 var(--font-mono,monospace); }
+.sheet-study { background:var(--sheet); border:1px solid color-mix(in srgb,var(--ink) 10%,transparent); padding:1.5rem; margin:1rem 0 0 1rem; border-radius:5px; position:relative; z-index:1; }
+.reading { font-size:clamp(1.8rem,3vw,2.6rem); }
+.annotation-study,.agent-study { min-height:155px; font:.8rem/1.7 system-ui,sans-serif; }
+.annotation-study p { margin:.7rem 0; }
+mark { color:var(--ink); background:color-mix(in oklch,var(--accent) 30%,transparent); padding:.15rem 0; }
+mark.focused { background:color-mix(in oklch,var(--accent) 55%,transparent); }
+.state-key { display:flex; flex-wrap:wrap; gap:.5rem 1rem; font:.55rem/1.6 var(--font-mono,monospace); margin-top:1.4rem; }
+.agent-line { display:flex; align-items:center; gap:.5rem; }
+.agent-avatar { display:grid; place-items:center; border-radius:50%; width:28px; height:28px; background:color-mix(in srgb,var(--accent) 10%,var(--sheet)); color:var(--accent-text); }
+small { font:.55rem/1.5 var(--font-mono,monospace); margin-left:auto; }
+.recipient { display:flex; align-items:center; gap:.5rem; margin:.8rem 0; }
+.recipient > span { padding:.2rem .5rem; }
+.chosen { background:color-mix(in srgb,var(--accent) 9%,var(--sheet)); color:var(--accent-text); border-radius:4px; }
+.focus-study { border:1px solid color-mix(in srgb,var(--accent) 45%,color-mix(in srgb,var(--ink) 10%,var(--sheet))); padding:.6rem; border-radius:5px; }
+.focus-study span { display:block; font:.55rem/1.5 var(--font-mono,monospace); margin-top:.2rem; }
+.inset-study { background:var(--well); padding:2rem 1rem 1rem; margin:-1rem 1rem 0 0; border-radius:4px; display:flex; flex-direction:column; gap:.5rem; font:.6rem/1.5 var(--font-mono,monospace); }
+@media(max-width:640px) { .sheet-study { padding:1rem; margin-left:.5rem; } }
+</style>

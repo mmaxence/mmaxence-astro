@@ -1,0 +1,219 @@
+---
+// Reconstructed from the actual Cooker recipes: skincare-quiz.json,
+// scratch-coupon.json, spin-wheel.json, swipe-deck.json, memory-match.json,
+// and review-pick.json. Recipe tiers range from prod to mock and lab;
+// these six examples are a selection, not an inventory of the library or its campaign trials.
+const patterns = [
+  { id: 'quiz', name: 'O/X quiz', purpose: 'A choice. Immediate feedback.', brand: 'FORME', description: 'A skincare quiz midway through three questions. False is selected, with immediate feedback and visible reward progress.' },
+  { id: 'scratch', name: 'Scratch & reveal', purpose: 'Let a gesture uncover the reward.', brand: 'FORME', description: 'A skincare reward card with its textured cover partly scratched away, exposing the reward beneath.' },
+  { id: 'wheel', name: 'Spin the wheel', purpose: 'Build anticipation around a reveal.', brand: 'FIELDWORK', description: 'A colorful six-segment reward wheel, with a fixed pointer marking the selected segment.' },
+  { id: 'swipe', name: 'Swipe deck', purpose: 'Discover a preference, one card at a time.', brand: 'FIELDWORK', description: 'The second of four product cards is tilted toward a save decision, showing a charcoal jacket and the next card underneath.' },
+  { id: 'memory', name: 'Memory match', purpose: 'Turn product recognition into play.', brand: 'FORME', description: 'A six-tile memory game with one matching pair of product photos revealed and four cards still face down.' },
+  { id: 'review', name: 'Review-led product pick', purpose: 'Narrow the choice. Add a reason to trust.', brand: 'FORME', description: 'A daily-care category selection followed by a skincare product and an illustrative review supporting the pick.' },
+];
+const wheelColors = ['#d4f172', '#f1f1e8', '#b8c7a5', '#c89470', '#596a50', '#333b31'];
+const wheelWords = ['PERK', 'CARE', 'EXTRA', 'TREAT', 'GIFT', 'BONUS'];
+const polar = (angle: number, radius: number) => ({ x: 100 + Math.cos(angle * Math.PI / 180) * radius, y: 100 + Math.sin(angle * Math.PI / 180) * radius });
+const sectors = wheelColors.map((color, index) => {
+  const start = polar(index * 60 - 120, 96);
+  const end = polar(index * 60 - 60, 96);
+  const label = polar(index * 60 - 90, 66);
+  return { color, path: `M100 100 L${start.x} ${start.y} A96 96 0 0 1 ${end.x} ${end.y} Z`, label, word: wheelWords[index], dark: index > 3 };
+});
+---
+<figure class="interaction-gallery">
+  <composer-interaction-gallery>
+    <div class="gallery-grid" tabindex="0" role="group" aria-label="Six selected examples from the wider interaction library; scroll horizontally on a narrow screen">
+      {patterns.map(pattern => (
+        <figure class="pattern">
+          <div class="sample-phone">
+            <div class="sample-hardware" aria-hidden="true"><i></i><b></b></div>
+            <div class:list={['sample-screen', pattern.id, { 'fieldwork': pattern.brand === 'FIELDWORK' }]} role="img" aria-label={pattern.description}>
+              <div class="sample-brand"><strong>{pattern.brand}</strong><span>{pattern.brand === 'FORME' ? 'Everyday, considered.' : 'EVERYDAY EQUIPMENT'}</span></div>
+
+              {pattern.id === 'quiz' && <>
+                <div class="quiz-photo"><img src="/work/composer/forme-campaign-768.webp" alt="" width="768" height="512" loading="lazy" decoding="async"/><span>Less.<br/>Better.</span></div>
+                <div class="sample-content">
+                  <div class="quiz-progress"><span>Your discovery reward</span><b>2 / 3</b></div><div class="progress-line"><i></i></div>
+                  <h3>A fresh start needs<br/>a new bottle.</h3>
+                  <div class="choice-row"><span><b>O</b> True</span><span class="chosen"><b>X</b> False</span></div>
+                  <p class="quiz-feedback"><span class="small-check">✓</span> Keep the bottle.<br/><span class="feedback-second">Refill the ritual.</span></p>
+                </div>
+              </>}
+
+              {pattern.id === 'scratch' && <>
+                <div class="scratch-intro"><span class="overline">A LITTLE SOMETHING</span><h3>Good things.<br/>Just underneath.</h3></div>
+                <div class="scratch-card">
+                  <div class="revealed-reward"><span>YOUR DAILY PERK</span><strong>Extra<br/>care.</strong><span class="reward-code">WITH YOUR NEXT RITUAL</span></div>
+                  <svg class="scratch-cover" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <pattern id="composer-scratch-grain" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#b9c3ac"/><path d="M0 1h6M0 4h6" stroke="#c9d0be" stroke-width="1"/></pattern>
+                      <mask id="composer-scratch-mask"><rect width="240" height="190" fill="white"/><path d="M49 58 Q120 34 174 61 L68 97 Q129 71 190 99 L77 134 Q136 110 184 133" fill="none" stroke="black" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/></mask>
+                    </defs>
+                    <rect width="240" height="190" rx="3" fill="url(#composer-scratch-grain)" mask="url(#composer-scratch-mask)"/>
+                  </svg>
+                  <span class="scratch-spark spark-one">✳</span><span class="scratch-spark spark-two">✳</span>
+                </div>
+                <div class="scratch-footer"><span class="gesture-line"></span><p>A small discovery,<br/>made by you.</p></div>
+              </>}
+
+              {pattern.id === 'wheel' && <>
+                <div class="wheel-intro"><span class="overline">A CHANGE OF PACE</span><h3>TAKE<br/>A TURN.</h3></div>
+                <div class="wheel-stage">
+                  <div class="wheel-pointer"></div>
+                  <svg viewBox="0 0 200 200" aria-hidden="true">
+                    {sectors.map(sector => <g><path d={sector.path} fill={sector.color} stroke="#202220" stroke-width="1.5"/><text x={sector.label.x} y={sector.label.y} fill={sector.dark ? '#f1f1e8' : '#202220'} text-anchor="middle" dominant-baseline="middle">{sector.word}</text></g>)}
+                    <circle cx="100" cy="100" r="24" fill="#202220" stroke="#f1f1e8" stroke-width="1.5"/><text class="wheel-center" x="100" y="102" text-anchor="middle" dominant-baseline="middle" fill="#f1f1e8">FW</text>
+                  </svg>
+                </div>
+                <div class="wheel-footer"><span>YOUR NEXT DISCOVERY</span><strong>A little extra.</strong></div>
+              </>}
+
+              {pattern.id === 'swipe' && <>
+                <div class="swipe-intro"><h3>MAKE IT<br/>YOUR EVERYDAY.</h3><span>02 / 04</span></div>
+                <div class="swipe-stack">
+                  <div class="swipe-under"></div>
+                  <div class="swipe-card">
+                    <img src="/work/composer/fieldwork-campaign-768.webp" alt="" width="768" height="512" loading="lazy" decoding="async"/>
+                    <span class="save-stamp">KEEP</span>
+                    <div class="swipe-product"><span>STUDIO SHELL / 01</span><strong>No set route.</strong></div>
+                  </div>
+                </div>
+                <div class="swipe-decisions"><span class="skip-mark">×</span><i></i><span class="keep-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20S3 14.2 3 7.7C3 2.8 9 2 12 6.3 15 2 21 2.8 21 7.7 21 14.2 12 20 12 20Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></div>
+              </>}
+
+              {pattern.id === 'memory' && <>
+                <div class="memory-intro"><span class="overline">A LITTLE FAMILIARITY</span><h3>A good match.</h3><p>Find the things that belong together.</p></div>
+                <div class="memory-grid">
+                  {[0,1,2,3,4,5].map(i => <div class:list={['memory-tile', {matched: i === 0 || i === 4}]}>{i === 0 || i === 4 ? <><img src="/work/composer/forme-campaign-768.webp" alt="" width="768" height="512" loading="lazy" decoding="async"/><span>✓</span></> : <span class="memory-monogram">f.</span>}</div>)}
+                </div>
+                <div class="memory-progress"><div><i class="found"></i><i></i><i></i></div><span>One pair found.</span></div>
+              </>}
+
+              {pattern.id === 'review' && <>
+                <div class="review-pick-top"><span class="pick-category">Daily care</span><span>Body care</span></div>
+                <div class="pick-photo"><img src="/work/composer/forme-campaign-768.webp" alt="" width="768" height="512" loading="lazy" decoding="async"/><span>YOUR PICK</span></div>
+                <div class="sample-content pick-copy"><h3>The Daily Wash</h3><p>A quiet essential.<br/>Made to begin again.</p><blockquote>“Finally, a bottle<br/>I keep.”</blockquote><span class="pick-action">Meet your everyday</span></div>
+              </>}
+            </div>
+            <div class="sample-home" aria-hidden="true"></div>
+          </div>
+          <figcaption><h3>{pattern.name}</h3><p>{pattern.purpose}</p></figcaption>
+        </figure>
+      ))}
+    </div>
+  </composer-interaction-gallery>
+  <figcaption class="gallery-note">Six examples from the wider library, reimagined with fictional brands and rewards.</figcaption>
+</figure>
+<style>
+  .interaction-gallery { margin: 0; }
+  composer-interaction-gallery { display: block; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2.75rem 2rem; padding: 4px; }
+  .gallery-grid:focus-visible { outline: 2px solid var(--theme-text); outline-offset: 4px; }
+  .pattern { margin: 0; min-width: 0; }
+  .sample-phone { width: 100%; max-width: 264px; margin-inline: auto; padding: 0 7px; border: 1px solid var(--theme-border); border-radius: 28px; background: var(--theme-bg); box-sizing: border-box; }
+  .sample-hardware { height: 21px; display: flex; justify-content: center; align-items: center; gap: 5px; color: var(--theme-text-muted); }
+  .sample-hardware i { width: 28px; height: 3px; border-radius: 5px; background: currentColor; }
+  .sample-hardware b { width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+  .sample-home { height: 3px; width: 48px; border-radius: 5px; margin: 9px auto; background: var(--theme-text-muted); }
+  .sample-screen { container-type: inline-size; --ink: #294536; --paper: #f1f0e7; --line: #cbd0be; --lime: #d4f172; color: var(--ink); background: var(--paper); aspect-ratio: 240 / 386; border-radius: 20px; overflow: hidden; font-family: Arial,Helvetica,sans-serif; }
+  .sample-screen * { box-sizing: border-box; }
+  .sample-screen.fieldwork { --ink: #f1f1e8; --paper: #202220; --line: #4b4e43; }
+  :global(composer-interaction-gallery .sample-screen :where(div,p,span,strong,b,h3,h4,small,blockquote)) { color: inherit; }
+  .sample-screen h3,.sample-screen p,.sample-screen blockquote { margin: 0; }
+  .sample-screen img { display: block; height: 100%; width: 100%; object-fit: cover; }
+  .sample-brand { height: 19cqw; padding: 0 7cqw; display: flex; justify-content: space-between; align-items: center; gap: 3cqw; }
+  .sample-brand strong { font: 400 7cqw/1 Georgia,serif; letter-spacing: -.04em; }
+  .sample-brand>span { max-width: 12ch; font-size: 3cqw; line-height: 1.4; text-align: right; }
+  .fieldwork .sample-brand strong { font: 900 5.6cqw/1 Arial,sans-serif; letter-spacing: -.06em; }
+  .fieldwork .sample-brand>span { font: 2.4cqw/1.5 'Courier New',monospace; max-width: 13ch; }
+  .sample-content { padding: 7cqw; }
+  .overline { display: block; font: 3cqw/1.5 'Courier New',monospace; letter-spacing: .04em; }
+  .quiz-photo { position: relative; height: 51cqw; overflow: hidden; }
+  .quiz-photo img { object-position: 72% 60%; }
+  .quiz-photo>span { position: absolute; left: 7cqw; top: 7cqw; font: 10cqw/.95 Georgia,serif; letter-spacing: -.06em; }
+  .quiz-progress { display: flex; justify-content: space-between; align-items: baseline; font-size: 3.3cqw; }
+  .quiz-progress b { font-weight: 400; }
+  .progress-line { height: 3px; margin: 2.5cqw 0 6cqw; background: var(--line); }
+  .progress-line i { width: 66.666%; display: block; height: 100%; background: var(--ink); }
+  .sample-screen.quiz h3 { font: 8.2cqw/1.08 Georgia,serif; letter-spacing: -.04em; }
+  .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; margin-top: 6cqw; }
+  .choice-row>span { display: flex; align-items: center; justify-content: center; gap: 4cqw; height: 16cqw; border: 1px solid var(--ink); border-radius: 50px; font-size: 3.7cqw; }
+  .choice-row b { font: 6cqw/1 Arial,sans-serif; }
+  .choice-row>.chosen { background: var(--ink); color: var(--paper); }
+  .sample-screen .quiz-feedback { margin-top: 5cqw; font: 3.5cqw/1.5 Arial,sans-serif; }
+  .small-check { margin-right: 2cqw; }
+  .feedback-second { margin-left: 6cqw; }
+  .scratch-intro { padding: 7cqw 8cqw 6cqw; }
+  .sample-screen.scratch h3 { font: 11cqw/.98 Georgia,serif; letter-spacing: -.055em; margin-top: 4cqw; }
+  .scratch-card { width: 86cqw; height: 69cqw; margin: 0 auto; position: relative; border: 1px solid #9aa98b; background: #d4f172; color: #294536; transform: rotate(-4deg); }
+  .revealed-reward { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .revealed-reward>span { font: 3cqw/1.5 'Courier New',monospace; }
+  .revealed-reward>strong { font: 17cqw/.9 Georgia,serif; letter-spacing: -.065em; margin: 4cqw 0; }
+  .revealed-reward>.reward-code { font-size: 2.5cqw; letter-spacing: .02em; }
+  .scratch-cover { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .scratch-spark { position: absolute; color: #294536; font-size: 12cqw; line-height: 1; }
+  .spark-one { left: -4cqw; top: -5cqw; }
+  .spark-two { right: -4cqw; bottom: -4cqw; font-size: 9cqw; }
+  .scratch-footer { padding: 9cqw 8cqw 0; display: flex; gap: 6cqw; align-items: center; }
+  .gesture-line { display: block; width: 21cqw; height: 9cqw; border-bottom: 2px solid var(--ink); border-radius: 50%; transform: rotate(-18deg); }
+  .scratch-footer p { font: 3.8cqw/1.45 Georgia,serif; }
+  .wheel-intro { padding: 5cqw 7cqw 0; }
+  .wheel-intro .overline { color: var(--lime); }
+  .sample-screen.wheel h3 { font: 900 15cqw/.82 Arial,sans-serif; letter-spacing: -.075em; margin-top: 4cqw; }
+  .wheel-stage { position: relative; margin: 7cqw auto 0; width: 78cqw; }
+  .wheel-stage>svg { display: block; width: 100%; height: auto; transform: rotate(-7deg); }
+  .wheel-stage text { font: 700 7px Arial,sans-serif; letter-spacing: .03em; }
+  .wheel-stage text.wheel-center { font-size: 13px; letter-spacing: -.06em; }
+  .wheel-pointer { position: absolute; z-index: 1; left: calc(50% - 3cqw); top: -2cqw; width: 6cqw; height: 7cqw; background: var(--paper); clip-path: polygon(0 0,100% 0,50% 100%); }
+  .wheel-footer { display: flex; justify-content: space-between; align-items: center; gap: 4cqw; padding: 5cqw 7cqw 0; }
+  .wheel-footer>span { max-width: 12ch; font: 2.5cqw/1.5 'Courier New',monospace; }
+  .wheel-footer>strong { font: 5cqw/1 Georgia,serif; color: var(--lime); }
+  .swipe-intro { display: flex; justify-content: space-between; gap: 2cqw; align-items: end; padding: 6cqw 7cqw; }
+  .sample-screen.swipe h3 { font: 800 7.2cqw/.95 Arial,sans-serif; letter-spacing: -.05em; }
+  .swipe-intro>span { font: 3cqw 'Courier New',monospace; white-space: nowrap; }
+  .swipe-stack { position: relative; margin: 3cqw 10cqw 0; height: 80cqw; }
+  .swipe-under { position: absolute; inset: 0; border: 1px solid #797f6b; background: #3c4435; transform: rotate(5deg) translate(2cqw,1cqw); }
+  .swipe-card { position: absolute; inset: 0; overflow: hidden; transform: rotate(-7deg); background: #858778; border: 1px solid #acb29f; }
+  .swipe-card img { object-position: 67% 50%; }
+  .swipe-card::after { content: ''; position: absolute; inset: 30% 0 0; background: linear-gradient(transparent,rgba(21,25,20,.9)); }
+  .save-stamp { position: absolute; z-index: 1; left: 6cqw; top: 7cqw; transform: rotate(-9deg); border: 2px solid #d4f172; padding: 2cqw 3cqw; font: 700 7cqw/1 Arial,sans-serif; letter-spacing: .05em; background: #202220; color: #d4f172; }
+  .swipe-product { position: absolute; z-index: 1; bottom: 7cqw; left: 6cqw; right: 4cqw; color: #f1f1e8; }
+  .swipe-product>span { font: 3cqw 'Courier New',monospace; }
+  .swipe-product>strong { display: block; margin-top: 3cqw; font: 7cqw/1 Georgia,serif; letter-spacing: -.03em; }
+  .swipe-decisions { display: flex; justify-content: center; align-items: center; gap: 7cqw; padding-top: 8cqw; }
+  .swipe-decisions>span { width: 16cqw; height: 16cqw; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; }
+  .swipe-decisions>.skip-mark { font: 10cqw/1 Arial,sans-serif; }
+  .swipe-decisions>i { width: 16cqw; height: 1px; background: var(--line); }
+  .swipe-decisions>.keep-mark { background: var(--lime); color: #202220; border-color: var(--lime); }
+  .keep-mark svg { width: 8cqw; height: 8cqw; }
+  .memory-intro { padding: 8cqw 7cqw 0; }
+  .sample-screen.memory h3 { font: 12cqw/1 Georgia,serif; letter-spacing: -.06em; margin: 4cqw 0; }
+  .memory-intro>p { font: 3.6cqw/1.5 Arial,sans-serif; max-width: 25ch; }
+  .memory-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 3cqw; padding: 5cqw 7cqw 0; }
+  .memory-tile { aspect-ratio: 4/5; position: relative; overflow: hidden; border-radius: 3px; border: 1px solid #a7b39c; background: #d8dece; display: grid; place-items: center; }
+  .memory-tile>.memory-monogram { font: italic 15cqw/1 Georgia,serif; color: #68815f; }
+  .memory-tile img { object-position: 74% 50%; }
+  .memory-tile.matched { border-color: #294536; }
+  .memory-tile.matched>span { position: absolute; bottom: 2cqw; right: 2cqw; display: grid; place-items: center; width: 7cqw; height: 7cqw; border-radius: 50%; background: #294536; color: #f1f0e7; font-size: 4cqw; }
+  .memory-progress { padding: 5cqw 7cqw; display: flex; gap: 4cqw; align-items: center; justify-content: space-between; font: 4cqw/1.3 Georgia,serif; }
+  .memory-progress>div { display: flex; gap: 2cqw; }
+  .memory-progress i { width: 5cqw; height: 5cqw; border: 1px solid #85977a; border-radius: 50%; }
+  .memory-progress i.found { background: #294536; border-color: #294536; }
+  .review-pick-top { display: flex; gap: 5cqw; align-items: center; padding: 4cqw 7cqw 6cqw; font-size: 3.5cqw; }
+  .review-pick-top>.pick-category { padding: 2.5cqw 4cqw; background: #294536; color: #f1f0e7; border-radius: 40px; }
+  .pick-photo { height: 48cqw; position: relative; overflow: hidden; }
+  .pick-photo img { object-position: 72% 55%; }
+  .pick-photo>span { position: absolute; left: 7cqw; top: 5cqw; font: 3cqw/1.4 'Courier New',monospace; padding: 1.5cqw 2cqw; background: #f1f0e7; color: #294536; }
+  .sample-screen.review h3 { font: 8cqw/1 Georgia,serif; letter-spacing: -.04em; }
+  .sample-content.pick-copy { padding-block: 5cqw; }
+  .pick-copy>p { font-size: 3.4cqw; line-height: 1.4; margin-top: 3cqw; }
+  .pick-copy blockquote { border-top: 1px solid var(--line); padding-top: 4cqw; margin-top: 4cqw; font: italic 7cqw/1 Georgia,serif; letter-spacing: -.025em; }
+  .pick-action { display: block; text-align: center; margin-top: 5cqw; padding: 3.5cqw 2cqw; border: 1px solid #294536; border-radius: 40px; font-size: 3.5cqw; }
+  .pattern>figcaption { max-width: 264px; margin: 1rem auto 0; }
+  .pattern>figcaption h3 { margin: 0; font: 400 .85rem/1.5 var(--font-mono,monospace); color: var(--theme-text); }
+  .pattern>figcaption p { margin: .35rem 0 0; font: .8rem/1.5 var(--font-body,sans-serif); color: var(--theme-text-muted); }
+  .gallery-note { margin-top: 1.5rem; max-width: 72ch; color: var(--theme-text-muted); font: .65rem/1.7 var(--font-mono,monospace); }
+  @media(max-width:900px) and (min-width:601px) { .gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2.25rem 1.5rem; } }
+  @media(max-width:600px) { .gallery-grid { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(264px,78vw); gap: 1.25rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding: 4px 4px 1rem; scrollbar-width: thin; scrollbar-color: var(--theme-border) transparent; } .pattern { scroll-snap-align: start; } .pattern>figcaption { min-height: 68px; } .gallery-note { margin-top: 1rem; } }
+</style>

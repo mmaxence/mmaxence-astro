@@ -1,0 +1,35 @@
+---
+interface Props { kind: 'work' | 'write' | 'performance' }
+const {kind}=Astro.props;
+---
+<figure>
+{kind==='work' && <div class="comment-study">
+  <div class="context"><span class="eyebrow">Work / issue context</span><h3>Plan the first review</h3><p>One issue. Contributions that remain readable after the session.</p></div>
+  <ol class="thread">
+    <li><strong>Ada <small>Person</small></strong><p>Claude, break the review into a few clear steps.</p></li>
+    <li><strong>Claude <small>Agent</small></strong><p>Prepare the example, invite the readers, then collect what they could not understand.</p></li>
+    <li class="handover">Claude session ended · GPT session started</li>
+    <li><strong>Ada <small>Person</small></strong><p>GPT, question that plan before we act on it.</p></li>
+    <li><strong>GPT <small>Agent</small></strong><p>Ask readers to explain the next action in their own words. A positive reaction alone will not tell us whether it is clear.</p></li>
+    <li><strong>Ada <small>Person</small></strong><p>Keep that check. Make it part of the review task.</p></li>
+  </ol>
+</div>}
+{kind==='write' && <div class="comment-study">
+  <div class="context document"><span class="eyebrow">Write / selected passage</span><h3>A small first review</h3><p>Begin with <mark>five readers who can try it in their own work</mark>. Use their questions to guide the next iteration.</p></div>
+  <div class="annotation"><span class="eyebrow">Inline discussion</span><blockquote>“five readers who can try it in their own work”</blockquote><ol class="thread"><li><strong>Ada</strong><p>Should they all have the same role?</p></li><li><strong>Remy</strong><p>Different roles would help us see where the context is missing.</p></li><li><strong>Ada</strong><p>Agreed. Let’s make that explicit in the invitation.</p></li></ol><span class="resolution">Discussion informs the edit</span></div>
+</div>}
+{kind==='performance' && <div class="performance-path">{[
+['01 / Read','Keep reading lightweight','The document is already rendered. Reading does not fetch the editor just in case.'],
+['02 / Show intent','Prepare the next gesture','Hovering or focusing Edit starts loading the editor before the click.'],
+['03 / Edit','Keep the place, change the mode','The prose stays until the editor is ready. Holding the page height prevents a scroll jump.']
+].map(([label,title,copy])=><div><span class="eyebrow">{label}</span><h3>{title}</h3><div class="lines" aria-hidden="true"><i/><i/><i/></div><p>{copy}</p></div>)}</div>}
+<figcaption>{kind==='work' ? 'Illustrative conversation using fictional content. Both agents contribute to the same issue record in successive sessions; the current build keeps one active agent session per issue.' : kind==='write' ? 'Illustrative inline review using fictional content. The quote keeps the discussion attached to the words being judged; changed anchors retain the original wording in an earlier-version group.' : 'Performance as interaction design · Based on the reading/editor refinements in the commit history. This sequence describes implemented behavior, not a benchmark.'}</figcaption>
+</figure>
+<style>
+figure { margin:1.5rem 0 2rem; } .comment-study { display:grid; grid-template-columns:1fr 1.4fr; gap:2rem; border-block:1px solid var(--theme-border); padding:1.5rem 0; } .context p { font-size:.85rem; line-height:1.8; } h3 { font:1.35rem/1.4 HanjiSpecimen,Georgia,serif; margin:1rem 0; } .eyebrow { font:.68rem/1.5 var(--font-mono,monospace); color:var(--theme-text-muted); }
+ol { list-style:none; margin:0; padding:0; } li { padding:1rem 0; border-bottom:1px solid var(--theme-border); } strong { font-size:.8rem; font-weight:500; } small { margin-left:.5rem; font:.65rem var(--font-mono,monospace); color:var(--theme-text-muted); } li p { font-size:.85rem; line-height:1.7; margin:.5rem 0 0; } .handover { font:.65rem/1.6 var(--font-mono,monospace); color:var(--theme-text-muted); }
+.document p { font:1.3rem/1.8 HanjiSpecimen,Georgia,serif; } mark { color:inherit; background:color-mix(in srgb,var(--theme-text) 12%,var(--theme-bg)); } blockquote { margin:1rem 0 0; padding:.75rem 1rem; border-left:2px solid var(--theme-text-muted); font:.85rem/1.7 HanjiSpecimen,Georgia,serif; } .resolution { display:block; margin-top:1rem; font:.7rem var(--font-mono,monospace); }
+.performance-path { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.5rem; padding-block:1.5rem; border-block:1px solid var(--theme-border); } .performance-path p { font-size:.8rem; line-height:1.7; color:var(--theme-text-muted); } .performance-path h3 { font-size:1.2rem; } .lines { display:grid; gap:7px; padding:1rem; border:1px solid var(--theme-border); } .lines i { display:block; height:3px; background:var(--theme-border); } .lines i:last-child { width:65%; }
+figcaption { margin-top:.85rem; font:.75rem/1.7 var(--font-mono,monospace); color:var(--theme-text-muted); }
+@media(max-width:640px) { .comment-study,.performance-path { grid-template-columns:1fr; gap:1rem; } }
+</style>

@@ -1,0 +1,33 @@
+---
+import type { InteractionFlow } from '../../data/work';
+interface Props { flow: InteractionFlow }
+const { flow } = Astro.props;
+---
+<figure class="interaction-flow">
+  <figcaption>{flow.title}</figcaption>
+  <ol>
+    {flow.steps.map((step, index) => (
+      <li class:list={[{ judgment: step.judgment }]}>
+        <span class="actor"><span aria-hidden="true">{String(index + 1).padStart(2, '0')} / </span>{step.actor}</span>
+        <h3>{step.title}</h3>
+        <p>{step.detail}</p>
+        {step.judgment && <span class="decision">The judgment seat</span>}
+      </li>
+    ))}
+  </ol>
+  <p class="flow-note">{flow.note}</p>
+</figure>
+<style>
+  .interaction-flow { margin:2.25rem 0 3rem; padding-block:1.25rem; border-block:1px solid var(--theme-border); }
+  figcaption { font-family:var(--font-mono, monospace); font-size:.8rem; margin-bottom:1.5rem; }
+  ol { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:1.5rem; }
+  li { min-width:0; padding-top:.75rem; border-top:1px solid var(--theme-border); }
+  li.judgment { border-top-color:var(--theme-text); }
+  .actor, .decision { font-family:var(--font-mono, monospace); font-size:.7rem; }
+  .actor { color:var(--theme-text-muted); }
+  h3 { font-size:1rem; font-weight:400; line-height:1.5; margin:.8rem 0 .6rem; }
+  li p { margin:0; font-size:.85rem; line-height:1.7; color:var(--theme-text-muted); }
+  .decision { display:block; margin-top:1rem; }
+  .flow-note { font-size:.75rem; line-height:1.6; color:var(--theme-text-muted); margin:1.5rem 0 0; max-width:45rem; }
+  @media(max-width:640px) { ol { grid-template-columns:1fr; gap:1.25rem; } figcaption { margin-bottom:1rem; } }
+</style>

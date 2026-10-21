@@ -1,0 +1,87 @@
+[
+  {
+    "id": "celadon",
+    "name": "Write · Celadon",
+    "mode": "auto",
+    "font": "newsreader",
+    "seeds": {
+      "accent": "#1e8485",
+      "background": "#fcfcf8",
+      "text": "#1e1c18"
+    },
+    "darkSeeds": null,
+    "light": {
+      "paper": "#fcfcf8",
+      "sheet": "oklch(99.80% 0.0053 106.5)",
+      "well": "oklch(97.80% 0.0053 106.5)",
+      "ink": "#1e1c18",
+      "accent": "#1e8485",
+      "accentText": "oklch(54.94% 0.0878 195.9)",
+      "onAccent": "oklch(12.00% 0.0000 89.9)",
+      "mark": "#2c2e32"
+    },
+    "dark": {
+      "paper": "oklch(23.50% 0.0060 106.5)",
+      "sheet": "oklch(25.70% 0.0060 106.5)",
+      "well": "oklch(21.90% 0.0060 106.5)",
+      "ink": "oklch(93.00% 0.0081 84.6)",
+      "accent": "#1e8485",
+      "accentText": "oklch(60.94% 0.0878 195.9)",
+      "onAccent": "oklch(12.00% 0.0000 89.9)",
+      "mark": "oklch(88.00% 0.0077 264.5)"
+    },
+    "adjustments": [
+      {
+        "mode": "light",
+        "role": "accent text",
+        "ratio": 4.533460578504069
+      },
+      {
+        "mode": "light",
+        "role": "label on accent",
+        "ratio": 4.537581669037356
+      },
+      {
+        "mode": "dark",
+        "role": "accent text",
+        "ratio": 4.5673297416046434
+      },
+      {
+        "mode": "dark",
+        "role": "label on accent",
+        "ratio": 4.537581669037356
+      }
+    ],
+    "product": "Write",
+    "generated": true
+  },
+  {
+    "id": "orchid",
+    "name": "Work · Orchid",
+    "product": "Work",
+    "generated": false,
+    "seeds": {
+      "accent": "#8d43b8",
+      "background": "#f7f7f5",
+      "text": "#242522"
+    },
+    "light": {
+      "paper": "#f7f7f5",
+      "sheet": "#fefefd",
+      "well": "#eaeae7",
+      "ink": "#242522",
+      "accent": "#8d43b8",
+      "accentText": "#793899",
+      "onAccent": "#ffffff"
+    },
+    "dark": {
+      "paper": "#1b1c1b",
+      "sheet": "#232423",
+      "well": "#2b2d2a",
+      "ink": "#eeefea",
+      "accent": "#ce91f2",
+      "accentText": "#dda7fa",
+      "onAccent": "#251b2b"
+    }
+  }
+]

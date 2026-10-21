@@ -1,0 +1,56 @@
+---
+import type { ProjectEvidence } from '../../data/work';
+interface Props { media: ProjectEvidence }
+const { media } = Astro.props;
+---
+<figure style={media.displayWidth ? `max-width: ${media.displayWidth}px` : undefined}>
+  {media.type === 'video' ? (
+    <deferred-video-poster data-poster={media.poster}>
+    <video controls playsinline preload="none" width={media.width} height={media.height} aria-label={media.alt}>
+      <source src={media.src} type="video/mp4" />
+      <a href={media.src}>Watch the demonstration</a>
+    </video>
+    </deferred-video-poster>
+  ) : (
+    <a class="image-link" href={media.src} aria-label={`${media.alt}. Open full-size image.`}>
+      <img src={media.preview || media.src}
+        srcset={media.preview ? `${media.preview} 1000w, ${media.src} ${media.width}w` : undefined}
+        sizes={media.preview ? '(max-width: 767px) calc(100vw - 48px), (max-width: 1024px) calc(100vw - 96px), 928px' : undefined}
+        alt={media.alt} width={media.width} height={media.height} loading="lazy" decoding="async" />
+    </a>
+  )}
+  <figcaption>{media.caption}</figcaption>
+  {media.description && <details><summary>What happens in the video</summary><p>{media.description}</p></details>}
+</figure>
+<script>
+  class DeferredVideoPoster extends HTMLElement {
+    private observer?: IntersectionObserver;
+    connectedCallback() {
+      this.observer?.disconnect();
+      const video = this.querySelector('video');
+      const poster = this.dataset.poster;
+      if (!video || !poster || video.poster) return;
+      const load = () => { video.poster = poster; this.observer?.disconnect(); };
+      if (!('IntersectionObserver' in window)) { load(); return; }
+      this.observer = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) load();
+      }, { rootMargin: '400px' });
+      this.observer.observe(this);
+    }
+    disconnectedCallback() { this.observer?.disconnect(); }
+  }
+  if (!customElements.get('deferred-video-poster')) customElements.define('deferred-video-poster', DeferredVideoPoster);
+</script>
+<style>
+  deferred-video-poster { display: block; }
+  figure { margin:2rem auto 2.5rem; }
+  img, video { display:block; width:100%; height:auto; border:1px solid var(--theme-border); border-radius:var(--theme-radius); }
+  .image-link { display:block; padding:0; background:none; border:0; }
+  .image-link::before, .image-link::after { display:none; }
+  .image-link:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+  figcaption { margin-top:.75rem; color:var(--theme-text-muted); font-family:var(--font-mono, monospace); font-size:.75rem; line-height:1.6; }
+  details { margin-top:.65rem; font-size:.85rem; color:var(--theme-text-muted); }
+  summary { cursor:pointer; width:fit-content; }
+  summary:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
+  details p { line-height:1.7; max-width:40rem; }
+</style>

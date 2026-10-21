@@ -1,0 +1,274 @@
+---
+interface Props { variant?: 'cover' | 'standard' }
+const { variant = 'standard' } = Astro.props;
+const concepts = [
+  {
+    id: 'care', name: 'FORME', line: 'Skin, in good company.',
+    image: '/work/composer/forme-campaign.webp',
+    alt: 'Editorial photograph of fictional FORME Daily Wash bottles on wet travertine.',
+    headline: ['Less.', 'Better.'], edition: 'THE DAILY RITUAL',
+    question: 'Make a little room for yourself.',
+    introduction: 'One everyday wash. Start with the moment you want to make your own.',
+    choices: [{ id: 'morning', label: 'Morning' }, { id: 'evening', label: 'Evening' }],
+    secondTitle: 'Keep the good part.',
+    secondDescription: 'Choose a bottle to begin with, or a refill for the one you already keep.',
+    options: [{ id: 'bottle', label: 'First bottle' }, { id: 'refill', label: 'Refill mine' }],
+    complete: 'Build my ritual',
+  },
+  {
+    id: 'wear', name: 'FIELDWORK', line: 'Equipment for life outside.',
+    image: '/work/composer/fieldwork-campaign.webp',
+    alt: 'Editorial photograph of a fictional FIELDWORK charcoal shell worn against concrete architecture.',
+    headline: ['NO SET', 'ROUTE.'], edition: 'COLLECTION 03',
+    question: 'Where does today take you?',
+    introduction: 'The same shell, with a different way to wear it. Start with your route.',
+    choices: [{ id: 'city', label: 'In the city' }, { id: 'away', label: 'Out of town' }],
+    secondTitle: 'Build the layer beneath.',
+    secondDescription: 'Keep it simple with a tee, or add an overshirt. Try both combinations.',
+    options: [{ id: 'tee', label: 'With a tee' }, { id: 'overshirt', label: 'Overshirt' }],
+    complete: 'Build my outfit',
+  },
+];
+---
+<figure class:list={['concept-studies', {'is-cover': variant === 'cover'}]}>
+  <composer-brands>
+    <div class="concept-pair">
+      {concepts.map(concept => (
+        <div class="phone-frame">
+          <div class="phone-hardware" aria-hidden="true"><i></i><b></b></div>
+          <div class:list={['concept-screen', concept.id]} data-concept={concept.id} data-stage="0" aria-label={`${concept.name} fictional brand discovery concept`}>
+            <header class="brand-header"><strong>{concept.name}</strong><span>{concept.line}</span></header>
+            <div class="campaign-image">
+              <img src={concept.image} srcset={`${concept.image.replace('.webp', '-768.webp')} 768w, ${concept.image} 1536w`} sizes="(max-width: 400px) 85vw, 340px" alt={concept.alt} width="1536" height="1024" decoding="async" />
+              <div class="campaign-copy"><h3>{concept.headline.map(line => <span>{line}</span>)}</h3></div>
+              <div class="campaign-detail"><span data-photo-caption>{concept.edition}</span></div>
+            </div>
+            <div class="concept-interaction">
+              <div class="discovery-progress" aria-label="Discovery progress">
+                <span data-progress-label>01 / Discover</span>
+                <div class="progress-marks" aria-hidden="true"><i class="current"></i><i></i><i></i></div>
+              </div>
+
+              <section class="discovery-step" data-step="0" aria-labelledby={`${concept.id}-start-title`}>
+                <h4 id={`${concept.id}-start-title`} tabindex="-1" aria-describedby={`${concept.id}-start-description`}>{concept.question}</h4>
+                <p id={`${concept.id}-start-description`}>{concept.introduction}</p>
+                <div class="concept-choices initial-choices" role="group" aria-labelledby={`${concept.id}-start-title`}>
+                  {concept.choices.map(choice => <button type="button" data-context={choice.id} aria-pressed="false">{choice.label}</button>)}
+                </div>
+              </section>
+
+              <section class="discovery-step" data-step="1" aria-labelledby={`${concept.id}-detail-title`} hidden>
+                <h4 id={`${concept.id}-detail-title`} tabindex="-1" aria-describedby={`${concept.id}-detail-description`}>{concept.secondTitle}</h4>
+                <p id={`${concept.id}-detail-description`} data-detail-description aria-live="polite">{concept.secondDescription}</p>
+                <div class="concept-choices detail-choices" role="group" aria-label={concept.id === 'care' ? 'Choose your bottle format' : 'Choose the layer under your shell'}>
+                  {concept.options.map(option => <button type="button" data-detail={option.id} aria-pressed="false">{option.label}</button>)}
+                </div>
+                <div class="journey-actions"><button type="button" class="back-button" data-back>Back</button><button type="button" class="continue-button" data-complete disabled>{concept.complete}</button></div>
+              </section>
+
+              <section class="discovery-step result-step" data-step="2" aria-labelledby={`${concept.id}-result-title`} hidden>
+                <h4 id={`${concept.id}-result-title`} tabindex="-1" aria-describedby={`${concept.id}-result-description`} data-result-title></h4>
+                <p id={`${concept.id}-result-description`} data-result-description></p>
+                <ul class="result-pieces" aria-label={concept.id === 'care' ? 'Your illustrative ritual' : 'Your illustrative outfit'}>
+                  <li><i aria-hidden="true"></i><span data-result-piece="0"></span></li>
+                  <li><i aria-hidden="true"></i><span data-result-piece="1"></span></li>
+                  <li><i aria-hidden="true"></i><span data-result-piece="2"></span></li>
+                </ul>
+                <div class="journey-actions"><button type="button" class="back-button" data-back>Change choices</button><button type="button" class="reset-button" data-reset>Start again</button></div>
+              </section>
+            </div>
+          </div>
+          <div class="phone-home" aria-hidden="true"></div>
+        </div>
+      ))}
+    </div>
+  </composer-brands>
+  <figcaption>Fictional brand discoveries. Rebuilt concepts, not original tested outputs.</figcaption>
+</figure>
+
+<script>
+  class ComposerBrands extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      this.querySelectorAll<HTMLElement>('[data-concept]').forEach(screen => {
+        let step = 0;
+        let context = '';
+        let detail = '';
+        const care = screen.dataset.concept === 'care';
+        const stages = screen.querySelectorAll<HTMLElement>('[data-step]');
+        const detailDescription = screen.querySelector<HTMLElement>('[data-detail-description]')!;
+        const initialDescription = detailDescription.textContent;
+        const complete = screen.querySelector<HTMLButtonElement>('[data-complete]')!;
+        const caption = screen.querySelector<HTMLElement>('[data-photo-caption]')!;
+        const initialCaption = caption.textContent;
+
+        const updateDetail = () => {
+          screen.dataset.detail = detail;
+          complete.disabled = !detail;
+          screen.querySelectorAll<HTMLButtonElement>('[data-detail]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.detail === detail)));
+          if (!detail) {
+            detailDescription.textContent = initialDescription;
+            caption.textContent = care ? 'THE DAILY WASH' : 'STUDIO SHELL / 01';
+            return;
+          }
+          if (care) {
+            detailDescription.textContent = detail === 'bottle'
+              ? 'Start with the glass pump bottle. When it is empty, keep it for the next refill.'
+              : 'Keep your pump bottle. This smaller format is the next chapter of the same daily ritual.';
+            caption.textContent = detail === 'bottle' ? 'THE BOTTLE YOU KEEP' : 'THE NEXT CHAPTER';
+          } else {
+            detailDescription.textContent = detail === 'tee'
+              ? 'An off-white tee keeps the charcoal shell in focus. One easy layer underneath.'
+              : 'A stone overshirt adds another layer of texture beneath the charcoal shell.';
+            caption.textContent = detail === 'tee' ? 'CHARCOAL + CHALK' : 'CHARCOAL + STONE';
+          }
+        };
+
+        const showStep = (next: number) => {
+          step = next;
+          screen.dataset.stage = String(step);
+          stages.forEach(stage => { stage.hidden = Number(stage.dataset.step) !== step; });
+          screen.querySelector<HTMLElement>('.campaign-copy')!.hidden = step !== 0;
+          screen.querySelector('[data-progress-label]')!.textContent = ['01 / Discover', '02 / Make it yours', '03 / Your edit'][step];
+          screen.querySelectorAll('.progress-marks i').forEach((mark, index) => mark.classList.toggle('current', index <= step));
+          if (step === 0) caption.textContent = initialCaption;
+          else updateDetail();
+          stages[step].querySelector<HTMLElement>('h4')!.focus({ preventScroll: true });
+        };
+
+        const buildResult = () => {
+          const title = screen.querySelector('[data-result-title]')!;
+          const description = screen.querySelector('[data-result-description]')!;
+          let pieces: string[];
+          if (care) {
+            const morning = context === 'morning';
+            const bottle = detail === 'bottle';
+            title.textContent = morning ? 'A softer start.' : 'Leave the day behind.';
+            description.textContent = `${bottle ? 'Begin with the Daily Wash bottle' : 'Refill your Daily Wash bottle'}, ${morning ? 'then take a quiet moment before the day begins.' : 'and make a small pause at the end of the day.'}`;
+            pieces = [bottle ? 'First bottle' : 'Refill', 'Wash + rinse', morning ? 'Begin the day' : 'Slow down'];
+          } else {
+            const city = context === 'city';
+            const tee = detail === 'tee';
+            title.textContent = city ? 'Your city uniform.' : 'Take the long way.';
+            description.textContent = `${tee ? 'A chalk tee' : 'A stone overshirt'}, the Studio Shell, and ${city ? 'black straight-leg trousers. Built around your everyday route.' : 'olive easy trousers. A change of scene, with room to move.'}`;
+            pieces = [tee ? 'Chalk tee' : 'Stone overshirt', 'Studio Shell', city ? 'Black trousers' : 'Olive trousers'];
+          }
+          screen.querySelectorAll<HTMLElement>('[data-result-piece]').forEach((piece, index) => { piece.textContent = pieces[index]; });
+          screen.style.setProperty('--under-layer', detail === 'overshirt' ? '#b2aa97' : '#eeeee2');
+          screen.style.setProperty('--lower-layer', context === 'away' ? '#737b56' : '#353736');
+        };
+
+        screen.querySelectorAll<HTMLButtonElement>('[data-context]').forEach(button => button.addEventListener('click', () => {
+          context = button.dataset.context!;
+          screen.querySelectorAll<HTMLButtonElement>('[data-context]').forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+          showStep(1);
+        }));
+        screen.querySelectorAll<HTMLButtonElement>('button[data-detail]').forEach(button => button.addEventListener('click', () => {
+          detail = button.dataset.detail!;
+          updateDetail();
+        }));
+        complete.addEventListener('click', () => {
+          if (!detail) return;
+          buildResult();
+          showStep(2);
+        });
+        screen.querySelectorAll<HTMLButtonElement>('[data-back]').forEach(button => button.addEventListener('click', () => showStep(Math.max(0, step - 1))));
+        screen.querySelector<HTMLButtonElement>('[data-reset]')!.addEventListener('click', () => {
+          context = ''; detail = '';
+          screen.querySelectorAll<HTMLButtonElement>('[data-context]').forEach(choice => choice.setAttribute('aria-pressed', 'false'));
+          updateDetail();
+          showStep(0);
+        });
+      });
+    }
+  }
+  if (!customElements.get('composer-brands')) customElements.define('composer-brands', ComposerBrands);
+</script>
+
+<style>
+  /* Let every specimen descendant inherit its brand palette. Keep specificity low
+     so explicit campaign and button colors below still take precedence. */
+  :global(composer-brands [data-concept] :where(*)) { color: inherit; }
+  .concept-studies { margin: 0; }
+  composer-brands { display: block; }
+  .concept-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 360px)); gap: clamp(2rem, 6vw, 5rem); align-items: start; justify-content: space-between; max-width: 850px; margin-inline: auto; }
+  .phone-frame { width: 100%; min-width: 0; max-width: 360px; padding: 0 9px; border: 1px solid var(--theme-border); border-radius: 32px; background: var(--theme-bg); }
+  .phone-hardware { height: 24px; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--theme-text-muted); }
+  .phone-hardware i { width: 35px; height: 4px; border-radius: 10px; background: currentColor; }
+  .phone-hardware b { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+  .phone-home { width: 64px; height: 3px; border-radius: 10px; background: var(--theme-text-muted); margin: 10px auto; }
+  .concept-screen { container-type: inline-size; --ink: #294536; --paper: #f1f0e7; --rule: #cbd0be; --accent: #294536; --button-ink: #f1f0e7; color: var(--ink); background: var(--paper); overflow: hidden; font-family: Arial, Helvetica, sans-serif; border-radius: 24px; }
+  .concept-screen * { box-sizing: border-box; }
+  .wear { --ink: #f1f1e8; --paper: #202220; --rule: #4b4e43; --accent: #d4f172; --button-ink: #202220; }
+  .brand-header { display: flex; justify-content: space-between; align-items: center; gap: 5cqw; min-height: 64px; padding: 4cqw 6cqw; }
+  .brand-header strong { font: 400 6.5cqw/1 Georgia, 'Times New Roman', serif; letter-spacing: -.05em; }
+  .brand-header > span { max-width: 12ch; font-size: 12px; line-height: 1.35; text-align: right; }
+  .wear .brand-header strong { font: 900 5.6cqw/.85 Arial, Helvetica, sans-serif; letter-spacing: -.065em; }
+  .wear .brand-header > span { font-family: 'Courier New', monospace; text-transform: uppercase; max-width: 17ch; }
+  .campaign-image { position: relative; height: 90cqw; overflow: hidden; isolation: isolate; background: #d2d4c3; }
+  .campaign-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; transform: scale(1); transition: transform 1.1s cubic-bezier(.2,.7,.2,1), object-position 1.1s; }
+  .wear .campaign-image { background: #858778; }
+  .wear .campaign-image img { object-position: 65% 45%; }
+  .wear .campaign-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(32,34,32,.82), rgba(32,34,32,.35) 55%, transparent 80%); pointer-events: none; }
+  .campaign-copy { position: absolute; z-index: 1; top: 6cqw; left: 6cqw; right: 6cqw; pointer-events: none; }
+  .campaign-copy h3 { font: 400 11.7cqw/.95 Georgia, 'Times New Roman', serif; letter-spacing: -.06em; margin: 0; }
+  .campaign-copy h3 span { display: block; }
+  .wear .campaign-copy { top: auto; bottom: 14cqw; color: #f1f1e8; }
+  .wear .campaign-copy h3 { font: 900 18.5cqw/.78 Arial, Helvetica, sans-serif; letter-spacing: -.085em; }
+  .campaign-detail { display: flex; position: absolute; z-index: 1; bottom: 5cqw; left: 6cqw; right: 6cqw; font-size: 12px; line-height: 1.2; letter-spacing: .04em; color: var(--ink); }
+  .wear .campaign-detail { color: #f1f1e8; }
+  .care .campaign-detail > span { background: #f1f0e7; color: #294536; padding: .3rem .45rem; }
+  .concept-interaction { height: 308px; padding: 18px 6cqw; display: flex; flex-direction: column; }
+  .discovery-progress { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; line-height: 1.4; margin-bottom: 15px; }
+  .progress-marks { display: flex; gap: 4px; }
+  .progress-marks i { display: block; width: 14px; height: 3px; border-radius: 3px; background: var(--rule); }
+  .progress-marks .current { background: var(--ink); }
+  .discovery-step { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: product-enter .45s both; }
+  .discovery-step h4 { font: 400 max(23px, 6.5cqw)/1.1 Georgia, 'Times New Roman', serif; letter-spacing: -.035em; margin: 0; }
+  .wear .discovery-step h4 { font: 700 max(22px, 6.3cqw)/1.08 Arial, Helvetica, sans-serif; letter-spacing: -.045em; }
+  .discovery-step h4:focus { outline: none; }
+  .discovery-step p { font: 400 13px/1.45 Arial, Helvetica, sans-serif; margin: 9px 0 0; }
+  .concept-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .initial-choices { margin-top: auto; margin-bottom: 10px; }
+  .detail-choices { margin-top: 14px; }
+  .concept-choices button { min-height: 44px; border: 1px solid var(--ink); border-radius: 100px; background: transparent; color: var(--ink); cursor: pointer; font: 400 14px/1.3 Arial, Helvetica, sans-serif; padding: 9px 6px; transition: background-color .2s, color .2s; }
+  .concept-choices button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--button-ink); }
+  .concept-choices button:hover { background: var(--ink); color: var(--paper); }
+  .wear .concept-choices button { border-radius: 0; }
+  .concept-screen button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .journey-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; }
+  .journey-actions button { border: 0; min-height: 44px; border-radius: 0; background: transparent; color: var(--ink); padding: 6px 0; font: 400 14px/1.3 Arial, Helvetica, sans-serif; cursor: pointer; }
+  .journey-actions .continue-button { background: var(--accent); color: var(--button-ink); border-radius: 100px; padding: 10px 14px; }
+  .wear .journey-actions .continue-button { border-radius: 0; }
+  .journey-actions .continue-button:disabled { opacity: .45; cursor: default; }
+  .back-button, .reset-button { text-decoration: underline; text-underline-offset: 4px; }
+  .result-pieces { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; list-style: none; margin: 15px 0 0; padding: 0; }
+  .result-pieces li { font: 400 12px/1.3 Arial, Helvetica, sans-serif; display: flex; flex-direction: column; gap: 7px; }
+  .result-pieces i { width: 100%; height: 3px; background: var(--ink); opacity: .7; }
+  .wear .result-pieces i { width: 20px; height: 20px; border-radius: 50%; border: 1px solid #f1f1e84d; background: var(--under-layer, #eeeee2); opacity: 1; }
+  .wear .result-pieces li:nth-child(2) i { background: #353736; }
+  .wear .result-pieces li:nth-child(3) i { background: var(--lower-layer, #353736); }
+  .concept-screen:not([data-stage='0']) .campaign-image img { transform: scale(1.1); object-position: 78% 58%; }
+  .care[data-detail='refill']:not([data-stage='0']) .campaign-image img { transform: scale(1.18); object-position: 100% 60%; }
+  .wear:not([data-stage='0']) .campaign-image img { object-position: 70% 50%; }
+  figcaption { margin: 1rem 0 0; color: var(--theme-text-muted); font: .65rem/1.7 var(--font-mono, monospace); }
+  [hidden] { display: none !important; }
+  @keyframes product-enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @media (min-width: 1001px) {
+    .is-cover .concept-pair { grid-template-columns: repeat(2, minmax(0, 290px)); max-width: 600px; gap: 1rem; }
+    .is-cover .phone-frame { max-width: 290px; }
+    .is-cover .campaign-image { height: 82cqw; }
+  }
+  @container (max-width: 285px) {
+    .concept-interaction { height: 350px; padding-inline: 16px; }
+    .discovery-step p { font-size: 12px; }
+    .brand-header { padding-inline: 16px; gap: 12px; }
+    .brand-header > span { font-size: 12px; max-width: 11ch; }
+    .wear .brand-header > span { max-width: 13ch; }
+    .result-pieces { gap: 5px; }
+  }
+  @media (max-width: 760px) { .concept-pair { grid-template-columns: minmax(0, 360px); justify-content: center; gap: 2rem; } }
+  @media (max-width: 370px) { .concept-interaction { height: 342px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>

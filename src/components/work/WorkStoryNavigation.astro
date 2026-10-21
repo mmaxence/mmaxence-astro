@@ -1,0 +1,94 @@
+<script>
+  import { navigate } from 'astro:transitions/client';
+  type Origin = { index: number; slug: string; url: string };
+  let returningSlug: string | null = null;
+  let exiting = false;
+  let previousPage = location.pathname;
+  const isWorkIndex = () => /^\/work\/?$/.test(location.pathname);
+  const ordinary = (event: MouseEvent) => event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+
+  function leaveStory(link: HTMLAnchorElement) {
+    if (exiting) return;
+    document.dispatchEvent(new Event('work-story-save-progress'));
+    exiting = true;
+    const slug = document.querySelector<HTMLElement>('[data-work-story]')?.dataset.workStory;
+    const origin: Origin | undefined = history.state?.workStoryOrigin;
+    const canGoBack = origin && Number.isInteger(origin.index) && history.state?.index === origin.index + 1;
+    returningSlug = canGoBack ? origin!.slug : slug || null;
+    if (canGoBack) history.back();
+    else void navigate(link.href, { history: 'replace' });
+  }
+
+  document.addEventListener('click', event => {
+    if (!ordinary(event)) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const link = target?.closest<HTMLAnchorElement>('a[href]');
+    if (!link || link.target === '_blank' || link.hasAttribute('download')) return;
+    if (link.hasAttribute('data-story-exit')) {
+      event.preventDefault();
+      leaveStory(link);
+      return;
+    }
+    if (!isWorkIndex()) return;
+    const url = new URL(link.href, location.href);
+    const match = url.pathname.match(/^\/work\/([^/]+)\/?$/);
+    if (url.origin !== location.origin || !match || !Number.isInteger(history.state?.index)) return;
+    const origin: Origin = { index: history.state.index, slug: match[1], url: location.href };
+    history.replaceState({ ...history.state, workReturnFocus: origin.slug, workReturnControl: link.hasAttribute('data-station-link') ? 'station' : 'project', workReturnPosition: { x: scrollX, y: scrollY } }, '');
+    event.preventDefault();
+    void navigate(link.href, { state: { workStoryOrigin: origin }, sourceElement: link });
+  }, { capture: true });
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || event.defaultPrevented || event.repeat || event.isComposing || event.keyCode === 229 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+    const exit = document.querySelector<HTMLAnchorElement>('.story-exit');
+    if (!exit || document.fullscreenElement) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]')) return;
+    if (target instanceof HTMLInputElement && !['radio', 'checkbox', 'button', 'submit', 'reset', 'range', 'color'].includes(target.type)) return;
+    if (document.querySelector('dialog[open]')) return;
+    if (CSS.supports('selector(:popover-open)') && document.querySelector('[popover]:popover-open')) return;
+    if ([...document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]')].some(dialog => dialog.getClientRects().length > 0 && getComputedStyle(dialog).visibility !== 'hidden')) return;
+    event.preventDefault();
+    leaveStory(exit);
+  });
+
+  function afterNavigation() {
+    exiting = false;
+    if (isWorkIndex()) {
+      let hashSlug = location.hash.slice(1);
+      try { hashSlug = decodeURIComponent(hashSlug); } catch { /* Keep a malformed external fragment harmless. */ }
+      const slug = returningSlug || hashSlug || history.state?.workReturnFocus;
+      const fromStory = /^\/work\/[^/]+\/?$/.test(previousPage);
+      const returnToStation = fromStory && history.state?.workReturnControl === 'station';
+      const link = returnToStation ? document.querySelector<HTMLElement>('[data-station-link]') : slug ? document.getElementById(slug)?.querySelector<HTMLElement>('[data-quest-select], .title-link') : null;
+      const restore = history.state?.workReturnPosition;
+      // The portfolio header compacts on return. Restore after that layout
+      // change, otherwise browser scroll anchoring shifts the map underneath.
+      if (link) requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (fromStory && restore && Number.isFinite(restore.y)) scrollTo({ left: restore.x, top: restore.y, behavior: 'instant' });
+        if (returnToStation) document.dispatchEvent(new Event('work-quest-station-focus'));
+        else {
+          document.dispatchEvent(new CustomEvent('work-quest-focus', { detail: slug }));
+          link.focus({ preventScroll: true });
+        }
+      }));
+      returningSlug = null;
+    }
+    previousPage = location.pathname;
+    const title = document.querySelector<HTMLElement>('[data-work-story] h1');
+    if (title && history.state?.workStoryOrigin && !location.hash) {
+      title.tabIndex = -1;
+      title.focus({ preventScroll: true });
+    }
+    // Review links still work when followed from a case's own narrative.
+    document.querySelectorAll<HTMLAnchorElement>('a[href="#review-notes"]').forEach(link => {
+      link.addEventListener('click', () => {
+        const notes = document.querySelector<HTMLDetailsElement>('#review-notes > details');
+        if (notes) notes.open = true;
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', afterNavigation);
+  afterNavigation();
+</script>

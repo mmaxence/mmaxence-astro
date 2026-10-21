@@ -1,0 +1,20 @@
+---
+interface Props { brand?: 'forme' | 'fieldwork'; eager?: boolean; }
+const { brand = 'forme', eager = false } = Astro.props;
+const campaign = brand === 'forme'
+  ? { name: 'FORME', title: 'Find your daily ritual', action: 'Visit the brand', points: 20, alt: 'Fictional FORME skincare campaign with green glass bottles on sunlit stone' }
+  : { name: 'FIELDWORK', title: 'Meet your everyday uniform', action: 'Explore the collection', points: 30, alt: 'Fictional FIELDWORK campaign showing a black technical jacket in the city' };
+---
+<article class:list={['native-campaign', brand]} aria-label={`${campaign.name} sample sponsored offer`}>
+  <img src={`/work/composer/${brand}-campaign-768.webp`} srcset={`/work/composer/${brand}-campaign-768.webp 768w, /work/composer/${brand}-campaign.webp 1536w`} sizes="(max-width: 650px) 280px, 330px" width="768" height="512" alt={campaign.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  <div class="campaign-copy">
+    <div class="campaign-brand"><b>{campaign.name}</b><span>Sponsored</span></div>
+    <h4>{campaign.title}</h4>
+    <div class="campaign-action"><span>{campaign.action}</span><button type="button" data-offer={brand} aria-label={`Preview ${campaign.name} offer, ${campaign.points} sample points`}>+{campaign.points}<small>P</small></button></div>
+  </div>
+</article>
+<style>
+.native-campaign{margin:0;overflow:hidden;background:#fff;color:#292c28;border:1px solid #e1e5dd;border-radius:10px;font-family:Arial,sans-serif;min-width:0;--theme-text:#292c28;--theme-text-muted:#636b60}
+img{display:block;width:100%;height:auto;aspect-ratio:1.85;object-fit:cover;object-position:60% 50%}.fieldwork img{object-position:58% 44%}
+.campaign-copy{padding:11px 12px 10px}.campaign-brand{display:flex;align-items:center;justify-content:space-between;gap:8px}.campaign-brand b{font:600 9px/1.4 Arial,sans-serif;letter-spacing:.1em}.campaign-brand span{font:9px/1.4 Arial,sans-serif;color:#6a7166}h4{font:600 13px/1.35 Arial,sans-serif;letter-spacing:-.01em;margin:7px 0 5px}.campaign-action{display:flex;align-items:center;justify-content:space-between;gap:8px}.campaign-action>span{font:10px/1.45 Arial,sans-serif;color:#61685d}.campaign-action button{border:0;background:#345f4c;color:#fff;border-radius:6px;padding:9px 10px;min-height:44px;flex-shrink:0;font:700 14px/1 Arial,sans-serif;cursor:pointer}.campaign-action button small{font:600 10px/1 Arial,sans-serif;margin-left:2px}.campaign-action button:hover{background:#234c3a}.campaign-action button:focus-visible{outline:2px solid #233e31;outline-offset:3px}
+</style>

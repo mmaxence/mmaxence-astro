@@ -1,0 +1,24 @@
+---
+import type { WorkEntry } from '../../data/work';
+interface Props { work: WorkEntry }
+const { work: w } = Astro.props;
+---
+              {w.image && (
+                <figure class="work-figure">
+                  <div class={`work-media ${w.imagePair ? 'work-media-pair' : ''} ${w.imageHeight && w.imageWidth && w.imageHeight > w.imageWidth ? 'work-media-portrait' : ''}`}>
+                    <img src={w.image} alt={w.imageAlt || w.title} width={w.imageWidth} height={w.imageHeight} loading="lazy" decoding="async" />
+                    {w.imagePair && <img src={w.imagePair} alt={w.imagePairAlt || ''} width={w.imageWidth} height={w.imagePairHeight || w.imageHeight} loading="lazy" decoding="async" />}
+                  </div>
+                  {w.imageCaption && <figcaption>{w.imageCaption}</figcaption>}
+                </figure>
+              )}
+
+<style>
+.work-figure { margin: 0 0 3rem; }
+.work-media { border: 1px solid var(--theme-border); border-radius: var(--theme-radius); overflow: hidden; background: var(--theme-bg); }
+.work-media img { display: block; width: 100%; height: auto; }
+.work-media-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--theme-border); }
+.work-media-portrait img { max-width: 34rem; margin-inline: auto; }
+figcaption { margin-top: .65rem; font-family: var(--font-mono, monospace); font-size: .75rem; line-height: 1.5; color: var(--theme-text-muted); }
+@media(max-width: 767px) { .work-media-pair { grid-template-columns: 1fr; } }
+</style>

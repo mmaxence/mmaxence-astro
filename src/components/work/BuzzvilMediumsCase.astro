@@ -1,0 +1,319 @@
+---
+import EditorialCase from './EditorialCase.astro';
+import StoryChapter from './StoryChapter.astro';
+import StoryFocus from './StoryFocus.astro';
+import MediumsPublishing from './MediumsPublishing.astro';
+import type { WorkEntry } from '../../data/work';
+interface Props { work: WorkEntry }
+const { work } = Astro.props;
+const liveWebsites = [
+  { label: 'Explore the design site', url: 'https://design.buzzvil.com' },
+  { label: 'Read the live tech blog', url: work.links?.find(link => link.url === 'https://tech.buzzvil.com')?.url },
+  { label: 'Explore the live docs', url: work.links?.find(link => link.url === 'https://docs.buzzvil.com')?.url },
+].filter((link): link is { label: string; url: string } => Boolean(link.url));
+const lessons = [
+  { title: 'A brand has to survive the next edit.', body: 'The redesign was only the first release. Shared components, agent instructions and publishing checks carry those decisions into the changes other people make.' },
+  { title: 'Automation moves the work to judgment.', body: 'Agents handle implementation, formatting and repeatable checks. People still own the facts, the message and the decision to publish. That is where the contribution process needs to be clearest.' },
+  { title: 'Technical quality is brand quality.', body: 'A slow page, a stale translation or a broken bookmark changes how the company feels. The invisible parts of the system deserve the same design attention as the hero.' },
+];
+const contributionSteps = [
+  { id: 'describe', label: 'Describe', title: 'Start with the person who knows.', body: 'The content owner supplies the intent and facts. The agent reads the app instructions, uses the shared components and prepares the edit in the repository. No CMS entry or manual page assembly.' },
+  { id: 'preview', label: 'Preview', title: 'See the actual page.', body: 'The result becomes a pull request with a rendered preview. The owner can judge the page itself, with the file changes available when a closer look is needed.' },
+  { id: 'review', label: 'Review', title: 'Keep the judgment human.', body: 'Automated checks inspect the structure and affected code. People review what those checks cannot decide: accuracy, language and whether the page tells the right story.' },
+  { id: 'publish', label: 'Publish', title: 'Make the last step repeatable.', body: 'An approved merge triggers the production deployment workflow. Content ownership and infrastructure ownership stay visible.' },
+];
+---
+<EditorialCase
+  work={work}
+  headline={'Buzzvil mediums.\nOne brand, built\nto stay current.'}
+  intro="As Buzzvil prepared for a stock-market listing, its online presence needed to feel like one company. I connected its key websites through a shared brand system and an agent-driven way to keep them current."
+  role="I led the design and implementation of a consistent web presence for Buzzvil’s preparations for a stock-market listing, including the shared brand foundation and repository workflows for agent-driven updates. Content owners and infrastructure teams contributed review, deployment and migration work."
+  coverNote="The new homepage, in its final content review."
+  lessons={lessons}
+  websites={liveWebsites}
+>
+  <figure slot="cover" class="mediums-cover">
+    <div class="browser-frame">
+      <div class="browser-bar"><span class="browser-mark" aria-hidden="true"></span><span>Buzzvil / Homepage</span><span>Preview</span></div>
+      <a class="capture-link no-underline" href="/work/buzzvil-mediums/homepage-oct21-2880.webp" aria-label="Inspect the homepage landing at full size">
+        <img src="/work/buzzvil-mediums/homepage-oct21-1440.webp" srcset="/work/buzzvil-mediums/homepage-oct21-800.webp 800w, /work/buzzvil-mediums/homepage-oct21-1440.webp 1440w, /work/buzzvil-mediums/homepage-oct21-2880.webp 2880w" sizes="(min-width: 1504px) 690px, (min-width: 1001px) 48vw, calc(100vw - 40px)" width="2880" height="2000" alt="The Buzzvil homepage landing: Your brand is unique. So is every person you reach, beside a colored particle sphere on a light canvas." fetchpriority="high" decoding="async" />
+      </a>
+    </div>
+  </figure>
+
+  <div class="mediums-journey">
+    <StoryChapter id="mediums-foundation" class="foundation-scene" title={'One company should\nfeel like one company.'} intro="Customers, developers and future colleagues met Buzzvil through different websites. I brought their typography, color, layout and interaction into a shared system, so each touchpoint could build the same sense of trust.">
+      <div class="current-sites">
+        <figure class="current-site design-site">
+          <div class="site-caption"><h3>Design</h3><span>Live</span></div>
+          <a class="capture-link no-underline" href="/work/buzzvil-mediums/design-oct21-refresh-2880.webp" aria-label="Inspect the Design screenshot at full size"><img src="/work/buzzvil-mediums/design-oct21-refresh-1440.webp" srcset="/work/buzzvil-mediums/design-oct21-refresh-800.webp 800w, /work/buzzvil-mediums/design-oct21-refresh-1440.webp 1440w, /work/buzzvil-mediums/design-oct21-refresh-2880.webp 2880w" sizes="(min-width: 900px) 45vw, calc(100vw - 40px)" width="2880" height="2000" alt="Buzzvil Design’s live homepage with its Design ships here statement, purple-to-pink typography and a wireframe sphere." loading="lazy" decoding="async" /></a>
+          <figcaption><p>Designers update the site with AI assistants.</p><a href="https://design.buzzvil.com">Visit Design</a></figcaption>
+        </figure>
+        <figure class="current-site docs-site">
+          <div class="site-caption"><h3>Docs</h3><span>Live</span></div>
+          <a class="capture-link no-underline" href="/work/buzzvil-mediums/docs-oct21-2880.webp" aria-label="Inspect the Docs screenshot at full size"><img src="/work/buzzvil-mediums/docs-oct21-1440.webp" srcset="/work/buzzvil-mediums/docs-oct21-800.webp 800w, /work/buzzvil-mediums/docs-oct21-1440.webp 1440w, /work/buzzvil-mediums/docs-oct21-2880.webp 2880w" sizes="(min-width: 900px) 45vw, calc(100vw - 40px)" width="2880" height="2000" alt="The live Korean developer documentation homepage, with Android and iOS integration guides." loading="lazy" decoding="async" /></a>
+          <figcaption><p>Technical writers update the documentation with AI assistants.</p><a href="https://docs.buzzvil.com">Visit Docs</a></figcaption>
+        </figure>
+        <figure class="current-site tech-site">
+          <div class="site-caption"><h3>Tech blog</h3><span>Live</span></div>
+          <a class="capture-link no-underline" href="/work/buzzvil-mediums/tech-oct21-refresh-2880.webp" aria-label="Inspect the Tech blog screenshot at full size"><img src="/work/buzzvil-mediums/tech-oct21-refresh-1440.webp" srcset="/work/buzzvil-mediums/tech-oct21-refresh-800.webp 800w, /work/buzzvil-mediums/tech-oct21-refresh-1440.webp 1440w, /work/buzzvil-mediums/tech-oct21-refresh-2880.webp 2880w" sizes="(min-width: 1200px) 1050px, calc(100vw - 40px)" width="2880" height="2000" alt="The live tech blog with a purple-to-pink title, geometric illustration, search, topic filters and recent engineering articles." loading="lazy" decoding="async" /></a>
+          <figcaption><p>Anyone at Buzzvil who wants to post can contribute with AI assistants.</p><a href="https://tech.buzzvil.com/en">Visit Tech blog</a></figcaption>
+        </figure>
+      </div>
+      <p class="small-note">AI assistants prepare the changes. People review what gets published.</p>
+    </StoryChapter>
+
+    <StoryChapter id="mediums-contribution" class="contribution-scene" title={'Describe the change.\nReview the page. Ship it.'} intro="I built the repository around agent-driven contribution: app instructions, content conventions and shared UI. The interface for an update became a request and a preview, with people responsible for what ships.">
+      <mediums-contribution>
+        <div class="contribution-tabs" role="tablist" aria-label="Follow the contribution workflow">
+          {contributionSteps.map((step, index) => <button type="button" id={`mediums-tab-${step.id}`} role="tab" aria-controls={`mediums-panel-${step.id}`} aria-selected={index === 0 ? 'true' : 'false'} tabindex={index === 0 ? 0 : -1} data-step={step.id}>{step.label}</button>)}
+        </div>
+        {contributionSteps.map((step, index) => <div class="contribution-panel" role="tabpanel" id={`mediums-panel-${step.id}`} aria-labelledby={`mediums-tab-${step.id}`} hidden={index !== 0}>
+          <div class="step-explanation"><h3>{step.title}</h3><p>{step.body}</p></div>
+          <div class:list={['workflow-artifact', step.id]} aria-label={`${step.label} step, illustrated`}>
+            {step.id === 'describe' && <><span class="artifact-label">A change to prepare</span><p class="request-text">Update the SDK release notes.</p><div class="request-material"><span>Context</span><b>Release facts</b></div><div class="request-material"><span>Instructions</span><code>AGENTS.md</code></div><div class="request-material"><span>Material</span><b>Shared UI + content rules</b></div><span class="artifact-footnote">An example contribution</span></>}
+            {step.id === 'preview' && <><div class="preview-strip"><span>Pull request</span><b>Preview ready</b></div><div class="release-preview"><span>Buzzvil / Docs</span><h4>Release notes</h4><strong>SDK 6.7.x</strong><div class="text-lines" aria-hidden="true"><i></i><i></i><i></i></div></div><span class="artifact-footnote">A preview for review, illustrated</span></>}
+            {step.id === 'review' && <><span class="artifact-label">Human review</span><div class="review-items"><span><i aria-hidden="true">✓</i>The claims are accurate.</span><span><i aria-hidden="true">✓</i>The language fits the audience.</span><span><i aria-hidden="true">✓</i>The page works as intended.</span></div><span class="review-stamp">Ready for approval</span><span class="artifact-footnote">Illustrative review criteria</span></>}
+            {step.id === 'publish' && <><span class="artifact-label">An established deployment path</span><div class="publish-path"><div><i aria-hidden="true"></i><span>Reviewed pull request</span></div><div><i aria-hidden="true"></i><span>Merge to main</span></div><div><i aria-hidden="true"></i><span>Production deployment</span></div></div><span class="artifact-footnote">The homepage launch is still ahead.</span></>}
+          </div>
+        </div>)}
+      </mediums-contribution>
+      <div class="proof-note"><span>Used beyond Design</span><p>A colleague, Eden, tested the workflow with a real update to the developer release notes. To make previews accessible to contributors, I proposed a shared deployment path; Edward, an engineer, implemented it.</p></div>
+      <StoryFocus id="mediums-engineering" topic="Publishing safeguards" problem="Opening updates to more contributors also made mistakes easier to repeat. The repository needed to enforce the rules, including keeping translations in sync.">
+      <MediumsPublishing />
+      <div class="engineering-foundation" aria-label="Technology supporting the contribution workflow">
+        <div><span>Design in code</span><strong>Shared design values + reusable React elements</strong></div>
+        <div><span>One repository</span><strong>Next.js · TypeScript · Turborepo</strong></div>
+        <div><span>Review and delivery</span><strong>GitHub Actions + Vercel previews</strong></div>
+      </div>
+      </StoryFocus>
+    </StoryChapter>
+
+    <StoryChapter id="mediums-migration" scope="Zoom in · The redesign’s loading cost" class="migration-chapter" title={'A considered brand\nshould feel fast, too.'} intro="The first redesign waited for JavaScript before showing its content. I moved reading back to server-rendered HTML, removed duplicate motion code and limited animation work to where it was needed.">
+      <figure class="performance-plate">
+        <div class="payload-heading"><span>Code downloaded to make the homepage interactive</span><strong>68% less to download.</strong></div>
+        <dl class="payload-chart">
+          <div><dt>Before the overhaul</dt><dd><span class="payload-track"><i style="--payload:100%" aria-hidden="true"></i></span><strong>1,008 <small>KB</small></strong></dd></div>
+          <div class="payload-after"><dt>After</dt><dd><span class="payload-track"><i style="--payload:31.94%" aria-hidden="true"></i></span><strong>322 <small>KB</small></strong></dd></div>
+        </dl>
+        <figcaption>Before and after the redesign, measured in local production builds. This compares downloaded code, not page speed.</figcaption>
+      </figure>
+      <div class="migration-proof">
+        <div class="migration-count"><strong>201</strong><p>legacy URLs checked<br/><span>Still working after the migration</span></p></div>
+        <div><h3>Keep the history intact.</h3><p>The migration also preserved how readers arrived: old links, search results and feeds. A faster, newer page still had to respect the reader who bookmarked the old one.</p>
+          <details class="migration-detail"><summary>A small bug with a real consequence</summary><p>Uppercase filenames worked locally on my Mac but returned 404s on Linux. Normalizing the paths fixed the deployed pages. An RSS identifier change also made an old article appear new in Feedly. Those failures made redirects, filenames and feed identity part of the design work.</p></details>
+        </div>
+      </div>
+    </StoryChapter>
+
+    <StoryChapter id="mediums-product" scope="Back to the brand experience" class="product-scene" title={'Product stories became\nexperiences people could try.'} intro="Consistency should leave room for expression. The corporate site explains Buzzvil through experiences people can try: discover an offer, participate and see the reward. Product demonstrations turn an unfamiliar B2B platform into something tangible.">
+      <div class="landing-sequence">
+        <figure class="landing-context">
+          <a class="capture-link browser-frame no-underline" href="/work/buzzvil-mediums/homepage-context-oct19.webp" aria-label="Inspect the advertiser context scene at full size">
+            <img src="/work/buzzvil-mediums/homepage-context-oct19-1440.webp" srcset="/work/buzzvil-mediums/homepage-context-oct19-800.webp 800w, /work/buzzvil-mediums/homepage-context-oct19-1440.webp 1440w, /work/buzzvil-mediums/homepage-context-oct19.webp 2880w" sizes="(min-width: 1504px) 1140px, (min-width: 901px) 80vw, calc(100vw - 40px)" width="2880" height="1800" alt="A moment in the homepage story pairs the fictional Lumière skincare brand with its goal: more purchases." loading="lazy" decoding="async" />
+          </a>
+          <figcaption><span>01 / Begin with the advertiser.</span> Brand context and the campaign goal give the story a starting point.</figcaption>
+        </figure>
+        <figure class="landing-experiences">
+          <a class="capture-link browser-frame no-underline" href="/work/buzzvil-mediums/homepage-experiences-oct19.webp" aria-label="Inspect the three personalized experience previews at full size">
+            <img src="/work/buzzvil-mediums/homepage-experiences-oct19-1440.webp" srcset="/work/buzzvil-mediums/homepage-experiences-oct19-800.webp 800w, /work/buzzvil-mediums/homepage-experiences-oct19-1440.webp 1440w, /work/buzzvil-mediums/homepage-experiences-oct19.webp 2880w" sizes="(min-width: 1504px) 1376px, calc(100vw - 40px)" width="2880" height="1800" alt="The homepage turns the same skincare brand into three phone-sized experiences: a discovery ritual, a skin-needs selector and a returning-customer refill choice." loading="lazy" decoding="async" />
+          </a>
+          <figcaption><span>02 / Make the idea tangible.</span> Different customer moments become experiences to explore, using a fictional brand.</figcaption>
+        </figure>
+      </div>
+      <div class="experience-notes">
+        <div class="demo-count"><strong>15</strong><p>bilingual phone demos<br/><span>reported October 16</span></p></div>
+        <ol class="experience-sequence" aria-label="The product demonstration moves through entry, progress and reward"><li>Enter</li><li>Make progress</li><li>Return to rewards</li></ol>
+      </div>
+      <p class="demo-loading-note"><strong>Rich when opened. Light while browsing.</strong> The landing loads WebP previews first. A sandboxed demo loads when someone opens it, using a shared runtime across the experiences.</p>
+      <p class="small-note">Interactive demonstrations of the advertising experience. <a href="/work/game-ua-multi-mission/">The product work behind Game UA</a></p>
+    </StoryChapter>
+
+    <StoryChapter id="mediums-delivery" class="delivery-scene" title={'The foundation is live.\nThe corporate site comes next.'} intro="Design, Docs and the tech blog are live, with their contributors already using AI assistants to keep them current. The homepage is in its final phase of content revisions, with launch expected late in 2026.">
+      <div class="delivery-grid">
+        <div class="delivery-live"><span class="delivery-label"><i aria-hidden="true"></i>Already in use</span><ul><li><a href="https://design.buzzvil.com">Design</a><span>Designers + AI assistants</span></li><li><a href="https://docs.buzzvil.com">Docs</a><span>Technical writers + AI assistants</span></li><li><a href="https://tech.buzzvil.com/en">Tech blog</a><span>Contributors across Buzzvil + AI assistants</span></li></ul></div>
+        <div class="delivery-next"><span class="delivery-label">Homepage / Final content revisions</span><strong>Late 2026</strong><span class="goal-label">Expected launch</span><p>Most teams will be able to contribute through AI assistants. The homepage will use a more involved review process, giving teams a way to contribute while keeping the company’s public messaging consistent.</p></div>
+      </div>
+    </StoryChapter>
+  </div>
+</EditorialCase>
+
+<script>
+  class MediumsContribution extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const tabs = Array.from(this.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+      const activate = (tab: HTMLButtonElement, moveFocus = false) => {
+        tabs.forEach(item => {
+          const active = item === tab;
+          item.setAttribute('aria-selected', String(active));
+          item.tabIndex = active ? 0 : -1;
+          const panel = this.querySelector<HTMLElement>(`#${item.getAttribute('aria-controls')}`);
+          if (panel) panel.hidden = !active;
+        });
+        if (moveFocus) tab.focus();
+      };
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activate(tab));
+        tab.addEventListener('keydown', event => {
+          let next: number | undefined;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+          if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === 'Home') next = 0;
+          if (event.key === 'End') next = tabs.length - 1;
+          if (next !== undefined) { event.preventDefault(); activate(tabs[next], true); }
+        });
+      });
+    }
+  }
+  if (!customElements.get('mediums-contribution')) customElements.define('mediums-contribution', MediumsContribution);
+</script>
+
+<style>
+.current-sites { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2.5rem 2rem; }
+.current-site { margin: 0; min-width: 0; }
+.current-site.tech-site { grid-column: 1/-1; max-width: 1050px; width: 100%; margin-inline: auto; }
+.site-caption { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .9rem; }
+.site-caption h3 { font: 500 1.2rem/1.4 var(--font-body); margin: 0; }
+.site-caption>span { font: .7rem/1.4 var(--font-mono); color: var(--theme-text-muted); border: 1px solid var(--theme-border); border-radius: 20px; padding: .3rem .65rem; }
+.current-site img { display: block; width: 100%; height: auto; border: 1px solid var(--theme-border); border-radius: 6px; }
+.current-site figcaption { display: flex; justify-content: space-between; align-items: start; gap: 1rem; margin-top: .9rem; font: .85rem/1.7 var(--font-body); }
+.current-site figcaption p { margin: 0; color: var(--theme-text-muted); }
+.current-site figcaption a { white-space: nowrap; text-decoration: underline; text-underline-offset: 4px; }
+@media(max-width:650px) { .current-sites { grid-template-columns: 1fr; } .current-site figcaption { flex-direction: column; gap: .4rem; } }
+
+  .mediums-cover,.mediums-journey{--line:var(--theme-border);--muted:var(--theme-text-muted);--soft:color-mix(in srgb,var(--theme-text) 4%,var(--theme-bg));color:var(--theme-text)}
+  .mediums-cover{margin:0;min-width:0;align-self:start}
+  .mediums-journey{font-family:var(--font-body,sans-serif)}
+  .mediums-journey *,.mediums-cover *{box-sizing:border-box}
+  .mediums-journey h3,.mediums-journey h4,.mediums-journey p,.mediums-journey figure{margin:0}
+  .browser-frame{overflow:hidden;border:1px solid var(--line);border-radius:8px;background:var(--theme-bg)}
+  .browser-bar{display:flex;align-items:center;gap:.65rem;min-height:36px;padding:.6rem .85rem;border-bottom:1px solid var(--line);font:.75rem/1.5 var(--font-mono,monospace)}
+  .browser-mark{width:5px;height:5px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+  .browser-bar>span:last-child,.browser-bar>a{margin-left:auto;color:var(--muted)}
+  .browser-bar>a{font-size:inherit}
+  .browser-frame img{display:block;width:100%;height:auto;background:#fafafa}
+  figcaption,.small-note{font:.78rem/1.75 var(--font-mono,monospace);color:var(--muted);margin-top:.85rem}
+  .mediums-cover figcaption{font-size:.78rem}
+  a{color:inherit;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:var(--line)}
+  a:hover{text-decoration-color:currentColor}
+  a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--theme-text);outline-offset:4px}
+  .shared-screens{display:grid;grid-template-columns:1.15fr 1fr;gap:2rem;align-items:start}
+  .docs-screen{padding-top:4.5rem}
+  .system-material{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;border-top:1px solid var(--line);margin-top:1.5rem;padding-top:1rem}
+  .system-material>span{display:flex;flex-direction:column;gap:.7rem;font:1.8rem/1 var(--font-body,sans-serif);min-height:64px}
+  .system-material small{font:.6rem/1.4 var(--font-mono,monospace);color:var(--muted)}
+  .layout-mark i{display:block;width:32px;height:29px;border:1px solid currentColor;background:linear-gradient(90deg,transparent 35%,var(--theme-text) 35%,var(--theme-text) 38%,transparent 38%)}
+  .component-mark i{display:block;width:54px;height:29px;border:1px solid currentColor;border-radius:24px}
+  .culture-proof{display:grid;grid-template-columns:.65fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center;margin-top:3rem;padding-top:3rem;border-top:1px solid var(--line)}
+  .brand-material .theme-pair{max-width:180px;margin-bottom:1.5rem}
+  .brand-material h3{font:400 clamp(1.5rem,2.5vw,2.2rem)/1.25 var(--font-body);letter-spacing:-.035em;max-width:22ch;margin-bottom:1rem}
+  .brand-material p{max-width:42ch;font:.95rem/1.8 var(--font-body);color:var(--muted)}
+  .capture-link{display:block;min-width:0;text-decoration:none}
+  .capture-link img{display:block;width:100%;height:auto}
+  .capture-link:focus-visible{outline:2px solid var(--theme-text);outline-offset:4px}
+  .landing-sequence{display:grid;gap:2.5rem}
+  .landing-context{width:84%}
+  .landing-sequence figcaption{max-width:85ch}
+  .landing-sequence figcaption>span{display:block;color:var(--theme-text);font:500 .95rem/1.65 var(--font-body);margin-bottom:.25rem}
+  .theme-pair{display:flex;gap:.5rem}
+  .theme-pair>span{display:flex;flex:1;flex-direction:column;gap:.5rem;border:1px solid var(--line);border-radius:4px;padding:.75rem;font:400 2rem/1 var(--font-body);background:oklch(98.5% 0 0);color:oklch(21% .0059 285.9)}
+  .theme-pair>span:last-child{background:oklch(14.1% .0044 285.8);color:oklch(94.7% .0027 286.3)}
+  .theme-pair small{font:.65rem/1.5 var(--font-mono)}
+  .experience-notes{display:flex;justify-content:space-between;gap:3rem;align-items:center;margin-top:1.5rem;padding-block:1.5rem;border-block:1px solid var(--line)}
+  .demo-count{display:flex;gap:1rem;align-items:center}
+  .demo-count strong{color:var(--theme-accent);font:400 3.5rem/1 var(--font-mono,monospace);letter-spacing:-.06em}
+  .demo-count p{font-size:.85rem;line-height:1.6}
+  .demo-count p span{color:var(--muted);font-size:.65rem}
+  .experience-sequence{display:flex;gap:2rem;list-style:none;margin:0;padding:0;font:.7rem/1.6 var(--font-mono,monospace)}
+  .experience-sequence li{display:grid;gap:.5rem}
+
+  .product-scene>.small-note{margin-top:1rem}
+  .engineering-foundation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem;padding-top:1.5rem;margin-top:1.5rem;border-top:1px solid var(--line)}
+  .engineering-foundation>div{display:grid;gap:.5rem}
+  .engineering-foundation span{font:.75rem/1.6 var(--font-mono);color:var(--muted)}
+  .engineering-foundation strong{font:400 .9rem/1.6 var(--font-body)}
+  .performance-plate{padding:clamp(1.25rem,4vw,3rem);background:var(--soft);border:1px solid var(--line);border-radius:8px}
+  .payload-heading{display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .payload-heading>span{font:.8rem/1.6 var(--font-mono);color:var(--muted)}
+  .payload-heading>strong{font:400 clamp(1.4rem,2.8vw,2.5rem)/1.2 var(--font-body);letter-spacing:-.04em}
+  .payload-chart{margin:2.5rem 0 1.5rem;display:grid;gap:1.75rem}
+  .payload-chart>div{display:grid;grid-template-columns:11rem 1fr;gap:1rem;align-items:center}
+  .payload-chart dt{font:.85rem/1.6 var(--font-body);color:var(--muted)}
+  .payload-chart dd{display:grid;grid-template-columns:1fr 8rem;gap:2rem;align-items:center;margin:0}
+  .payload-track{display:block;height:42px;background:var(--theme-bg);overflow:hidden;border-radius:3px}
+  .payload-track i{display:block;width:var(--payload);height:100%;background:var(--muted);opacity:.5}
+  .payload-after .payload-track i{background:var(--theme-accent);opacity:1}
+  .payload-chart strong{font:400 clamp(1.5rem,3vw,2.5rem)/1 var(--font-mono);letter-spacing:-.04em;text-align:right;white-space:nowrap}
+  .payload-chart small{font-size:.75rem;letter-spacing:0;color:var(--muted)}
+  .migration-proof{display:grid;grid-template-columns:.8fr 1.2fr;gap:3rem;align-items:start;margin-top:2.5rem}
+  .migration-count{display:flex;align-items:center;gap:1.25rem}
+  .migration-count>strong{color:var(--theme-accent);font:400 clamp(3rem,5vw,4.5rem)/1 var(--font-mono);letter-spacing:-.08em}
+  .migration-count p{font:.75rem/1.8 var(--font-mono)}
+  .migration-count p span{color:var(--muted)}
+  .migration-proof h3{font:400 1.15rem/1.5 var(--font-body)}
+  .migration-proof>div>p,.migration-detail p{font:.9rem/1.75 var(--font-body);color:var(--muted);margin-top:.75rem}
+  .migration-detail{margin-top:1rem}
+  .migration-detail summary{cursor:pointer;width:fit-content;padding:.65rem 0;font:.8rem/1.6 var(--font-body);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
+  .demo-loading-note{font:.95rem/1.75 var(--font-body);color:var(--muted);max-width:75ch;padding-top:1.5rem}
+  .demo-loading-note strong{font-weight:500;color:var(--theme-text)}
+  mediums-contribution{display:block;border:1px solid var(--line);background:var(--soft)}
+  .contribution-tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+  .contribution-tabs button{display:flex;align-items:center;gap:.65rem;padding:1rem;background:transparent;border:0;border-right:1px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono,monospace);cursor:pointer;min-height:52px}
+  .contribution-tabs button:last-child{border-right:0}
+
+  .contribution-tabs button[aria-selected=true]{background:var(--theme-text);color:var(--theme-bg)}
+  .contribution-tabs button:focus-visible{outline-offset:-4px;outline-color:currentColor}
+  .contribution-panel{display:grid;grid-template-columns:1fr 1.15fr;gap:3rem;padding:clamp(1.5rem,4vw,3rem);align-items:center}
+  .contribution-panel[hidden]{display:none}
+  .step-explanation h3{font:400 clamp(1.4rem,2.4vw,2rem)/1.2 var(--font-mono,monospace);letter-spacing:-.035em;max-width:17ch}
+  .step-explanation>p{font-size:.9rem;line-height:1.75;color:var(--muted);margin-top:1.25rem;max-width:37ch}
+  .workflow-artifact{border:1px solid var(--line);background:var(--theme-bg);padding:1.5rem;min-height:280px;display:flex;flex-direction:column;justify-content:center;gap:1rem;font-family:var(--font-mono,monospace)}
+  .artifact-label,.artifact-footnote{font-size:.75rem;line-height:1.7;color:var(--muted)}
+  .artifact-footnote{margin-top:auto;padding-top:1rem;font-size:.7rem}
+  .workflow-artifact .request-text{font-size:1.25rem;line-height:1.5;margin-bottom:.5rem}
+  .request-material{display:flex;justify-content:space-between;gap:1rem;padding-top:.75rem;border-top:1px solid var(--line);font-size:.75rem;line-height:1.5}
+  .request-material>span{color:var(--muted)}
+  .request-material b{font-weight:400;text-align:right}
+  .request-material code{padding:0;background:none;font:inherit;color:var(--theme-text)}
+  .preview-strip{display:flex;justify-content:space-between;gap:1rem;font-size:.75rem}
+  .preview-strip b{font-weight:400}
+  .release-preview{padding:1rem;border:1px solid var(--line)}
+  .release-preview>span{font-size:.75rem;color:var(--muted)}
+  .release-preview h4{font-size:1.25rem;font-weight:400;margin:1rem 0 .5rem}
+  .release-preview>strong{font-size:.7rem;font-weight:400}
+  .text-lines{display:grid;gap:7px;margin-top:1.25rem}
+  .text-lines i{height:3px;background:var(--line);width:100%}
+  .text-lines i:last-child{width:72%}
+  .review-items{display:grid;gap:1rem;font-size:.8rem;line-height:1.6;padding:.5rem 0}
+  .review-items>span{display:flex;align-items:baseline;gap:.75rem}
+  .review-items i{font-style:normal;font-size:.7rem}
+  .review-stamp{width:fit-content;border:1px solid var(--line);padding:.6rem .75rem;font-size:.65rem}
+  .publish-path{padding-block:.5rem}
+  .publish-path>div{display:flex;gap:1rem;align-items:center;position:relative;min-height:48px;font-size:.75rem}
+  .publish-path>div:not(:last-child)::after{content:'';position:absolute;top:28px;bottom:-20px;left:4px;width:1px;background:var(--line)}
+  .publish-path i{width:9px;height:9px;border:1px solid currentColor;border-radius:50%;flex:0 0 auto}
+  .publish-path>div:last-child i{background:var(--theme-text)}
+  .proof-note{display:grid;grid-template-columns:180px 1fr;gap:2rem;margin-top:1.5rem}
+  .proof-note>span{font:.75rem/1.7 var(--font-mono,monospace);color:var(--muted)}
+  .proof-note>p{max-width:70ch;font-size:.85rem;line-height:1.7}
+  .delivery-grid{display:grid;grid-template-columns:1fr 1fr;border-block:1px solid var(--line)}
+  .delivery-live,.delivery-next{padding:2rem}
+  .delivery-live{border-right:1px solid var(--line)}
+  .delivery-label{display:flex;align-items:center;gap:.6rem;font:.75rem/1.7 var(--font-mono,monospace);color:var(--muted)}
+  .delivery-label i{width:6px;height:6px;background:var(--theme-text);border-radius:50%}
+  .delivery-live ul{list-style:none;margin:1.5rem 0 0;padding:0}
+  .delivery-live li{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:1rem 0;border-bottom:1px solid var(--line)}
+  .delivery-live li:last-child{border:0;padding-bottom:0}
+  .delivery-live a{font-size:.95rem}
+  .delivery-live li>span{font:.75rem/1.7 var(--font-mono,monospace);color:var(--muted);text-align:right}
+  .delivery-next>strong{display:block;font:400 clamp(2rem,4vw,3.25rem)/1.2 var(--font-mono,monospace);letter-spacing:-.055em;margin:1.5rem 0 .5rem}
+  .goal-label{font:.7rem/1.7 var(--font-mono,monospace)}
+  .delivery-next>p{font-size:.85rem;line-height:1.7;color:var(--muted);max-width:48ch;margin-top:1rem}
+  @media(max-width:900px){.shared-screens{gap:1.25rem}.docs-screen{padding-top:3rem}.experience-notes{gap:1.5rem}.experience-sequence{gap:1rem}.delivery-live,.delivery-next{padding:1.5rem}.delivery-live li{flex-direction:column;gap:.35rem}.contribution-panel{gap:1.5rem}.proof-note{grid-template-columns:150px 1fr;gap:1.5rem}.landing-context{width:100%}}
+  @media(max-width:650px){.shared-screens{grid-template-columns:1fr;gap:2rem}.docs-screen{padding-top:0}.system-material{margin-top:1.25rem}.culture-proof{grid-template-columns:1fr;gap:1.5rem;margin-top:2rem;padding-top:2rem}.brand-material h3,.brand-material p{max-width:none}.landing-sequence{gap:2rem}.theme-pair{max-width:180px;width:100%}.experience-notes{align-items:start;flex-direction:column;gap:1.5rem}.experience-sequence{width:100%;justify-content:space-between;font-size:.65rem}.contribution-tabs button{justify-content:center;padding:.75rem .4rem;font-size:.75rem}.contribution-panel{grid-template-columns:1fr;padding:1.25rem}.step-explanation h3{max-width:none}.step-explanation>p{max-width:48ch;margin-top:1rem}.workflow-artifact{min-height:270px;padding:1.25rem}.proof-note{grid-template-columns:1fr;gap:.6rem}.delivery-grid{grid-template-columns:1fr}.delivery-live{border-right:0;border-bottom:1px solid var(--line)}.delivery-live,.delivery-next{padding:1.5rem 0}.delivery-live li{flex-direction:row;gap:1rem}.delivery-live a{font-size:.85rem}.browser-bar{font-size:.7rem;padding:.5rem .65rem;flex-wrap:wrap}.mediums-cover .browser-bar{font-size:.7rem}}
+  @media(max-width:900px){.payload-chart>div{grid-template-columns:9rem 1fr}.payload-chart dd{grid-template-columns:1fr 6rem;gap:1rem}.migration-proof{grid-template-columns:1fr 1.2fr;gap:2rem}}
+  @media(max-width:650px){.engineering-foundation{grid-template-columns:1fr;gap:1rem}.engineering-foundation>div{grid-template-columns:1fr 1.3fr;gap:.75rem}.engineering-foundation strong{font-size:.8rem}.payload-heading{flex-direction:column;gap:.75rem}.payload-chart{margin-top:2rem}.payload-chart>div{grid-template-columns:1fr;gap:.5rem}.payload-chart dd{grid-template-columns:1fr 5.4rem;gap:.75rem}.payload-track{height:30px}.migration-proof{grid-template-columns:1fr;gap:1.75rem}.migration-count{gap:1rem}.migration-count p span{font-size:.7rem}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>

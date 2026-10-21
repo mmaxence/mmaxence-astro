@@ -1,0 +1,64 @@
+---
+interface Props { kind: 'overview' | 'halla' }
+const { kind } = Astro.props;
+const halla = kind === 'halla';
+---
+<figure class="lockscreen-presentation">
+  <div class:list={['presentation', { halla }]}>
+    <div class="presentation-heading"><span>{halla ? 'HALLA / THE PERSONAL LAYER' : 'THE FIRST SCREEN / THREE INTENTIONS'}</span><span>Reconstructed study</span></div>
+    <div class="composition">
+      <div class="phone" aria-label={halla ? 'Reconstructed Halla personal area and theme picker' : 'Reconstructed content lockscreen'}>
+        <div class="screen">
+          <div class="landscape" aria-hidden="true"><svg viewBox="0 0 360 700" preserveAspectRatio="xMidYMid slice"><rect width="360" height="700" fill="#0d4949"/><circle cx="280" cy="230" r="105" fill="#c9d8a9"/><path d="M0 325L125 190 263 365 360 260V700H0Z" fill="#32736b"/><path d="M0 420L205 265 360 420V700H0Z" fill="#175b58"/><path d="M0 535L130 380 360 510V700H0Z" fill="#083e45"/><path d="M0 650Q100 480 360 580V700H0Z" fill="#072f39"/><path d="M198 420L170 460 230 500 170 550 218 605 160 700H210L250 600 205 549 259 500 195 457Z" fill="#83aaa0" opacity=".55"/></svg></div>
+          <div class="status" aria-hidden="true"><span>12:31</span><span>••• ▰</span></div>
+          {halla ? <>
+            <div class="account"><span class="eyebrow">SLIDEJOY</span><strong>My space</strong><div class="balance">520 <small>REDEEMABLE<br/>CARATS</small></div><span class="account-link">See details</span></div>
+            <div class="account-cards"><div class="full">Slidejoy Offerwall <span>More rewards</span></div><div>Redeem</div><div>Coupon inbox <b>3</b></div></div>
+            <div class="theme-sheet"><div class="sheet-grip"></div><strong>Select theme</strong><div class="theme-options">{['forest','dusk','sea'].map((theme,i)=><div><div class:list={['theme-swatch',theme]}>{i===0&&<span>✓</span>}</div><small>{['Forest','Dusk','Coast'][i]}</small></div>)}</div></div>
+          </> : <>
+            <div class="clock"><strong>12:31</strong><span>Monday, December 5</span></div>
+            <div class="story-card"><span class="eyebrow">A MOMENT TO DISCOVER</span><h3>A little more world.<br/>Before your day begins.</h3><p>Stories worth a moment of your time.</p><span class="story-reward">Read a story <b>+5P</b></span></div>
+            <div class="gesture-bar"><span>Read<br/><b>+5P</b></span><div class="unlock"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div><span>Unlock<br/><b>+2P</b></span></div>
+          </>}
+          <div class="nav-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <div class="design-notes">
+        <span class="eyebrow">{halla ? 'PERSONAL, WITHOUT LEAVING THE SURFACE' : 'THE PHONE STILL COMES FIRST'}</span>
+        <h3>{halla ? <>A familiar place.<br/>A layer of choice.</> : <>One surface.<br/>Different intentions.</>}</h3>
+        <p>{halla ? 'The personal area brings points, rewards and appearance together. A bottom sheet keeps the context visible while making a choice.' : 'Content is an invitation. Unlocking remains a separate, direct action. The same starting point serves both intentions.'}</p>
+        {halla ? <div class="detail-specimen"><span class="eyebrow">A SMALLER CONTROL, IN CONTEXT</span><div class="lab-row"><span><strong>Enable rolling</strong><small>Swipe up to the next page</small></span><span class="toggle" aria-hidden="true"></span></div><p>Reconstructed from Halla’s Lab Features sheet.</p></div> : <lockscreen-intent>
+          <div class="intent-controls" role="group" aria-label="Explore the lockscreen intentions"><button type="button" data-intent="discover" aria-pressed="true">Discover</button><button type="button" data-intent="read" aria-pressed="false">Read</button><button type="button" data-intent="unlock" aria-pressed="false">Unlock</button></div>
+          <div class="intent-result" aria-live="polite"><span class="intent-index">01</span><p>Pick up the phone. Content and rewards are visible before choosing a direction.</p></div>
+          <span class="interaction-note">Select an intention to explore the interaction logic.</span>
+        </lockscreen-intent>}
+      </div>
+    </div>
+    <div class="presentation-footer"><span>{halla ? 'Personal area · Contextual sheets · Optional behavior' : 'Discover content · Read with a left swipe · Unlock with a right swipe'}</span><span>Design reconstruction / 2026</span></div>
+  </div>
+  <figcaption>{halla ? 'Halla, rebuilt for presentation from the original personal-area, theme and Lab Features layouts. Sample themes, artwork and labels are new; the archival captures below show the original UI.' : 'Presentation reconstruction of the lockscreen’s content and gesture model, informed by the Halla archive. Typography and artwork are redrawn; editorial copy is illustrative. This is not a historical screenshot or a shipped redesign.'}</figcaption>
+</figure>
+<script>
+  class LockscreenIntent extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const states: Record<string, [string,string]> = {
+        discover:['01','Pick up the phone. Content and rewards are visible before choosing a direction.'],
+        read:['02','Swipe left to read. Choosing the story opens a path into its content.'],
+        unlock:['03','Swipe right to unlock. Continue to the phone without choosing the story.']
+      };
+      this.querySelectorAll<HTMLButtonElement>('button').forEach(button => button.addEventListener('click',()=>{
+        this.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+        const state=states[button.dataset.intent!];
+        this.querySelector('.intent-index')!.textContent=state[0];
+        this.querySelector('.intent-result p')!.textContent=state[1];
+      }));
+    }
+  }
+  if(!customElements.get('lockscreen-intent'))customElements.define('lockscreen-intent',LockscreenIntent);
+</script>
+<style>
+.lockscreen-presentation{margin:2.5rem 0} .presentation{background:#e9eeea;color:#193a38;padding:28px;overflow:hidden;border:1px solid #d4ddd5}.presentation-heading,.presentation-footer{display:flex;justify-content:space-between;gap:16px;font:10px/1.6 var(--font-mono,monospace);letter-spacing:.08em}.presentation-heading{padding-bottom:24px;border-bottom:1px solid #bdcdc3}.presentation-heading span:last-child{letter-spacing:0;opacity:.7}.composition{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center;padding:46px 12px}.phone{width:100%;max-width:300px;justify-self:center;background:#162d2e;padding:7px;border-radius:35px;border:1px solid #3e5553}.screen{aspect-ratio:360/700;border-radius:28px;position:relative;overflow:hidden;color:#fff;container-type:inline-size;font-family:Arial,Helvetica,sans-serif}.landscape{position:absolute;inset:0}.landscape svg{width:100%;height:100%}.status{position:relative;display:flex;justify-content:space-between;padding:5cqw 7cqw;font-size:3cqw;letter-spacing:.08em}.clock{position:relative;padding:3cqw 7cqw}.clock strong{display:block;font-size:16cqw;font-weight:300;letter-spacing:-.06em;line-height:1.1}.clock span{font-size:3.4cqw}.story-card{position:absolute;left:6cqw;right:6cqw;top:38%;padding:7cqw;background:#f5f4e9;color:#163a38;border-radius:3cqw}.eyebrow{display:block;font:10px/1.5 var(--font-mono,monospace);letter-spacing:.12em}.story-card .eyebrow{font-size:2.4cqw}.story-card h3{font-size:7.8cqw;font-weight:400;line-height:1.12;margin:4cqw 0;letter-spacing:-.04em}.story-card p{font-size:3.5cqw;line-height:1.5;margin:0 0 5cqw}.story-reward{display:flex;justify-content:space-between;border-top:1px solid #c5d0c5;padding-top:4cqw;font-size:3.4cqw}.story-reward b{font-weight:400}.gesture-bar{position:absolute;bottom:13cqw;left:8cqw;right:8cqw;display:flex;align-items:center;justify-content:space-between;font-size:3.3cqw;line-height:1.8}.gesture-bar span:last-child{text-align:right}.gesture-bar b{font-weight:400;opacity:.65}.unlock{width:16cqw;height:16cqw;border:1px solid #a2beb9;border-radius:50%;display:grid;place-items:center}.nav-bar{position:absolute;bottom:4cqw;left:23%;right:23%;display:flex;align-items:center;justify-content:space-between}.nav-bar i{width:2.4cqw;height:2.4cqw;border:1px solid #b9ccc5}.nav-bar i:nth-child(2){border-radius:50%}.nav-bar i:first-child{transform:rotate(45deg);border-top:0;border-right:0}.design-notes h3{font:400 clamp(24px,3vw,39px)/1.12 Arial,Helvetica,sans-serif;letter-spacing:-.04em;margin:20px 0}.design-notes>p{font:14px/1.75 Arial,Helvetica,sans-serif;color:#4c625c;max-width:29ch}.intent-controls{display:flex;gap:4px;flex-wrap:wrap;margin-top:30px;padding-bottom:12px;border-bottom:1px solid #bdcdc3}.intent-controls button{font:11px/1.5 var(--font-mono,monospace);padding:8px 10px;border:1px solid transparent;background:transparent;color:#193a38;cursor:pointer;border-radius:0}.intent-controls button[aria-pressed=true]{background:#193a38;color:#fff}.intent-controls button:hover{border-color:#193a38}.intent-controls button:focus-visible{outline:2px solid #193a38;outline-offset:3px}.intent-result{display:flex;align-items:baseline;gap:15px;min-height:110px;padding-top:14px}.intent-index{font:24px/1 monospace;color:#6b8b7e}.intent-result p{font:13px/1.7 Arial,Helvetica,sans-serif;margin:0}.interaction-note{display:block;font:10px/1.6 var(--font-mono,monospace);color:#536b61}.presentation-footer{border-top:1px solid #bdcdc3;padding-top:20px;font-size:9px;letter-spacing:0}.account{position:relative;margin:8cqw 7cqw}.account .eyebrow{font-size:2.4cqw}.account>strong{font-size:5cqw;font-weight:400}.balance{font-size:15cqw;line-height:1.1;display:flex;align-items:center;gap:4cqw;margin-top:7cqw}.balance small{font-size:2.3cqw;line-height:1.6;letter-spacing:.15em}.account-link{font-size:3cqw;display:block;margin-top:3cqw}.account-cards{position:relative;padding:1cqw 6cqw;display:grid;grid-template-columns:1fr 1fr;gap:2cqw;font-size:3.5cqw}.account-cards>div{background:#f4f1e7;color:#254841;padding:5cqw 4cqw;border-radius:2cqw}.account-cards .full{grid-column:span 2;background:#cbd9b4}.full span{display:block;font-size:2.5cqw;margin-top:2cqw}.account-cards b{font-size:2.4cqw;background:#c55542;color:white;padding:1cqw;border-radius:50%}.theme-sheet{position:absolute;bottom:0;left:0;right:0;background:#fffdf6;color:#1d3c36;border-radius:5cqw 5cqw 0 0;padding:3cqw 5cqw 14cqw}.sheet-grip{width:9cqw;height:1cqw;background:#c8cec4;border-radius:2cqw;margin:0 auto 5cqw}.theme-sheet>strong{font-size:4cqw;font-weight:500}.theme-options{display:grid;grid-template-columns:repeat(3,1fr);gap:3cqw;margin-top:5cqw}.theme-options small{font-size:2.5cqw}.theme-swatch{aspect-ratio:3/4;border-radius:2cqw;display:grid;place-items:center;background:linear-gradient(145deg,#b8cfb6 0 35%,#387669 35% 60%,#123f43 60%)}.theme-swatch.dusk{background:linear-gradient(145deg,#edc5a4 0 35%,#ad796d 35% 60%,#5d485b 60%)}.theme-swatch.sea{background:linear-gradient(145deg,#cfddd9 0 35%,#709caa 35% 60%,#34596c 60%)}.theme-swatch span{display:grid;place-items:center;border-radius:50%;background:#fff;width:8cqw;height:8cqw;font-size:4cqw}.halla .nav-bar i{border-color:#36544e}.detail-specimen{margin-top:30px;padding-top:20px;border-top:1px solid #bdcdc3}.lab-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0}.lab-row strong{display:block;font:14px/1.6 Arial,sans-serif;font-weight:400}.lab-row small{display:block;font:11px/1.5 Arial,sans-serif;color:#586e64}.toggle{width:34px;height:18px;border-radius:20px;background:#71897c;position:relative;flex-shrink:0}.toggle:after{content:'';position:absolute;right:3px;top:3px;width:12px;height:12px;border-radius:50%;background:white}.detail-specimen p{font:10px/1.6 var(--font-mono,monospace);color:#536b61}figcaption{margin-top:12px;color:var(--theme-text-muted);font:.75rem/1.7 var(--font-mono,monospace)}
+@media(max-width:650px){.presentation{padding:20px}.presentation-heading{font-size:8px}.composition{grid-template-columns:1fr;gap:30px;padding:30px 0}.phone{max-width:280px}.design-notes{max-width:360px;margin:auto;width:100%}.design-notes>p{max-width:none}.design-notes h3{font-size:32px}.presentation-footer{flex-direction:column;gap:6px}.intent-result{min-height:85px}}
+</style>

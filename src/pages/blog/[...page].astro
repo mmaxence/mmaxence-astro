@@ -2,11 +2,11 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import SectionLinks from '../../components/ui/SectionLinks.astro';
 import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
-import BlogCard from '../../components/blog/BlogCard.astro';
-import CardGrid from '../../components/ui/CardGrid.astro';
+import TitleListItem from '../../components/ui/TitleListItem.astro';
 import ThemeToast from '../../components/ui/ThemeToast.astro';
 import { getCollection } from 'astro:content';
 
@@ -46,8 +46,6 @@ export async function getStaticPaths() {
 
 const { posts, featured, currentPage, totalPages } = Astro.props;
 const isFirstPage = currentPage === 1;
-const heroPost = isFirstPage ? posts[0] : null;
-const gridPosts = isFirstPage ? posts.slice(1) : posts;
 
 const prevUrl = currentPage > 1
   ? currentPage === 2 ? '/blog/' : `/blog/${currentPage - 1}/`
@@ -57,16 +55,18 @@ const nextUrl = currentPage < totalPages
   : null;
 ---
 
-<BaseLayout title="Blog" description="Essays on product design in the AI age: the systems people and agents design within, working in code, and the judgment that doesn't automate.">
+<BaseLayout title="Writing" description="Essays on product design in the AI age: the systems people and agents design within, working in code, and the judgment that doesn't automate.">
   <Header />
   <PageContent class="flex flex-col items-center pb-4 min-h-screen">
     <div class="w-full max-w-5xl mx-auto px-3 md:px-8 lg:px-12 py-12">
       <AnimatedContent delay={0}>
         <PageHeader
-          title="Blog"
+          title="Writing"
           description="Essays on product design in the AI age: the systems people and agents design within, working in code, and the judgment that doesn't automate."
         />
+
       </AnimatedContent>
+      <SectionLinks group="writing" sticky />
 
       {isFirstPage && featured.length > 0 && (
         <div class="mb-16">
@@ -77,17 +77,7 @@ const nextUrl = currentPage < totalPages
             <ol class="start-here-path" data-reveal style="--r: 2">
               {featured.map((post, index) => (
                 <li class="start-here-item" data-reveal style={`--r: ${3 + Math.min(index, 5)}`}>
-                  <a href={`/blog/${post.slug}/`} class="start-here-link">
-                    <span class="start-here-num">{index + 1}</span>
-                    {post.data.featured_image && (
-                      <img src={post.data.featured_image} alt="" class="start-here-cover" loading="lazy" />
-                    )}
-                    <span class="start-here-text">
-                      <span class="start-here-title">{post.data.title}</span>
-                      {post.data.description && <span class="start-here-desc">{post.data.description}</span>}
-                    </span>
-                    <span class="start-here-arrow" aria-hidden="true">→</span>
-                  </a>
+                  <TitleListItem title={post.data.title} href={`/blog/${post.slug}/`} number={index + 1} />
                 </li>
               ))}
             </ol>
@@ -99,21 +89,12 @@ const nextUrl = currentPage < totalPages
         <AnimatedContent>
           <h2 class="text-2xl md:text-3xl font-mono font-light mb-4 text-theme" data-reveal style="--r: 0">All writing</h2>
           <div class="reveal-rule mb-8" style="--r: 0" aria-hidden="true"></div>
-          {heroPost && (
-            <div class="mb-12 md:mb-16" data-reveal style="--r: 1">
-              <BlogCard post={heroPost} featured />
-            </div>
-          )}
         </AnimatedContent>
       )}
 
-      <CardGrid columns={2}>
-        {gridPosts.map((post, index) => (
-          <AnimatedContent delay={Math.min(isFirstPage ? index + 1 : index, 6) * 50 + 150}>
-            <BlogCard post={post} />
-          </AnimatedContent>
-        ))}
-      </CardGrid>
+      <div aria-label="Writing archive">
+        {posts.map(post => <TitleListItem title={post.data.title} href={`/blog/${post.slug}/`} date={post.data.date} heading={isFirstPage ? 'h3' : 'h2'} />)}
+      </div>
 
       {totalPages > 1 && (
         <nav class="blog-pagination mt-16 pt-8 border-t border-theme" aria-label="Blog pagination">
@@ -181,82 +162,8 @@ const nextUrl = currentPage < totalPages
     opacity: 0.6;
   }
 
-  /* The AI series — numbered reading path */
-  .start-here-path {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border: 1px solid var(--theme-border);
-    border-radius: var(--radius-card);
-    overflow: hidden;
-  }
-  .start-here-item + .start-here-item {
-    border-top: 1px solid var(--theme-border);
-  }
-  .start-here-link {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.1rem;
-    text-decoration: none;
-    color: var(--theme-text);
-    transition: background-color 0.2s ease;
-  }
-  .start-here-link:hover {
-    background-color: color-mix(in srgb, var(--theme-text) 5%, transparent);
-  }
-  .start-here-num {
-    flex-shrink: 0;
-    width: 1.85rem;
-    height: 1.85rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: 1px solid var(--theme-border);
-    font-family: var(--theme-font-heading, monospace);
-    font-size: 0.85rem;
-    color: var(--theme-text-muted);
-  }
-  .start-here-cover {
-    flex-shrink: 0;
-    height: 34px;
-    width: auto;
-    max-width: 82px;
-    object-fit: contain;
-    border-radius: 3px;
-    border: 1px solid var(--theme-border);
-  }
-  .start-here-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    min-width: 0;
-  }
-  .start-here-title {
-    font-size: 1rem;
-    line-height: 1.3;
-    color: var(--theme-text);
-  }
-  .start-here-desc {
-    font-size: 0.85rem;
-    color: var(--theme-text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .start-here-arrow {
-    margin-left: auto;
-    flex-shrink: 0;
-    color: var(--theme-text-muted);
-    opacity: 0;
-    transform: translateX(-2px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  .start-here-link:hover .start-here-arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  .start-here-path { list-style:none; margin:0; padding:0; }
+  .start-here-item { margin:0; }
 </style>
 
 <script>

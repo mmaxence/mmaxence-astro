@@ -16,7 +16,7 @@ const bookUrl = `/library/${book.slug.replace('-review', '')}/`;
 ---
 
 <a href={bookUrl} class="book-card-link block no-underline">
-  <article class="book-card p-6 border border-theme bg-theme rounded-card shadow-theme">
+  <article class="book-card p-6 border border-theme bg-theme rounded-card">
     {book.data.featured_image && (
       <img
         src={featuredImage}
@@ -44,7 +44,7 @@ const bookUrl = `/library/${book.slug.replace('-review', '')}/`;
 
   .book-card-link:hover .book-card {
     border-color: var(--theme-accent);
-    box-shadow: var(--shadow-hover, 0 2px 8px rgba(0, 0, 0, 0.12));
+    box-shadow: none;
     transform: translateY(-1px);
   }
 

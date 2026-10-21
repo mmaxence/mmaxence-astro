@@ -1,0 +1,158 @@
+---
+/** A conceptual interaction study. Product captures live in HanjiCase. */
+---
+<figure class="hanji-connections">
+  <fieldset class="connection-switch">
+    <legend class="sr-only">Choose a connection to follow</legend>
+    <input type="radio" name="hanji-connection" id="hanji-sketch-task" checked />
+    <label for="hanji-sketch-task">Sketch to task</label>
+    <input type="radio" name="hanji-connection" id="hanji-sketch-page" />
+    <label for="hanji-sketch-page">Sketch to page</label>
+    <input type="radio" name="hanji-connection" id="hanji-passage-task" />
+    <label for="hanji-passage-task">Passage to task</label>
+
+    <div class="connection-panels">
+      <div class="connection-panel" data-connection="sketch-task">
+        <div class="connection-pair">
+          <section class="surface source-surface" aria-label="Source sketch in Think">
+            <header class="surface-label"><span>Think</span><span>First visit / Questions</span></header>
+            <div class="sketch-plane">
+              <div class="small-note">What does someone need to know first?</div>
+              <div class="sticky-note"><span class="note-type">A question to work on</span><h3>What should a first visit explain?</h3><span class="source-chip"><i></i> Linked issue · To do</span></div>
+            </div>
+          </section>
+          <div class="context-thread" aria-hidden="true"><span></span><i></i><span></span></div>
+          <section class="surface destination-surface" aria-label="Resulting issue in Work">
+            <header class="surface-label"><span>Work</span><span>Issue</span></header>
+            <div class="issue-specimen">
+              <span class="issue-state"><i></i> To do</span>
+              <h3>What should a first visit explain?</h3>
+              <p>Explore the first visit. Decide what a new person needs before taking the next step.</p>
+              <div class="source-reference"><span>From Think</span><strong>First visit / Questions</strong><small>Source sticky retained</small></div>
+            </div>
+          </section>
+        </div>
+        <p class="connection-principle">The sticky stays on the board with a live issue link, while a short Undo window can cancel a newly created issue.</p>
+      </div>
+
+      <div class="connection-panel" data-connection="sketch-page">
+        <div class="connection-pair">
+          <section class="surface source-surface" aria-label="Selected section in Think">
+            <header class="surface-label"><span>Think</span><span>First visit / Questions</span></header>
+            <div class="selection-plane">
+              <span class="selection-label">Selected section</span>
+              <div class="section-note"><h3>What should a first visit explain?</h3></div>
+              <div class="selection-notes"><span>Start with what matters.</span><span>Show one useful next step.</span></div>
+            </div>
+          </section>
+          <div class="context-thread" aria-hidden="true"><span></span><i></i><span></span></div>
+          <section class="surface destination-surface" aria-label="Content and destination preview for Write">
+            <header class="surface-label"><span>Write</span><span>Review the destination &amp; content</span></header>
+            <div class="page-specimen">
+              <span class="note-type">Page preview</span>
+              <h3>What should a first visit explain?</h3>
+              <p>Start with what matters.<br />Show one useful next step.</p>
+              <div class="source-reference"><span>From Think</span><strong>First visit / Questions</strong><small>Board and section linked</small></div>
+            </div>
+          </section>
+        </div>
+        <p class="connection-principle">Preview the content and destination before creating a page or submitting it for review.</p>
+      </div>
+
+      <div class="connection-panel" data-connection="passage-task">
+        <div class="connection-pair">
+          <section class="surface source-surface" aria-label="Selected document passage in Write">
+            <header class="surface-label"><span>Write</span><span>First visit / A useful beginning</span></header>
+            <div class="passage-specimen">
+              <span class="note-type">A useful beginning</span>
+              <h3>What should a first visit explain?</h3>
+              <p>Begin with what matters.</p>
+              <p><mark>Give a new person one useful next step before introducing the rest.</mark></p>
+              <span class="selection-caption">Selected passage</span>
+            </div>
+          </section>
+          <div class="context-thread" aria-hidden="true"><span></span><i></i><span></span></div>
+          <section class="surface destination-surface" aria-label="Issue with a source citation in Work">
+            <header class="surface-label"><span>Work</span><span>Issue</span></header>
+            <div class="issue-specimen">
+              <span class="issue-state"><i></i> To do</span>
+              <h3>Design one useful next step.</h3>
+              <blockquote>Give a new person one useful next step before introducing the rest.</blockquote>
+              <div class="source-reference"><span>From Write</span><strong>First visit</strong><small>Heading: A useful beginning</small></div>
+            </div>
+          </section>
+        </div>
+        <p class="connection-principle">The new issue carries the selected words, page and heading, keeping the reason for the task beside the action.</p>
+      </div>
+    </div>
+  </fieldset>
+  <figcaption>Interaction study · Illustrated from local implementations.</figcaption>
+</figure>
+
+<style>
+  .hanji-connections { --connection-quiet: color-mix(in srgb, var(--theme-text) 3%, var(--theme-bg)); --connection-line: var(--theme-border); margin: 0; color: var(--theme-text); min-width: 0; }
+  .connection-switch { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); min-width: 0; padding: 0; margin: 0; border: 0; }
+  .connection-switch > input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .connection-switch > label { display: flex; align-items: center; justify-content: center; min-height: 48px; padding: .5rem .75rem; border-bottom: 1px solid var(--connection-line); color: var(--theme-text-muted); text-align: center; font: .8rem/1.5 var(--story-body, sans-serif); cursor: pointer; gap: .7rem; }
+  .connection-switch > input:checked + label { color: var(--theme-text); border-bottom-color: currentColor; background: color-mix(in srgb, var(--theme-bg) 75%, transparent); }
+  .connection-switch > input:focus-visible + label { outline: 2px solid var(--theme-text); outline-offset: -4px; }
+  .connection-switch > label:hover { color: var(--theme-text); }
+  .connection-panels { grid-column: 1 / -1; min-width: 0; }
+  .connection-panel { display: none; }
+  #hanji-sketch-task:checked ~ .connection-panels [data-connection='sketch-task'], #hanji-sketch-page:checked ~ .connection-panels [data-connection='sketch-page'], #hanji-passage-task:checked ~ .connection-panels [data-connection='passage-task'] { display: block; animation: connection-arrives .3s ease both; }
+  .connection-pair { display: grid; grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr); align-items: stretch; padding: clamp(1.25rem, 3vw, 2.5rem) 0 1.5rem; }
+  .surface { display: flex; flex-direction: column; min-width: 0; }
+  .surface-label { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem .75rem; margin-bottom: 1rem; font: 1.25rem/1.5 var(--story-display, Georgia, serif); }
+  .surface-label > span + span { color: var(--theme-text-muted); font: .62rem/1.5 var(--story-body, sans-serif); }
+  .sketch-plane, .selection-plane, .issue-specimen, .page-specimen, .passage-specimen { flex: 1; min-height: 310px; }
+  .sketch-plane { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; padding: 1.5rem; background-color: #e9e7df; background-image: radial-gradient(#b3afa3 0.65px, transparent 0.65px); background-size: 14px 14px; border: 1px solid var(--connection-line); }
+  .small-note { align-self: flex-start; max-width: 18ch; border: 1px solid var(--connection-line); padding: .65rem .8rem; font: .8rem/1.55 var(--font-body, sans-serif); color: #4e594a; background: #e3ead9; transform: rotate(-2deg); }
+  .sticky-note { width: min(100%, 300px); border: 1px solid #d4cba9; padding: 1.1rem; background: #f7edcd; color: #494335; transform: rotate(1deg); }
+  .hanji-connections h3 { font: 400 clamp(1.45rem, 2.2vw, 1.9rem)/1.15 var(--story-display, Georgia, serif); letter-spacing: -.025em; margin: .65rem 0 1rem; }
+  .note-type, .selection-caption { display: block; font: .7rem/1.5 var(--font-mono, monospace); color: var(--theme-text-muted); }
+  .source-chip { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid #d4cba9; padding: .3rem .45rem; color: #645432; font: .7rem/1.4 var(--font-mono, monospace); }
+  .source-chip i, .issue-state i { width: .4rem; height: .4rem; border: 1px solid currentColor; border-radius: 50%; }
+  .context-thread { display: flex; align-items: center; justify-content: center; padding: 0 8px; }
+  .context-thread span { flex: 1; height: 1px; background: var(--connection-line); }
+  .context-thread i { width: 5px; height: 5px; border: 1px solid var(--theme-text-muted); border-radius: 50%; margin: 0 3px; }
+  .issue-specimen, .page-specimen, .passage-specimen { display: flex; flex-direction: column; border: 1px solid var(--connection-line); padding: 1.5rem; background: #fcfbf8; }
+  .destination-surface .issue-specimen { border-top: 2px solid #8d43b8; }
+  .destination-surface .page-specimen { border-top: 2px solid #1e8485; }
+  .issue-state { display: flex; align-items: center; gap: .4rem; font: .7rem/1.5 var(--font-mono, monospace); color: var(--theme-text-muted); }
+  .hanji-connections .surface p, .hanji-connections blockquote { font: .85rem/1.8 var(--font-body, sans-serif); color: var(--theme-text-muted); margin: 0 0 1rem; }
+  .source-reference { display: grid; gap: .25rem; padding: .75rem; margin-top: auto; border-left: 2px solid #b896c4; background: #f1edf3; }
+  .page-specimen .source-reference { border-color: #72a5a2; background: #eaf1ed; }
+  .source-reference > span, .source-reference small { font: .7rem/1.5 var(--font-mono, monospace); color: var(--theme-text-muted); }
+  .source-reference strong { font: 400 .8rem/1.5 var(--font-body, sans-serif); }
+  .selection-plane { border: 1px dashed var(--theme-text-muted); padding: 1.25rem; background: var(--connection-quiet); }
+  .selection-label { font: .7rem/1.5 var(--font-mono, monospace); color: var(--theme-text-muted); }
+  .section-note { border: 1px solid var(--connection-line); padding: .6rem 1rem; margin: .8rem 0; background: var(--theme-bg); }
+  .section-note h3 { margin: .35rem 0; }
+  .selection-notes { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .selection-notes > span { display: block; padding: .8rem; border: 1px solid var(--connection-line); font: .8rem/1.6 var(--font-body, sans-serif); background: #f7edcd; color: #494335; }
+  .passage-specimen mark { color: var(--theme-text); background: color-mix(in srgb, #1e8485 18%, var(--theme-bg)); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: .1rem .15rem; }
+  .selection-caption { margin-top: auto; }
+  .hanji-connections blockquote { padding: 0 0 0 .9rem; border-left: 2px solid var(--theme-text-muted); }
+  .hanji-connections .connection-principle { font: .9rem/1.75 var(--story-body, sans-serif); color: var(--theme-text-muted); max-width: 76ch; margin: 0; padding-top: 1rem; border-top: 1px solid var(--connection-line); }
+  .hanji-connections > figcaption { font: .62rem/1.7 var(--story-body, sans-serif); color: var(--theme-text-muted); margin-top: .85rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @keyframes connection-arrives { from { opacity: .4; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    #hanji-sketch-task:checked ~ .connection-panels [data-connection='sketch-task'], #hanji-sketch-page:checked ~ .connection-panels [data-connection='sketch-page'], #hanji-passage-task:checked ~ .connection-panels [data-connection='passage-task'] { animation: none; }
+  }
+  @media (max-width: 700px) {
+    .connection-switch > label { font-size: .68rem; padding-inline: .3rem; gap: .25rem; }
+    .connection-pair { grid-template-columns: 1fr; gap: 0; }
+    .context-thread { flex-direction: column; height: 38px; padding: 4px 0; }
+    .context-thread span { width: 1px; height: auto; }
+    .context-thread i { margin: 3px 0; }
+    .surface-label { margin-bottom: .7rem; }
+    .sketch-plane, .selection-plane, .issue-specimen, .page-specimen, .passage-specimen { min-height: 0; padding: 1.1rem; }
+    .source-reference { margin-top: .25rem; }
+    .small-note { max-width: 21ch; }
+    .sticky-note { width: 90%; padding: .9rem; }
+    .selection-caption { margin-top: .5rem; }
+      .selection-notes { gap: .5rem; }
+    .selection-notes > span { padding: .65rem; }
+  }
+</style>

@@ -34,4 +34,4 @@ During my 6-month new mission discovery, I used "pretotyping" to pitch new monet
 
 ## How It Shaped My Work
 
-It reinforced my belief that even if you have development resources, you shouldn't use them until the market fit is proven—a lesson I learned during my 2022 mission team "failure".
+It reinforced my belief that even if you have development resources, you shouldn't use them until the market fit is proven. I learned that lesson during my 2022 mission team "failure".

@@ -1,0 +1,476 @@
+---
+import { workEntries } from '../../data/work';
+const chapters = [
+  { slug: 'lockscreen', title: 'Lockscreen', x: 10, y: 42 },
+  { slug: 'offerwall', title: 'Offerwall', x: 27, y: 59 },
+  { slug: 'game-ua-multi-mission', title: 'Game UA', x: 44, y: 49 },
+  { slug: 'interaction-composer', title: 'Composer', x: 61, y: 34 },
+  { slug: 'buzzvil-mediums', title: 'Buzzvil mediums', x: 78, y: 43 },
+  { slug: 'hanji', title: 'Hanji', x: 95, y: 57 },
+].map(chapter => ({ ...chapter, years: workEntries.find(work => work.slug === chapter.slug)!.years }));
+---
+<work-quest>
+  <h1 class="sr-only">Work</h1>
+  <div class="quest-stage" id="project-path" tabindex="0" role="region" aria-label="Six project stories">
+
+    <div class="world-loader" aria-hidden="true"><div class="loader-orb"><span data-load-percent>0%</span></div></div>
+    <canvas class="quest-canvas" aria-hidden="true"></canvas>
+    <svg class="fallback-trail" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true"><path d="M-70 170 C130 100 180 400 300 310 S480 100 610 170 S820 350 1070 240" /></svg>
+    <div class="workshop-label" data-workshop-label hidden><a href="#open-source" data-open-contributions aria-haspopup="dialog" aria-controls="open-source-dialog"><span>Open-source workshop</span><small>Community contributions</small></a></div>
+    <div class="quest-markers" role="group" aria-label="Project timeline">
+      {chapters.map(chapter => <div class="quest-stop" id={chapter.slug} data-map-x={chapter.x} data-map-y={chapter.y} style={`--node-x:${chapter.x}%;--node-y:${chapter.y}%`}>
+        <a class="quest-marker no-underline" href={`/work/${chapter.slug}/`} data-quest-select={chapter.slug} aria-label={`${chapter.title}, ${chapter.years}. Open story.`}>
+          <svg class="stop-ring" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7.5" /><circle class="ring-value" cx="10" cy="10" r="7.5" pathLength="100" /><path class="ring-check" d="m6.5 10 2.3 2.3 4.7-4.6" /></svg>
+          <span class="stop-copy"><span class="stop-title">{chapter.title}</span><span class="stop-years">{chapter.years}</span><span class="stop-progress-label" data-stop-progress-label hidden></span></span><span class="sr-only" data-stop-percent>0%</span>
+        </a>
+      </div>)}
+    </div>
+  </div>
+  <div class="quest-controls">
+    <details class="journey-stats">
+      <summary aria-label="Your exploration progress">
+        <span class="journey-level"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="completion-track" cx="24" cy="24" r="20"/><circle class="completion-arc" cx="24" cy="24" r="20" pathLength="100"/></svg><span>LV</span><b data-level>0</b></span>
+        <span class="journey-readout"><span class="journey-rank">Explorer</span><span data-next-level>0 of 6 complete</span></span>
+      </summary>
+      <div class="journey-popover"><p><b data-xp>0</b> exploration XP</p><p><b data-completed>0</b> of 6 projects completed.</p><p>One completed project = one level. Partial reading earns XP. Saved in this browser.</p><button type="button" data-reset>Reset journey</button><span role="status" data-reset-status></span></div>
+    </details>
+    <div class="route-controls">
+      <button type="button" data-step="-1" aria-label="Travel to the previous project"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="m12 5-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.4" /></svg></button>
+      <a class="station-control no-underline" data-station-link href="/work/lockscreen/" aria-label="Open Lockscreen story">
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="3" y="3" width="14" height="11" rx="4"/><path d="M3 9h14M10 3v6M6 17h8M10 14v3"/></svg>
+        <span data-station-name>Lockscreen</span><kbd>Enter</kbd>
+      </a>
+      <button type="button" data-step="1" aria-label="Travel to the next project"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="m8 5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" /></svg></button>
+    </div>
+    <div class="world-controls" role="group" aria-label="World controls"><div class="zoom-controls" role="group" aria-label="Globe zoom"><button type="button" data-zoom="-.1" aria-label="Zoom out"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-zoom=".1" aria-label="Zoom in"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 10h10M10 5v10"/></svg></button></div><button class="motion-control" type="button" data-motion aria-pressed="false" aria-label="Pause world motion" title="Pause motion"><svg width="12" height="12" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1v8M7 1v8" stroke="currentColor" stroke-width="1.3" /></svg><span data-motion-label>Pause</span></button></div>
+  </div>
+  <aside class="journey-reward" hidden data-journey-reward aria-label="Exploration reward">
+    <span class="reward-symbol" aria-hidden="true">✓</span><div role="status" aria-live="polite"><strong data-reward-title></strong><p data-reward-detail></p></div><button type="button" data-dismiss-reward aria-label="Dismiss progress reward">×</button>
+  </aside>
+  <noscript><style>work-quest .world-loader{display:none!important}</style><nav aria-label="All project stories"><ul>{chapters.map(chapter => <li><a href={`/work/${chapter.slug}/`}>{chapter.title}</a></li>)}</ul></nav></noscript>
+</work-quest>
+
+<script>
+  import { getProgress, getSummary, resetProgress, takeWorkRewards, WORK_SLUGS } from '../../lib/work-progress';
+  import type { WorldHandle } from './work-quest-world';
+
+  let worldHasLoaded = false;
+
+  class WorkQuest extends HTMLElement {
+    private controller?: AbortController;
+    private world?: WorldHandle;
+    private alive = false;
+    private motion = true;
+    private panPosition = 0;
+    private saveTimer = 0;
+    private loaderTimer = 0;
+    private rewardTimer = 0;
+    private rewardHideTimer = 0;
+    private restoring = false;
+    private pendingStationFocus = false;
+    private focusFrame = 0;
+    private station: string = WORK_SLUGS[0];
+    private active: string | null = null;
+    private reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+    connectedCallback() {
+      this.controller?.abort();
+      this.controller = new AbortController();
+      const { signal } = this.controller;
+      this.alive = true;
+      this.dataset.world='loading';this.setAttribute('aria-busy','true');
+      this.loadingProgress(5);this.removeAttribute('data-loader-visible');
+      clearTimeout(this.loaderTimer);
+      this.loaderTimer=window.setTimeout(()=>{if(!worldHasLoaded&&this.alive&&this.dataset.world==='loading')this.setAttribute('data-loader-visible','');},250);
+      this.motion = !this.reduced.matches;
+      this.panPosition = Number.isFinite(history.state?.workQuestPan) ? Math.min(1,Math.max(0,history.state.workQuestPan)) : 0;
+      this.station=WORK_SLUGS.find(slug=>slug===history.state?.workQuestStation)??WORK_SLUGS[0];
+      this.updateStation(this.station);
+      this.updateProgress();
+      this.updateMotion();
+      document.addEventListener('work-contributions-toggle',event=>{
+        if((event as CustomEvent<boolean>).detail)this.world?.setMotion(false);
+        else this.updateMotion();
+      },{signal});
+      this.querySelectorAll<HTMLElement>('[data-open-contributions]').forEach(link=>{
+        link.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')this.activate('open-source');},{signal});
+        link.addEventListener('pointerleave',()=>this.activate(null),{signal});
+        link.addEventListener('focus',()=>this.activate('open-source'),{signal});
+        link.addEventListener('blur',()=>this.activate(null),{signal});
+      });
+      this.querySelectorAll<HTMLAnchorElement>('[data-quest-select]').forEach((link,index) => {
+        const slug = link.dataset.questSelect!;
+        link.addEventListener('pointerenter', event => { if(event.pointerType==='mouse') this.activate(slug); }, {signal});
+        link.addEventListener('pointerleave', () => { if(document.activeElement!==link) this.activate(null); }, {signal});
+        link.addEventListener('focus', () => { this.activate(slug);if(!this.restoring&&link.matches(':focus-visible')){if(this.dataset.world==='ready')this.world?.select(slug);else link.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});} }, {signal});
+        link.addEventListener('blur', () => this.activate(null), {signal});
+        link.addEventListener('keydown', event => {
+          if(event.metaKey||event.ctrlKey||event.altKey) return;
+          const offset = ['ArrowRight','ArrowDown'].includes(event.key) ? 1 : ['ArrowLeft','ArrowUp'].includes(event.key) ? -1 : 0;
+          if(!offset&&event.key!=='Home'&&event.key!=='End') return;
+          event.preventDefault();
+          const next = event.key==='Home'?0:event.key==='End'?5:Math.max(0,Math.min(5,index+offset));
+          this.querySelector<HTMLAnchorElement>(`[data-quest-select="${WORK_SLUGS[next]}"]`)?.focus({preventScroll:true});
+        }, {signal});
+      });
+      this.querySelectorAll<HTMLButtonElement>('[data-step]').forEach(button => button.addEventListener('click', () => {
+        this.travel(Number(button.dataset.step)<0?-1:1);
+      }, {signal}));
+      this.querySelector('[data-station-link]')?.addEventListener('click',()=>this.persistPan(),{signal});
+      this.querySelector<HTMLElement>('.route-controls')?.addEventListener('keydown',event=>{
+        if(event.altKey||event.metaKey||event.ctrlKey||event.repeat)return;
+        if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();this.travel(event.key==='ArrowRight'?1:-1);}
+      },{signal});
+      const stage=this.querySelector<HTMLElement>('.quest-stage')!;
+      stage.addEventListener('dragstart',event=>event.preventDefault(),{signal});
+      this.querySelectorAll<HTMLButtonElement>('[data-zoom]').forEach(button=>button.addEventListener('click',()=>this.world?.zoom(Number(button.dataset.zoom)),{signal}));
+      this.querySelector('canvas')?.addEventListener('pointerdown',()=>stage.focus({preventScroll:true}),{signal});
+      stage.addEventListener('keydown',event=>{
+        if(event.target!==stage||event.altKey||event.metaKey||event.ctrlKey)return;
+        if(event.repeat)return;
+        if(event.key==='+'||event.key==='='||event.key==='-'){event.preventDefault();this.world?.zoom(event.key==='-'?-.1:.1);}
+        else if(event.key==='Enter'){event.preventDefault();this.openStation();}
+        else if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();this.travel(event.key==='ArrowRight'?1:-1);}
+      },{signal});
+      document.addEventListener('keydown',event=>{
+        if(event.target!==document.body||event.altKey||event.metaKey||event.ctrlKey||event.repeat)return;
+        const bounds=stage.getBoundingClientRect();
+        if(bounds.top>innerHeight*.35||bounds.bottom<innerHeight*.65)return;
+        if(event.key==='Enter'){event.preventDefault();this.openStation();}
+        else if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();this.travel(event.key==='ArrowRight'?1:-1);}
+      },{signal});
+      this.querySelector('[data-motion]')?.addEventListener('click', () => {this.motion=!this.motion;this.updateMotion();}, {signal});
+      this.reduced.addEventListener('change', () => {this.motion=!this.reduced.matches;this.updateMotion();}, {signal});
+      this.querySelector('[data-reset]')?.addEventListener('click', () => {
+        resetProgress();
+        if(this.dataset.world==='ready')this.world?.select(WORK_SLUGS[0]);else this.panFallback(-this.panPosition);
+        this.activate(null);
+        const status=this.querySelector('[data-reset-status]');if(status)status.textContent='Fresh journey started.';
+      }, {signal});
+      this.querySelector('[data-dismiss-reward]')?.addEventListener('click',()=>this.dismissReward(),{signal});
+      window.addEventListener('work-progress', () => this.updateProgress(), {signal});
+      document.addEventListener('work-quest-focus', event => {
+        this.restoring=true;
+        this.activate((event as CustomEvent<string>).detail);
+        queueMicrotask(()=>{this.restoring=false;});
+      }, {signal});
+      document.addEventListener('work-quest-station-focus',()=>{this.pendingStationFocus=true;this.focusStationControl();},{signal});
+      document.addEventListener('astro:before-preparation', () => this.persistPan(), {signal});
+      window.addEventListener('pagehide', () => this.persistPan(), {signal});
+      this.querySelector('.quest-stage')?.addEventListener('scroll', () => {
+        if(this.dataset.world==='ready') return;
+        const stage=this.querySelector<HTMLElement>('.quest-stage')!;
+        this.onPan(stage.scrollLeft/Math.max(1,stage.scrollWidth-stage.clientWidth));
+      }, {passive:true,signal});
+      void this.loadWorld();
+    }
+
+    private loadingProgress(value:number) {
+      this.style.setProperty('--load-progress',String(value/100));
+      const label=this.querySelector('[data-load-percent]');if(label)label.textContent=`${value}%`;
+    }
+    private async loadWorld() {
+      try {
+        const { createWorkQuestWorld } = await import('./work-quest-world');
+        if(!this.alive) return;
+        this.loadingProgress(70);
+        const savedPan=this.panPosition,savedStation=WORK_SLUGS.find(slug=>slug===history.state?.workQuestStation);
+        let booting=true;
+        this.world=createWorkQuestWorld(this.querySelector<HTMLCanvasElement>('canvas')!,{
+          onProject: points => {
+            const width=this.querySelector('.quest-stage')!.clientWidth;
+            const labels=points.flatMap(point=>{
+              const node=this.querySelector<HTMLElement>(`#${point.slug}`);
+              if(!node)return [];
+              const halfWidth=node.offsetWidth/2,inset=halfWidth+10;
+              const visible=point.visible&&point.x>=22&&point.x<=width-22;
+              node.toggleAttribute('data-outside',!visible);
+              return [{node,visible,x:Math.max(inset,Math.min(width-inset,point.x)),y:point.y,halfWidth,height:node.offsetHeight}];
+            });
+            // On small screens, three nearby labels can share the same space.
+            // Keep each below its landmark and separate their native hit targets.
+            const placed:typeof labels=[];
+            for(const label of labels.filter(label=>label.visible).sort((a,b)=>a.y-b.y)){
+              for(const previous of placed){
+                if(Math.abs(label.x-previous.x)<label.halfWidth+previous.halfWidth+6&&label.y<previous.y+previous.height+6&&label.y+label.height>previous.y){
+                  label.y=previous.y+previous.height+6;
+                }
+              }
+              placed.push(label);
+            }
+            for(const label of labels){
+              label.node.style.setProperty('--node-x',`${label.x}px`);
+              label.node.style.setProperty('--node-y',`${label.y}px`);
+            }
+          },
+          onWorkshop: point => {
+            const label=this.querySelector<HTMLElement>('[data-workshop-label]');if(!label)return;
+            label.hidden=!point.visible;
+            const half=label.offsetWidth/2;
+            label.style.left=`${Math.max(half+12,Math.min(this.clientWidth-half-12,point.x))}px`;
+            label.style.top=`${point.y}px`;
+          },
+          onSelect: (slug,event) => {
+            if(slug==='open-source'){document.dispatchEvent(new Event('work-contributions-open'));return;}
+            const link=this.querySelector<HTMLAnchorElement>(`[data-quest-select="${slug}"]`);
+            if(!link)return;
+            this.persistPan();
+            if(event?.metaKey||event?.ctrlKey||event?.shiftKey) window.open(link.href,'_blank','noopener');
+            else link.click();
+          },
+          onHover: slug => this.activate(slug,false),
+          onPan: position => {if(!booting)this.onPan(position);},
+          onStation: slug => {this.updateStation(slug);if(!booting)this.persistPan();},
+          onReady: () => {worldHasLoaded=true;clearTimeout(this.loaderTimer);this.loaderTimer=window.setTimeout(()=>this.removeAttribute('data-loader-visible'),400);this.rewardTimer=window.setTimeout(()=>this.showReturnReward(),950);this.loadingProgress(100);this.removeAttribute('aria-busy');this.dataset.world='ready';this.updateStation(this.station);this.querySelector('.quest-stage')?.setAttribute('aria-label','Explore six project stories on the globe. Drag to choose the centered project. The monorail follows your view. Left and right arrows travel between stops. Enter opens the selected story.');this.querySelector('.quest-stage')!.scrollLeft=0;this.focusStationControl();},
+          onError: () => this.fallback(),
+        });
+        this.world.setProgress(getProgress());
+        this.world.setMotion(this.motion&&!document.querySelector('#open-source-dialog[open]'),!this.motion&&this.reduced.matches);
+        this.world.setPan(savedPan);
+        if(savedStation)this.world.restoreStation(savedStation);
+        if(this.active)this.world.hover(this.active);
+        booting=false;
+        this.onPan(savedPan);
+      } catch {this.fallback();}
+    }
+
+    private focusStationControl() {
+      cancelAnimationFrame(this.focusFrame);this.focusFrame=0;
+      if(!this.pendingStationFocus||!this.dataset.world||!this.alive)return;
+      let target=this.querySelector<HTMLElement>('[data-station-link]');
+      if(this.dataset.world==='fallback'){
+        const bounds=this.querySelector('.quest-stage')!.getBoundingClientRect();
+        const links=[...this.querySelectorAll<HTMLAnchorElement>('[data-quest-select]')];
+        target=links.find(link=>{const r=link.getBoundingClientRect();return r.left>=bounds.left&&r.right<=bounds.right;})??links[0];
+      }
+      // During an Astro return, styles can finish after the renderer is ready.
+      // A hidden anchor ignores focus, so wait for the actual visible control.
+      if(!target||getComputedStyle(target).visibility!=='visible'||!target.getClientRects().length){
+        this.focusFrame=requestAnimationFrame(()=>this.focusStationControl());return;
+      }
+      this.pendingStationFocus=false;
+      const active=document.activeElement;
+      if(active&&active!==document.body&&active!==document.documentElement&&active!==target)return;
+      this.restoring=true;target.focus({preventScroll:true});queueMicrotask(()=>{this.restoring=false;});
+    }
+    private travel(direction:-1|1) {
+      if(this.dataset.world==='ready')this.world?.step(direction);
+      else this.panFallback(direction*.22);
+    }
+    private openStation() {
+      if(this.dataset.world==='ready')this.querySelector<HTMLAnchorElement>('[data-station-link]')?.click();
+    }
+    private updateStation(slug:string) {
+      if(!WORK_SLUGS.some(value=>value===slug))return;
+      this.station=slug;this.dataset.station=slug;
+      this.querySelectorAll<HTMLAnchorElement>('[data-quest-select]').forEach(link=>{
+        const current=link.dataset.questSelect===slug;
+        link.toggleAttribute('data-current-station',current);
+        if(current)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');
+      });
+      const title=this.querySelector(`[data-quest-select="${slug}"] .stop-title`)?.textContent??slug;
+      const link=this.querySelector<HTMLAnchorElement>('[data-station-link]');
+      if(link){link.href=`/work/${slug}/`;link.setAttribute('aria-label',`Open ${title} story`);const name=link.querySelector('[data-station-name]');if(name)name.textContent=title;}
+      this.updateStepControls();
+    }
+    private updateStepControls() {
+      const index=WORK_SLUGS.findIndex(slug=>slug===this.station),ready=this.dataset.world==='ready';
+      this.querySelector('[data-step="-1"]')?.toggleAttribute('disabled',ready?index===0:this.panPosition<.005);
+      this.querySelector('[data-step="1"]')?.toggleAttribute('disabled',ready?index===WORK_SLUGS.length-1:this.panPosition>.995);
+    }
+    private activate(slug:string|null,forward=true) {
+      this.active=slug;
+      if(slug)this.dataset.selected=slug;else delete this.dataset.selected;
+      this.querySelectorAll<HTMLElement>('[data-quest-select]').forEach(link=>link.toggleAttribute('data-active',link.dataset.questSelect===slug));
+      if(forward)this.world?.hover(slug);
+    }
+    private onPan(position:number) {
+      if(!Number.isFinite(position))return;
+      this.panPosition=Math.max(0,Math.min(1,position));
+      this.updateStepControls();
+      clearTimeout(this.saveTimer);
+      this.saveTimer=window.setTimeout(()=>this.persistPan(),250);
+    }
+    private persistPan() {
+      clearTimeout(this.saveTimer);
+      if(this.alive&&/^\/work\/?$/.test(location.pathname))history.replaceState({...history.state,workQuestPan:this.panPosition,workQuestStation:this.station},'');
+    }
+    private panFallback(delta:number) {
+      const stage=this.querySelector<HTMLElement>('.quest-stage')!;
+      const next=Math.max(0,Math.min(1,this.panPosition+delta));
+      stage.scrollTo({left:next*(stage.scrollWidth-stage.clientWidth),behavior:this.motion?'smooth':'instant'});
+      this.onPan(next);
+    }
+    private fallback() {
+      clearTimeout(this.loaderTimer);this.removeAttribute('data-loader-visible');this.removeAttribute('aria-busy');this.dataset.world='fallback';
+      this.rewardTimer=window.setTimeout(()=>this.showReturnReward(),950);
+      this.querySelectorAll<HTMLElement>('.quest-stop').forEach(node=>{
+        node.style.setProperty('--node-x',`${node.dataset.mapX}%`);node.style.setProperty('--node-y',`${node.dataset.mapY}%`);node.removeAttribute('data-outside');
+      });
+      this.panFallback(0);
+      this.focusStationControl();
+    }
+    private updateMotion() {
+      this.world?.setMotion(this.motion&&!document.querySelector('#open-source-dialog[open]'),!this.motion&&this.reduced.matches);
+      const button=this.querySelector('[data-motion]');button?.setAttribute('aria-pressed',String(!this.motion));button?.setAttribute('aria-label',this.motion?'Pause world motion':'Play world motion');
+      button?.querySelector('path')?.setAttribute('d',this.motion?'M3 1v8M7 1v8':'M3 1.5 8 5 3 8.5Z');
+      button?.setAttribute('title',this.motion?'Pause motion':'Play motion');
+      const label=button?.querySelector('[data-motion-label]');if(label)label.textContent=this.motion?'Pause':'Play';
+    }
+    private dismissReward(){
+      const panel=this.querySelector<HTMLElement>('[data-journey-reward]');if(panel)panel.hidden=true;
+      this.removeAttribute('data-rewarding');this.querySelectorAll('[data-rewarded]').forEach(el=>el.removeAttribute('data-rewarded'));
+      clearTimeout(this.rewardHideTimer);
+    }
+    private showReturnReward(){
+      if(!this.alive)return;
+      if(document.documentElement.dataset.storyTravel){this.rewardTimer=window.setTimeout(()=>this.showReturnReward(),150);return;}
+      this.updateProgress();
+      const rewards=takeWorkRewards();if(!rewards.length)return;
+      const reward=rewards.find(r=>r.slug===this.station)??rewards[rewards.length-1];
+      const gained=rewards.reduce((sum,r)=>sum+r.to-r.from,0),summary=getSummary();
+      const oldLevel=summary.level-rewards.filter(r=>r.from<100&&r.to===100).length;
+      const link=this.querySelector<HTMLElement>(`[data-quest-select="${reward.slug}"]`);
+      const title=link?.querySelector('.stop-title')?.textContent??'Story';
+      const panel=this.querySelector<HTMLElement>('[data-journey-reward]')!;
+      panel.querySelector('[data-reward-title]')!.textContent=reward.to===100?`${title} complete`:`${title}: ${reward.to}% explored`;
+      panel.querySelector('[data-reward-detail]')!.textContent=`${reward.from}% → ${reward.to}% · +${gained} XP${summary.level>oldLevel?` · Level ${summary.level}!`:''}`;
+      panel.querySelector('.reward-symbol')!.textContent=reward.to===100?'✓':'+';
+      panel.hidden=false;this.setAttribute('data-rewarding','');link?.setAttribute('data-rewarded','');
+      this.rewardHideTimer=window.setTimeout(()=>this.dismissReward(),7500);
+    }
+    private updateProgress() {
+      const progress=getProgress(),summary=getSummary();
+      const set=(selector:string,value:number)=>{const el=this.querySelector(selector);if(el)el.textContent=String(value);};
+      set('[data-xp]',summary.xp);set('[data-level]',summary.level);set('[data-completed]',summary.completed);
+      this.style.setProperty('--journey-progress',String(summary.xp/600));
+      this.style.setProperty('--completion-percent',String(summary.completed/6*100));
+      const next=this.querySelector('[data-next-level]');if(next)next.textContent=`${summary.completed} of 6 complete`;
+      this.querySelector('.journey-stats summary')?.setAttribute('aria-label',`Exploration progress: level ${summary.level}, ${summary.xp} XP. Show details.`);
+      WORK_SLUGS.forEach((slug,index)=>{
+        const value=progress[slug]||0,link=this.querySelector<HTMLElement>(`[data-quest-select="${slug}"]`);if(!link)return;
+        link.style.setProperty('--stop-progress',String(value));link.toggleAttribute('data-complete',value===100);
+        const progressLabel=link.querySelector<HTMLElement>('[data-stop-progress-label]');if(progressLabel){progressLabel.hidden=value===0;progressLabel.textContent=value===100?'Complete':`${value}% explored`;}
+        const percent=link.querySelector('[data-stop-percent]');if(percent)percent.textContent=`${value}%`;
+        const number=link.querySelector('[data-stop-number]');if(number)number.textContent=value===100?'✓':String(index+1).padStart(2,'0');
+        link.setAttribute('aria-label',`${link.querySelector('.stop-title')?.textContent}, ${link.querySelector('.stop-years')?.textContent}. ${value}% explored. Open story.`);
+      });
+      this.world?.setProgress(progress);
+    }
+    disconnectedCallback(){this.persistPan();this.alive=false;this.controller?.abort();clearTimeout(this.saveTimer);clearTimeout(this.loaderTimer);clearTimeout(this.rewardTimer);clearTimeout(this.rewardHideTimer);cancelAnimationFrame(this.focusFrame);this.world?.dispose();this.world=undefined;}
+  }
+  if(!customElements.get('work-quest'))customElements.define('work-quest',WorkQuest);
+</script>
+
+<style>
+  work-quest{--quest-ink:#252525;--quest-muted:#777;--quest-rule:#dedede;--journey-progress:0;display:block;position:relative;color:var(--quest-ink);font-family:var(--font-body)}
+  work-quest *{box-sizing:border-box}
+  :global(work-quest span),:global(work-quest b){color:inherit}
+  work-quest{-webkit-user-select:none;user-select:none}
+  .quest-stage{touch-action:pan-y}
+  .world-controls{grid-column:3;justify-self:end;display:flex;align-items:center;padding:4px;border:1px solid #ccc;border-radius:28px;background:#fff;pointer-events:auto}
+  .zoom-controls{display:flex;align-items:center;gap:0;border-right:1px solid #ddd;padding-right:4px;margin-right:4px}
+  .world-controls .motion-control{border:0;background:transparent;backdrop-filter:none;min-width:44px;padding:0 9px}
+  .world-controls [data-motion-label]{display:none}
+  .zoom-controls button{display:grid;place-items:center;width:44px;height:44px;flex:0 0 44px;padding:0;line-height:1;border:0;border-radius:50%;background:#fff;color:#333;font:20px var(--font-body);cursor:pointer;touch-action:manipulation}
+  .zoom-controls svg{display:block}
+  .zoom-controls button:hover{background:#eee}.zoom-controls button:active{transform:scale(.9)}
+  .zoom-controls button:focus-visible{outline:2px solid #555;outline-offset:1px}
+  work-quest:not([data-world='ready']) .zoom-controls{display:none}
+  .quest-stage{position:relative;width:100%;height:calc(clamp(440px,calc(100svh - 330px),850px) * var(--world-zoom-space,1));overflow:clip;isolation:isolate;scroll-margin-top:75px;background:transparent;outline:none}
+  .world-loader{display:none;position:absolute;inset:0;z-index:6;pointer-events:none}
+  .loader-orb{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);--orb-size:min(68vw,calc(clamp(440px,100svh - 330px,850px) * .78));width:calc(56px + (var(--orb-size) - 56px) * var(--load-progress,0));aspect-ratio:1;border-radius:50%;background:color-mix(in srgb,#202020,#ededed calc(var(--load-progress,0) * 100%));color:color-mix(in srgb,#fff,#555 calc(var(--load-progress,0) * 100%));display:grid;place-items:center;transition:background-color .65s ease,color .65s ease,width .65s cubic-bezier(.2,.65,.25,1),opacity .3s ease,visibility 0s linear .3s}
+  .loader-orb span{font:.7rem var(--font-mono);color:inherit;font-variant-numeric:tabular-nums}
+  [data-loader-visible] .world-loader{display:block}
+  [data-world='ready'] .loader-orb{opacity:0;visibility:hidden}
+  work-quest:not([data-world='ready']):not([data-world='fallback']) .quest-markers,work-quest:not([data-world='ready']):not([data-world='fallback']) .fallback-trail,work-quest:not([data-world='ready']):not([data-world='fallback']) .workshop-label{visibility:hidden}
+  [data-world='fallback'] .world-loader{display:none}
+  [data-world='loading'] .quest-stage{overflow:clip}
+  @media(max-width:699px){.loader-orb{--orb-size:min(80vw,calc(clamp(400px,100svh - 380px,720px) * .74))}}
+  @media(prefers-reduced-motion:reduce){.loader-orb{transition:none}}
+  .quest-canvas{display:block;width:100%;height:100%;opacity:0;transition:opacity .8s ease;touch-action:pan-y}
+  [data-world='ready'] .quest-canvas{opacity:1}
+  .quest-hud{position:relative;z-index:3;padding:12px clamp(24px,4vw,64px);display:flex;justify-content:flex-end;align-items:center;pointer-events:none}
+  .journey-stats{grid-column:1;justify-self:start;visibility:hidden;position:relative;pointer-events:auto;font:.75rem/1.5 var(--font-mono)}
+  .journey-stats summary{display:flex;align-items:center;gap:8px;cursor:pointer;min-height:44px;list-style:none}
+  .journey-stats summary::-webkit-details-marker{display:none}
+  .journey-stats summary{padding:5px 10px 5px 6px;border:1px solid #ccc;border-radius:28px;background:#fff;transition:background .2s,border-color .2s}
+  .journey-stats summary:hover,.journey-stats[open] summary{background:#f6f6f6;border-color:#ddd}
+  .journey-stats summary:active{transform:scale(.97)}
+  .journey-level{width:42px;height:42px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#333;gap:1px;flex-shrink:0}
+  .journey-level svg{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke-width:2.5;pointer-events:none}
+  .completion-track{stroke:#e2e2e2}.completion-arc{stroke:#303030;stroke-dasharray:var(--completion-percent,0) 100;transform:rotate(-90deg);transform-origin:center;transition:stroke-dasharray .6s ease}
+  .journey-level>span{font:.43rem/1 var(--font-mono);letter-spacing:.06em;color:#777}
+  .journey-level b{font:500 .9rem/1 var(--font-mono)}
+  .journey-readout{display:grid;gap:5px;width:106px}
+  .journey-rank{font:.75rem/1.2 var(--font-body)}
+  [data-next-level]{color:#777;font:.6rem/1.2 var(--font-mono);white-space:nowrap}
+  @media(prefers-reduced-motion:reduce){.completion-arc{transition:none}}
+  .journey-stats b{font-weight:400;font-variant-numeric:tabular-nums}
+  .journey-popover{position:absolute;left:0;bottom:calc(100% + 10px);width:min(270px,calc(100vw - 40px));padding:1rem 1.1rem;border:1px solid #e3e3e3;background:#fff;border-radius:12px;font:.7rem/1.6 var(--font-body)}
+  .journey-popover p{font:inherit;color:var(--quest-muted);margin:0 0 .75rem}
+  .journey-popover button{min-height:34px;padding:0;text-decoration:underline;text-underline-offset:3px}
+  [data-reset-status]{display:block;font-size:.65rem}
+  .quest-markers{position:absolute;inset:0;pointer-events:none}
+  .quest-stop{position:absolute;left:var(--node-x);top:var(--node-y);width:max-content;max-width:178px;transform:translate(-50%,0);transition:opacity .2s ease;pointer-events:auto;scroll-margin-top:100px}
+  .quest-stop[data-outside]{opacity:0;pointer-events:none}
+  .quest-marker{display:flex;align-items:center;gap:.6rem;padding:.7rem .85rem;min-height:52px;border:1px solid #c9c9c9;border-radius:12px;background:rgba(255,255,255,.96);transition:background .18s,border-color .18s,transform .18s;color:var(--quest-ink);text-decoration:none;cursor:pointer;white-space:nowrap}
+  .stop-copy{display:flex;flex-direction:column;gap:.15rem;transition:transform .2s ease}
+  .stop-title{font:500 .9rem/1.35 var(--font-body);letter-spacing:-.025em;transition:transform .25s ease}
+  .stop-years{font:.68rem/1.3 var(--font-mono);letter-spacing:0;opacity:.65}
+  [data-current-station]{border-color:#353535;background:#f3f3f3}.quest-marker:hover,.quest-marker[data-active]{background:#ececec;border-color:#555}[data-current-station] .stop-title{font-weight:500}.quest-marker:active{background:#dedede}
+  .quest-marker:active .stop-copy{transform:translateY(1px)}
+  .stop-ring{align-self:flex-start;margin-top:.12rem;flex-shrink:0;overflow:visible;transition:transform .25s ease}
+  .stop-ring circle{fill:none;stroke:#9d9d9d;stroke-width:1.1}
+  .stop-ring .ring-value{stroke:#373737;stroke-width:1.6;stroke-dasharray:var(--stop-progress,0) 100;transform:rotate(-90deg);transform-origin:center;transition:stroke-dasharray .4s ease}
+  .ring-check{fill:none;stroke:currentColor;stroke-width:1.3;opacity:0}
+  [data-complete] .ring-check{opacity:1}
+  .quest-marker:hover .stop-ring,.quest-marker[data-active] .stop-ring{transform:scale(1.2)}
+  .quest-marker:hover .stop-title,.quest-marker[data-active] .stop-title{transform:translateX(3px)}
+  .quest-marker:focus-visible{outline:1px solid var(--quest-ink);outline-offset:3px;border-radius:3px}
+  .quest-controls{visibility:hidden;position:relative;z-index:2;padding:16px clamp(24px,4vw,64px) 24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem;pointer-events:none}
+  [data-world="ready"] .quest-controls,[data-world="fallback"] .quest-controls,[data-world="ready"] .journey-stats,[data-world="fallback"] .journey-stats{visibility:visible}
+
+
+
+  .workshop-label{position:absolute;z-index:1;transform:translateX(-50%);width:max-content;max-width:190px}
+  .workshop-label[hidden]{display:none}.workshop-label a{display:grid;gap:4px;padding:10px 13px;border:1px dashed #999;border-radius:12px;background:rgba(255,255,255,.96);text-decoration:none;color:#333;font:.75rem/1.3 var(--font-body)}
+  .workshop-label small{font:.6rem var(--font-mono);color:#777}.workshop-label a:hover{background:#eee;border-style:solid}.workshop-label a:active{transform:scale(.96)}
+
+  .route-controls{grid-column:2;display:flex;padding:.4rem;border:1px solid #d8d8d8;border-radius:32px;background:#f7f7f7;gap:.5rem;align-items:center;pointer-events:auto}
+  button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+  .route-controls>button,.station-control,.motion-control{height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;border:1px solid #bcbcbc;border-radius:24px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);transition:border-color .2s,background .2s,transform .2s}
+  .route-controls>button:hover:not(:disabled),.station-control:hover,.motion-control:hover{border-color:#999;transform:translateY(-2px)}
+  .route-controls>button:disabled{opacity:.3;cursor:default}
+  .route-controls .station-control{background:#292929;border-color:#292929;gap:.5rem;padding:0 1rem;font:.8rem/1 var(--font-body);color:#fff;text-decoration:none;white-space:nowrap}
+  .station-control kbd{font:.6rem/1 var(--font-mono);border:1px solid #626262;border-radius:3px;padding:.25rem .3rem;margin-left:.3rem;color:#ccc}
+  .motion-control{grid-column:3;justify-self:end;pointer-events:auto;color:#555;gap:.45rem;padding:0 .8rem;font:.7rem var(--font-mono)}.route-controls>button:active:not(:disabled),.station-control:active,.motion-control:active{transform:scale(.93);background:#d9d9d9}.station-control:active{background:#444;color:#fff}
+  work-quest:has(.quest-stage:focus-visible) .station-control{outline:2px solid #777;outline-offset:4px}
+  button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--quest-ink);outline-offset:4px}
+  .fallback-trail{position:absolute;inset:0;width:max(100%,760px);height:100%;pointer-events:none}
+  .fallback-trail path{stroke:#d2d2d2;stroke-width:1;fill:none;stroke-dasharray:2 12}
+  [data-world='ready'] .fallback-trail{display:none}
+  work-quest:not([data-world='ready']) .quest-stage{overflow-x:auto;overflow-y:hidden}
+  work-quest:not([data-world='ready']) .quest-markers{width:max(100%,760px)}
+  [data-world='fallback'] .motion-control,[data-world='fallback'] .station-control{display:none}
+  .stop-progress-label{font:.58rem/1.3 var(--font-mono);color:#555;margin-top:3px}
+  .stop-progress-label[hidden]{display:none}
+  .journey-reward{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:92;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100vw - 32px);padding:14px 16px;border:1px solid #555;border-radius:16px;background:#252525;color:#fff;animation:reward-arrive .4s ease-out}
+  .journey-reward[hidden]{display:none}.journey-reward strong{color:#fff;font:500 .85rem/1.4 var(--font-body)}.journey-reward p{margin:5px 0 0;font:.7rem/1.4 var(--font-mono);color:#ddd}
+  .reward-symbol{display:grid;place-items:center;width:36px;height:36px;border:1px solid #999;border-radius:50%;font:1.2rem var(--font-mono);flex-shrink:0}
+  [data-dismiss-reward]{display:grid;place-items:center;min-width:32px;height:32px;padding:0;border:0;background:transparent;color:#ddd;font-size:20px;cursor:pointer}
+  [data-rewarded]{animation:reward-step .75s ease-out 2}[data-rewarding] .journey-level{animation:reward-step .75s ease-out 2}
+  @keyframes reward-arrive{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+  @keyframes reward-step{0%,100%{scale:1}45%{scale:1.12}}
+  @media(prefers-reduced-motion:reduce){.journey-reward,[data-rewarded],[data-rewarding] .journey-level{animation:none}}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  noscript ul{display:flex;flex-wrap:wrap;gap:1rem;padding:1rem 2rem;list-style:none}
+  @media(max-width:760px){
+    .quest-stage{height:calc(clamp(400px,calc(100svh - 380px),720px) * var(--world-zoom-space,1))}
+    .quest-hud{padding:8px 20px}.quest-heading{gap:1.2rem}.quest-heading h1{font-size:1.25rem}.quest-heading a{font-size:.7rem}.journey-stats summary{gap:.45rem}.journey-level{padding:.3rem .55rem;font-size:.65rem}.journey-xp{font-size:.65rem}
+    .quest-stop{max-width:124px}.quest-marker{gap:.35rem;padding:.55rem .6rem;border-radius:10px}.stop-title{font-size:.76rem;white-space:normal;line-height:1.25}.stop-years{font-size:.6rem}.stop-ring{width:14px;height:14px}
+    .quest-controls{padding:8px 20px 78px;grid-template-columns:1fr auto;gap:12px}.workshop-label{max-width:158px}.workshop-label a{font-size:.66rem;padding:8px 10px}.workshop-label small{font-size:.54rem}.route-controls{grid-column:1/-1;justify-self:center;gap:.3rem;padding:.35rem}.station-control kbd{display:none}.route-controls .station-control{padding:0 .8rem}.journey-stats{grid-column:1;grid-row:2}.journey-readout{width:96px}.world-controls{grid-column:2;grid-row:2;justify-self:end}.route-controls>button,.station-control{height:44px;min-width:44px}
+  }
+  @media(max-width:360px){.world-controls{grid-row:3;grid-column:1/-1}.journey-stats{grid-column:1/-1}.quest-controls{padding-inline:14px}.route-controls{gap:.2rem}.quest-stop{max-width:116px}}
+  @media(prefers-reduced-motion:reduce){.quest-canvas,.quest-stop,.quest-marker,.stop-copy,.stop-title,.stop-ring,.ring-value,.journey-meter i,.route-controls>button,.station-control,.motion-control{transition:none}}
+</style>

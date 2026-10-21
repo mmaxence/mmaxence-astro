@@ -1,0 +1,345 @@
+---
+import StoryHero from './StoryHero.astro';
+import StoryChapter from './StoryChapter.astro';
+import ComposerBrandStudies from './ComposerBrandStudies.astro';
+import ComposerInteractionGallery from './ComposerInteractionGallery.astro';
+import type { WorkEntry } from '../../data/work';
+interface Props { work: WorkEntry }
+const { work } = Astro.props;
+---
+<composer-case>
+  <StoryHero
+    title={'Could a library\nshape a brand\nexperience?'}
+    intro="Buzzvil already knew how to reach people likely to be interested. I built the Interaction Composer to explore the next question: how could we turn that knowledge into a different brand experience for each audience?"
+    links={[{ label: 'Read the original research', url: '/blog/a-design-system-for-an-agent/' }]}
+  >
+    <Fragment slot="visual"><ComposerBrandStudies variant="cover" /></Fragment>
+  </StoryHero>
+
+  <StoryChapter id="composer-challenge" scope="The design challenge" title={'Knowing whom to reach\nwas only half the problem.'} intro="From 2025, Buzzvil’s focus expanded beyond getting a campaign seen or clicked. Our targeting and retargeting, including reaching people who had already shown interest, gave us a strong starting point. The next challenge was to shape what those people experienced with the brand.">
+    <figure class="composition-brief">
+      <div class="brief-inputs">
+        <div><span>Who is this for?</span><h3>Audience context</h3><p>What we know about a group’s interests and behavior, informed by Buzzvil’s data and analysis.</p></div>
+        <div><span>What should it feel like?</span><h3>Brand context</h3><p>The brand’s identity, product information and insights, so the interaction belongs to that brand.</p></div>
+        <div><span>What should it achieve?</span><h3>The advertiser’s goal</h3><p>The action the campaign aims to encourage, such as a purchase. This is its key performance indicator, or KPI.</p></div>
+      </div>
+      <div class="brief-composition"><span>Interaction Composer</span><p>Choose and combine interactions<br/>for this audience, brand and goal.</p></div>
+      <div class="brief-outputs"><span>A tailored journey for each audience group</span><div><span>Discover the brand</span><span>Explore the product</span><span>Take the next step</span></div></div>
+      <figcaption>A possible journey, composed from audience and brand context.</figcaption>
+    </figure>
+    <div class="challenge-decision"><h3>Personalize the journey<br/>through the campaign.</h3><p>A user segment is a group of people with shared characteristics. The design challenge was to turn what we knew about each group into a relevant sequence of interactions, while keeping the brand recognizable and the advertiser’s goal clear. One generic landing page could not express all of those differences.</p></div>
+  </StoryChapter>
+
+  <StoryChapter
+    id="composer-library"
+    scope="My proposed approach"
+    title={'One library could assemble\ndozens of interactions.'}
+    intro="My proposal was to give the AI a library of interaction patterns it could combine using audience data, brand context and the advertiser’s goal. Alongside the product team’s research, I built the Composer and a testing tool, the UI Cooker, to assemble and compare those variations."
+    class="library-scene"
+  >
+    <ComposerInteractionGallery />
+    <div class="recipe-caption">
+      <details class="code-note">
+        <summary>Inside the recipe</summary>
+        <pre aria-label="Original coupon component manifest excerpt"><code>{`id: 'CouponCard',
+intent: 'reward',
+flowPredecessors: ['FlipCard', 'ScratchReveal', 'SpinWheel'],
+compositionRules: [{
+  role: 'reward',
+  constraints:
+    'Use as the reward reveal after a discovery interaction. ' +
+    'Always pair with a CTA so users can act on the coupon.'
+}]`}</code></pre>
+        <p>Original manifest excerpt. Each component carried design intent: where it belonged, how it behaved and what came next. Recipes combined these parts into flows.</p>
+      </details>
+    </div>
+  </StoryChapter>
+
+  <StoryChapter
+    id="composer-test"
+    scope="Zoom in · One campaign refinement"
+    title={'Real campaigns revealed\nsmall reasons to leave.'}
+    intro="Generating a flow was only the first test: people also had to stay with it. The Composer ran in a few campaigns, where usage data drove dozens of refinements. Here is one focused example, addressing people leaving before reaching the product."
+    class="reward-scene"
+  >
+    <div class="reward-board">
+      <div class="reward-thinking">
+        <h3>Keep the reward<br/> within reach.</h3>
+        <p class="reward-context">I kept the reward visible throughout the quiz, so every answer would show progress toward a clear payoff. Compare the two versions, then try the three questions.</p>
+        <div class="detail-switch" role="group" aria-label="Compare reward visibility">
+          <button type="button" data-reward-mode="before" aria-pressed="false">Before</button>
+          <button type="button" data-reward-mode="revised" aria-pressed="true">Revised</button>
+        </div>
+        <div class="reward-annotation" aria-live="polite">
+          <p data-reward-note>The reward stays in sight. Every answer makes progress tangible.</p>
+        </div>
+      </div>
+      <div class="reward-device-area">
+        <div class="phone-frame">
+          <div class="device-cap" aria-hidden="true"><i></i><b></b></div>
+          <div class="reward-phone" data-reward-mode="revised">
+            <div class="reward-brand"><strong>FORME</strong><span>Your daily ritual</span></div>
+            <div class="reward-photo"><img src="/work/composer/forme-campaign-768.webp" alt="FORME Daily Wash bottles on a stone ledge" width="768" height="512" loading="lazy" decoding="async" /><span>Good habits.<br/>Less waste.</span></div>
+            <div class="reward-body">
+              <div class="reward-progress">
+                <div class="reward-progress-label"><span>Your discovery reward</span><span data-answer-count>0 / 3</span></div>
+                <div class="gauge-track" role="progressbar" aria-label="Discovery reward progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><i></i></div>
+              </div>
+              <div class="quiz-content">
+                <span class="question-kicker" data-question-number>Discover / 01</span>
+                <h3 id="reward-question" data-question>A fresh start needs a new bottle.</h3>
+                <div class="reward-choices" role="group" aria-labelledby="reward-question"><button type="button" data-answer="O"><span aria-hidden="true">O</span>True</button><button type="button" data-answer="X"><span aria-hidden="true">X</span>False</button></div>
+              </div>
+              <div class="complete-content" hidden>
+                <span class="question-kicker">Discovery complete</span>
+                <h3 tabindex="-1">A little care,<br/>on us.</h3>
+                <p>Your reward is ready.<br/>Explore the Daily Wash.</p>
+              </div>
+              <p class="answer-feedback" data-answer-feedback>Three small discoveries. One daily essential.</p><span class="sr-only" data-quiz-status role="status"></span>
+              <button type="button" class="reset-quiz" data-reset>Start again</button>
+            </div>
+          </div>
+          <div class="device-home" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+    <p class="figure-note">Reconstructed refinement from campaign feedback. Its effect on conversion remains unconfirmed.</p>
+  </StoryChapter>
+
+  <StoryChapter
+    id="composer-pivot"
+    scope="Back to the research question"
+    title={'We chose richer context\nover a larger UI kit.'}
+    intro="Alongside my Composer experiments, the product team tested instructions and supporting tools for the AI, without restricting it to a library of interface components. Results were stronger and more flexible. Generating and validating an experience for each audience group on the server made the extra generation time acceptable."
+    class="pivot-scene"
+  >
+    <figure class="review-figure" id="composer-delivery">
+      <div class="review-workspace story-artifact">
+        <div class="workspace-bar"><span>Experience studio <i>/</i> FIELDWORK</span><span class="workspace-status" data-workspace-status>Draft · human review</span></div>
+        <div class="workspace-content">
+          <aside class="brand-context" aria-label="Illustrative brand context for generation">
+            <span class="panel-label">01 / Generation context</span>
+            <div class="brand-wordmark">FIELD<br/>WORK</div>
+            <div class="brand-swatches" aria-label="Charcoal, chalk and acid yellow palette"><span></span><span></span><span></span></div>
+            <div class="guideline"><span>Brand</span><p>Equipment for life outside.</p></div>
+            <div class="guideline"><span>Example audience</span><p>New visitors</p></div>
+            <div class="guideline"><span>Example advertiser goal</span><p>Product purchase</p></div>
+            <div class="guideline"><span>Design guidance</span><p>Utility. Real texture.<br/>A clear next step.</p></div>
+            <p class="context-source">Prompts + research tools<br/>+ design guidelines</p>
+          </aside>
+          <div class="review-canvas">
+            <div class="canvas-toolbar"><span class="panel-label">02 / Compose & review</span><div class="variant-controls" role="group" aria-label="Preview illustrative campaign versions"><button type="button" data-variant="story" aria-pressed="true">Brand story</button><button type="button" data-variant="product" aria-pressed="false">Product first</button></div></div>
+            <div class="campaign-preview" data-variant="story">
+              <div class="preview-header"><strong>FIELDWORK</strong><span>Collection 03 / Everyday equipment</span></div>
+              <div class="preview-body">
+                <img src="/work/composer/fieldwork-campaign.webp" srcset="/work/composer/fieldwork-campaign-768.webp 768w, /work/composer/fieldwork-campaign.webp 1536w" sizes="(max-width: 700px) 92vw, 700px" alt="A charcoal FIELDWORK shell, photographed against concrete architecture" width="1536" height="1024" loading="lazy" decoding="async" />
+                <div class="preview-story"><span>No destination required.</span><h3>TAKE THE<br/>LONG WAY.</h3></div>
+                <div class="preview-product"><span>Everyday equipment / 01</span><h3>THE<br/>STUDIO<br/>SHELL.</h3><p>One layer.<br/>No set route.</p></div>
+                <span class="preview-index">FW-03</span>
+              </div>
+              <div class="preview-footer"><span data-variant-copy>From the first train to the last light.</span><span class="preview-cta" aria-hidden="true">Discover the collection</span></div>
+            </div>
+            <div class="review-decision"><div><span class="panel-label">03 / Human decision</span><p data-review-copy>Judge the experience before anyone sees it.</p></div><button type="button" data-approve aria-pressed="false">Approve this version</button></div>
+          </div>
+        </div>
+        <div class="server-branch"><div><span class="branch-dot" aria-hidden="true"></span><span>04 / Server branch</span></div><p data-branch-status>Awaiting review <span>Audience: new visitors</span></p></div>
+      </div>
+      <figcaption>Concept demonstration with a fictional brand. Compare versions, then approve one to try the review flow.</figcaption>
+    </figure>
+    <div class="decision-caption">
+      <div><h3>The Composer favored speed.</h3><p>Shared components worked well for the possibility of live generation: a new experience for each session.</p></div>
+      <div><h3>The chosen flow favored quality.</h3><p>Brand-research tools and design guidance gave the model more freedom. Admin-side generation gave us time to review each variation.</p></div>
+    </div>
+    <p class="closing-note">The campaign platform serves a validated interaction to each user segment. If a segment underperforms, we can generate and validate another version on the server. Generation time stays outside the user’s experience.</p>
+  </StoryChapter>
+
+  <StoryChapter
+    id="composer-learnings"
+    title={'What I learned: better context,\nless machinery.'}
+    class="learning-scene"
+  >
+    <div class="learning-grid">
+      <article class="learning-item">
+        <div class="learning-visual library-visual" aria-hidden="true">
+          <span class="learning-stage">01 / UI library</span>
+          <div class="kit-pieces">
+            <span class="kit-wide"><i></i><i></i></span><span class="kit-disc"><i></i></span>
+            <span class="kit-pair"><i></i><i></i></span><span class="kit-lines"><i></i><i></i><i></i></span><span class="kit-disc"><i></i></span>
+            <span class="kit-lines"><i></i><i></i><i></i></span><span class="kit-wide"><i></i><i></i></span>
+          </div>
+          <span class="learning-visual-note">Compose from what exists</span>
+        </div>
+        <h3>A library has a ceiling.</h3>
+        <p>Our UI kit made generation fast, but limited the quality and range of the results. Matching the model’s freedom would mean a much larger library and a growing system to maintain. The reason to build it became less convincing.</p>
+      </article>
+      <article class="learning-item">
+        <div class="learning-visual harness-visual" aria-hidden="true">
+          <span class="learning-stage">02 / Context + tools</span>
+          <div class="harness-layers"><div><div class="learning-inputs"><span>Brand</span><span>User data</span><span>Goal</span><span>Prompt</span></div></div></div>
+          <span class="learning-visual-note">Give the model room to compose</span>
+        </div>
+        <h3>Context mattered more.</h3>
+        <p>Brand details, user data and the advertiser’s goal proved more valuable inputs than a catalog of components. A clear prompt connected them. Richer context gave the model room to produce stronger experiences, which we validated before delivery.</p>
+      </article>
+      <article class="learning-item">
+        <div class="learning-visual minimal-visual" aria-hidden="true">
+          <span class="learning-stage">03 / Where we are going</span>
+          <div class="learning-inputs"><span>Brand</span><span>User data</span><span>Goal</span><span>Prompt</span></div>
+          <span class="learning-visual-note">Keep the inputs. Reduce the layers.</span>
+        </div>
+        <h3>The AI needs less scaffolding.</h3>
+        <p>As models improve, we’re gradually removing layers that earlier models needed. What remains is the essential context: user data, the brand, the goal and a clear prompt connecting those factors to the goal.</p>
+      </article>
+    </div>
+    <p class="learning-footnote">The direction, simplified. The prompt logic remains proprietary; human validation still happens before delivery.</p>
+  </StoryChapter>
+
+</composer-case>
+<script>
+class ComposerCase extends HTMLElement {
+ connectedCallback() {
+  if(this.dataset.ready) return;
+  this.dataset.ready='true';
+  const questions=[
+   {text:'A fresh start needs a new bottle.',O:'Not always. Keep the bottle; refill the ritual.',X:'Exactly. Keep the bottle; refill the ritual.'},
+   {text:'A simple routine can be a daily ritual.',O:'Exactly. Small habits deserve a little care.',X:'Even a small habit can become a ritual.'},
+   {text:'An everyday essential should earn its place.',O:'Exactly. Fewer things, chosen well.',X:'Choose what works for your everyday.'}
+  ];
+  let answers=0;
+  const phone=this.querySelector<HTMLElement>('.reward-phone')!;
+  const progress=this.querySelector<HTMLElement>('.gauge-track')!;
+  const quiz=this.querySelector<HTMLElement>('.quiz-content')!;
+  const complete=this.querySelector<HTMLElement>('.complete-content')!;
+  const feedback=this.querySelector<HTMLElement>('[data-answer-feedback]')!;
+  const updateQuiz=()=>{
+   progress.setAttribute('aria-valuenow',String(answers));
+   progress.querySelector<HTMLElement>('i')!.style.width=`${answers/3*100}%`;
+   this.querySelector('[data-answer-count]')!.textContent=`${answers} / 3`;
+   phone.classList.toggle('complete',answers===3);
+   quiz.hidden=answers===3;complete.hidden=answers!==3;
+   if(answers<3){
+    this.querySelector('[data-question]')!.textContent=questions[answers].text;
+    this.querySelector('[data-question-number]')!.textContent=`Discover / 0${answers+1}`;
+   }
+  };
+  this.querySelectorAll<HTMLButtonElement>('[data-answer]').forEach(button=>button.addEventListener('click',()=>{
+   if(answers>=3)return;
+   const response=questions[answers][button.dataset.answer as 'O'|'X'];
+   answers++;updateQuiz();
+   feedback.textContent=response;
+   this.querySelector('[data-quiz-status]')!.textContent=answers<3?`${response} ${answers} of 3 complete. ${questions[answers].text}`:`${response} Discovery complete. Your reward is ready.`;
+   if(answers===3)complete.querySelector<HTMLElement>('h3')!.focus({preventScroll:true});
+  }));
+  phone.querySelector<HTMLButtonElement>('[data-reset]')!.addEventListener('click',()=>{
+   answers=0;updateQuiz();feedback.textContent='Three small discoveries. One daily essential.';
+   this.querySelector('[data-quiz-status]')!.textContent='Discovery restarted. '+questions[0].text;
+   this.querySelector<HTMLButtonElement>('[data-answer]')!.focus({preventScroll:true});
+  });
+  this.querySelectorAll<HTMLButtonElement>('[data-reward-mode]').forEach(button=>{
+   if(button.tagName!=='BUTTON')return;
+   button.addEventListener('click',()=>{
+    phone.dataset.rewardMode=button.dataset.rewardMode;
+    this.querySelectorAll('button[data-reward-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    this.querySelector('[data-reward-note]')!.textContent=button.dataset.rewardMode==='before'?'The reward appeared at the end. During the quiz, the payoff was out of sight.':'The reward stays in sight. Every answer makes progress tangible.';
+   });
+  });
+  const approval=this.querySelector<HTMLButtonElement>('[data-approve]')!;
+  const workspace=this.querySelector<HTMLElement>('.review-workspace')!;
+  const setApproval=(approved:boolean)=>{
+   approval.setAttribute('aria-pressed',String(approved));
+   approval.textContent=approved?'Reopen for review':'Approve this version';
+   workspace.classList.toggle('approved',approved);
+   this.querySelector('[data-workspace-status]')!.textContent=approved?'Reviewed · ready to assign':'Draft · human review';
+   this.querySelector('[data-review-copy]')!.textContent=approved?'Reviewed. This version can become a server branch.':'Judge the experience before anyone sees it.';
+   const branch=this.querySelector('[data-branch-status]')!;
+   branch.firstChild!.textContent=approved?'Reviewed version ready ':'Awaiting review ';
+  };
+  approval.addEventListener('click',()=>setApproval(approval.getAttribute('aria-pressed')!=='true'));
+  this.querySelectorAll<HTMLButtonElement>('button[data-variant]').forEach(button=>button.addEventListener('click',()=>{
+   if(button.getAttribute('aria-pressed')==='true')return;
+   this.querySelector<HTMLElement>('.campaign-preview')!.dataset.variant=button.dataset.variant;
+   this.querySelectorAll('button[data-variant]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+   this.querySelector('[data-variant-copy]')!.textContent=button.dataset.variant==='story'?'From the first train to the last light.':'The Studio Shell / Charcoal';
+   setApproval(false);
+  }));
+  this.querySelector('[data-workspace-status]')!.setAttribute('role','status');
+ }
+}
+if(!customElements.get('composer-case'))customElements.define('composer-case',ComposerCase);
+</script>
+<style>
+.composition-brief { margin: 0; border: 1px solid var(--theme-border); }
+.brief-inputs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); }
+.brief-inputs>div { padding: clamp(1.25rem,3vw,2.25rem); min-width: 0; }
+.brief-inputs>div+div { border-left: 1px solid var(--theme-border); }
+.brief-inputs span,.brief-composition>span,.brief-outputs>span { font: .75rem/1.5 var(--font-mono); color: var(--theme-text-muted); }
+.brief-inputs h3 { margin: 1.1rem 0 .8rem; font: 400 1.3rem/1.3 var(--font-body); }
+.brief-inputs p { margin: 0; font: .9rem/1.7 var(--font-body); color: var(--theme-text-muted); }
+.brief-composition { padding: 2rem 1.5rem; border-block: 1px solid var(--theme-border); text-align: center; background: color-mix(in srgb,var(--theme-accent) 6%,var(--theme-bg)); }
+.brief-composition p { margin: 1rem 0 0; font: 400 clamp(1.2rem,2.5vw,1.8rem)/1.45 var(--font-body); }
+.brief-outputs { padding: 1.5rem; text-align: center; }
+.brief-outputs>div { display: flex; justify-content: center; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
+.brief-outputs>div>span { padding: .65rem 1rem; border: 1px solid var(--theme-border); border-radius: 4px; font: .85rem/1.5 var(--font-body); }
+.composition-brief>figcaption { padding: 0 1.5rem 1.5rem; font: .75rem/1.6 var(--font-body); color: var(--theme-text-muted); text-align: center; }
+.challenge-decision { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; margin-top: 2.5rem; }
+.challenge-decision h3 { margin: 0; font: 400 clamp(1.4rem,2.5vw,2rem)/1.3 var(--font-body); }
+.challenge-decision p { margin: 0; font: 1rem/1.8 var(--font-body); color: var(--theme-text-muted); }
+@media(max-width:650px) { .brief-inputs,.challenge-decision { grid-template-columns: 1fr; } .brief-inputs>div+div { border-left: 0; border-top: 1px solid var(--theme-border); } .challenge-decision { gap: 1rem; } }
+
+/* StoryHero and StoryChapter own the editorial rhythm. Product studies keep their own UI. */
+.recipe-caption{padding:1.5rem 0 0}
+.recipe-caption .code-note{max-width:44rem}
+.review-workspace.story-artifact{--line:var(--theme-border);--muted:var(--theme-text-muted);--soft:color-mix(in srgb,var(--theme-text) 4%,var(--theme-bg));color:var(--theme-text)}
+/* Global typography belongs to the portfolio shell; product UI owns its contrast. */
+:global(composer-case .reward-phone :where(div, p, span, h3, h4)), :global(composer-case .campaign-preview :where(div, p, span, h3, h4)) { color: inherit; }
+.preview-body::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(32,34,32,.88),rgba(32,34,32,.3) 50%,transparent 80%);pointer-events:none;transition:opacity .4s}
+.preview-story,.preview-product,.preview-index{z-index:1}
+.preview-index{background:#f1f1e8;padding:.4em .5em}
+.campaign-preview[data-variant=product] .preview-body::after{opacity:0}
+
+composer-case{display:block;color:var(--theme-text);--line:var(--theme-border);--muted:var(--theme-text-muted);--soft:color-mix(in srgb,var(--theme-text) 4%,var(--theme-bg));font-family:var(--font-mono,monospace)}composer-case *{box-sizing:border-box}composer-case [hidden]{display:none!important}h2,h3,p,figure{margin:0}h2{font-weight:400;letter-spacing:-.055em;line-height:1.08}button,a{color:inherit}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}a{text-underline-offset:5px;text-decoration-color:var(--line)}a:hover{text-decoration-color:currentColor}.pivot-scene{scroll-margin-top:7rem}.code-note{min-width:0}.code-note summary,.research-notes summary{font-size:.75rem;cursor:pointer;padding:.3rem 0}.code-note pre{overflow:auto;font:.65rem/1.8 var(--font-mono,monospace);background:var(--soft);padding:1rem;margin:1rem 0}.code-note p{font:.75rem/1.7 var(--font-body,sans-serif);color:var(--muted)}.reward-board{display:grid;grid-template-columns:1fr 1fr;gap:2rem;background:var(--soft);padding:clamp(1.5rem,5vw,4rem)}.reward-thinking{display:flex;flex-direction:column;align-items:start;padding-block:1rem}.reward-thinking h3{font:400 clamp(1.8rem,3.8vw,3.5rem)/1.08 var(--font-mono,monospace);letter-spacing:-.055em;margin:0 0 1.5rem}.reward-context{font:.95rem/1.8 var(--font-body,sans-serif);max-width:30ch;color:var(--muted)}.detail-switch{display:flex;gap:0;margin:2rem 0 0;border:1px solid var(--line)}.detail-switch button{min-height:44px;border:0;background:transparent;font-size:.8rem;padding:.6rem 1.2rem}.detail-switch button[aria-pressed=true]{background:var(--theme-text);color:var(--theme-bg)}.reward-annotation{display:flex;gap:.75rem;margin-top:2rem;max-width:28ch}.reward-annotation p{font:.9rem/1.65 var(--font-body,sans-serif)}.reward-device-area{display:flex;align-items:center;justify-content:center;min-width:0}.phone-frame{width:350px;max-width:100%;padding:0 9px;background:var(--theme-bg);border:1px solid var(--line);border-radius:32px}.device-cap{display:flex;justify-content:center;align-items:center;gap:5px;height:24px;color:var(--muted)}.device-cap i{width:35px;height:4px;background:currentColor;border-radius:5px}.device-cap b{height:4px;width:4px;border-radius:50%;background:currentColor}.device-home{width:64px;height:3px;margin:10px auto;border-radius:10px;background:var(--muted)}.reward-phone{border-radius:24px;overflow:hidden;background:#f1f0e7;color:#294536;font-family:Arial,Helvetica,sans-serif}.reward-brand{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem}.reward-brand strong{font:1.4rem/1 Georgia,serif;letter-spacing:-.06em}.reward-brand>span{font-size:10px}.reward-photo{height:190px;position:relative;overflow:hidden;background:#d2d4c3}.reward-photo img{width:100%;height:100%;object-fit:cover;object-position:70% 50%;display:block}.reward-photo>span{position:absolute;left:1.2rem;top:1.2rem;font:1.5rem/1.05 Georgia,serif;letter-spacing:-.04em}.reward-body{padding:1.2rem}.reward-progress{margin-bottom:1.5rem;min-height:30px}.reward-phone[data-reward-mode=before]:not(.complete) .reward-progress{visibility:hidden}.reward-progress-label{display:flex;align-items:center;justify-content:space-between;gap:.5rem;font-size:11px}.gauge-track{margin-top:9px;height:5px;background:#d8dcce;overflow:hidden;border-radius:4px}.gauge-track>i{display:block;height:100%;width:0;background:#294536;transition:width .5s cubic-bezier(.2,.8,.2,1)}.question-kicker{font-size:10px;letter-spacing:.04em}.quiz-content h3,.complete-content h3{font:1.7rem/1.08 Georgia,serif;letter-spacing:-.04em;margin:.6rem 0 1rem;min-height:88px}.reward-choices{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}.reward-choices button{min-height:48px;border-radius:30px;border:1px solid #294536;background:transparent;color:#294536;font:14px Arial,sans-serif;display:flex;justify-content:center;align-items:center;gap:.75rem}.reward-choices button>span{font-size:20px}.reward-choices button:first-child{background:#294536;color:#f1f0e7}.reward-choices button:hover{background:#dde2d1}.reward-choices button:first-child:hover{background:#3c5946}.complete-content{min-height:156px}.complete-content h3{font-size:2rem}.complete-content p{font-size:13px;line-height:1.6}.answer-feedback{font-size:11px;line-height:1.5;min-height:50px;margin:1rem 0 0}.reset-quiz{display:block;margin:0 auto -5px;padding:.6rem;min-height:44px;background:transparent;border:0;color:#294536;font:12px Arial,sans-serif;text-decoration:underline;text-underline-offset:3px}.figure-note,figcaption{font:.65rem/1.75 var(--font-mono,monospace);color:var(--muted);margin:1rem 0 0;max-width:100%}.review-workspace{border:1px solid var(--line);background:var(--soft)}.workspace-bar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;gap:1rem;border-bottom:1px solid var(--line);font-size:.65rem;background:var(--theme-bg)}.workspace-bar i{font-style:normal;color:var(--muted);margin-inline:.5rem}.workspace-status{color:var(--muted)}.workspace-content{display:grid;grid-template-columns:215px minmax(0,1fr)}.brand-context{padding:1.5rem;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:start}.panel-label{font:11px/1.5 var(--font-mono,monospace);letter-spacing:.02em;color:var(--muted)}.brand-wordmark{font:900 2.5rem/.83 Arial,Helvetica,sans-serif;letter-spacing:-.08em;margin:2rem 0 1.5rem}.brand-swatches{display:flex;gap:.3rem;margin-bottom:1.75rem}.brand-swatches>span{width:34px;height:34px;background:#202220;border:1px solid var(--line)}.brand-swatches>span:nth-child(2){background:#f1f1e8}.brand-swatches>span:last-child{background:#d4f172}.guideline{margin:0 0 1.2rem}.guideline>span{font-size:.55rem;color:var(--muted)}.guideline p{font:.8rem/1.55 Arial,Helvetica,sans-serif;margin-top:.3rem}.context-source{font:.6rem/1.7 var(--font-mono,monospace);color:var(--muted);margin-top:auto;padding-top:1rem}.review-canvas{padding:1.5rem;min-width:0}.canvas-toolbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.variant-controls{display:flex;gap:.35rem}.variant-controls button{border:1px solid var(--line);background:var(--theme-bg);font-size:12px;padding:.55rem .7rem;min-height:44px}.variant-controls button[aria-pressed=true]{background:var(--theme-text);color:var(--theme-bg);border-color:var(--theme-text)}.campaign-preview{container-type:inline-size;background:#202220;color:#f1f1e8;font-family:Arial,Helvetica,sans-serif}.preview-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:3cqw 4cqw;border-bottom:1px solid #4b4e43}.preview-header strong{font-size:3.5cqw;font-weight:900;letter-spacing:-.065em}.preview-header>span{font:1.4cqw 'Courier New',monospace;text-transform:uppercase}.preview-body{height:65cqw;position:relative;overflow:hidden;background:#8c8c81}.preview-body>img{width:100%;height:100%;object-fit:cover;object-position:70% 45%;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1),object-position .8s}.preview-story{position:absolute;left:4cqw;bottom:5cqw;right:4cqw;transition:opacity .4s,transform .6s}.preview-story>span{font:1.8cqw 'Courier New',monospace;display:block;margin-bottom:3cqw}.preview-story h3{font:900 13cqw/.8 Arial,Helvetica,sans-serif;letter-spacing:-.08em}.preview-index{position:absolute;right:4cqw;top:4cqw;font:1.8cqw 'Courier New',monospace;color:#202220}.preview-product{position:absolute;inset:0 auto 0 0;width:47%;background:#d4f172;color:#202220;padding:5cqw 4cqw;display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden;transform:translateX(-15px);transition:opacity .4s,transform .6s,visibility .4s}.preview-product>span{font:1.4cqw 'Courier New',monospace;margin-bottom:3cqw}.preview-product h3{font:900 10cqw/.86 Arial,Helvetica,sans-serif;letter-spacing:-.08em}.preview-product p{font:2.1cqw/1.4 Arial,Helvetica,sans-serif;margin-top:3cqw}.preview-footer{padding:4cqw;display:flex;justify-content:space-between;align-items:center;gap:2cqw;font:1.8cqw/1.6 'Courier New',monospace}.preview-footer>span:first-child{max-width:23ch}.preview-cta{background:#d4f172;color:#202220;padding:2.2cqw 3cqw;white-space:nowrap}.campaign-preview[data-variant=product] .preview-story{opacity:0;visibility:hidden;transform:translateY(12px)}.campaign-preview[data-variant=product] .preview-product{opacity:1;visibility:visible;transform:none}.campaign-preview[data-variant=product] .preview-body>img{transform:scale(1.2);object-position:85% 45%}.review-decision{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;margin-top:1.5rem}.review-decision p{font:.75rem/1.6 var(--font-body,sans-serif);max-width:24ch;margin-top:.3rem}.review-decision button{background:var(--theme-text);color:var(--theme-bg);border:1px solid var(--theme-text);padding:.8rem 1rem;font-size:12px;min-height:44px}.review-decision button:hover{opacity:.85}.server-branch{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.5rem;border-top:1px solid var(--line);font-size:.6rem;background:var(--theme-bg)}.server-branch>div{display:flex;align-items:center;gap:.5rem}.branch-dot{height:6px;width:6px;border:1px solid var(--muted);border-radius:50%;transition:background .3s}.approved .branch-dot{background:var(--theme-text);border-color:var(--theme-text)}.server-branch p{color:var(--muted)}.server-branch p span{display:inline-block;border-left:1px solid var(--line);padding-left:1rem;margin-left:1rem}.approved .workspace-status{color:var(--theme-text)}.decision-caption{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2rem;border-block:1px solid var(--line);padding:1.5rem 0}.decision-caption h3{font:400 1rem/1.5 var(--font-mono,monospace);color:var(--theme-text)}.decision-caption p{font:1rem/1.65 var(--font-body,sans-serif);max-width:32ch;margin-top:.5rem}.closing-note{font:.85rem/1.7 var(--font-body,sans-serif);max-width:62ch;color:var(--muted);margin:1.5rem 0 3rem}.research-notes{padding:1.5rem 0;border-block:1px solid var(--line)}.research-notes section{margin:2rem 0;max-width:44rem}.research-notes h3{font-size:1rem;font-weight:400;margin-bottom:1rem}.research-notes p{font:.85rem/1.8 var(--font-body,sans-serif);margin:1rem 0;color:var(--muted);max-width:44rem}.related-reading{display:flex;justify-content:space-between;gap:2rem;font-size:.7rem;line-height:1.7;margin-top:1.5rem}
+@media(max-width:850px){.workspace-content{grid-template-columns:165px minmax(0,1fr)}.brand-context,.review-canvas{padding:1rem}.brand-wordmark{font-size:2rem}.canvas-toolbar{align-items:start;flex-direction:column;gap:.6rem}.reward-board{padding:1.5rem;gap:1.5rem}.reward-thinking h3{font-size:2.5rem}.reward-context{font-size:.85rem}.reward-annotation p{font-size:.8rem}.preview-body{height:80cqw}.preview-story h3{font-size:14cqw}.review-decision{gap:.75rem}.review-decision p{font-size:.7rem}.review-decision button{font-size:12px;padding:.65rem}}
+@media(max-width:700px){.recipe-caption{grid-template-columns:1fr;gap:1rem}.reward-board{grid-template-columns:1fr;padding:1.5rem 1rem;gap:2rem}.reward-thinking{padding:0 .5rem;display:grid;grid-template-columns:1fr auto;gap:1rem}.reward-context,.reward-annotation{grid-column:1/-1}.reward-thinking h3{margin:0;font-size:2rem;grid-column:1/-1}.reward-thinking h3 br{display:none}.reward-context{max-width:45ch}.detail-switch{margin:0;align-self:center;justify-self:start}.detail-switch button{padding:.5rem .8rem;font-size:.8rem}.reward-annotation{margin:0;max-width:42ch;min-height:48px}.reward-device-area{padding:0 .25rem}.workspace-bar{font-size:.55rem;padding:.85rem;align-items:start}.workspace-status{max-width:13ch;text-align:right}.workspace-content{grid-template-columns:1fr}.brand-context{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:1rem}.brand-context>.panel-label{grid-column:1/-1}.brand-wordmark{font-size:2.2rem;margin:.5rem 0}.brand-swatches{margin:.5rem 0;align-self:center}.brand-swatches>span{width:26px;height:26px}.guideline{margin:0}.guideline p{font-size:.75rem}.context-source{display:none}.canvas-toolbar{flex-direction:row;align-items:center;gap:.5rem}.variant-controls{gap:.25rem}.variant-controls button{font-size:12px;padding:.5rem}.canvas-toolbar>.panel-label{max-width:13ch}.review-canvas{padding:1rem}.preview-header>span{font-size:2cqw;max-width:20ch;text-align:right}.preview-header strong{font-size:4.5cqw}.preview-body{height:87cqw}.preview-body>img{object-position:67% 45%}.preview-story h3{font-size:16cqw}.preview-story>span,.preview-index{font-size:2.6cqw}.preview-product{width:50%}.preview-product>span{font-size:2cqw;line-height:1.5}.preview-product h3{font-size:11cqw}.preview-product p{font-size:3cqw}.preview-footer{font-size:2.4cqw;padding:4cqw 3cqw;gap:3cqw}.preview-cta{padding:3cqw 2cqw}.review-decision p{font-size:.75rem}.review-decision button{font-size:12px}.server-branch{padding:1rem;flex-wrap:wrap;gap:.75rem;font-size:.55rem}.server-branch p{width:100%;display:flex;justify-content:space-between;gap:1rem}.server-branch p span{padding:0;margin:0;border:0}.decision-caption{gap:1.5rem}.decision-caption p{font-size:.85rem}.closing-note{font-size:.8rem}.related-reading{flex-direction:column;gap:1rem}}
+@media(max-width:380px){.reward-thinking{grid-template-columns:1fr}.reward-thinking h3,.detail-switch{grid-column:1/-1}.detail-switch{justify-self:start}.review-canvas{padding:.75rem}.canvas-toolbar{flex-direction:column;align-items:start}.canvas-toolbar>.panel-label{max-width:none}.review-decision{flex-direction:column;align-items:start}.review-decision p{max-width:none}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.learning-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(1.25rem,3vw,3rem); }
+.learning-item { min-width: 0; }
+.learning-visual { height: 280px; padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: var(--soft); }
+.learning-stage { width: 100%; font: .6rem/1.5 var(--font-mono,monospace); color: var(--muted); }
+.learning-visual-note { font: .55rem/1.5 var(--font-mono,monospace); color: var(--muted); text-align: center; }
+.kit-pieces { width: min(100%,216px); display: grid; grid-template-columns: repeat(3,1fr); grid-auto-rows: 42px; gap: 6px; }
+.kit-pieces>span { border: 1px solid var(--line); background: var(--theme-bg); display: flex; align-items: center; justify-content: center; padding: 10px; gap: 6px; }
+.kit-pieces i { display: block; background: color-mix(in srgb,var(--theme-text) 20%,var(--theme-bg)); }
+.kit-pieces .kit-wide { grid-column: span 2; justify-content: space-between; }
+.kit-wide i:first-child { width: 24px; height: 20px; }
+.kit-wide i:last-child { width: 60%; height: 5px; }
+.kit-disc i { width: 20px; height: 20px; border-radius: 50%; background: transparent; border: 4px solid color-mix(in srgb,var(--theme-text) 20%,var(--theme-bg)); }
+.kit-pieces .kit-pair { gap: 4px; }
+.kit-pair i { width: 16px; height: 20px; }
+.kit-pieces .kit-lines { flex-direction: column; gap: 4px; align-items: start; }
+.kit-lines i { width: 100%; height: 3px; }
+.kit-lines i:last-child { width: 60%; }
+.harness-layers { width: min(100%,250px); padding: 12px; border: 1px dashed var(--line); }
+.harness-layers>div { padding: 12px; border: 1px solid var(--line); }
+.learning-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; width: min(100%,190px); }
+.learning-inputs>span { min-height: 43px; padding: .5rem .3rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); background: var(--theme-bg); font: .65rem/1.5 var(--font-mono,monospace); text-align: center; }
+.minimal-visual .learning-inputs>span { border-color: var(--theme-text-muted); }
+.learning-item h3 { font: 400 clamp(.95rem,1.3vw,1.1rem)/1.4 var(--font-mono,monospace); letter-spacing: -.025em; margin: 1.3rem 0 .8rem; }
+.learning-item>p { font: .85rem/1.75 var(--font-body,sans-serif); color: var(--muted); max-width: 42ch; }
+.learning-footnote { margin-top: 1.75rem; font: .6rem/1.7 var(--font-mono,monospace); color: var(--muted); }
+@media(max-width:850px) {
+ .learning-grid { grid-template-columns: 1fr; gap: 2rem; }
+ .learning-item { display: grid; grid-template-columns: minmax(220px,.85fr) 1fr; gap: .65rem 2rem; align-items: start; }
+ .learning-visual { grid-column: 1; grid-row: 1/3; height: 250px; }
+ .learning-item h3 { grid-column: 2; align-self: end; margin: 0; }
+ .learning-item>p { grid-column: 2; }
+}
+@media(max-width:560px) {
+ .learning-item { display: block; }
+ .learning-visual { height: 260px; }
+ .learning-item h3 { margin: 1.1rem 0 .65rem; }
+ .learning-item>p { max-width: none; }
+}
+</style>

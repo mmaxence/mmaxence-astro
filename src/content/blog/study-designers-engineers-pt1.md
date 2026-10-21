@@ -5,7 +5,7 @@ date: 2019-12-07T11:07:21+09:00
 draft: false
 featured_image: "/blog/study-designers-engineers-pt1/design_x_dev_study_at_buzzvil.jpeg"
 credential: "How our study usually looked like 🍕 💻"
-credentiallink: "/blog/posts/studydesigners+engineers-%EF%B8%8F-pt1/design_x_dev_study_at_buzzvil.jpeg"
+credentiallink: "/blog/study-designers-engineers-pt1/design_x_dev_study_at_buzzvil.jpeg"
 tags: ["craft", "design-systems", "tools"]
 ---
 

@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import SectionLinks from '../../components/ui/SectionLinks.astro';
 import PageHeader from '../../components/ui/PageHeader.astro';
 import PageContent from '../../components/ui/PageContent.astro';
 import AnimatedContent from '../../components/ui/AnimatedContent.astro';
@@ -65,6 +66,7 @@ Object.keys(booksByCategory).forEach(category => {
           description="My Library is my Blueprint. These works have shaped my 'Think Slow, Do Fast' philosophy, bridging the gap between cognitive science, business operations, and systemic design." 
         />
       </AnimatedContent>
+      <SectionLinks group="writing" sticky />
       
       {Object.keys(categoryOrder)
         .sort((a, b) => categoryOrder[a] - categoryOrder[b])

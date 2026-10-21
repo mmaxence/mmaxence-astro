@@ -66,7 +66,7 @@ export default function CopyForAI({ mdUrl, label = 'Copy for AI' }: Props) {
       : status === 'copying'
         ? 'Copying…'
         : status === 'error'
-          ? 'Failed — try again'
+          ? 'Failed. Try again'
           : label;
 
   return (
