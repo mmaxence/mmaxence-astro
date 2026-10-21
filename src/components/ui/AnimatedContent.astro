@@ -20,7 +20,7 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
     transform: translateY(0);
   }
   
-  /* Hide only once JS is ready (flag set on <html> in the head, before first paint).
+  /* Only offscreen sections opt into a reveal after measurement.
      Easing matches the data-reveal grammar in global.css so wrapper-level and
      child-level reveals feel like one system. The transition lives on the
      always-on state: declared only on :not(.visible) it disappears the moment
@@ -30,7 +30,7 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
                 transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  html.js-ready .animated-content:not(.visible) {
+  html.js-ready .animated-content.reveal-pending:not(.visible) {
     opacity: 0;
     transform: translateY(14px);
   }
@@ -92,7 +92,7 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
 
     // Reveal every not-yet-visible element. This is purely ADDITIVE and idempotent:
     // it never removes .visible, so overlapping triggers (DOMContentLoaded + astro:page-load)
-    // can't blank the page. Above-the-fold reveals immediately with its stagger; the rest
+    // cannot blank the page. Above-the-fold content stays visible; the rest
     // wait for the viewport.
     function run() {
       const els = document.querySelectorAll(REVEAL_SELECTOR);
@@ -116,10 +116,16 @@ const delayMs = typeof delay === 'string' ? parseInt(delay) || 0 : delay;
         { threshold: 0.01, rootMargin: '0px 0px -8% 0px' }
       );
 
-      const fold = window.innerHeight * 0.92;
+      const fold = window.innerHeight;
       els.forEach((el) => {
-        if (el.getBoundingClientRect().top < fold) reveal(el);
-        else observer.observe(el);
+        if (el.getBoundingClientRect().top < fold) {
+          // Initial and restored viewports stay visible through the page transition.
+          el.classList.add('visible');
+          el.querySelectorAll(CHILD_SELECTOR).forEach(child => child.classList.add('visible'));
+        } else {
+          el.classList.add('reveal-pending');
+          observer.observe(el);
+        }
       });
     }
 

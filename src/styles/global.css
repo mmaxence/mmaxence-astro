@@ -618,12 +618,12 @@ p:has(.inline-card) {
    renders everything static) and disabled under prefers-reduced-motion via
    the global reduce block. */
 
-html.js-ready .animated-content:not(.visible) [data-reveal] {
+html.js-ready .animated-content.reveal-pending:not(.visible) [data-reveal] {
   opacity: 0;
   transform: translateY(16px);
 }
 
-html.js-ready .animated-content:not(.visible) .visual-frame[data-reveal] {
+html.js-ready .animated-content.reveal-pending:not(.visible) .visual-frame[data-reveal] {
   transform: translateY(16px) scale(0.985);
 }
 
@@ -643,7 +643,7 @@ html.js-ready .animated-content:not(.visible) .visual-frame[data-reveal] {
   transform-origin: left center;
 }
 
-html.js-ready .animated-content:not(.visible) .section-kicker::after {
+html.js-ready .animated-content.reveal-pending:not(.visible) .section-kicker::after {
   transform: scaleX(0);
 }
 
@@ -661,7 +661,7 @@ html.js-ready .animated-content:not(.visible) .section-kicker::after {
   transform-origin: left center;
 }
 
-html.js-ready .animated-content:not(.visible) .reveal-rule {
+html.js-ready .animated-content.reveal-pending:not(.visible) .reveal-rule {
   transform: scaleX(0);
 }
 
@@ -673,7 +673,7 @@ html.js-ready .animated-content:not(.visible) .reveal-rule {
 
 /* The inspector chip attaches after its frame has settled
    (base transform: translateY(-50%) positions it on the border) */
-html.js-ready .animated-content:not(.visible) .visual-frame-label {
+html.js-ready .animated-content.reveal-pending:not(.visible) .visual-frame-label {
   opacity: 0;
   transform: translateY(calc(-50% + 5px));
 }
@@ -876,9 +876,7 @@ html {
     background 0.3s ease;
 }
 
-/* The page-entrance fade (.page-content) is defined, scoped, in PageContent.astro —
-   it's the single source for that animation. The old global duplicate and the
-   unused .page-transition system were removed. */
+/* Navigation owns the page transition; content stays visible during swaps. */
 
 /* View Transitions - Astro View Transitions API */
 @view-transition {

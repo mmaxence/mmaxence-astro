@@ -20,7 +20,7 @@ function isActive(url: string): boolean {
 }
 ---
 
-<header class="header-sticky header-border">
+<header class:list={["header-sticky header-border", { "work-navigation": currentPath === "/work/" || currentPath === "/work" }]}>
   <nav class="header-nav pt-6 md:pt-16 pb-4 px-4 md:px-8 lg:px-12" role="navigation" aria-label="Primary">
     <div class="flex flex-col md:flex-row items-start md:items-baseline justify-between max-w-5xl mx-auto gap-3 md:gap-6">
       <a href="/" class="header-logo-link flex flex-row items-center mb-0 pl-0 grow md:mr-3 no-underline hover:bg-transparent border-none group">
@@ -151,6 +151,12 @@ function isActive(url: string): boolean {
   .mobile-menu-secondary button { margin-left:auto; }
   .mobile-menu-dialog :is(a,button):focus-visible,.mobile-menu-fab:focus-visible { outline:2px solid var(--theme-text);outline-offset:4px; }
   @keyframes menu-arrive { from { opacity:0;transform:translateY(12px); } to { opacity:1;transform:none; } }
+  /* Work has its own route controls. Keep global navigation in the header. */
+  @media(max-width:767px) {
+    .work-navigation .header-nav > div { display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px; }
+    .work-navigation .mobile-menu-fab { position:static;min-height:48px;padding:0 14px;gap:8px; }
+    .work-navigation .mobile-menu-dialog { inset:0 0 auto;margin:calc(12px + env(safe-area-inset-top)) 12px 0 auto; }
+  }
   @media(min-width:768px) { .mobile-menu-fab,.mobile-menu-dialog { display:none!important; } }
   @media(prefers-reduced-motion:reduce) { .mobile-menu-dialog[open] { animation:none; }.mobile-menu-fab { transition:none; } }
 
@@ -179,6 +185,7 @@ function isActive(url: string): boolean {
       fab.addEventListener('click', () => {
         if (desktop.matches || dialog.open) return;
         previousOverflow = document.documentElement.style.overflow;
+        fab.focus({ preventScroll: true });
         dialog.showModal();
         document.documentElement.style.overflow = 'hidden';
         locked = true;

@@ -469,7 +469,7 @@ const chapters = [
   @media(max-width:360px){.world-controls{grid-row:3;grid-column:1/-1}.journey-stats{grid-column:1/-1}.quest-controls{padding-inline:14px}.route-controls{gap:.2rem}.quest-stop{max-width:116px}}
   @media(max-width:767px){
     work-quest { position:relative;padding-top:66px; }
-    .quest-controls { position:static;display:flex;justify-content:center;padding:8px 20px 82px; }
+    .quest-controls { position:static;display:flex;justify-content:center;padding:8px 20px calc(24px + env(safe-area-inset-bottom)); }
     .world-controls { display:none; }
     .journey-stats { position:absolute;right:20px;top:4px;z-index:5; }
     .journey-popover { left:auto;right:0;top:calc(100% + 8px);bottom:auto; }
