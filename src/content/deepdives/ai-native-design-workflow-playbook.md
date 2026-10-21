@@ -1,6 +1,6 @@
 ---
 title: "The AI-Native Design Playbook"
-description: "How Buzzvil's design team ships through pull requests, not handoffs. A full playbook for designers, PMs, engineers, and leaders moving from mockup-and-handoff to AI-native design."
+description: "Buzzvil's October 2026 playbook for AI-native design: explore and deliver, three delivery paths, designer review, the design harness, hiring, and team results."
 date: 2026-04-23T10:00:00+09:00
 draft: false
 featured: true
@@ -11,80 +11,76 @@ tags: ["ai-design", "design-systems", "product-strategy", "workflow", "engineeri
 
 <!-- SYNC: canonical source for the AI-Native Design Playbook. Mirrored to design.buzzvil.com (EN+KO) and tech-blog (KO condensed). Edits here should propagate per /Users/max/projects/head/projects/playbook-sync.md -->
 
-**How Buzzvil's design team ships through pull requests, not handoffs.**
+**How Buzzvil's design team explores, delivers through pull requests, and reviews what ships.**
+
+*Revised October 2026. This edition adds the product design protocol we wrote in September 2026 (two lanes, three delivery paths and the designer's review), how we hire designers, and current numbers from our own work and from industry research. First published 2026-04-23.*
 
 ## Preface
 
-At Buzzvil, our design team shipped 5 web applications and 344 commits in a single month, with near-zero Figma usage. No engineering sprint allocation. No handoff tickets. No waiting. My own time in Figma dropped to roughly 10%.
+In six months, Buzzvil's design team opened 432 pull requests across our repositories. In the first quarter of 2026, 17% of the team opened PRs. Since the second quarter, every designer has. Figma Dev Mode seats fell from 23 in June 2026 to 3 in July, because the handoff they served stopped happening.[^prs]
 
-This playbook is how we got here, and how you can get here too.
-
-It is written for **designers** making the transition from mockups to pull requests. For **PMs and engineers** who will increasingly ship user stories through shared design patterns, and need to understand what changed. And for **leaders** who must evaluate and adopt these practices, because the teams that move first will define how products get built.
+This playbook is written for **designers** moving from mockups to pull requests. For **PMs and engineers** who now build UI themselves and need to know how design review works with them. For **leaders** who evaluate and adopt these practices. And for **designers who want to join us**: Part 4 explains how we hire.
 
 A quick note on why this moment matters, before the practical parts.
 
-Design has been through a shift like this before. In 1985, the Apple Macintosh, the LaserWriter, and Aldus PageMaker arrived, and the graphic design profession split in two. Traditionalists saw desktop publishing as a threat to craft. Anyone with a mouse could now set type, and most of them did it badly. The resistance was real. Experienced designers mourned the loss of specialized typesetters, hand-cut paste-ups, and the hard-earned knowledge that separated a professional from an amateur.[^11]
+Design has been through a shift like this before. In 1984 and 1985, the Apple Macintosh, the LaserWriter and Aldus PageMaker arrived, and the graphic design profession split in two. Traditionalists saw desktop publishing as a threat to craft. Anyone with a mouse could now set type, and most of them did it badly. The resistance was real. Experienced designers mourned the loss of specialized typesetters, hand-cut paste-ups, and the hard-earned knowledge that separated a professional from an amateur.[^11]
 
-By the mid-1990s, the transition was complete. The designers who thrived were not the ones who resisted the tool. They were the ones who recognized that the tool changed *what design could be*: faster iteration, direct control over production, and the ability to explore more ideas in less time. The craft didn't die. It moved.
+By the mid-1990s, the transition was complete. The designers who thrived were the ones who saw that the tool changed *what design could be*: faster iteration, direct control over production, and the ability to explore more ideas in less time. The craft moved.
 
-Christopher Alexander described the underlying pattern before it ever reached software. In *The Timeless Way of Building* (1979), he argued that lasting quality comes not from the individual craftsperson's hand, but from shared pattern languages: living systems of rules that anyone can use to produce coherent, beautiful results.[^12] When the patterns are right, the buildings take care of themselves. When the language is shared, the system scales without losing its soul.
+Christopher Alexander described the underlying pattern before it ever reached software. In *The Timeless Way of Building* (1979), he argued that lasting quality comes from shared pattern languages: living systems of rules that anyone can use to produce coherent, beautiful results.[^12] When the patterns are right, the buildings come out right. When the language is shared, the system can grow and keep its character.
 
-Alexander's insight migrated from architecture to software, inspiring design patterns, the Wiki, and eventually design systems. It migrates again now. The AI agent is not the designer. The *pattern language* is the design. The agent is a new kind of builder, faster and more tireless than any before, but only as good as the patterns it's given. We write those patterns. That is the opportunity.
+Alexander's insight moved from architecture to software, inspiring design patterns, the Wiki, and eventually design systems. It moves again now. The *pattern language* is the design. The AI agent is a new kind of builder, faster and more tireless than any before, and only as good as the patterns it is given. We write those patterns. That is the opportunity.
 
-The shift already happened. This playbook helps you catch up, and then move ahead.
+This playbook describes how we work today and how you can start.
 
----
 
 ## Part 1: Why Everything Changed
 
-### Engineers don't wait anymore
+### Execution got cheap. Review became the work.
 
-Jenny Wen, Head of Design at Anthropic (formerly Director of Design at Figma), said it plainly on Lenny's Podcast in March 2026:
+In March 2026, Jenny Wen, head of design for Claude at Anthropic, appeared on Lenny's Podcast in an episode titled "The design process is dead."[^wen] The episode explains why the classic design process (discovery, then mockups, then iteration) is becoming obsolete, and how engineers are pushing the design role to change.
 
-> "The classic discover-diverge-converge loop doesn't work when engineers can spin up seven coding agents and ship a working version before a designer finishes exploring options." [^1]
+The data points the same way. Each number below comes with its source, its population and its date:
 
-The numbers back her up. In 2025-2026:
-- 51% of code committed to GitHub was AI-generated or AI-assisted [^2]
-- AI-assisted engineers finished 21% more tasks and created 98% more pull requests per person [^3]
-- Median PR size increased 33% [^3]
-- PR review times increased 91% [^3]
+- On average, 51.9% of code is now AI-authored, across more than 400 companies in Q2 2026 (self-reported).[^dx]
+- In 2025, developers on teams with high AI adoption completed 21% more tasks and merged 98% more pull requests, while PR review time rose 91% (telemetry from more than 10,000 developers).[^faros25]
+- By Q2 2026, across 22,000 developers, median review time had grown 5x and PR size had grown 51%.[^faros26]
+- Median PR size grew from 44 to 72 lines between July 2025 and June 2026.[^dx]
+- At Anthropic, code output per engineer grew 200% in a year. With AI code review in place, the share of PRs that received substantive review comments went from 16% to 54%.[^anthropic-review]
+
+One caution. METR, which runs controlled studies of AI and developer speed, wrote in February 2026 that its newest data is "only very weak evidence" of how large the speed-up is.[^metr] Read these numbers as a direction. The direction is clear: writing code got cheap, and reading it became the bottleneck.
 
 Mockup-and-handoff was already slow. Now it's the slowest part of the system.
 
-Jenny's own team at Anthropic saw the shift in real time. The time allocation inverted:
+Design work changed in the same period. On the same episode, Jenny Wen described her own shift: "A few years ago, 60 to 70% of it was mocking and prototyping, but now I feel the mocking up part of it is 30 to 40%."[^wen] [^wong]
 
-| Work type | A few years ago | Now |
-|-----------|-----------------|-----|
-| Mocking and prototyping | 60-70% | 30-40% |
-| Jamming and pairing with engineers | ~20% | 30-40% |
-| Coordination | ~10% | (shrinking) |
-| Direct implementation in code | 0% | A new slice |
+At Buzzvil, we went further. My work now starts with user stories, written on paper or in text. I describe intent, constraints, and success criteria. Then I build directly in code with Claude Code, or I direct an agent to do it.
 
-Time that used to go into pixel-perfect compositions now goes into two modes: *supporting execution* (consulting with engineers as they build, giving feedback, polishing in code) and *setting short-range vision* (3-6 months, not multi-year roadmaps). [^1]
+The time that used to go into pixel-perfect compositions now goes into *thinking clearly about what should exist and why.* The visual output still happens, faster and closer to production, and the creative work moved upstream. It lives in a well-written user story, a sharp constraint, a decision about what to leave out.
 
-At Buzzvil, we went further. I don't make mockups anymore. I write user stories, on paper or in text. I describe intent, constraints, and success criteria. Then I build directly in code with Claude Code, or I direct an agent to do it.
+The whole team works this way now. When delivery moved into code, the handoff channel emptied on its own: Figma Dev Mode seats went from 23 in June 2026 to 3 in July. We asked the engineering teams whether they still needed the seats, and they gave them back.[^prs]
 
-The time that used to go into pixel-perfect compositions now goes into *thinking clearly about what should exist and why.* The visual output still happens, faster and closer to production, but the creative work moved upstream. It lives in a well-written user story, a sharp constraint, a decision about what *not* to build.
+One fix shows the speed. Rina, a designer on our team, noticed that the screen jumped back to the top when an ad overlay closed. Everything still worked, so no QA ticket described it. Working with Claude, Rina traced the jump to a shared hook that reset the scroll position when two overlays locked at once, fixed the root cause, added regression tests and opened a PR. The fix reached production 46 minutes after the PR opened. Because it lived in a shared hook, every partner app that uses the overlay improved at the same time.[^prs]
 
-Jenny describes 30-40% on mockups as the new normal. I think that's a midpoint on a curve that keeps falling. For a design leader working with AI agents daily, the floor is closer to 10%. The remaining 90% is judgment, articulation, review, and direction: the work that actually determines product quality.
-
-One designer, working this way, can produce what previously required a designer, a frontend engineer, and a sprint cycle. The constraint flipped from "can we build it?" to "should we build it?"
+One designer working this way now covers work that used to need a designer, a frontend engineer, and a sprint cycle. The constraint flipped from "can we build it?" to "should we build it?"
 
 ### What design is for now
 
 When production capacity approaches zero cost, design's value shifts from execution to discernment.
 
-This is uncomfortable. Execution fluency (the ability to produce polished mockups, pixel-perfect prototypes, and comprehensive design specs) was the core of the job for two decades. It's declining in value. Not because it doesn't matter, but because AI does it faster and at a quality level that's good enough for most decisions.
+This is uncomfortable. Execution fluency (the ability to produce polished mockups, pixel-perfect prototypes, and comprehensive design specs) was the core of the job for two decades. Its value is declining. AI now does that work faster, at a level good enough for most decisions.
 
-What remains irreplaceable:
-- **Judgment:** deciding what's worth building, and what isn't
+What stays with people:
+- **Judgment:** deciding what's worth building, and what to leave out
 - **Articulation:** making intent precise enough for machines to act on
-- **Accountability:** someone still has to be responsible for what ships [^1]
+- **Accountability:** someone still has to be responsible for what ships
 - **Discovery:** testing whether something is worth building before committing to production
 
-That last point deserves attention. Marty Cagan draws a sharp line between *building to learn* (discovery) and *building to earn* (delivery). [^14] Discovery tests four risks: value, usability, feasibility, and viability. Delivery tests scale, performance, reliability, security, and everything else required for a product customers can depend on. Same word, "testing," with completely different meanings on each side.
+That last point deserves attention. Marty Cagan separates *building to learn* (discovery) from *building to earn* (delivery).[^14] Discovery tests four risks: value, usability, feasibility, and viability. Delivery has to hold up for real customers: scale, performance, reliability, security, and everything else they depend on. Same word, "testing," with very different meanings on each side.
 
-This distinction used to belong to product managers. Designers mocked up, PMs validated, engineers built. When building was expensive, that division made sense. Now that a designer with an AI agent can produce a functional prototype in hours, the discovery loop is within reach of anyone who builds. Designers who work this way are not replacing PMs. They are extending their own role into territory that was previously inaccessible: testing value and usability directly, with real artifacts, before a single sprint gets allocated.
+This distinction used to belong to product managers. Designers mocked up, PMs validated, engineers built. When building was expensive, that division made sense. Now a designer with an AI agent can produce a functional prototype in hours, so the discovery loop is within reach of anyone who builds. Designers who work this way extend their own role into territory that used to be out of reach: testing value and usability directly, with real artifacts, before a sprint gets allocated.
+
+The wider field shows the same move. In a survey of more than 900 designers, published in May 2026, 65% said they are taking on more product or engineering responsibilities, and half had shipped AI-generated code to production.[^designerfund]
 
 ### "But AI makes everything look the same"
 
@@ -92,99 +88,152 @@ This is the most common concern, from teammates, from designers online, from any
 
 The concern was valid. In 2024 and early 2025, it was true. Unharnessed LLMs default to generic patterns, the statistical average of everything they've seen. When intent is vague, AI fills the gaps with the most common solution. That's how you get sameness.
 
-But this is a solved problem. The era of harnessing strategies changed the equation. Tools like [design.md](https://getdesign.md/) showed that you can encode brand voice, visual language, component constraints, and tone directly into the agent's context. CLAUDE.md files, design skills, and hooks create a *design environment*, a controlled space where the AI produces on-brand output, not generic output.
+This problem has a known fix. Tools like [design.md](https://getdesign.md/) showed that you can encode brand voice, visual language, component constraints, and tone directly into the agent's context. CLAUDE.md files, design skills, and hooks create a *design environment*, a controlled space where the AI produces on-brand output.
 
 At Buzzvil, we publish and use across products:
-- **Brand and design skills:** Claude Code skills that encode our visual language (Buzzvil brand guidelines, OKLCH color system, typography rules, animation profiles) and enforce them during generation
-- **An internal UI library package built for LLMs:** `@buzzvil/design-library` isn't just a React component library. It's structured so agents can discover, select, and compose components with the right tokens, the right spacing, the right behavioral patterns. The library is consumed by 5+ repos and verified across 60 brand × recipe combinations.
-- **Hooks that enforce consistency:** Biome lint, spacing conventions, token compliance. If the agent produces a hardcoded hex color, the hook catches it before commit.
+- **A design plugin for the whole company.** Since July 2026, our brand skill ships as the `buzzvil-design` plugin for Claude Code. Its skills cover brand foundations, decks, docs, reports, dashboards, illustrations, icons, web editing and SDK release notes. People across the company, most of them outside design, use it to make on-brand decks, reports and pages.
+- **Tokens and a brand kit as the shared engine.** In the first half of 2026 we built `@buzzvil/design-library` for agents to read. In August 2026 we narrowed it to its tokens and brand kit, and in September 2026 we froze its component tier. Components now come from each product's own repository, where the agent sees what the product already uses. The [library docs](https://buzzvil.github.io/design-library/) are public.
+- **Hooks and checks that enforce consistency:** Biome lint, spacing conventions, token compliance. If the agent writes a hard-coded hex color, the hook catches it before commit. A craft check also runs before every review (Part 2).
 
-The generic output problem is a *setup* problem, not an AI problem. A designer who drops into Claude Code without a CLAUDE.md, without design tokens, without brand skills, yes, they'll get generic output. The same way an engineer without a linter gets inconsistent code.
+Generic output is a setup problem. A designer who opens Claude Code with no CLAUDE.md, no design tokens and no brand skills will get generic output, the same way an engineer with no linter gets inconsistent code.
 
-The designer's new craft is building the environment. Set the constraints, encode the brand, publish the tokens, write the skills. Then the AI produces *your* design, not *a* design.
+The designer's new craft is building the environment. Set the constraints, encode the brand, publish the tokens, write the skills. Then the AI produces *your* design.
 
-### The design system is no longer for designers
+### The design system's first reader is an agent
 
-The biggest conceptual leap: your design system's primary consumer may not be a human.
+The biggest conceptual leap: your design system's main reader may be an agent.
 
-At Buzzvil, we build interaction modules: gamification recipes for ad campaigns (spin wheels, memory matches, quizzes, timing games). In Q1, the consumer of these patterns shifted from designers composing screens to AI agents composing campaigns autonomously.
+At Buzzvil, we build interaction modules: gamification recipes for ad campaigns (spin wheels, memory matches, quizzes, timing games). In [The Flip](/blog/the-flip/) (2026-02-28), I wrote down the direction:
 
 > "We're building a design system for an AI agent to use. Not for designers. Not for developers. For an agent."
 
-This changes what a design system *is*. Components are answers. An agent needs to understand the questions: inputs, constraints, brand compatibility, behavioral rules. Every principle, every behavioral rule, every constraint has to be written down precisely enough to produce consistent outputs across thousands of compositions. [^6] [^10]
+[A Design System for an Agent](/blog/a-design-system-for-an-agent/) (2026-06-17) shows what that means in practice. Each component carries a manifest: data that tells the agent what the component is for and how it combines with others. A test kitchen then checks each recipe before it ships.
 
-The design system becomes structured knowledge, not a component library.
+This changes what a design system *is*. Components are answers. An agent needs to understand the questions: inputs, constraints, brand compatibility, behavioral rules. Every principle, every behavioral rule, every constraint has to be written down precisely enough to produce consistent outputs across thousands of compositions.[^6] [^10]
 
----
+The design system becomes structured knowledge: manifests, rules and recipes an agent can read.
+
 
 ## Part 2: The Workflow
 
-For most of design's history, discovery and delivery lived in the same tool. You explored directions in Figma, presented to stakeholders in Figma, and handed off specs from Figma. The intent changed; the tool didn't. That made the two modes invisible.
+For most of design's history, discovery and delivery lived in the same tool. You explored directions in Figma, presented to stakeholders in Figma, and handed off specs from Figma. The intent changed and the tool stayed the same, so the two modes were hard to see.
 
-AI coding agents are making them visible. When a designer can produce a functional prototype in hours, the question stops being "which Figma file is this?" and becomes "am I exploring or shipping?" That question demands different workflows for each answer.
+AI coding agents make them visible. When a designer can produce a functional prototype in hours, the question becomes "am I exploring or shipping?" Each answer needs its own workflow.
 
-Most design teams today, including ours, still blend these modes. AI usage is often layered on top of existing processes rather than replacing them, which creates real pressure on designers' time and attention. The split described below is not yet how most teams operate day to day, but it is where things are heading. The teams that name the distinction early will transition faster, because their designers will know *why* they're opening Figma on one task and Claude Code on another, instead of feeling like they're doing twice the work.
+Since the second quarter of 2026, every designer on our team works this way.[^prs] In September 2026 we wrote it down as our product design protocol. It starts with one rule:
 
-### Discovery: explore the problem
+**A clear task goes straight to delivery, and an open question gets explored first. Everything delivered is a PR in the real product, and a designer makes the final design call.**
 
-Discovery means building to learn. The tools for discovery are whichever let you explore fastest.
+Underneath the rule sits Cagan's split from Part 1: explore is building to learn, and deliver is building to earn.[^14]
 
-**Figma** remains strong for spatial exploration. Jenny Wen makes the case: "You can spread 8 or 10 directions across a single canvas and compare them simultaneously. Code-based tools are linear. You invest effort in one direction and develop a bias toward it. Figma's spatial layout prevents that sunk-cost thinking." [^1]
+### Two lanes: explore and deliver
 
-Use Figma for discovery when you need to:
-- Compare 5+ directions side by side
-- Present options to a stakeholder before committing
-- Explore brand, illustration, or visual identity work
+| | Explore | Deliver |
+|---|---|---|
+| **Purpose** | Decide whether and what to build | Put it in users' hands |
+| **Starts from** | An open question | A clear task, or a yes from exploration |
+| **Tools** | Whatever is fastest: Figma, prototypes, AI | Code, the design library, repo skills |
+| **Quality bar** | Enough to learn | The craft bar |
+| **Ends with** | A decision in the ticket: build, change or stop | A merged PR, tested, then released |
+| **The work afterwards** | Left behind once decided | Lives in the product |
 
-**Code prototypes** are increasingly viable for discovery too. A quick prototype built with Claude Code can go in front of users with real data, real interactions, and real responsive behavior. This used to require engineering allocation. It doesn't anymore. The prototype's job is to answer a question, not to ship.
+**Exploration is optional.** Use it when the question is open: is this worth building, and what should it be? A clear task skips it.
 
-The key discipline: discovery artifacts are disposable. A prototype that tested value and failed did its job. A Figma exploration that clarified the wrong direction saved weeks. Treat them as learning instruments, not as partially-completed products.
+In the explore lane, use whatever reaches the answer fastest. Figma is still the best tool we know for spreading eight directions across one surface and comparing them at a glance. Code is linear: once you invest in one direction, you start to defend it. Treat every exploration artifact as something you leave behind once the decision is made.
 
-### Delivery: ship the solution
+**Keep the lanes apart.** Work that sits between them gets done twice: a prototype built to learn, redrawn as a spec, then rebuilt for production. Once the answer is yes, delivery starts in the real product. Our first prototypes lived in Figma Make, then as HTML pages on Vercel. They served exploration well and failed at delivery, because a prototype outside the repository knows nothing about our tokens, components or data. It took us about two months to accept that.[^prs]
 
-Delivery is building to earn. The solution has been validated (or at least has enough signal to proceed), and now it needs to work at production quality: scale, reliability, accessibility, token compliance, responsive behavior.
+**Stopping is a good result.** An exploration that ends in "no" saved the delivery lane weeks.
 
-The delivery loop is:
+The honest cost: the lanes blur. A designer can build something functional in an afternoon, and then keeps polishing an exploration prototype because it already looks real. Ask your designer which lane they are in right now. A designer who cannot answer is doing both jobs at once.[^prs]
 
-1. **Write the intent.** The direction is validated. Capture it as a user story, a constraint set, or a written description of what should exist and why. Paper works. A markdown file works. Precision matters more than format.
-2. **Build in code.** Open Claude Code, describe what you want, iterate until it's right. The agent uses your tokens, your components, your standing orders. Code forces reality.
-3. **Open a PR.** Push the branch, describe what changed, request review.
-4. **Review and merge.** Design review for visual quality, engineering review for correctness. One process, not two.
-5. **Ship.** Vercel deploys on merge. No staging bottleneck.
+### Three delivery paths
 
-The entire loop from intent to production can be hours, not weeks. This is where designers ship user stories directly in the codebase, where PRs are the unit of output, and where hooks and tokens enforce quality automatically.
+**Designer owns it.** The default for designers. Spot the problem, or take the ticket, and carry it all the way: build the fix in code with AI, get the code reviewed, ship it, and check it live. One person, from problem to production. In late September 2026 this path opened into our native ad SDKs for iOS and Android: designers make UI-only changes with AI and open PRs, and client engineers review them for stability. That work is a pilot today.
 
-Don't use Figma for delivery:
-- Component building (tokens + code are the source of truth)
-- Page layout (faster to build directly)
-- Spec handoff (there is no handoff: the designer opens the PR)
-- Responsive design (you can't fake responsiveness in a canvas)
+**PM or engineer builds, designer reviews.** For UI changes on existing screens: copy, states, layout, small flows. The PM or engineer builds with the design library and the repo's design skills, and opens the PR. The designer of that surface reviews it and makes the final design call. We want more of this path: the person closest to the problem ships the fastest.
 
-### The tooling gap
+**Build together.** For new screens that need data, logic or tracking. The designer builds the UI PR in the real product. The engineer adds data, logic and tracking on the same branch, or in a PR that links it. The designer checks the result before merge. A designer can also open a full UI as a reference PR, and engineers build the implementation from it. Design, frontend and backend PRs often stack and get reviewed together.
 
-Figma is a strong discovery tool, but it has no meaningful path from canvas to codebase. That gap is its fundamental limitation.
+### How a designer delivers
 
-Dev Mode, Figma's answer to the handoff problem, generates CSS snippets and component annotations that engineers are expected to interpret and rewrite. In practice, this creates a translation layer that adds time, introduces drift, and requires manual reconciliation between what was designed and what gets built. The more complex the component, the wider the gap. Features like Code Connect attempt to bridge this by letting teams map Figma components to code components manually, but the mapping is maintained by hand, and the output is reference documentation, not executable code.
+1. **Write the intent.** Capture what should exist and why: a user story, a set of constraints, a short description. Paper works. A markdown file works. Precision matters more than format.
+2. **Start in the real repository, on a branch.** Ask Claude Code to explain the screen, its components, its tokens and its states before you change anything. A loose HTML file feels safe, but the agent then works with none of the product's context.
+3. **Build, and check every state.** Describe the change in plain words, with a screenshot or a Figma link when it helps. Run the app and look at loading, empty, error and a narrow screen.
+4. **Run the checks and open a draft PR.** The repository's checks and a pre-PR review run first. The PR description says what changed and why, from a designer's point of view.
+5. **Add a preview link.** A branch with a shareable preview URL turns a PR into something a PM can click.
+6. **Get it reviewed and merge.** Engineers review the code, and the PR merges after their approval.
 
-Dev Mode is a product of the handoff era. It assumes designers produce visual specifications and engineers interpret them. As designers ship directly through PRs and AI agents consume design systems as structured data, the need for a human translation layer between canvas and code diminishes. Tools built around that assumption will increasingly feel like legacy.
+Merging hands the change to the project's own release path. In product repositories, engineers own deploys. A PR is a proposal: nothing goes live before an engineer approves.
 
-A new generation of tools is designed around this exact gap. Paper works directly with code and design tokens: what you design is already expressed in the same language the codebase uses, eliminating the translation step entirely. Stitch takes a different approach, generating production-ready code from design intent with awareness of your existing component library. Both treat the discovery-to-delivery transition as a first-class problem rather than a side feature.
+Delivery happens in code: components, page layout, responsive behavior. The PR is the spec. Figma stays in the explore lane, where it is strong: comparing directions, presenting options before committing, and brand, illustration and visual identity work.
 
-Claude Design, launched by Anthropic in April 2026, goes further. [^15] It covers both discovery and delivery in a single collaborative surface. Teams explore directions through conversation, refine with inline comments and direct edits, and hand off to Claude Code with bundled design specifications. The design system is read from the team's codebase during onboarding and applied automatically to every project. The collaboration model is what matters most here: PMs, designers, and engineers work in the same live document, removing the role-based tool boundaries that Figma enforced. A PM can prototype a feature flow, a designer can refine the visual direction, and an engineer can export the result with specifications attached. No translation step, no handoff ticket, no waiting for the next person's tool to catch up.
+### The designer's review
 
-The toolchain is catching up to the workflow. Discovery tools that excel at spatial exploration, delivery tools that work in code natively, collaborative tools that let the whole team shape the product together, and less need for anything in between.
+| Outcome | When | What the designer does |
+|---|---|---|
+| **Approve** | It meets the bar | Approves the PR |
+| **Fix** | Small gaps: spacing, tokens, copy, a missing state | Pushes the fix to the same branch and notes what changed |
+| **Send back** | The direction or the problem is unclear | Comments with the reason, and suggests building together when the change is bigger than it looked |
 
----
+- Review happens within one working day.
+- UI PRs merge with the designer's approval. Engineering reviews the code as usual.
+- The craft check and an AI reviewer go through the PR first, so the designer's time goes to flow, copy and feel.
+
+This is the rule we work to, and we are still building the habit across every team that ships UI. In September 2026 I described the idea in two sentences: "It is the exact mirror of code review. You review our logic, we review your interface."[^prs]
+
+### The craft bar
+
+A shared standard has to be written down. Our craft bar covers five groups: system fidelity, states and content, motion and feedback, device and performance, and handoff.
+
+A script checks the mechanical half before a person looks: hard-coded colors outside the tokens, type under 12px on product surfaces, support for reduced motion and no endless scale loops, image weight, and accessible names. Each finding carries a file and a line, so it pastes straight into the PR. An AI reviewer then reads UI PRs against the bar and returns its findings with file and line. Designers answer each finding before they mark a PR ready.
+
+When we audited our own UI PRs in October 2026, one pattern was clear: bigger UI changes miss more details, whoever writes them. Most misses can be caught by tools and habits, and a smaller share needs a designer's eye. So we fix a repeated defect once, in the shared component, and every surface that uses it gets the fix.
+
+### Early testing and release
+
+Before public release, the team tests the change: self tests, or early users through a flag or a beta. When the PM judges the team is confident, the PM or product designer updates the product page with Claude and our brand skill. The page can go live ahead of the public release, after our marketing team reviews the content.
+
+Partner customizations follow the same lanes, with a delivery format that matches how each partner finalizes. Partners who finalize in their own tools receive a Figma file made from our code. A skill draws that file from the preview PR and reuses the components and styles already in Figma.
+
+### Tools in October 2026
+
+Our own data comes first. After the drop described in Part 1, Figma Dev Mode seats stood at 4 in August 2026. The fourth seat serves one partner project that still runs a Figma-first handoff.[^prs] The same article says it plainly: "Figma never held our design system. It held a copy of one." The system lives in the codebase, where the product is made.
+
+Dev Mode came from the handoff era: designers drew a specification, and engineers read it and rebuilt it by hand. Code Connect maps Figma components to code components, and through Figma's MCP server it now "keeps your generated code consistent with your codebase."[^figma-mcp]
+
+The market moved toward code during 2026:
+
+- **Figma** opened the canvas to agents on 2026-03-24, in beta: agents can now write directly to Figma files.[^figma-agents] At Config on 2026-06-24, Figma announced code layers, which bring interactive code onto the canvas from a GitHub repository or a local folder (closed beta).[^figma-code] Figma Make can connect to a GitHub repository, edit the running app and open pull requests (closed beta), after an engineer configures the repository.[^figma-make] The Figma agent left beta on 2026-10-06.[^figma-whatsnew]
+- **Paper** raised a $34M Series A on 2026-07-22. It renders with HTML and CSS "because they form a natural language for agents."[^paper]
+- **Stitch**, from Google Labs, streams its designs to the canvas in real time, can start from an existing codebase and design files, and exports screens to Google Antigravity for backend logic (2026-05-19).[^stitch]
+- **Cursor Design Mode** edits the running product: you pick an element, and the agent receives its component, its computed styles and a screenshot (2026-06-05).[^cursor]
+- **Claude Design** launched on 2026-04-17. It builds a team's design system by reading the codebase and design files, and packages designs into a handoff bundle for Claude Code.[^claude-design] Since 2026-06-17 it imports design systems from a GitHub repository, checks its output against them, and connects to Claude Code through `/design` and `/design-sync`.[^claude-design-brand] Since September 2026 it works inside any Claude conversation, and on 2026-10-08 it left beta on every Claude plan, Free included.[^claude-design-ga]
+
+Our position stays simple. Whatever tool explores, delivery lands as a PR in the product repository, where the agent can see the tokens, components, data and conventions the product already has.
+
 
 ## Part 3: Setting Up the Environment
 
-This is where most teams fail. They try the workflow from Part 2 without the infrastructure, get generic output, and conclude "AI can't do design." The environment is everything.
+This is where most teams fail. They try the workflow from Part 2 without the infrastructure, get generic output, and conclude "AI can't do design." The environment decides the quality of the output.
+
+### Before the first designer PR
+
+A motivated designer cannot set this up alone. Someone has to settle these first:
+
+- **A company-approved LLM,** with a reviewed agreement on how source code sent to the model is handled, signed off by security.
+- **Write access to production repositories for people outside engineering.** This is a policy decision, and it belongs to the team that owns each repository.
+- **A security review of that decision:** who can merge, which branch protections apply, whether a branch can reach secrets, and what happens when a bad change lands.
+- **CI that runs branches from non-engineers,** with preview environments added last.
+- **A written review policy:** who reviews design PRs, and how that review fits into their sprint.
+
+For us this took months, and most of the work sat with DevOps, security and engineering leads. Start these conversations early and in parallel, because each one has a different owner.[^prs]
 
 ### The five-layer harness
 
-An AI coding agent is like a fast, tireless junior developer. Talented, but needs structure.
+An AI coding agent is like a fast, tireless junior developer. Talented, and in need of structure.
 
-Without guardrails, the agent produces generic output, makes decisions you didn't authorize, and drifts from your system. With the right structure, it becomes a high-leverage collaborator. Research from SmartScope confirms the impact: projects with structured agent context files show a 29% reduction in median runtime and 17% reduction in token consumption. [^9]
+Without guardrails, the agent produces generic output, makes decisions you didn't authorize, and drifts from your system. With the right structure, it becomes a strong collaborator. Research supports this: in a study of 10 repositories and 124 pull requests, AGENTS.md files were associated with 28.64% lower median runtime and 16.58% fewer output tokens, with comparable task completion.[^agentsmd]
 
 **1. Standing Orders (CLAUDE.md)**
 
@@ -194,18 +243,13 @@ A markdown file at the root of every repository. The agent reads it on every ses
 - What to do and what never to do
 - File structure and naming rules
 
-This is the most important file in the repo for AI-native development. It compounds: every convention you encode saves hundreds of future corrections.
+This is the most important file in the repo for AI-native development. Its value grows over time: every convention you write down saves many corrections later.
 
 **2. Skills**
 
-Reusable playbooks for recurring tasks. At Buzzvil, we've built skills for:
-- SDK documentation releases
-- Brand guideline compliance
-- Illustration and icon generation
-- Dashboard design patterns
-- Blog post creation
+Reusable playbooks for recurring tasks. Our company-wide `buzzvil-design` plugin carries skills for brand foundations, decks, docs, reports, dashboards, illustrations, icons, web editing and SDK release notes. Product repositories add their own design skills: one finds similar components and tokens before you build new UI, one reviews the branch before a PR, and one writes and opens the PR. Other teams at Buzzvil publish their own skills in the same internal marketplace.
 
-A skill tells the agent *how* to approach a category of work. It encodes craft knowledge that would otherwise exist only in someone's head.
+A skill tells the agent *how* to approach a category of work. It keeps craft knowledge in the repository, where everyone can use it. When you explain the same thing a third time, ask Claude to make it a skill.
 
 **3. Memory**
 
@@ -213,23 +257,25 @@ Persistent notes the agent maintains across sessions. Patterns confirmed over mu
 
 **4. Permissions**
 
-An allowlist of what the agent can do autonomously versus what requires human approval. File writes, git operations, external API calls: each has an explicit permission level.
+An allowlist of what the agent can do on its own and what requires human approval. File writes, git operations, external API calls: each has an explicit permission level.
 
 **5. Hooks**
 
 Automated checks that run on specific events: before commit, after file write, on session start. At Buzzvil, hooks enforce:
-- Biome lint + formatting
+- Biome lint and formatting
 - TypeScript type checking
 - Spacing conventions
 - Destructive operation warnings
 
+Before review, the craft check from Part 2 adds hard-coded colors, type under 12px, reduced motion, image weight and accessible names.
+
 The principle: *silent on success, loud on failure.* The agent works freely within the guardrails. When it hits a boundary, it stops and asks.
 
-The Anthropic team calls verification "the single most impactful tip": give the agent a way to check its own output, and quality goes up dramatically. [^13] If you only adopt one practice from this playbook, make it this: set up hooks that verify before commit. Everything else compounds from there.
+Anthropic's own guide to Claude Code names verification as its most impactful tip: give the agent a way to check its own output.[^13] If you adopt one practice from this playbook, make it this one: set up hooks that verify before commit. Everything else builds on it.
 
 ### Tokens as the shared language
 
-The design system isn't a Figma library you reference. It's the actual material the surfaces are made of.
+The design system is the material the surfaces are made of.
 
 At Buzzvil, every color, spacing value, typography scale, and shadow exists as a semantic CSS variable generated from OKLCH color space. The token system has three layers:
 
@@ -239,13 +285,13 @@ At Buzzvil, every color, spacing value, typography scale, and shadow exists as a
 
 When the agent builds a page, it uses semantic tokens. When it builds a component, it uses component tokens. Hardcoded values look wrong because everything around them is systematic.
 
-This alignment between design tokens and code tokens is what the UX Collective calls the #1 prerequisite for AI-native design workflows: "ensuring MCP Server, Claude Code, and Codex CLI all spoke the same design language." [^4] Indeed's Diana Wolosin tested 8 MCP configurations across 1,056 prompts and found JSON offered 80% fewer tokens and 5x lower cost compared to prose documentation. [^10]
+Tool makers now build on the same idea. Figma's MCP server uses Code Connect to keep generated code consistent with the codebase,[^figma-mcp] and Claude Design pulls a team's design system in through `/design-sync`.[^claude-design-brand] Format matters too. Diana Wolosin at Indeed tested 8 MCP configurations across 1,056 prompts, and JSON came out ahead: higher accuracy, 80% fewer tokens and 5x lower annual cost.[^10]
 
 ### Principles → Recipes → Guidelines
 
-When an agent composes interfaces, it needs three layers of instruction. Cristian Morales Achiardi at the Design Systems Collective describes this as the shift toward "agentic design systems": systems that detect drift, report it, and propose fixes autonomously. [^6]
+When an agent composes interfaces, it needs three layers of instruction. Cristian Morales Achiardi at the Design Systems Collective describes this direction as an "agentic design system."[^6]
 
-**Principles** are non-negotiable constraints. "Never use red as a background fill." "All interactive elements must have a minimum 44px touch target." "Korean text uses Noto Sans KR." These don't change per context.
+**Principles** are non-negotiable constraints. "Never use red as a background fill." "All interactive elements must have a minimum 44px touch target." "Type on product surfaces is 12px or larger." These stay the same in every context.
 
 **Recipes** are validated patterns for known contexts. "A campaign interaction follows Hook → Challenge → Reward → Offer." "An advertiser landing page leads with trust metrics, then case study, then CTA." Recipes encode proven solutions.
 
@@ -253,137 +299,138 @@ When an agent composes interfaces, it needs three layers of instruction. Cristia
 
 At Buzzvil, this maps to:
 - **Principles** → CLAUDE.md (repo-level standing orders)
-- **Recipes** → Skills (reusable task playbooks) + Component patterns
-- **Guidelines** → Design tokens + Brand guide + Hooks (automated enforcement)
+- **Recipes** → Skills (reusable task playbooks) and component patterns
+- **Guidelines** → Design tokens, the brand guide, hooks and the craft check (automated enforcement)
 
-> **A note on project context.** Design work doesn't happen in one repo. At Buzzvil, the design team touches 10+ active repositories. We use a markdown-driven command center (head) that connects every project: registry, OKRs, weekly reviews from git data. The agent reads it on session start and can pull live data from any project. This isn't required for the workflow, but it's how we keep context across a complex landscape.
-
----
 
 ## Part 4: The People
 
-The workflow and environment only work if the people running them know what changed. This part covers the mindset shift, the onboarding path, how to collaborate across functions, how to measure output, and how to keep the rhythm coherent when everyone can ship fast.
+The workflow and environment only work if the people running them know what changed. This part covers the mindset shift, the onboarding path, how PMs and engineers work with designers, how we hire, how we measure output, how we ship early, and how we keep the rhythm coherent when everyone can ship fast.
 
 ### For designers joining this workflow
 
-Your job didn't get smaller. It got different.
+Your job changed shape. You are measured by what ships. That means:
 
-You are no longer measured by the fidelity of your mockups. You are measured by what ships. That means:
+- **Put your opinion in the product.** If you see a problem, fix it and open a PR.
+- **You own the experience layer.** Engineers own the logic and infrastructure. You own how it looks, feels, and flows. The boundary moved, and the responsibility stayed with you.
+- **You own the surface, whoever builds on it.** When a PM or engineer opens a UI PR on your surface, you are the reviewer, and you make the final design call.
+- **You need to read code. AI writes most of it.** Understand what a component is, what a token does, what a PR contains. Structural literacy is required. Half of the designers in the Designer Fund 2026 survey have already shipped AI-generated code to production.[^designerfund]
+- **Figma is for exploration.** Use it when you need to compare directions side by side. Build what ships in code.
+- **Know which risk you're testing.** Every prototype should answer a question. Use the four discovery risks from Part 1 as a self-check: value, usability, feasibility, viability. If you can't name the risk your current work addresses, you may be producing artifacts without learning from them.
 
-- **Your opinion needs to be in the product, not in a deck.** If you see a problem, fix it. Open a PR. Don't file a ticket and wait.
-- **You own the experience layer.** Engineers own the logic and infrastructure. You own how it looks, feels, and flows. The boundary moved, but the responsibility didn't.
-- **You must be able to read code, not write it.** You'll use AI to write. But you need to understand what a component is, what a token does, what a PR contains. Structural literacy is non-negotiable. [^5]
-- **Figma is a thinking tool, not a delivery tool.** Use it when you need to compare directions spatially. Don't use it to produce something that will be rebuilt in code anyway.
-- **Know which risk you're testing.** Every prototype should answer a question. Use the four discovery risks from Part 1 as a self-check: value, usability, feasibility, viability. If you can't name which one your current work addresses, you may be producing artifacts without learning from them.
-
-The biggest fear: "I'm not a developer. I can't write code." You don't need to. But you need to read the structure.
+The biggest fear: "I'm not a developer. I can't write code." AI writes the code with you. Your part is to read its structure and judge the result.
 
 ### Onboarding sequence
 
-At Buzzvil, designer onboarding follows this progression:
+Once the path is clear, onboarding is the short part. At Buzzvil, designer onboarding follows this progression:
 
-**Week 1-2: Read, don't write.**
-Familiarize yourself with the project's component library, codebase conventions, and review culture. For example:
-- Browse the component library (e.g. Storybook, a docs site, or the source code directly): see every component, its variants, its props
-- Read 3-4 existing PRs: understand what a design change looks like in code
-- Read the repo's CLAUDE.md or equivalent project docs: understand the standing orders
+**Week 1-2: Read first.**
+Get to know the repository, its components and its review culture. For example:
+- Start in the real repository, on a branch. Ask Claude Code how a screen is built, which components and tokens it uses and which states it has, before you change anything.
+- Read 3-4 existing PRs: see what a design change looks like in code.
+- Read the repo's CLAUDE.md or equivalent project docs: learn the standing orders.
 
 **Week 3-4: Small, safe changes.**
 Build confidence through low-risk contributions that teach the patterns. For example:
-- Document an existing component (add a story, write usage notes, or improve prop descriptions)
-- Fix a color token (hardcoded hex → semantic variable)
-- Adjust spacing or copy on an existing page
+- Replace a hard-coded color with a semantic token.
+- Adjust spacing or copy on an existing page.
+- Run the checks, open a draft PR, and go through the full loop on a change where a mistake costs nothing.
 
 **Week 5+: Own a feature.**
 Take full ownership of a feature from intent to production. For example:
-- Build a new page or component from a design intent
-- Use an AI coding agent with the repo's skills and harness
-- Open, get reviewed, merge, ship
+- Build a new page or component from a written intent.
+- Use the repo's skills and harness, with one session per feature.
+- Open the PR, get it reviewed, merge, and check it live.
 
-The key: start with *observation* (component library, PRs, project docs), then *low-risk contribution* (documentation, tokens), then *ownership* (features). Each step builds confidence that the system works.
+The key: start with *observation* (components, PRs, project docs), then *low-risk contribution* (tokens, spacing, copy), then *ownership* (features). Each step builds confidence that the system works.
 
 ### For PMs and engineers working with designers
 
-The designer on your team no longer hands off mockups. They open PRs. And increasingly, you'll ship UI changes too.
+The designer on your team opens PRs. You can open UI PRs too.
 
-AI coding agents make it possible for anyone on the product team to build and modify interfaces. A PM prototyping a flow, an engineer adjusting a layout, a data analyst adding a dashboard view: all of these produce UI output. The design system, tokens, and harness ensure that output is structurally sound regardless of who wrote it.
+AI coding agents let anyone on the product team build and change interfaces. At Buzzvil, most UI code is written by frontend engineers, and a growing share comes from backend engineers and PMs. The industry shows the same shift: in Figma's 2026 AI report (8,403 survey responses over three years), the share of developers doing design work rose from 44% to 60%, and the share of designers taking part in development roughly doubled, to 41%.[^figma-report]
 
-What changes is the collaboration model, and specifically, who reviews what:
+Here is how it works with us:
 
-- **Don't wait for specs.** The designer may ship a working version before you'd have reviewed a Figma file. Review the PR instead.
-- **You can ship UI too.** With the design system and AI agent, you have the tools to make interface changes directly. Use the tokens, use the components, open a PR.
-- **The designer reviews your UI.** When you ship a UI change, the designer is the accountable reviewer for visual quality, consistency, and user experience. This is the mirror of engineering code review: you review their logic, they review your interface. The designer doesn't need to have written the code to own the quality of what ships.
-- **Design feedback happens in code.** Comment on the PR, suggest changes, iterate on the branch, the same way you'd review any other contribution.
-- **The design system is shared territory.** Tokens, components, and patterns are the contract between everyone's output. If you change a token, it affects the designer's work. If they add a component, it's available to you.
-- **Quality gates are automated.** Lint, type checking, formatting: hooks catch structural issues. Human review focuses on judgment calls: product fit, visual quality, and user experience.
+- **What you can build:** UI changes on existing screens: copy, states, layout, small flows.
+- **What you build with:** the design library and the repo's design skills. The tokens, components and harness keep the output structurally sound, whoever writes it.
+- **Who reviews:** the designer of that surface. They approve, fix small gaps on your branch, or send it back with the reason, within one working day. Engineering reviews the code as usual.
+- **Bigger work:** new screens that need data, logic or tracking are built together. The designer builds the UI PR, and you add data, logic and tracking on the same branch or in a linked PR.
+- **Review the PR. The working version is the spec.** Comment on the PR, suggest changes, iterate on the branch, the same way you review any other contribution.
+- **The design system is shared territory.** Tokens, components, and patterns are the contract between everyone's output. A token change affects the designer's work, and a new component is available to you.
+- **Checks run first.** Lint, type checking, formatting and the craft check catch structural issues. Human review focuses on judgment calls: product fit, visual quality, and user experience.
 
-### Hiring for this workflow
+### How we hire designers
 
-The traditional design job description optimizes for execution fluency: Figma mastery, pixel-perfect specs, comprehensive documentation. Those skills are declining in value.
+We hire for five traits, the same for every seat:
 
-What matters now:
-- **Judgment:** can you decide what's worth building?
-- **Articulation:** can you make your intent precise enough for a machine to act on?
-- **Conviction:** can you hold a position without a finished artifact to point at?
-- **Speed:** can you ship something rough, learn from it, and iterate?
+- **Owns it to live.** Carries work from the problem to production, checks it works for users, and stands behind it, including what AI or others produced.
+- **Finds the real problem.** Understands the user and the business behind the screen, and checks a problem is worth solving before building.
+- **Decides with a point of view.** Chooses what to build and what to cut, what to hand to tools and what to keep. Holds a position with reasons, and changes it when the evidence changes.
+- **Thinks in systems.** Sees the pattern behind the screen, turns repeated work into something others reuse, and keeps changing how they work as tools change.
+- **Makes intent precise.** Writes intent clear enough for a teammate or an agent to act on, in Korean or English.
 
-Jenny Wen at Anthropic uses a clean three-archetype framework for who actually thrives in this workflow. [^1] It is the most useful hiring frame we've found, and we apply it at Buzzvil.
+Four of them are the principles from Part 1 written as behavior. Judgment becomes deciding with a point of view. Articulation becomes making intent precise. Accountability becomes owning it to live. Discovery becomes finding the real problem. The fifth, thinking in systems, is how a designer builds the environment from Part 3.
 
-1. **The block-shaped generalist.** Rather than the classic T-shape (one deep skill plus light coverage), this person has several core skills at the 80th percentile. Research, visual design, prototyping, product thinking, maybe light code. The block shape matters because the design role now stretches into PM and engineering territory. Anyone who can flex across a few domains absorbs the role change without breaking.
-2. **The deep specialist (long-T).** Top 10% in one specific skill: visual design, motion, typography, illustration, or highly technical design closer to engineering. In a world where anyone can produce good-enough output, the deep specialist is what makes the work feel *special*.
-3. **The craft new grad.** Early-career, humble, technically curious, already building in code. Jenny makes the counter-intuitive case: "People without ingrained habits or attachment to established processes are an advantage when those processes are changing fast." The craft new grad hasn't built muscle memory around Figma-first workflows, which means they don't have to unlearn anything.
+**Craft is the floor.** Every seat needs taste and care for detail: every state covered, consistent, clean. The floor rises with seniority. Other design leaders keep the same floor: in the Designer Fund 2026 survey, only 5% of leaders said they put less emphasis on execution quality.[^designerfund]
 
-The common thread is adaptability. The processes are changing fast enough that attachment to any single tool or method is a liability, regardless of experience level.
+**AI lives inside every trait.** We look at a candidate's interest in AI and their judgment in how they work with it. Many strong designers work at companies that give them no AI tools, so we weigh the direction they are moving in and what they explore on their own time. Other leaders move the same way: in the same survey, 50% said they put more emphasis on AI fluency when hiring.[^designerfund]
 
-The best preparation isn't a portfolio of polished case studies. It's evidence of judgment, speed, and willingness to work in code.
+What candidates experience: a few short application questions, answered next to links to their work. Then one main interview of about two hours: a project deep dive, a 60-minute build in a starter repository with our design library and an AI tool we provide, and a walkthrough with the AI closed, where the candidate explains every decision in their own words. A final conversation with company leadership follows. The full candidate view, with the application questions and our promises to candidates, is on [the team page](https://design.buzzvil.com/team/#hiring).
+
+For a wider view of the field, Jenny Wen describes the three archetypes she is hiring for now in the same Lenny's Podcast episode.[^wen]
 
 ### Measuring output
 
-If designers ship through PRs, measure PRs.
+If designers ship through PRs, count PRs. Here is every pull request opened by a member of the design team across our repositories in 2026:[^prs]
 
-At Buzzvil, we track the pull requests the design team opens as a team metric.
+| | Q1 2026 | Q2 2026 | Q3 2026 (to 2026-09-04) |
+|---|---|---|---|
+| PRs opened | 10 | 177 | 245 |
+| Share of the team contributing | 17% | 100% | 100% |
+| Merged | 90% | 82% | 87% |
+| Repositories touched | 3 | 14 | 15 |
 
-This is a novel metric. No other design team we've found tracks PR count as a team metric. But it's the most honest measure of the workflow shift, and it answers one question directly: *are designers actually shipping, or are they still handing off?*
+Two rows matter most. The share of the team is the result: the second quarter is when PRs became the team's default. The merge rate shows that review still filters ideas. The PRs that did not merge are closed exploration branches, replaced stacks, and a few bad ideas that ended in review, which is where bad ideas should end.
 
-The number isn't the point. The trend is. Week over week, the count should grow and the contributors should diversify.
+PR count measures delivery only. It says nothing about whether we built the right thing. A team that optimizes for it ships 300 confident mistakes. We have no clean metric for exploration yet.
 
-PRs measure delivery. Discovery is harder to quantify: prototypes tested, risks validated, directions eliminated. We don't have a clean metric for that yet. For now, the delivery metric is the forcing function. Once the team is shipping consistently, discovery metrics will follow naturally as the workflow matures.
+We publish team-level numbers, and only those. DORA explains why: "company-wide aggregates are meaningless, and individual scores are harmful."[^dora-tokens]
 
-### Build trust through speed, not perfection
+### Ship early, then keep improving
 
-Anthropic ships products early, labels them research previews, and iterates publicly based on real feedback. Jenny argues that what actually degrades a brand isn't launching something rough; it's launching something rough and then going silent. [^1]
+We ship early and improve in public. Our web monorepo shows how. Work started in early March 2026, and five weeks later three apps were in production. We moved a tech blog of 195 posts and 227 pages of SDK docs into it.[^website] SDK Docs shipped at 95%, with final QA done through a live content update test with the platform team. The design portal went live before every page was perfect.
 
-We apply the same principle. SDK Docs shipped at 95%, with final QA happening via a live content update test with the platform team. The design portal went live before every page was perfect. The tech blog migrated 195+ posts in one sprint.
-
-Speed with iteration beats perfection with delay. This applies to both discovery (share the rough prototype early, learn from it) and delivery (ship, then improve based on real usage). The teams that wait for perfection ship less and learn slower.
+Ship, learn, improve. This applies to both lanes: share the rough prototype early and learn from it, then ship the feature and improve it based on real usage. Teams that wait for perfection ship less and learn slower.
 
 ### Tempo
 
-AI makes individuals fast. Without shared rhythm, that speed produces chaos. A team shipping 20 PRs a day with no coordination is not productivity. It's noise.
+AI makes individuals fast. Without a shared rhythm, that speed produces chaos. A team that ships 20 PRs a day with no shared rhythm makes noise.
 
-Creative teams need tempo the way an orchestra needs a conductor. Not to control what each musician plays, but to ensure the parts make sense together. The music happens in the space between the notes.
+Creative teams need a shared rhythm. It leaves each person free in what they make, and it makes the parts fit together.
 
-The problem is specific to AI-native workflows: the old cadence was designed around slow production cycles. Standups assumed work took days. Sprint planning assumed a two-week horizon. Design reviews assumed one direction per week. When individuals can ship multiple features per day, those rhythms are too slow to coordinate and too frequent to be useful.
+The problem is specific to AI-native workflows: the old cadence was designed around slow production cycles. Standups assumed work took days. Sprint planning assumed a two-week horizon. Design reviews assumed one direction per week. When individuals can ship several features per day, those rhythms are too slow to coordinate and too frequent to be useful.
 
-At Buzzvil, we rebuilt the cadence around what AI actually produces: commits, PRs, and measured artifacts.
+At Buzzvil, we rebuilt the cadence around what AI produces: commits, PRs, and measured artifacts.
 
 **Daily: async, artifact-based.**
-No standups. Work is visible through commits and open PRs. If you need to know what someone is working on, check the branch. If you need to give feedback, comment on the PR. The artifact *is* the status update.
+No standups. Open PRs are the status update. If you need to know what someone is working on, check the branch. If you need to give feedback, comment on the PR.
 
 **Weekly: generated reviews.**
-Every week, the system scans git logs across all active projects and generates a progress report. This replaces the "what did you do this week" meeting with evidence. It also surfaces connections: a commit on the interaction library affects the design library docs, which affects the SDK docs. Those dependencies are visible in the data, not in someone's head.
+Every week, the team review is generated from git logs across active projects. Each designer's weekly note is drafted from their own activity, then checked by them. The evidence answers "what did you do this week?", so we hold no meeting for it. The data also surfaces connections: a change in the interaction library affects the design library docs, which affects the SDK docs. Those dependencies show up in the data.
 
 **Monthly: stakeholder alignment.**
-1:1s with the people who consume the design team's output: product managers, group leads, engineering partners. These are not status meetings. They're alignment checks: are we building the right things? Has the priority shifted? What's coming next quarter that we should prepare for?
+1:1s with the people who use the design team's output: product managers, group leads, engineering partners. These are alignment checks: are we building the right things? Has the priority shifted? What's coming next quarter that we should prepare for?
 
 **Quarterly: a review with counted numbers.**
-Every number is measured from artifacts, such as merged PRs and published pages, not self-reported. The quarterly review is a conversation about what the numbers mean, not a debate about what they are.
+A quarterly review with numbers counted from artifacts, such as merged PRs and published pages. The conversation is about what the numbers mean.
 
-The cadence serves two purposes. For the individual, it provides checkpoints: moments to step back from the speed of daily AI-assisted work and ask if the direction is still right. For the team, it provides coherence: the assurance that everyone shipping independently is building one product.
+The cadence serves two purposes. For the individual, it provides checkpoints: moments to step back from the speed of daily AI-assisted work and ask if the direction is still right. For the team, it provides coherence: the assurance that everyone shipping independently builds one product.
+
+We learned this in the wrong order. Individual speed rose first, and the shared rhythm caught up later. It hurt.[^prs]
 
 AI accelerates individual output. Tempo keeps it coherent.
 
----
 
 ## Notes & Further Reading
 
@@ -392,33 +439,34 @@ AI accelerates individual output. Tempo keeps it coherent.
 Each section of this playbook introduces ideas explored in more depth elsewhere. Pick the topic that matters most to you.
 
 **On the value shift** (Part 1)
-- [Designing Above the Interface](/blog/designing-above-the-interface): What happens to design's value when production costs zero
-- [The Job Description Is Wrong](/blog/the-job-description-is-wrong): The five traits that matter in an agentic era, and why execution fluency isn't one of them
+- [Designing Above the Interface](/blog/designing-above-the-interface/): What happens to design's value when production costs zero
+- [The Job Description Is Wrong](/blog/the-job-description-is-wrong/): Which traits matter in design work when AI handles much of the execution
 
-**On the workflow** (Part 2)
-- [From Paper to Code](/blog/from-paper-to-code): Why paper forces thinking, code forces reality, and Figma sits in between
+**On the workflow** (Parts 2 and 4)
+- [From Paper to Code](/blog/from-paper-to-code/): Why paper forces thinking, code forces reality, and Figma sits in between
+- [Designers Open the PRs Now](/blog/designers-open-the-prs-now/): Six months and 432 pull requests: what got better and what it cost
 
 **On the environment** (Part 3)
-- [My Agents' Operating Manual, Written by the Agent](/blog/harnessing-ai-coding-agents): The five-layer harness in full detail, with examples from production
-- [The Flip](/blog/the-flip): What it means to build a design system for agents, not designers
-- [When the Interface Assembles Itself](/blog/when-the-interface-assembles-itself): Principles, recipes, and guidelines as the architecture of agentic composition
-- [Nobody Owned the Website. Now Everybody Does.](/blog/nobody-owned-the-website-now-everybody-does): A case study of shared tokens replacing four separate web properties
+- [My Agents' Operating Manual, Written by the Agent](/blog/harnessing-ai-coding-agents/): The five-layer harness in full detail, with examples from production
+- [The Flip](/blog/the-flip/): Why we build our design system for an agent to read
+- [A Design System for an Agent](/blog/a-design-system-for-an-agent/): Components as data, and a test kitchen that checks recipes before they ship
+- [When the Interface Assembles Itself](/blog/when-the-interface-assembles-itself/): Principles, recipes, and guidelines as the architecture of agentic composition
+- [Nobody Owned the Website. Now Everybody Does.](/blog/nobody-owned-the-website-now-everybody-does/): A case study of shared tokens replacing four separate web properties
 
 **On the people** (Part 4)
-- [Design Tempo](/blog/design-tempo): How to establish organizational rhythm for creative teams working at AI speed
-- [Head: A Neural System Across Projects](/blog/head-a-neural-system-across-projects): Managing context across 10+ repositories with markdown and agents
+- [Design Tempo](/blog/design-tempo/): How to establish organizational rhythm for creative teams working at AI speed
 
 ### Elsewhere
 
-Related articles and resources not directly cited above:
+Related articles and resources:
 
 - "Design Engineering at Vercel: What we do and how we do it." Vercel Blog. [vercel.com](https://vercel.com/blog/design-engineering-at-vercel)
-- "How Anthropic teams use Claude Code." Anthropic Blog. [claude.com](https://claude.com/blog/how-anthropic-teams-use-claude-code)
+- "How Anthropic teams use Claude Code." Anthropic. [claude.com](https://claude.com/resources/articles/how-anthropic-teams-use-claude-code)
 - "Claude Code vs Cursor: A Power-User's Playbook." Arize AI. [arize.com](https://arize.com/blog/claude-code-vs-cursor-a-power-users-playbook/)
 - "The future of enterprise design systems: 2026 Trends." Supernova.io. [supernova.io](https://www.supernova.io/blog/the-future-of-enterprise-design-systems-2026-trends-and-tools-for-success)
 - "Vibe Coding Guide - AI-Directed Development Playbook." Awesome Claude. [awesomeclaude.ai](https://awesomeclaude.ai/vibe-coding-guide)
 - "Design Systems And AI: Why MCP Servers Are The Unlock." Figma Blog. [figma.com](https://www.figma.com/blog/design-systems-ai-mcp/)
-- "Bridging the gap between design and code with v0." Vercel Blog. [vercel.com](https://vercel.com/blog/bridging-the-gap-between-design-and-code-with-v0)
+- "Bridging the gap between design and code with v0." Vercel. [vercel.com](https://vercel.com/customers/bridging-the-gap-between-design-and-code-with-v0)
 - "Mapping your design system for AI agents." Cristian Morales Achiardi, Design Systems Collective. [designsystemscollective.com](https://www.designsystemscollective.com/codebase-indexing-for-design-systems-agents-c0f6b563a39e)
 - "Why your design system is the most important asset in the AI era." The Design System Guide. [thedesignsystem.guide](https://learn.thedesignsystem.guide/p/why-your-design-system-is-the-most)
 
@@ -426,42 +474,78 @@ Related articles and resources not directly cited above:
 
 | Metric | Value | Source |
 |--------|-------|--------|
-| GitHub code AI-assisted | 51% | GitHub [^2] |
-| PR size increase (AI-assisted) | +33% | Greptile [^3] |
-| PRs per person increase | +98% | Greptile [^3] |
-| PR review time increase | +91% | Index.dev [^3] |
-| Designer time on mockups (before AI) | 60-70% | Jenny Wen [^1] |
-| Designer time on mockups (after AI) | 30-40% | Jenny Wen [^1] |
-| Vibe coding market (2026) | $8.5B projected | Industry estimates [^5] |
-| Developers using AI coding tools daily | 72% | Industry surveys [^5] |
-| Booking.com PR merge rate (AI users) | +16% | DX Core 4 [^7] |
-| Booking.com developer hours saved (year 1) | 150,000 | DX [^7] |
-| Booking.com MR increase after training | +30% | DORA report [^8] |
-| AGENTS.md: median runtime reduction | -29% | SmartScope [^9] |
-| AGENTS.md: output token reduction | -17% | SmartScope [^9] |
-| JSON vs Markdown for AI (accuracy) | 80% fewer tokens | Indeed [^10] |
+| Code that is AI-authored (Q2 2026, self-reported) | 51.9% | DX [^dx] |
+| Median PR size, Jul 2025 to Jun 2026 | 44 to 72 lines | DX [^dx] |
+| PRs merged per developer, high-AI teams (2025) | +98% | Faros AI [^faros25] |
+| Tasks completed per developer, high-AI teams (2025) | +21% | Faros AI [^faros25] |
+| PR review time, high-AI teams (2025) | +91% | Faros AI [^faros25] |
+| Median review time (Q2 2026) | 5x | Faros AI [^faros26] |
+| PRs with substantive review comments, with AI code review | 16% to 54% | Anthropic [^anthropic-review] |
+| Coding-assistant users who use them daily (2026) | 73% | Stack Overflow [^so26] |
+| Jenny Wen's time on mockups and prototypes, a few years ago to now | 60-70% to 30-40% | Jenny Wen [^wen] [^wong] |
+| Developers doing design work (2026) | 60%, up from 44% | Figma AI report [^figma-report] |
+| Designers taking on more product or engineering work | 65% | Designer Fund [^designerfund] |
+| Booking.com PR merge rate, AI users | +16% | DX [^7] |
+| AGENTS.md: median runtime / output tokens | -28.64% / -16.58% | Lulla et al. [^agentsmd] |
+| JSON vs Markdown for agents (tokens) | 80% fewer tokens | Indeed, via Into Design Systems [^10] |
 
 ### Sources
 
-[^1]: Jenny Wen, "The design process is dead. Here's what's replacing it." Lenny's Newsletter/Podcast, March 2026. [lennysnewsletter.com](https://www.lennysnewsletter.com/p/the-design-process-is-dead)
+[^prs]: "Designers Open the PRs Now." 2026-09-07. [mmaxence.me](/blog/designers-open-the-prs-now/). Korean edition on the Buzzvil tech blog, 2026-09-08: [tech.buzzvil.com](https://tech.buzzvil.com/blog/designers-open-the-prs-now)
 
-[^2]: Chris Roth, "Building An Elite AI Engineering Culture In 2026." [cjroth.com](https://cjroth.com/blog/2026-02-18-building-an-elite-engineering-culture)
+[^website]: "Nobody Owned the Website. Now Everybody Does." 2026-04-14. [mmaxence.me](/blog/nobody-owned-the-website-now-everybody-does/)
 
-[^3]: Greptile State of AI Coding Report / Index.dev, cited in "When product managers ship code: AI just broke the software org chart." [dataworldbank.net](https://www.dataworldbank.net/2026/03/29/when-product-managers-ship-code-ai-just-broke-the-software-org-chart/)
+[^wen]: Jenny Wen, "The design process is dead. Here's what's replacing it." Lenny's Podcast, 2026-03-01. [lennysnewsletter.com](https://www.lennysnewsletter.com/p/the-design-process-is-dead)
 
-[^4]: "Building AI-driven workflows powered by Claude Code and other tools." UX Collective. [uxdesign.cc](https://uxdesign.cc/designing-with-claude-code-and-codex-cli-building-ai-driven-workflows-powered-by-code-connect-ui-f10c136ec11f)
+[^wong]: Roger Wong, notes on Jenny Wen's episode of Lenny's Podcast, 2026-03-03. [rogerwong.me](https://rogerwong.me/2026/03/the-design-process-is-dead-jenny-wen-head-of-design-at-claude)
 
-[^5]: "The Complete Vibe Coding Guide for Designers (2026)." Muzli Blog. [muz.li](https://muz.li/blog/the-complete-vibe-coding-guide-for-designers-2026/)
+[^dx]: Justin Reock, "AI-authored code has nearly doubled." DX, 2026-06-17. Q2 2026 data from more than 400 companies, self-reported. [getdx.com](https://getdx.com/blog/ai-authored-code-has-nearly-doubled/)
+
+[^faros25]: "The AI Productivity Paradox Report 2025." Faros AI, 2025-07-23. Telemetry from more than 10,000 developers across 1,255 teams. [faros.ai](https://www.faros.ai/blog/ai-software-engineering)
+
+[^faros26]: "The Acceleration Whiplash." Faros AI, AI Engineering Report with data through Q2 2026. Telemetry from 22,000 developers across 4,000 teams. [faros.ai](https://www.faros.ai/research/ai-acceleration-whiplash)
+
+[^anthropic-review]: "Bringing Code Review to Claude Code." Claude Blog, 2026-03-09. [claude.com](https://claude.com/blog/code-review)
+
+[^metr]: "We are Changing our Developer Productivity Experiment Design." METR, 2026-02-24. [metr.org](https://metr.org/blog/2026-02-24-uplift-update/)
+
+[^so26]: Ryan Donovan, "The results of the 2026 Developer Survey are here!" Stack Overflow Blog, 2026-10-06. Daily use measured among people who use coding assistants and agents. [stackoverflow.blog](https://stackoverflow.blog/2026/10/06/the-results-of-the-2026-developer-survey-are-here/)
+
+[^figma-report]: Madeline Stafford and Shane Johnston, "Figma's 2026 AI report: Can AI help us collaborate better?" Figma Blog, 2026-06-24. 8,403 survey responses; a Figma-commissioned survey. [figma.com](https://www.figma.com/blog/2026-ai-report/)
+
+[^designerfund]: Robyn Park, "AI in Design 2026: The inflection point is here." Designer Fund and Foundation Capital, 2026-05-20. More than 900 designers in 60+ countries. [designerfund.com](https://designerfund.com/blog/ai-in-design-2026)
+
+[^dora-tokens]: Evan Conaway, "Finding balance in the era of tokenmaxxing." DORA, 2026-06-02. [dora.dev](https://dora.dev/insights/finding-balance-in-the-era-of-tokenmaxxing/)
+
+[^agentsmd]: Lulla, Mohsenimofidi, Galster, Zhang, Baltes and Treude, "On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents." arXiv 2601.20404, version 2, 2026-03-30. [arxiv.org](https://arxiv.org/abs/2601.20404)
+
+[^figma-agents]: Matt Colyer, "Agents, meet the Figma canvas." Figma Blog, 2026-03-24. [figma.com](https://www.figma.com/blog/the-figma-canvas-is-now-open-to-agents/)
+
+[^figma-code]: Nikolas Klein, "Code on the Figma canvas." Figma Blog, 2026-06-24. [figma.com](https://www.figma.com/blog/code-on-the-figma-canvas/)
+
+[^figma-make]: "Make in your local codebase." Figma Help Center, closed beta. [help.figma.com](https://help.figma.com/hc/en-us/articles/40775535020695-Make-in-your-local-codebase)
+
+[^figma-whatsnew]: "What's new." Figma, entry of 2026-10-06. [figma.com](https://www.figma.com/whats-new/)
+
+[^figma-mcp]: "Figma MCP server." Figma Developer Docs. [developers.figma.com](https://developers.figma.com/docs/figma-mcp-server/)
+
+[^paper]: Stephen Haney, "Paper raises $34M to build the next great design platform." Paper, 2026-07-22. [paper.design](https://paper.design/blog/series-a)
+
+[^stitch]: Rustin Banks, "We're introducing new ways to design in real time with Stitch." Google, 2026-05-19. [blog.google](https://blog.google/innovation-and-ai/models-and-research/google-labs/stitch-updates/)
+
+[^cursor]: Erik Nilsson, Ian Huang and Ryo Lu, "Direct agents with visual prompts in Design Mode." Cursor, 2026-06-05. [cursor.com](https://cursor.com/blog/design-mode)
+
+[^claude-design]: "Introducing Claude Design by Anthropic Labs." Anthropic, 2026-04-17. [anthropic.com](https://www.anthropic.com/news/claude-design-anthropic-labs)
+
+[^claude-design-brand]: "Claude Design now stays on brand for daily work." Claude Blog, 2026-06-17. [claude.com](https://claude.com/blog/claude-design-stays-on-brand-for-daily-work)
+
+[^claude-design-ga]: "Build live dashboards and animate explainers with Claude." Claude Blog, 2026-10-08. [claude.com](https://claude.com/blog/dashboards-and-motion)
 
 [^6]: "Towards an agentic design system." Cristian Morales Achiardi, Design Systems Collective. [designsystemscollective.com](https://www.designsystemscollective.com/towards-an-agentic-design-system-c7e0a6469bb1)
 
 [^7]: "Booking.com uses DX to measure AI's impact on developer productivity." DX. [getdx.com](https://getdx.com/customers/booking-uses-dx-to-measure-impact-of-genai/)
 
-[^8]: "QCon London 2026: behind Booking.com's AI Evolution." InfoQ. [infoq.com](https://www.infoq.com/news/2026/03/booking-evolution-ai-manuel/)
-
-[^9]: "AGENTS.md Optimization: 5x Performance Boost for AI Coding Agents." SmartScope. [smartscope.blog](https://smartscope.blog/en/generative-ai/claude/agents-md-token-optimization-guide-2026/)
-
-[^10]: "Your Design System Is Not Ready for AI Agents." Into Design Systems. [intodesignsystems.com](https://www.intodesignsystems.com/blog/design-system-not-ready-for-ai-agents)
+[^10]: "Your Design System Is Not Ready for AI Agents." Into Design Systems, 2026-04-10. Reports Diana Wolosin's tests at Indeed. [intodesignsystems.com](https://www.intodesignsystems.com/blog/design-system-not-ready-for-ai-agents)
 
 [^11]: "Graphic design: The digital revolution." Britannica. [britannica.com](https://www.britannica.com/art/graphic-design/The-digital-revolution) / "American Graphic Design in the 1990s: Deindustrialization and the Death of the Author." Post45. [post45.org](https://post45.org/2019/01/american-graphic-design-in-the-1990s-deindustrialization-and-the-death-of-the-author/)
 
@@ -469,6 +553,4 @@ Related articles and resources not directly cited above:
 
 [^13]: "Claude Code power user tips: Verification." Anthropic Help Center. [support.claude.com](https://support.claude.com/en/articles/14554000-claude-code-power-user-tips#h_ae6efc03ec)
 
-[^14]: Marty Cagan, "Build to Learn vs Build to Earn." Silicon Valley Product Group, April 2026. [svpg.com](https://www.svpg.com/build-to-learn-vs-build-to-earn/)
-
-[^15]: "Claude Design." Anthropic Labs, April 2026. [anthropic.com](https://www.anthropic.com/news/claude-design-anthropic-labs)
+[^14]: Marty Cagan, "Build to Learn vs Build to Earn." Silicon Valley Product Group, 2026-04-16. [svpg.com](https://www.svpg.com/build-to-learn-vs-build-to-earn/)
