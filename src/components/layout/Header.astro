@@ -153,9 +153,7 @@ function isActive(url: string): boolean {
   @keyframes menu-arrive { from { opacity:0;transform:translateY(12px); } to { opacity:1;transform:none; } }
   /* Work has its own route controls. Keep global navigation in the header. */
   @media(max-width:767px) {
-    .work-navigation .header-nav > div { display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px; }
-    .work-navigation .mobile-menu-fab { position:static;min-height:48px;padding:0 14px;gap:8px; }
-    .work-navigation .mobile-menu-dialog { inset:0 0 auto;margin:calc(12px + env(safe-area-inset-top)) 12px 0 auto; }
+    .work-navigation .mobile-menu-fab { right:max(12px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));width:88px;height:56px;padding:0 12px;gap:8px; }
   }
   @media(min-width:768px) { .mobile-menu-fab,.mobile-menu-dialog { display:none!important; } }
   @media(prefers-reduced-motion:reduce) { .mobile-menu-dialog[open] { animation:none; }.mobile-menu-fab { transition:none; } }

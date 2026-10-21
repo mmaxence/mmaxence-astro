@@ -420,7 +420,7 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
     if(viewChoosing||autoTurning)chooseCenteredStation(points);
     if(points.some((point,index)=>!projectionCache[index]||point.visible!==projectionCache[index].visible||Math.abs(point.x-projectionCache[index].x)>.15||Math.abs(point.y-projectionCache[index].y)>.15)){projectionCache=points;options.onProject(points);}
   };
-  const draw=()=>{if(disposed||failed)return;updateGlobe();project();renderer.render(scene,camera);if(!ready){ready=true;options.onReady?.();}};
+  const draw=()=>{if(disposed||failed)return;updateGlobe();project();renderer.render(scene,camera);if(!ready){ready=true;requestAnimationFrame(()=>{if(disposed||failed)return;renderer.render(scene,camera);options.onReady?.();});}};
   const animateAllowed=()=>motion&&visible&&!document.hidden&&!disposed&&!failed;
   const poseTrain=(dt=0,reset=false)=>{
     railFrame(trainPosition);monorail.object.position.copy(railNormal).multiplyScalar(railRadius+.055);
@@ -568,7 +568,10 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
     sunlight.position.copy(planet.position).add(new THREE.Vector3(-14,20,24));sunlight.target.position.copy(planet.position);sunlight.target.updateMatrixWorld();
     places.forEach(place=>place.scale.setScalar(placeScale));
     monorail.object.scale.setScalar(compact?.54:.52);updateGlobe();poseTrain();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.6));renderer.setSize(width,height,false);draw();wake();
+    const ratio=Math.min(window.devicePixelRatio||1,1.6);
+    if(renderer.getPixelRatio()!==ratio)renderer.setPixelRatio(ratio);
+    if(canvas.width!==Math.floor(width*ratio)||canvas.height!==Math.floor(height*ratio))renderer.setSize(width,height,false);
+    draw();wake();
   };
   let zoomTarget=1,zoomFrame=0,zoomPrevious=0,pinching=false,pinchDistance=0,pinchZoom=1,suppressClickUntil=0;
   const applyZoom=(value:number)=>{camera.zoom=value;(stage as HTMLElement).style.setProperty('--world-zoom-space',String(Math.max(1,value)));resize();};

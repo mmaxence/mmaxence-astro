@@ -44,7 +44,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
         >
           <div class="profile-flip" id="profile-flip">
             <img class="profile-flip-backing" id="profile-flip-backing" src="/images/profile.jpeg" alt="" draggable="false" aria-hidden="true" />
-            <div class="profile-flip-inner" id="profile-flip-inner">
+            <div class="profile-flip-inner" id="profile-flip-inner" data-face="front">
               <img class="profile-face profile-face-front" src="/images/profile.jpeg" alt="Maxence Mauduit" width="240" height="240" draggable="false" />
               <img class="profile-face profile-face-back" src="/images/profile.jpeg" alt="" width="240" height="240" draggable="false" aria-hidden="true" />
             </div>
@@ -386,6 +386,9 @@ const featuredDeepdive = (await getCollection('deepdives'))
     transition: filter 0.2s ease;
   }
 
+  .profile-flip-inner[data-face="front"] .profile-face-back,
+  .profile-flip-inner[data-face="back"] .profile-face-front { visibility:hidden; }
+
   .profile-face-back {
     transform: rotateX(180deg);
   }
@@ -557,6 +560,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
           // accompany the spin with the shape choreography
           document.dispatchEvent(new CustomEvent('hero-flip', { detail: { duration } }));
 
+          delete inner.dataset.face;
           const spin = inner.animate(
             [
               { offset: 0, transform: `rotateX(${from}deg) scale(1)`, easing: 'cubic-bezier(0.5, 0, 0.75, 0.4)' },
@@ -577,6 +581,7 @@ const featuredDeepdive = (await getCollection('deepdives'))
           inner.style.transform = `rotateX(${to}deg) scale(1)`;
           spin.cancel();
           rotation = to;
+          inner.dataset.face = frontForward ? 'back' : 'front';
         }
         index = target;
         try { localStorage.setItem('hero-photo-index', String(index)); } catch (e) {}
