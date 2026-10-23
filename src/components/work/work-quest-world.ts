@@ -48,7 +48,8 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-12, 12, 8, -8, 0.1, 100);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x999999, 1.1));
+  const sky = new THREE.HemisphereLight(0xffffff, 0x999999, 1.1);
+  scene.add(sky);
   const sunlight = new THREE.DirectionalLight(0xffffff, 2.3);
   sunlight.position.set(-10, 34, 14);
   sunlight.castShadow = true;
@@ -674,6 +675,26 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
   canvas.style.touchAction='pan-y';canvas.style.cursor='grab';
   stage.addEventListener('pointerdown',onPointerDown as EventListener);stage.addEventListener('pointermove',onPointerMove as EventListener);window.addEventListener('pointerup',finishPointer);window.addEventListener('pointercancel',finishPointer);stage.addEventListener('pointerleave',onPointerLeave);canvas.addEventListener('click',onClick);stage.addEventListener('wheel',onWheel as EventListener,{passive:false});stage.addEventListener('touchstart',onTouchStart as EventListener,{passive:false});stage.addEventListener('touchmove',onTouchMove as EventListener,{passive:false});stage.addEventListener('click',suppressPinchClick,true);stage.addEventListener('touchend',onTouchEnd);stage.addEventListener('touchcancel',onTouchEnd);stage.addEventListener('gesturestart',onGesture,{passive:false});stage.addEventListener('gesturechange',onGesture,{passive:false});canvas.addEventListener('webglcontextlost',onContextLost);document.addEventListener('visibilitychange',onVisibility);
   document.addEventListener('pointermove',onViewportPointer);document.documentElement.addEventListener('pointerleave',leaveViewport);window.addEventListener('blur',leaveViewport);
+  // Tint the illumination and globe surface, preserving the objects' shading.
+  // Observe tokens so custom themes, persisted themes and Reset all use one path.
+  let themeBackground = '';
+  const syncTheme = () => {
+    const background = getComputedStyle(canvas).getPropertyValue('--theme-bg').trim() || '#ffffff';
+    if (background === themeBackground) return;
+    themeBackground = background;
+    const base = new THREE.Color(background);
+    const tint = base.clone().lerp(new THREE.Color('#ffffff'), .45);
+    const surfaceTint = base.clone().lerp(new THREE.Color('#ffffff'), .18);
+    surfaceMaterial.color.copy(surfaceTint);
+    surfaceMaterial.emissive.copy(surfaceTint);
+    sky.color.copy(tint);
+    sunlight.color.copy(tint);
+    fill.color.copy(tint);
+    if (ready) draw();
+  };
+  const themeObserver = new MutationObserver(syncTheme);
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-theme', 'class'] });
+  syncTheme();
   const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(canvas);
   const visibilityObserver=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible)draw();wake();},{rootMargin:'100px'});visibilityObserver.observe(canvas);
   resize();options.onPan?.(panPosition);options.onStation?.(chapters[selected]);
@@ -695,7 +716,7 @@ export function createWorkQuestWorld(canvas: HTMLCanvasElement, options: WorldOp
       wake();
     },
     dispose(){
-      if(disposed)return;disposed=true;if(zoomFrame)cancelAnimationFrame(zoomFrame);if(frame)cancelAnimationFrame(frame);resizeObserver.disconnect();visibilityObserver.disconnect();
+      if(disposed)return;disposed=true;if(zoomFrame)cancelAnimationFrame(zoomFrame);if(frame)cancelAnimationFrame(frame);resizeObserver.disconnect();visibilityObserver.disconnect();themeObserver.disconnect();
       stage.removeEventListener('pointerdown',onPointerDown as EventListener);stage.removeEventListener('pointermove',onPointerMove as EventListener);window.removeEventListener('pointerup',finishPointer);window.removeEventListener('pointercancel',finishPointer);stage.removeEventListener('pointerleave',onPointerLeave);canvas.removeEventListener('click',onClick);stage.removeEventListener('wheel',onWheel as EventListener);stage.removeEventListener('touchstart',onTouchStart as EventListener);stage.removeEventListener('touchmove',onTouchMove as EventListener);stage.removeEventListener('click',suppressPinchClick,true);stage.removeEventListener('touchend',onTouchEnd);stage.removeEventListener('touchcancel',onTouchEnd);stage.removeEventListener('gesturestart',onGesture);stage.removeEventListener('gesturechange',onGesture);canvas.removeEventListener('webglcontextlost',onContextLost);document.removeEventListener('visibilitychange',onVisibility);
       document.removeEventListener('pointermove',onViewportPointer);document.documentElement.removeEventListener('pointerleave',leaveViewport);window.removeEventListener('blur',leaveViewport);
       canvas.style.cursor='';canvas.style.touchAction='';ambient.dispose();monorail.dispose();railSupports.dispose();treeTrunks.dispose();treeCrowns.dispose();rocks.dispose();geometries.forEach(geometry=>geometry.dispose());materials.forEach(value=>value.dispose());transientMaterials.forEach(value=>value.dispose());renderer.dispose();renderer.forceContextLoss();scene.clear();

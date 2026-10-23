@@ -65,8 +65,8 @@ function isActive(url: string): boolean {
       </div>
 
       <mobile-navigation>
-        <button id="mobile-menu-fab" class="mobile-menu-fab" type="button" aria-label="Open navigation" aria-haspopup="dialog" aria-controls="mobile-navigation-dialog" aria-expanded="false">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 7h14M3 13h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg><span>Menu</span>
+        <button id="mobile-menu-fab" transition:name="mobile-menu-trigger" class="mobile-menu-fab" type="button" aria-label="Open navigation" aria-haspopup="dialog" aria-controls="mobile-navigation-dialog" aria-expanded="false">
+          <svg transition:name="mobile-menu-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 7h14M3 13h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg><span transition:name="mobile-menu-label" aria-hidden="true">Menu</span>
         </button>
         <dialog id="mobile-navigation-dialog" class="mobile-menu-dialog" aria-labelledby="mobile-navigation-title">
           <div class="mobile-menu-heading"><span id="mobile-navigation-title">Explore</span><button type="button" data-menu-close aria-label="Close navigation" autofocus><svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
@@ -129,7 +129,9 @@ function isActive(url: string): boolean {
   }
 
   mobile-navigation { display: contents; }
-  .mobile-menu-fab { position:fixed;right:max(20px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 20px;border:1px solid var(--theme-text);border-radius:28px;background:var(--theme-text);color:var(--theme-bg);font:500 .85rem var(--font-body);z-index:101;cursor:pointer;transition:transform .18s ease;touch-action:manipulation; }
+  .mobile-menu-fab { position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:10px;width:112px;height:56px;padding:0;border:1px solid var(--theme-text);border-radius:28px;background:var(--theme-text);color:var(--theme-bg);font:500 .85rem var(--font-body);z-index:101;cursor:pointer;transition:transform .18s ease;touch-action:manipulation; }
+  .mobile-menu-fab > svg { position:absolute;left:18px;view-transition-name:mobile-menu-icon; }
+  .mobile-menu-fab > span { position:absolute;left:46px;width:46px;text-align:left;white-space:nowrap; }
   .mobile-menu-fab span,.mobile-menu-list a > span { color:inherit; }
   .mobile-menu-fab:active { transform:scale(.95); }
   .mobile-menu-dialog { position:fixed;inset:auto 0 0;margin:0 12px calc(12px + env(safe-area-inset-bottom)) auto;width:calc(100% - 24px);max-width:420px;max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:24px;border:1px solid var(--theme-border);border-radius:24px;background:var(--theme-bg);color:var(--theme-text);overflow:auto;overscroll-behavior:contain; }
@@ -151,13 +153,33 @@ function isActive(url: string): boolean {
   .mobile-menu-secondary button { margin-left:auto; }
   .mobile-menu-dialog :is(a,button):focus-visible,.mobile-menu-fab:focus-visible { outline:2px solid var(--theme-text);outline-offset:4px; }
   @keyframes menu-arrive { from { opacity:0;transform:translateY(12px); } to { opacity:1;transform:none; } }
-  /* Work has its own route controls. Keep global navigation in the header. */
+  /* The Work overview keeps the same global control, with a compact label variant. */
   @media(max-width:767px) {
-    .work-navigation .mobile-menu-fab { right:max(12px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));width:88px;height:56px;padding:0 12px;gap:8px; }
+    .work-navigation .mobile-menu-fab { right:max(12px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));width:56px;height:56px;padding:0;gap:0; }
   }
+  .work-navigation .mobile-menu-fab > span { opacity:0; }
   @media(min-width:768px) { .mobile-menu-fab,.mobile-menu-dialog { display:none!important; } }
   @media(prefers-reduced-motion:reduce) { .mobile-menu-dialog[open] { animation:none; }.mobile-menu-fab { transition:none; } }
 
+  :global(::view-transition-group(mobile-menu-trigger)) { animation-duration:280ms;animation-timing-function:cubic-bezier(.22,.7,.25,1); }
+  :global(::view-transition-group(mobile-menu-icon)) { animation-duration:280ms;animation-timing-function:cubic-bezier(.22,.7,.25,1); }
+  /* Resize an opaque CSS pill without stretching its snapshot. The old/new crossfade
+     dims the pill and icon independently and produces a visible blink. */
+  :global(::view-transition-old(mobile-menu-trigger)),
+  :global(::view-transition-old(mobile-menu-icon)),
+  :global(::view-transition-new(mobile-menu-trigger)) { display:none; }
+  :global(::view-transition-new(mobile-menu-icon)) { animation:none!important;opacity:1;mix-blend-mode:normal; }
+  :global(::view-transition-image-pair(mobile-menu-trigger)) { position:absolute;inset:0;width:100%;height:100%;box-sizing:border-box;border:1px solid var(--theme-text);border-radius:28px;background:var(--theme-text); }
+  :global(::view-transition-group(mobile-menu-label)) { animation-duration:200ms; }
+  :global(::view-transition-old(mobile-menu-label)),
+  :global(::view-transition-new(mobile-menu-label)) { animation-duration:180ms; }
+  @media(prefers-reduced-motion:reduce) {
+    :global(::view-transition-group(mobile-menu-trigger)),
+    :global(::view-transition-group(mobile-menu-icon)),
+    :global(::view-transition-group(mobile-menu-label)),
+    :global(::view-transition-old(mobile-menu-label)),
+    :global(::view-transition-new(mobile-menu-label)) { animation-duration:0s!important; }
+  }
 </style>
 
 <script>
