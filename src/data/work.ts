@@ -1,7 +1,3 @@
-// Local first-review stories, 2026-10-10.
-// Source: docs/reviews/2026-10-10-work-first-review.md and companion claim boundaries.
-// Company figures and credits remain review material; no publication is implied.
-
 export interface WorkLink { label: string; url: string }
 
 export interface ProjectEvidence {
@@ -40,20 +36,10 @@ export interface ProjectVisual {
   table?: { title: string; columns: string[]; rows: string[][]; caption: string };
 }
 
-export interface ProjectReview {
-  updated?: string;
-  credit: string;
-  figures: { value: string; context: string }[];
-  questions: string[];
-  sources: WorkLink[];
-  boundaries: string[];
-}
-
 export interface WorkProject {
   opening?: string;
   readingPath?: { chapter: number; label: string }[];
   intro?: string;
-  review?: ProjectReview;
   status: { label: string; value: string }[];
   sections: { title: string; takeaway?: { label: string; text: string }; paragraphs: string[]; links?: WorkLink[]; visuals?: ProjectVisual[]; plate?: 'brand' | 'system' | 'shortcuts' | 'accessibility'; detailPlate?: 'mark' | 'scale' | 'motion'; showcase?: 'palette' | 'work' | 'write' | 'performance'; mediaFirst?: boolean; details?: string[]; media?: ProjectEvidence[]; flow?: InteractionFlow; notes?: { title: string; paragraphs: string[] }[] }[];
 }
@@ -473,108 +459,6 @@ export const workEntries: WorkEntry[] = [
           ]
         }
       ],
-      "review": {
-        "credit": "Max: direction, shared foundation, implementation and migration. Edward: shared deployment workflow. Hugo: deployment, indexing and cutover. Eden: release-update test. Hazel and Olivia: documentation structure and content ownership. Daniel and Zune: review and infrastructure decisions. Confirm exact credit wording.",
-        "figures": [
-          {
-            "value": "201 legacy URLs",
-            "context": "Successful final responses after redirects in the 6 Apr 2026 audit. A dated migration check, not an uptime guarantee or proof every historic URL was tested."
-          },
-          {
-            "value": "200 migrated content items",
-            "context": "13 Apr 2026 launch update: 93 blog posts, 83 seminars and 24 handbook entries. Do not call all 200 blog posts."
-          },
-          {
-            "value": "5,293 → 1,859 files",
-            "context": "Inventory reported 13 Apr 2026, about 65% fewer files. Confirm measured directory scope before a headline; this does not measure page speed."
-          },
-          {
-            "value": "₩8.85M / year",
-            "context": "Potential Contentful and JotForm subscription avoidance from the August 31 cost note. Gross annualized opportunity; not verified cancellations or net savings."
-          },
-          {
-            "value": "1,008 KB to 322 KB",
-            "context": "Landing-page JavaScript transferred, gzip, before and after the August 13 redesign overhaul. Production builds, cold cache, localhost. About 68% less JavaScript; not a current live-site performance score."
-          }
-        ],
-        "questions": [
-          "Confirm whether 2025 belongs in the project period as substantive work or only prior token groundwork.",
-          "Resolve the migration inventory and conflicting retrospective cutover date. Contemporary CTO and launch posts support 12 April for the blog.",
-          "Which post-launch contribution best proves the workflow worked beyond Design? Eden’s real release update is documented; broad adoption and time saved are not.",
-          "Review the October 14–15 captures and confirm content alignment and migration readiness before the December publication goal.",
-          "Confirm subscription cancellation dates, remaining hosting/tooling costs and permission to publish the internal cost figures."
-        ],
-        "sources": [
-          {
-            "label": "23 February function alignment",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/~296941078/pages/4943085598/26.02.23+2026+Function+alignment"
-          },
-          {
-            "label": "27 March platform introduction",
-            "url": "https://buzzvil.slack.com/archives/C051V6F36LR/p1774599750134649"
-          },
-          {
-            "label": "Tech blog migration thread",
-            "url": "https://buzzvil.slack.com/archives/C011G4Z4086/p1774597104126049"
-          },
-          {
-            "label": "6 April audit",
-            "url": "https://buzzvil.slack.com/archives/C011G4Z4086/p1775443741668889"
-          },
-          {
-            "label": "13 April launch update",
-            "url": "https://buzzvil.slack.com/archives/C051V6F36LR/p1776041484796199"
-          },
-          {
-            "label": "6 May deployment implementation",
-            "url": "https://buzzvil.slack.com/archives/C011G4Z4086/p1778057986193909"
-          },
-          {
-            "label": "15 May SDK production update",
-            "url": "https://buzzvil.slack.com/archives/C051V6F36LR/p1778824641951159"
-          },
-          {
-            "label": "14 September Judy and Max notes",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/~296941078/pages/5226168738/Judy+Max+meeting+notes"
-          },
-          {
-            "label": "Nobody owned the website",
-            "url": "https://mmaxence.me/blog/nobody-owned-the-website-now-everybody-does/"
-          },
-          {
-            "label": "October 12 shared production deployment",
-            "url": "https://github.com/Buzzvil/buzzvil-mediums/actions/runs/38190126410"
-          },
-          {
-            "label": "October 16 function alignment · publication goal and remaining checks",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/5264081198"
-          },
-          {
-            "label": "October 16 team report · recent website updates",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/5260673175"
-          }
-        ],
-        "boundaries": [
-          "23 February function alignment. Internal. Problem and intended workflow. Proposed steps such as Slack publishing and Contentful removal are not treated as shipped.",
-          "27 March platform introduction. Internal. Design portal live; blog review, SDK testing and homepage incomplete. Preview app count is not a production-launch count.",
-          "Tech blog migration thread. Internal. April filename case errors, Feedly identifier problem, link checks and CTO production confirmation. Supports 12 April cutover over a conflicting later retrospective date.",
-          "6 April audit. Internal. 201 legacy URLs ended in successful responses after redirects. Point-in-time audit only.",
-          "13 April launch update. Internal. 93 posts, 83 seminars, 24 handbook entries; 5,293 to 1,859 files. Disk footprint and media compression measure different things. Credentials in the source have not been copied.",
-          "6 May deployment implementation. Internal. Edward confirms preview comments and production on merge after Max’s proposal. Does not prove proposed content auto-approval shipped.",
-          "15 May SDK production update. Internal. Search indexing, preserved URLs, simpler structure, old versions, real release-update test and collaborator credits. GitHub direct reads were blocked by organization IP policy; no current repository audit is implied.",
-          "14 September Judy and Max notes. Internal. Customer-focused prototype and continuing brand alignment; later dates are plans, not completed launch milestones.",
-          "Nobody owned the website. Public, April 2026. Background only where corroborated. The stated 71% image reduction does not reconcile with 1.0 GB to 325 MB; raw bytes are needed. No blanket cost saving or universal adoption claim is retained.",
-          "12 October 2026: Max identifies IPO readiness and the AI-native organizational transition as the context for this work. This is preparation, not proof of a scheduled or completed IPO. The February proposal and Game UA handoff are not assigned an unsupported day-by-day order.",
-          "October 12 repository review: five production app jobs succeeded. Homepage content PRs #109–111 remain drafts. This does not establish www.buzzvil.com cutover. The August 31 John 1:1 cost note is an internal planning source; no billing cancellation is asserted.",
-          "October 18 refresh: October 16 alignment and team report read, local buzzvil-web history corroborates merged PRs #109–127 through October 15. Earlier draft-PR statuses are superseded. December is a goal, not a launch commitment. Reused October 14–15 local review screenshots are explicitly dated; they are not fresh production captures. No Buzzvil repository was modified.",
-          "19 October 2026: Max identifies IPO preparation, a consistent brand across key online mediums and agent-driven repository updates as core project goals. This describes preparation, not a completed listing or a listing date.",
-          "19 October local repository inspection: shared tokens, layouts, agent instructions, content/code CI classification, preview workflow and bilingual release checks are implemented in buzzvil-web. The rebuilt publishing pipeline reads repository content. Legacy hosted assets, forms and public-domain cutover are separate migration concerns; no subscription cancellation is implied.",
-          "August 13 homepage comparison in head/notes/2026-08-13-homepage-perf-comparison.md supports the 1,008 KB to 322 KB gzip payload comparison. Both redesign measurements are local production builds with cold cache. The live-site network timing column was not used.",
-          "October demo implementation: optimized WebP previews load before sandboxed interactive experiences. No new field performance, conversion, time-saving or organization-wide adoption figures are inferred.",
-          "19 October 2026 visual refresh: homepage hero, advertiser-context and personalized-experience captures come from the running local buzzvil-web homepage on port 3001. Source pixels were inspected before responsive WebP export. The homepage is labeled a local preview, not an established public-domain launch. The culture capture remains a secondary brand example."
-        ],
-        "updated": "19 October 2026"
-      },
       "opening": "Rebuilding the websites was only part of the job. The harder question was who could keep them moving afterward.",
       "readingPath": [
         {
@@ -662,7 +546,7 @@ export const workEntries: WorkEntry[] = [
           "title": "First remove the unnecessary step",
           "paragraphs": [
             "Before reaching the mission page, users encountered a separate explanation screen. The mission page already contained the necessary campaign information. I wrote the proposal to remove that bridge for our Web UA campaigns and coordinated the work across the teams responsible for campaign setup, platform logic, the client and QA. A campaign-level switch kept the change reversible.",
-            "The two-week KakaoBank comparison showed more users reaching the experience. Unique mission-page visits rose from 35% to 67% of unique ad clicks. Unique installs rose from 7.8% to 10.4%.",
+            "The two-week comparison in a banking partner’s app showed more users reaching the experience. Unique mission-page visits rose from 35% to 67% of unique ad clicks. Unique installs rose from 7.8% to 10.4%.",
             "But advertiser conversion barely changed in that window. We had made entry easier. The harder work still sat inside the experience."
           ],
           "visuals": [
@@ -692,7 +576,7 @@ export const workEntries: WorkEntry[] = [
                     "Essentially flat"
                   ]
                 ],
-                "caption": "KakaoBank · 11–25 August vs 26 August–9 September 2024. Before/after comparison, not randomized A/B; allocation changes may confound the result."
+                "caption": "Banking partner · 11–25 August vs 26 August–9 September 2024. Before/after comparison, not randomized A/B; allocation changes may confound the result."
               }
             }
           ],
@@ -816,16 +700,8 @@ export const workEntries: WorkEntry[] = [
             {
               "label": "Experiment source and other campaign slices",
               "url": "https://buzzvil.atlassian.net/wiki/spaces/DEM/pages/3919086115"
-            },
-            {
-              "label": "Original choice frame",
-              "url": "https://www.figma.com/design/rIjQudVP8g0K7ecLxG3yty?node-id=6222-154827"
-            },
-            {
-              "label": "Original confirmation frame",
-              "url": "https://www.figma.com/design/rIjQudVP8g0K7ecLxG3yty?node-id=6222-154839"
             }
-          ]
+            ]
         },
         {
           "title": "Engagement: make the next step feel reachable",
@@ -862,12 +738,6 @@ export const workEntries: WorkEntry[] = [
                   "context": "Same participation measure. Raw cohort counts and assignment still need confirmation."
                 }
               ]
-            }
-          ],
-          "links": [
-            {
-              "label": "Original Ranking Board frame",
-              "url": "https://www.figma.com/design/rIjQudVP8g0K7ecLxG3yty?node-id=13871-89246"
             }
           ]
         },
@@ -949,133 +819,6 @@ export const workEntries: WorkEntry[] = [
           ]
         }
       ],
-      "review": {
-        "credit": "Max’s account: hands-on design to prove the initial Game UA model, followed by a handoff of ongoing design to Mido. Product, sales, Ad Product and Supply shared delivery and commercial outcomes. Mido owns the subsequent design iterations described here. Max’s later focus is organizational AI-native adoption and web readiness for IPO preparations.",
-        "figures": [
-          {
-            "value": "35% → 67%",
-            "context": "Unique mission-page visits / unique ad clicks. KakaoBank, 11–25 Aug versus 26 Aug–9 Sep 2024. Before/after comparison, not randomized A/B."
-          },
-          {
-            "value": "7.8% → 10.4%",
-            "context": "Unique installs / unique ad clicks, same periods and publisher. Advertiser conversion was essentially flat; allocation changes may confound the comparison."
-          },
-          {
-            "value": "52.18% → 40.59%",
-            "context": "Advertiser events / installs, Match Convenience Store Android. Control 824/1,579; experiment 772/1,902. Later Mission Mode test begins 1 Jun 2025; closing date and assignment need verification."
-          },
-          {
-            "value": "9.12% → 7.67%; 13.10% → 8.06%",
-            "context": "Other Mission Mode slices: Fantasy Town Android and iOS respectively. Same event/install measure; do not pool or generalize the rates."
-          },
-          {
-            "value": "1,472 ratings and 277 comments",
-            "context": "UA feedback report, 12–27 Sep 2024. Counts describe collected responses. The source’s NPS scoring needs clarification and is omitted."
-          },
-          {
-            "value": "₩788M in 2024; ₩3.209B in 2025",
-            "context": "Demand Group 2025 plan/year-end review, updated January 2026: 7.88억 and 32.09억 actual Game UA revenue. Reported growth 4.07×; 2025 target 50억 (₩5B), 64.18% achieved. Not Max-attributed revenue or the combined multimission/multiaction business."
-          },
-          {
-            "value": "About 42,000 to 32,000 monthly new users",
-            "context": "2026 Game UA direction paper: first-half vs second-half 2025 monthly averages. Source interprets this as partner-inventory audience saturation; no claim that a specific design caused the decline."
-          }
-        ],
-        "questions": [
-          "Confirm dated early screens that best show Max’s work establishing the first viable model.",
-          "Choose dated Mido captures and review the handoff wording with the team before publication.",
-          "Confirm exact experiment cohorts and ownership before publishing Mission Mode or Ranking Board results.",
-          "Review internal business figures and IPO-preparation wording before publication; no IPO date or completed listing is asserted."
-        ],
-        "sources": [
-          {
-            "label": "I Don’t Like Ads",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/~296941078/pages/4728455227/I+Don+t+Like+Ads"
-          },
-          {
-            "label": "2024 Design OKRs",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/DN/pages/3379397096/2024+OKR+-+Design"
-          },
-          {
-            "label": "Removing the bridge page PRD",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/~296941078/pages/3606905160/PRD+Removing+the+bridge+page+for+all+UA+campaigns+on+Web+Products"
-          },
-          {
-            "label": "Two week report",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/~296941078/pages/3645079773/Removing+the+bridge+page+-+2+weeks+report"
-          },
-          {
-            "label": "Mission selection experiment",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/DEM/pages/3919086115"
-          },
-          {
-            "label": "UA Mission Page NPS report",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/DN/pages/3666051565/UA+Mission+Page+NPS"
-          },
-          {
-            "label": "Ranking Board experiment board",
-            "url": "https://www.figma.com/board/1b5svTvbozaBzlDOkNpQTg?node-id=28-3455"
-          },
-          {
-            "label": "2026 design team interview",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/B2B/pages/5148967063/AX+CDO+EN+KR"
-          },
-          {
-            "label": "Mission Mode fourth iteration",
-            "url": "https://www.figma.com/design/rIjQudVP8g0K7ecLxG3yty?node-id=6222-154826"
-          },
-          {
-            "label": "Ranking Board third iteration",
-            "url": "https://www.figma.com/design/rIjQudVP8g0K7ecLxG3yty?node-id=13871-89246"
-          },
-          {
-            "label": "2025 Demand Product plan · reward investment",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/3725787200"
-          },
-          {
-            "label": "2025 Demand Group plan and annual results",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/3725230268"
-          },
-          {
-            "label": "2026 Game UA direction · beyond partner inventory",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/4654039057"
-          },
-          {
-            "label": "2026 Demand Product plan · first-half review and strategic transfer",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/4554031449"
-          },
-          {
-            "label": "June 2026 global action-ad business plan",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/5113905556"
-          },
-          {
-            "label": "Mido / Max biweekly · ongoing product design",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/4950818972"
-          },
-          {
-            "label": "AI-native organization · 2026 strategy workshop",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/5112563211"
-          }
-        ],
-        "boundaries": [
-          "I Don’t Like Ads. Internal, January 2026 version. Advertiser-defined meaningful event supports the opening. Broad completion figures are not specific enough to import.",
-          "2024 Design OKRs. Internal, January 2025 final version. Names Max and Jia on different work. Some mission-page and booster iterations had no clear improvement; V4 redirects harmed mission performance.",
-          "Removing the bridge page PRD. Internal. Max owned the proposal; campaign, platform, client and QA work was assigned across teams. Web UA scope only.",
-          "Two week report. Internal. 11–25 August versus 26 August–9 September 2024, KakaoBank. Unique-click denominator for visits and installs. Before/after with possible allocation confound; advertiser conversion essentially flat.",
-          "Mission selection experiment. Internal, updated 4 July 2025. Later queries begin 1 June. Three campaign/platform slices lowered advertiser-event per install conversion. Self-selected retention cohorts do not prove a mode caused retention.",
-          "UA Mission Page NPS report. Internal. 1,472 ratings, 277 comments; 12–27 September 2024 dates corroborated in Max’s 2 October Slack post. Score labels need methodology, so only response counts and themes are used.",
-          "Ranking Board experiment board. Internal, inspected original board. 20 January–5 February 2026; 7.88% versus 23.93% participation. Numerator: unique RewardMon click DAU. Denominator: unique hub entry DAU. Raw cohort counts and assignment not shown.",
-          "2026 design team interview. Internal. Supports broader design-to-code practice and Mido’s substantial Game UA contribution. Does not assign individual causal KPI gains.",
-          "12 October 2026: Max explicitly clarified his early IC role proving the model, its contribution to greater 2025 investment, the handoff to Mido, and his later AI-native organizational and IPO-readiness focus.",
-          "2025 Demand Product and Demand Group plans read in full on 12 October 2026. More active reward investment and sales capacity are planned commitments; no precise investment budget or proof that every planned hire occurred is asserted. Annual actual revenue and target are separated.",
-          "2026 Demand Product plan distinguishes the initial strategy from the first-half review and second-half transfer to Frontier. Open-internet retargeting, referral and standalone growth are strategic directions, not blanket claims of completed rollout or success.",
-          "Mido biweekly notes document his mission-page, cashback, hub, retention and design-in-code work. Later team experiments must not be used as evidence of Max’s initial IC success.",
-          "IPO preparation is supplied directly by Max; this local draft asserts neither an exchange-approved timetable nor a completed listing.",
-          "October 18 visual pass: hub/discovery video and stills extracted from the existing July 13 all-hands asset q-fourth.mp4. QA marker preserved. This is archival team-build evidence, not proof of production release or a specific experiment outcome. Journey and choice diagrams are explicitly reconstructed summaries.",
-          "18 October 2026 Figma visual research: original frames exported read-only, visually inspected and saved as lossless WebP at source resolution. Captions distinguish archival designs from production and experiment evidence. Source-frame links are included beside each comparison. See docs/reviews/2026-10-18-figma-visuals.md."
-        ],
-        "updated": "18 October 2026"
-      },
       "opening": "An install is a beginning. What makes someone take the next step and then return?",
       "readingPath": [
         {
@@ -1236,8 +979,7 @@ export const workEntries: WorkEntry[] = [
             "The Composer performed better for the hypothetical case of generating a fresh experience for every session. Its coded pieces and recipes suited live assembly. Live per-session generation remained a research scenario, separate from the campaign trials.",
             "The Mission team’s second track took a different route. Prompts and a harness let the LLM crawl brand details and compose UI from design guidelines, without relying on the Composer’s UI library. It produced much more flexible experiences and stronger results. Its drawback was the time needed to produce each variation.",
             "That delay turned out to be acceptable. We chose to generate and validate interactions per user segment on the ad platform’s server, before anyone encountered them. The Composer’s speed mattered less in that delivery model than the flexibility and quality of the prompt-and-harness approach. These were findings about generation, not a measured advertiser KPI uplift."
-          ],
-          "links": []
+          ]
         },
         {
           "title": "The conclusion: use the stronger approach for prepared experiences",
@@ -1294,73 +1036,6 @@ export const workEntries: WorkEntry[] = [
           ]
         }
       ],
-      "review": {
-        "credit": "The Mission team owned the initiative and researched approaches in parallel. Max proposed and tested the Composer approach through the design library, UI Cooker and interaction refinements. Product and engineering partners supported campaign experiments and delivery work. The Composer ran in a few campaigns before the team selected the prompt-and-harness approach.",
-        "figures": [
-          {
-            "value": "88 manifests and 21 recipes",
-            "context": "Library inventory reported 18 May 2026. Manifests are not directly comparable with the earlier count of React components."
-          },
-          {
-            "value": "60 of 60 validated combinations",
-            "context": "Recipe and brand validation across five brands. Coverage of the implementation, not a conversion or user-success rate."
-          },
-          {
-            "value": "23.5% in-quiz dropoff",
-            "context": "Pre-revision OX diagnostic cited 2 June 2026. One campaign line item; exact event denominator, sample size and observation dates still need the full report. Do not use as a headline improvement."
-          }
-        ],
-        "questions": [
-          "Confirm the documented OX trial’s first production date and provide its final recording. The 4 May staging message conflicts with a retrospectively edited meeting note; 12 May is provisional. This one trial does not describe the full scope of the Composer’s campaigns.",
-          "Approve the campaign metric for public use and recover its denominator and sample size. No measured benefit from the June revision is established."
-        ],
-        "sources": [
-          {
-            "label": "Interaction Library",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/DN/pages/5006819451/Interaction+Library"
-          },
-          {
-            "label": "18 May 2026 biweekly",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/~139668156/pages/5068029954/2026-05-18+Max+John+Biweekly+Meeting+note"
-          },
-          {
-            "label": "1 June analysis announcement",
-            "url": "https://buzzvil.slack.com/archives/C0AJTB08THP/p1780293967536659"
-          },
-          {
-            "label": "2 June revision",
-            "url": "https://buzzvil.slack.com/archives/C0AJTB08THP/p1780380569138889"
-          },
-          {
-            "label": "4 May staging clarification",
-            "url": "https://buzzvil.slack.com/archives/C0AJTB08THP/p1777874257788089"
-          },
-          {
-            "label": "30 April polish update",
-            "url": "https://buzzvil.slack.com/archives/C087QNJP333/p1777515180086189"
-          },
-          {
-            "label": "June reward-gauge preview",
-            "url": "https://buzzvil.github.io/interaction-cooker/?recipe=ox-quiz-3"
-          }
-        ],
-        "boundaries": [
-          "18 October 2026, learning clarified by Max: in this project a UI-kit constraint improved generation speed but reduced output quality; a much larger kit would weaken the rationale for building it. Prompt quality and shared brand, user and KPI context were more valuable. Improving models now allow gradual removal of heavy harness layers. The prompt logic remains proprietary and must not be reproduced. These are project observations and the current direction, not a universal model benchmark or a claim that all harness layers have already been removed.",
-          "18 October 2026, conclusion clarified by Max: while he built the first Composer experiments, a second track began inside the Mission team using prompts and a harness without a UI library. It showed much greater flexibility and strong results; producing each variation took longer. That delay was acceptable because the team chose to generate and validate interactions per user segment on the ad platform’s server. No quantitative generation-time or quality benchmark is supplied.",
-          "18 October 2026, latest clarification from Max: the library consolidated common interaction patterns and could generate dozens of different interactions; the six portfolio specimens are a selection. The Composer ran in a few campaigns, gathering real data that drove dozens of small performance refinements. The progress gauge is one example. This supersedes earlier wording that implied the Composer had no campaign use. It does not establish exact campaign counts, per-session generation or measured uplift from any individual change.",
-          "Interaction Library. Internal. Explains manifests, roles, recipes, documentation and Cooker. Earlier counts use different units and dates from May; do not merge them into a growth claim.",
-          "18 May 2026 biweekly. Internal and retrospectively edited. Supports 88 manifests, 21 recipes, five brands, 60 validated combinations and one OX line item. Provisional first production date is 12 May.",
-          "1 June analysis announcement. Internal. More than 20% incomplete quiz bounce; teasing-screen explanation is a hypothesis. Full report and denominator remain to be checked.",
-          "2 June revision. Internal. Max cites 23.5% in-quiz dropoff and describes gauge, feedback and transitions. The metric precedes the revision; there is no established uplift.",
-          "4 May staging clarification. Internal. Only OX was polished and only live in stagingqa; Cooker images were placeholders. Do not label these as final campaign visuals.",
-          "30 April polish update. Internal. Design-library PR 6 and production-renderer handoff support personal craft and engineering collaboration, not final campaign release by themselves.",
-          "18 October 2026: Max clarified that the Composer was a research direction tested in a few campaigns. The generation comparison distinguishes two settings: the recipe Composer performed better for hypothetical live, per-session generation; the LLM-driven approach produced better quality for prepared server-side experiences. Neither comparison is a quantified benchmark.",
-          "18 October 2026: Max authorized new concept illustrations unconstrained by early screenshots. New fictional skincare and streetwear brands illustrate the shared interaction idea; they are not original research outputs, shipped campaigns or evidence of model performance. The documented OX analysis concerns one campaign line item. Later prompt-and-harness delivery is distinguished from the Composer’s campaign trials.",
-          "18 October 2026: Max describes the replacement as an LLM-driven flow that can crawl brand details and compose UI using design guidelines instead of the Composer’s coded recipes. Current experiences are admin-generated, human-reviewed and server-assigned to segments. Per-session generation is a hypothetical comparison, not a shipped capability. No measured latency, quality score, conversion gain or automated optimization outcome is inferred.",
-          "18 October 2026: Max clarified the strategic context and ownership. Since 2025 Buzzvil has focused on post-impression experiences, building on strong targeting and retargeting. The goal is to use audience data to tailor experiences toward actual advertiser KPIs beyond views and clicks. The Mission team owned the initiative and researched approaches in parallel; Max proposed and tested Composer and UI Cooker as one option. The team chose prompt-and-harness generation for better results with prepared experiences, since live generation was not required. These statements establish intent, research findings and contribution boundaries, not proven conversion uplift or overall initiative ownership by Max. The documented OX trial is one part of the campaign evidence, not a full inventory of the Composer’s use."
-        ],
-        "updated": "18 October 2026"
-      },
       "opening": "The audience was already being reached. What experience would help them take the next step? I built a recipe-based system within the Mission team’s broader research, refined it through campaign data, then helped compare it with a more flexible LLM approach.",
       "readingPath": [
         {
@@ -1653,56 +1328,6 @@ export const workEntries: WorkEntry[] = [
           ]
         }
       ],
-      "review": {
-        "credit": "My account describes an independent lab, design and implementation across its surfaces, and daily use of Write and Work at Buzzvil. It does not claim sole authorship or import Buzzvil ownership into the project.",
-        "figures": [
-          {
-            "value": "Think local prototype",
-            "context": "Unreleased development preview, verified in the local Hanji repository on 18 October 2026. Cross-product implementations are present; owner restart and end-to-end checks remain pending."
-          },
-          {
-            "value": "Write closed beta and Work alpha",
-            "context": "Last explicit status supplied by Max. Access by request. Confirm current stage before publication; these are product stages, not audited October 2026 usage metrics."
-          },
-          {
-            "value": "Daily personal use",
-            "context": "Reported by Max for both products at Buzzvil. Describes dogfooding, not measured adoption or team-wide usage."
-          },
-          {
-            "value": "Roughly 5 to 10 people",
-            "context": "Intended scope of the next feedback group, not existing adoption. If active, distinguish invitations, onboarding and recurring use."
-          }
-        ],
-        "questions": [
-          "Are the closed-beta and alpha labels still correct, and has either product had a proper public-source release? Do not infer public release from a repository push.",
-          "Is the five-to-ten-person group still planned or already active? Add a usage figure only with a clear definition and date.",
-          "Does the terminal → chat → issue comments sequence match the turning point you want to emphasize, and which daily frustration made it matter?",
-          "Which current recording can demonstrate reading-to-editing continuity or multiplayer merging? Existing captures do not show those behaviors.",
-          "Can a real, non-confidential agent session replace the seeded thread, and should anyone else receive specific contribution credit?"
-        ],
-        "sources": [
-          {
-            "label": "Hanji",
-            "url": "https://hanji.ink/"
-          },
-          {
-            "label": "Write access",
-            "url": "https://hanji.ink/projects/write/#get-started"
-          },
-          {
-            "label": "Work access",
-            "url": "https://hanji.ink/projects/work/#get-started"
-          }
-        ],
-        "boundaries": [
-          "The refresh was checked against the Hanji landing and local Hanji main at 7fcb688 on 18 October 2026. Think is not presented as a released third product.",
-          "Think and conductor captures come from the local handbook’s fictional demonstration fixtures. Existing agent replies are seeded demonstrations, not live Claude/GPT evidence.",
-          "The cross-product study illustrates implemented flows. Existing Think screenshots predate their controls; no current capture proves a complete live round trip.",
-          "Local-folder proposal support, the workspace conductor and drawer continuity are implementation-backed details. No new speed, adoption or release metrics are asserted.",
-          "The Write → Work → Think sequence follows the initial repository (10 August), tracker (18 September) and whiteboard (9 October) commits. Figma/FigJam friction is Max’s account of his own setup, supplied during this portfolio review."
-        ],
-        "updated": "18 October 2026"
-      },
       "opening": "I could make more. I needed a better way to judge it.",
       "readingPath": [
         {
@@ -1875,14 +1500,6 @@ export const workEntries: WorkEntry[] = [
               "url": "/work/lockscreen/"
             },
             {
-              "label": "Original Feed prototype",
-              "url": "https://www.figma.com/design/x3tqXc804Z5iSVjSHDteoN?node-id=321-28138"
-            },
-            {
-              "label": "Original bottom-sheet component",
-              "url": "https://www.figma.com/design/x3tqXc804Z5iSVjSHDteoN?node-id=72-2365"
-            },
-            {
               "label": "BenefitHub (formerly Feed) · current Android guide",
               "url": "https://docs.buzzvil.com/docs/buzzbenefit-android/v6/benefithub"
             }
@@ -1953,18 +1570,6 @@ export const workEntries: WorkEntry[] = [
             "We documented ways to test that: separating the explanation of the service from the advertiser's message, trying clearer onboarding, and comparing paths through the funnel. The useful lesson was to examine whether the reward was understood before treating its amount as the only lever."
           ],
           "links": [
-            {
-              "label": "Original Carousel UI",
-              "url": "https://www.figma.com/design/45kZV5TgUKYV5LURmTXrQO?node-id=1-2269"
-            },
-            {
-              "label": "Native carousel system",
-              "url": "https://www.figma.com/design/x3tqXc804Z5iSVjSHDteoN?node-id=356-30928"
-            },
-            {
-              "label": "Native card variants",
-              "url": "https://www.figma.com/design/x3tqXc804Z5iSVjSHDteoN?node-id=356-30849"
-            },
             {
               "label": "Native placements · current Android guide",
               "url": "https://docs.buzzvil.com/docs/buzzbenefit-android/v6/native"
@@ -2070,7 +1675,7 @@ export const workEntries: WorkEntry[] = [
           "title": "Later: the offerwall itself became the constraint",
           "paragraphs": [
             "By 2025–2026, the question was no longer only how to add inventory inside our partner apps. More formats were competing in the same scrolling feed. Products placed near the bottom could be available without ever being seen. Reordering sections often moved attention from one product to another.",
-            "A June 2026 internal review made that limit visible across publishers. In KakaoBank’s April data, the bottom action section reached 18% of the audience exposed to the top section. For KB StarBanking, shopping reached 11% of hub impression users while the two upper sections reached 93–95%. These use different denominators, but both exposed the cost of burying a product in a long feed.",
+            "A June 2026 internal review made that limit visible across publishers. In one banking partner’s April data, the bottom action section reached 18% of the audience exposed to the top section. For another banking partner, shopping reached 11% of hub impression users while the two upper sections reached 93–95%. These use different denominators, but both exposed the cost of burying a product in a long feed.",
             "There was a market boundary too. By August 2026, supply reviews again identified publisher-point rewards as a barrier to entering new sectors. The next work had to address both discovery inside the hub and the value of the experience beyond its list of offers. Game UA explores participation after installation; the interaction composer tested reusable brand journeys, then led us toward more freedom and brand context for generation. They are related directions in that broader shift, rather than a single replacement for the offerwall."
           ],
           "visuals": [
@@ -2097,164 +1702,6 @@ export const workEntries: WorkEntry[] = [
           ]
         }
       ],
-      "review": {
-        "credit": "Max’s account establishes the transition from design IC to roughly two years of supply PO/PM responsibility. The 2021–2022 team charter names Max as PO, Diane as PM and Dio as technical owner. Experiment credits remain with the team; Cathie authored the cited analysis.",
-        "figures": [
-          {
-            "value": "10 million monthly active users",
-            "context": "Official company history, May 2019. Whole-company milestone. The October 2021 release uses monthly users and does not document deduplication; no precise like-for-like growth rate is inferred."
-          },
-          {
-            "value": "150+ premium publishers",
-            "context": "Buzzvil network-wide figure, company-reported October 2021. Not the number using this particular offerwall redesign."
-          },
-          {
-            "value": "20 million monthly users",
-            "context": "Buzzvil network-wide figure, company-reported October 2021. Unique-user methodology is not disclosed; do not use as a design-attributed growth curve."
-          },
-          {
-            "value": "₩12.3B to ₩22.3B company revenue; +81% year over year",
-            "context": "Public Buzzvil release, 28 October 2021: Q3 2020 versus Q3 2021, company-wide revenue. Not Feed revenue or causal evidence for an interface change. Gross/net and acquisition-adjustment basis are not specified."
-          },
-          {
-            "value": "Two layout options",
-            "context": "List and card in the September 2019 renewal notice. Product configuration scope, not experiment arms or measured winners."
-          },
-          {
-            "value": "392.0M to 432.2M feed PVs; ₩3.37B to ₩3.61B revenue",
-            "context": "Q3 2021 review: May–June vs July–August totals, all platforms. Wider publisher adoption is a documented contributor. Not annual totals or design-attributed uplift."
-          },
-          {
-            "value": "+15.69% impressions/visit; +6.99% pRPM; −12.30% CTR",
-            "context": "Honeyscreen Android feed A/B, 21 February–31 March 2022. No day-one/week-one retention difference. Report contains older year typos in its method; result dates and Q1 2022 OKRs agree."
-          },
-          {
-            "value": "1 to 2.73 impressions per show",
-            "context": "March 2022 Honeyscreen Android carousel before/after, carousel-version users only. Native-to-feed visits broadly flat; not a network-wide uplift."
-          }
-        ],
-        "questions": [
-          "Confirm the exact start and end months of the roughly two-year supply PO/PM remit.",
-          "Choose archival captures for SDK customization, entry points and the 2022 feed experiment.",
-          "Review internal aggregate revenue and partner-specific figures before any future publication."
-        ],
-        "sources": [
-          {
-            "label": "Buzzvil company history",
-            "url": "https://www.buzzvil.com/company/about_us"
-          },
-          {
-            "label": "20 September 2019 SDK UI notice",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/SUP/pages/1389428786/SDK+UI+2019.09.20"
-          },
-          {
-            "label": "13 November 2019 iteration",
-            "url": "https://buzzvil.slack.com/archives/DBMPBN858/p1573634275012800"
-          },
-          {
-            "label": "Hypothesis of low CTR",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/MI/pages/551059819/Hypothesis+of+low+CTR"
-          },
-          {
-            "label": "A B test management",
-            "url": "https://buzzvil.atlassian.net/wiki/spaces/MI/pages/535855337/A+B+Test+Management+Document"
-          },
-          {
-            "label": "28 June 2021 feed focus",
-            "url": "https://buzzvil.slack.com/archives/C01J573LRG9/p1624856321175700"
-          },
-          {
-            "label": "Buzzvil Q3 2021 release",
-            "url": "https://www.newswire.co.kr/newsRead.php?no=933111"
-          },
-          {
-            "label": "Maxence Mauduit resume",
-            "url": "https://mmaxence.me/images/Maxence-Mauduit_Resume-2026.pdf"
-          },
-          {
-            "label": "2020 Offerwall tabs exploration",
-            "url": "https://www.figma.com/design/B3K5wARA1swOvdNvcN9gUG?node-id=717-137"
-          },
-          {
-            "label": "Nucleus rough journey map",
-            "url": "https://www.figma.com/design/A9IEzf28pnWKrSrfiNnumV?node-id=92-38"
-          },
-          {
-            "label": "February 2021 bottom sheet",
-            "url": "https://www.figma.com/design/kbxSbDoZ5iI9S4bXcqe5on?node-id=2-1663"
-          },
-          {
-            "label": "Supply SDK team · 2021–2022 remit and strategy",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2197389336"
-          },
-          {
-            "label": "Supply Product Roadmap · 2021",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2138079396"
-          },
-          {
-            "label": "Supply Product QBR · Q3 2021",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2415362262"
-          },
-          {
-            "label": "Feed UI A/B analysis · version 2",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2701525706"
-          },
-          {
-            "label": "Carousel inventory analysis · 2022",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2748481537"
-          },
-          {
-            "label": "Offerwall market penetration research · January 2022",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2627764323"
-          },
-          {
-            "label": "Max’s monetization strategy proposal · February 2022",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2642641123"
-          },
-          {
-            "label": "Limits of the single-level hub · June 2026",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/5100503176"
-          },
-          {
-            "label": "Supply MBR · 28 August 2026",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/5197431002"
-          },
-          {
-            "label": "Carousel Ad inventory PRD · delivery-model decision",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2597617699"
-          },
-          {
-            "label": "Carousel integration guide",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/2690416838"
-          },
-          {
-            "label": "Honeyscreen · current official app listing",
-            "url": "https://play.google.com/store/apps/details?id=com.buzzvil.adhours&hl=en_US"
-          },
-          {
-            "label": "Max’s story · Buzzvil, 30 August 2022",
-            "url": "https://tech.buzzvil.com/en/blog/max-story"
-          }
-        ],
-        "boundaries": [
-          "Buzzvil company history. Public retrospective. In-app Buzzbenefit dates to April 2018. The 2019–2022 page is a focus period; it is not the invention date of the offerwall.",
-          "20 September 2019 SDK UI notice. Internal archived notice, copied December 2020. List/card and coordinated accent color; no publisher UI implementation required. Supports offered/planned configuration, not completion of every rollout phase or sole authorship.",
-          "13 November 2019 iteration. Internal. Max shared Offerwall Figma iteration for review. Surviving 2020 alternatives must not be called unchanged 2019 screens.",
-          "Hypothesis of low CTR. Internal, January 2020. Lower-than-expected Nucleus CTR and Max’s hypothesis that reward communication went unnoticed. A hypothesis, not a proven cause or fixed outcome.",
-          "A B test management. Internal, March 2020. Credits Max’s sign-in versus redirect UX; warns that small samples are date-sensitive. Numerical improvement is not established.",
-          "28 June 2021 feed focus. Internal. Supports the move toward feed and Benefit SDK. The inspected February bottom-sheet deck is a presentation with placeholder creatives, and Max said he had no figures.",
-          "Buzzvil Q3 2021 release. Public, company-supplied, 28 October 2021. 150+ publishers and 20M monthly users describe the whole network. Revenue, even when public, cannot prove UI impact.",
-          "Maxence Mauduit resume. Public first-person context. PM and Head of Design dates differ from the portfolio timeline; review before publication.",
-          "12 October 2026: role transition and approximate two-year duration supplied directly by Max. Do not imply Max was the sole PM throughout; the team charter explicitly names Diane as PM.",
-          "New Confluence sources read in full on 12 October 2026. QBR totals and experiment results have distinct scopes. The 2026 inventory findings are a later coda, not results of the 2019–2022 work.",
-          "The June 2026 format-limit document is an internal synthesis. Its publisher reach denominators differ. The August 2026 MBR describes a strategic problem, not a completed product pivot.",
-          "18 October 2026: Max identifies PM and PD responsibility for “1 feed 4 all,” connecting ad units to a central offerwall, and creation of the horizontal native carousel with a feed link and final see-more card. Substantial feed-impression growth and continued ecosystem development are first-person qualitative claims; no causal percentage is supplied. The visual is a newly drawn schematic, not an archival product screen.",
-          "18 October 2026 Figma visual research: original frames exported read-only, visually inspected and saved as lossless WebP at source resolution. Captions distinguish archival designs from production and experiment evidence. Source-frame links are included beside each comparison. See docs/reviews/2026-10-18-figma-visuals.md.",
-          "18 October 2026: exported the 2021 Output Feed improvements file and February 2022 Carousel UI file shared by Max. Original example ads, point values and component-board backgrounds retained. Native carousel entry points are distinct from cards inside the Feed. The carousel PRD records the change from a bundled SDK UI to an integration guide/sample implementation with Feed-promotion support; no new performance attribution is inferred.",
-          "19 October 2026: verified the public company history and 28 October 2021 release. Network audience and quarterly company revenue are now visible business context. Product totals and experiments retain their original scopes. Honeyscreen remains linked as Buzzvil’s own consumer rewards app; the broader SDK serves other publishers."
-        ],
-        "updated": "19 October 2026"
-      },
       "opening": "The next step was not another ad unit. It was making the ones we already had lead somewhere together.",
       "readingPath": [
         {
@@ -2372,16 +1819,6 @@ export const workEntries: WorkEntry[] = [
                 }
               ],
               "archive": true
-            }
-          ],
-          "links": [
-            {
-              "label": "Original square-image template",
-              "url": "https://www.figma.com/design/MlqPPWob7yeVqxCZSHO4onjm?node-id=219-426"
-            },
-            {
-              "label": "Original landscape-image template",
-              "url": "https://www.figma.com/design/MlqPPWob7yeVqxCZSHO4onjm?node-id=219-141"
             }
           ],
           "details": [
@@ -2507,116 +1944,6 @@ export const workEntries: WorkEntry[] = [
           ]
         }
       ],
-      "review": {
-        "credit": "My documented contribution spans concepts, complete flows, wireframes and coordination. Derek refined interface mockups; Ahreumong led migration asset production, with other design support. Company scale reflects many teams. Max also introduced advertiser templates and creative guidelines that replaced internal campaign adaptation. Native-ad template delivery and subsequent iterations were a team effort.",
-        "figures": [
-          {
-            "value": "2.5 million Korean users",
-            "context": "Official company history, November 2014, during the Honeyscreen era. Reported users; not specified as MAU. Do not compare as a growth rate with later network monthly-user counts."
-          },
-          {
-            "value": "50+ publishing partners",
-            "context": "Company-wide network reported August 2018, not integrations personally shipped by Max."
-          },
-          {
-            "value": "5.4 billion monthly impressions",
-            "context": "Company-reported August 2018. Served impressions, not unique people; the observation month is not specified."
-          },
-          {
-            "value": "30 countries",
-            "context": "Company distribution footprint reported August 2018. Not 30 localized versions or an individual design outcome."
-          },
-          {
-            "value": "Four migration scenarios",
-            "context": "Design scope from December 2017 notes: main app updated or not, lockscreen enabled or not. A state model, not a success rate."
-          },
-          {
-            "value": "Two months",
-            "context": "Google policy lead time, supplied by Max. Do not infer exact notice/enforcement days or a complete in-app migration from this duration."
-          }
-        ],
-        "questions": [
-          "Confirm that 2014–2019 is the portfolio focus period. Honeyscreen predated your arrival and the lockscreen continued afterward.",
-          "Which gesture or onboarding decision is most distinctly yours, and which original early screen can represent 2014 honestly?",
-          "Which customization boundary actually shipped after migration? The surviving January 2018 message records the proposal.",
-          "Do you have a period-specific migration, usability or integration-time measure with dates and denominators? Current metrics establish company scale only."
-        ],
-        "sources": [
-          {
-            "label": "Max’s story from design to product leadership",
-            "url": "https://medium.com/design-bootcamp/maxs-story-from-design-to-product-leadership-d9007dbe3a1d"
-          },
-          {
-            "label": "14 July 2016 research preparation",
-            "url": "https://buzzvil.slack.com/archives/D086KP5UJ/p1468478409000009"
-          },
-          {
-            "label": "18 December 2017 design coordination",
-            "url": "https://buzzvil.slack.com/archives/D086KP5UJ/p1513561692000086"
-          },
-          {
-            "label": "21 December 2017 four scenarios",
-            "url": "https://buzzvil.slack.com/archives/D033CLXRZ/p1513852226000283"
-          },
-          {
-            "label": "18 January 2018 division of work",
-            "url": "https://buzzvil.slack.com/archives/D033CLXRZ/p1516241906000161"
-          },
-          {
-            "label": "Buzzvil rebounds after suspension",
-            "url": "https://appdevelopermagazine.com/buzzvil-rebounds-after-google-play-store-suspended-their-app/"
-          },
-          {
-            "label": "August 2018 company release",
-            "url": "https://www.prnewswire.com/news-releases/largest-lockscreen-media-platform-buzzvil-acquires-india-and-pakistans-slideapp-300703902.html"
-          },
-          {
-            "label": "Halla onboarding tutorial",
-            "url": "https://www.figma.com/design/aXJP6LW8Xb2N1TAAWI4w57Al?node-id=112-2"
-          },
-          {
-            "label": "Archived Sketch-era template",
-            "url": "https://www.figma.com/design/MlqPPWob7yeVqxCZSHO4onjm?node-id=1-61"
-          },
-          {
-            "label": "Halla 2.1 · detailed design feedback",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/388202800"
-          },
-          {
-            "label": "Channel · December 2018 concept based on Halla 2.1",
-            "url": "https://buzzvil.atlassian.net/wiki/pages/282329344"
-          },
-          {
-            "label": "Honeyscreen · current official app listing",
-            "url": "https://play.google.com/store/apps/details?id=com.buzzvil.adhours&hl=en_US"
-          },
-          {
-            "label": "Max’s story · Buzzvil, 30 August 2022",
-            "url": "https://tech.buzzvil.com/en/blog/max-story"
-          },
-          {
-            "label": "Buzzvil company history · Honeyscreen and SDK milestones",
-            "url": "https://www.buzzvil.com/en/company/about_us"
-          }
-        ],
-        "boundaries": [
-          "Max’s story from design to product leadership. Public first-person article, 5 September 2022; only accessible introduction used. Supports late-2014 arrival and Honeyscreen focus. Product existed before Max joined.",
-          "14 July 2016 research preparation. Internal. Max asks about unlocking, engaging campaigns and reading content. Questions are not measured usability findings.",
-          "18 December 2017 design coordination. Internal. Standalone app migration and production support. Max coordinates; Ahreumong leads asset production. Not sole ownership of the recovery.",
-          "21 December 2017 four scenarios. Internal. Main-app update and lockscreen-enabled conditions support a four-state reconstruction. Final screen content requires original approved exports.",
-          "18 January 2018 division of work. Internal. Max’s concept, flows and wireframes; Derek’s refined mockups. Consistent marketing assets and limits on customization are proposed; full rollout is not established.",
-          "Buzzvil rebounds after suspension. Public secondary report, 23 May 2018; internal messages corroborate the migration. Dedicated lockscreen apps remained possible. Ambiguous migration percentages and historical revenue are excluded.",
-          "August 2018 company release. Public, company-supplied, 30 August 2018. 50+ publishing partners, 5.4B monthly impressions, 30 countries. Scale context with date and attribution, not design causality.",
-          "Max supplied the two-month Google policy window on 12 October 2026. This describes the urgent distribution pivot to companion apps. The separate April 2018 in-app launch must not be described as completed inside that same window.",
-          "18 October 2026: Max describes two marketing designers adapting each creative when he joined; his introduction of advertiser templates and guidelines; eventual retirement of internal adaptation and reassignment of marketing design resources to brand and product design. He also describes native-ad templates for ad-network supply, multiple treatments and revisions, and continued lockscreen use nearly eight years later. These are first-person historical claims, not independently audited staffing, throughput or current production-code measurements. No exact launch year, template count or quantified efficiency gain is inferred.",
-          "18 October 2026 Figma visual research: original frames exported read-only, visually inspected and saved as lossless WebP at source resolution. Captions distinguish archival designs from production and experiment evidence. Source-frame links are included beside each comparison. See docs/reviews/2026-10-18-figma-visuals.md.",
-          "18 October 2026 Halla research: inspected full UI Instances page in Halla Layout and read the Channel proposal and Halla 2.1 detailed feedback. Feed, Favorites, Explore, utility overlays and persistent unlock are visible design scope. Exact release dates and adoption are not established. Halla is presented as a later evolution; Max identifies it as possibly the most advanced lockscreen UI. The checkerboard-heavy Feed and Explore exports were replaced with intact original theme and Lab Features frames. Main feed imagery remains missing in the available export; no replacement imagery was invented. Team review suggestions are not asserted as all shipped or solely Max-authored.",
-          "18 October 2026: user requested improved reconstructed product imagery. Added resolution-independent HTML/SVG presentation studies for the lockscreen and Halla. New illustrative artwork, typography and sample content are explicitly labeled; original archival exports remain for comparison. Demonstration buttons explain gesture intentions rather than simulate a production product.",
-          "18 October 2026 narrative revision: removed the Halla feature chapter and archive screens from the case, at Max’s request. Its source narrative is preserved in docs/reviews/2026-10-18-lockscreen-halla-archive.json. Reconstructed lockscreen specimens reuse fictional FORME and FIELDWORK campaign assets; these advertisers, campaign copy and refreshed layouts are illustrative, not historic Buzzvil clients or shipped screens. The primary arc is creative operations, advertiser guidelines, native-ad automation, the 2017 companion-app pivot and the separate April 2018 move into in-app rewards.",
-          "19 October 2026: verified the public company history and August 2018 company release. Visible scale figures describe the whole business, not Max-attributed results. Honeyscreen is linked to its official Buzzvil Google Play listing; the current app is not presented as unchanged historical UI."
-        ],
-        "updated": "19 October 2026"
-      },
       "opening": "A simple lockscreen depended on a much larger system: creative production, advertiser input and partner distribution.",
       "readingPath": [
         {
