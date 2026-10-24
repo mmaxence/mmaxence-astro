@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { WORK_SLUGS } from '../../data/work-order';
 import { createMonorail } from './work-monorail';
 import { createAmbientLife } from './work-ambient-life';
 
@@ -26,7 +27,7 @@ type WorldOptions = {
   onPan?(position: number): void;
   onStation?(slug: string): void;
 };
-const chapters = ['lockscreen', 'offerwall', 'game-ua-multi-mission', 'interaction-composer', 'buzzvil-mediums', 'hanji'];
+const chapters: readonly string[] = WORK_SLUGS;
 const ivory = '#f5f5f5';
 const ink = '#353535';
 

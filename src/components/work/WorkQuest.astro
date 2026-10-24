@@ -1,13 +1,18 @@
 ---
 import { workEntries } from '../../data/work';
-const chapters = [
+import { WORK_SLUGS } from '../../data/work-order';
+const chapterDetails = [
   { slug: 'lockscreen', title: 'Lockscreen', x: 10, y: 42 },
   { slug: 'offerwall', title: 'Offerwall', x: 27, y: 59 },
   { slug: 'game-ua-multi-mission', title: 'Game UA', x: 44, y: 49 },
   { slug: 'interaction-composer', title: 'Composer', x: 61, y: 34 },
   { slug: 'buzzvil-mediums', title: 'Buzzvil mediums', x: 78, y: 43 },
   { slug: 'hanji', title: 'Hanji', x: 95, y: 57 },
-].map(chapter => ({ ...chapter, years: workEntries.find(work => work.slug === chapter.slug)!.years }));
+];
+const chapters = WORK_SLUGS.map(slug => {
+  const chapter = chapterDetails.find(chapter => chapter.slug === slug)!;
+  return { ...chapter, years: workEntries.find(work => work.slug === slug)!.years };
+});
 ---
 <work-quest>
   <h1 class="sr-only">Work</h1>
@@ -68,6 +73,7 @@ const chapters = [
     private rewardHideTimer = 0;
     private restoring = false;
     private pendingStationFocus = false;
+    private pendingReturnSlug: string | null = null;
     private focusFrame = 0;
     private station: string = WORK_SLUGS[0];
     private active: string | null = null;
@@ -159,7 +165,13 @@ const chapters = [
       window.addEventListener('work-progress', () => this.updateProgress(), {signal});
       document.addEventListener('work-quest-focus', event => {
         this.restoring=true;
-        this.activate((event as CustomEvent<string>).detail);
+        const slug = (event as CustomEvent<string>).detail;
+        this.activate(slug);
+        const marker = this.querySelector<HTMLElement>(`#${slug}`);
+        if (marker && (marker.inert || this.dataset.world === 'loading')) {
+          this.pendingReturnSlug = slug;
+          this.restoreReturnProject();
+        }
         queueMicrotask(()=>{this.restoring=false;});
       }, {signal});
       document.addEventListener('work-quest-station-focus',()=>{this.pendingStationFocus=true;this.focusStationControl();},{signal});
@@ -213,7 +225,7 @@ const chapters = [
           onHover: slug => this.activate(slug,false),
           onPan: position => {if(!booting)this.onPan(position);},
           onStation: slug => {this.updateStation(slug);if(!booting)this.persistPan();},
-          onReady: () => {worldHasLoaded=true;clearTimeout(this.loaderTimer);this.loaderTimer=window.setTimeout(()=>this.removeAttribute('data-loader-visible'),400);this.rewardTimer=window.setTimeout(()=>this.showReturnReward(),950);this.loadingProgress(100);this.removeAttribute('aria-busy');this.dataset.world='ready';this.updateStation(this.station);this.querySelector('.quest-stage')?.setAttribute('aria-label','Explore six project stories on the globe. Drag to choose the centered project. The monorail follows your view. Left and right arrows travel between stops. Enter opens the selected story.');this.querySelector('.quest-stage')!.scrollLeft=0;this.focusStationControl();},
+          onReady: () => {worldHasLoaded=true;clearTimeout(this.loaderTimer);this.loaderTimer=window.setTimeout(()=>this.removeAttribute('data-loader-visible'),400);this.rewardTimer=window.setTimeout(()=>this.showReturnReward(),950);this.loadingProgress(100);this.removeAttribute('aria-busy');this.dataset.world='ready';this.updateStation(this.station);this.querySelector('.quest-stage')?.setAttribute('aria-label','Explore six project stories on the globe. Drag to choose the centered project. The monorail follows your view. Left and right arrows travel between stops. Enter opens the selected story.');this.querySelector('.quest-stage')!.scrollLeft=0;this.restoreReturnProject();this.focusStationControl();},
           onError: () => this.fallback(),
         });
         this.world.setProgress(getProgress());
@@ -224,6 +236,18 @@ const chapters = [
         booting=false;
         this.onPan(savedPan);
       } catch {this.fallback();}
+    }
+
+    private restoreReturnProject() {
+      if (!this.pendingReturnSlug || this.dataset.world !== 'ready' || !this.world) return;
+      const slug = this.pendingReturnSlug;
+      this.pendingReturnSlug = null;
+      // Next-project navigation can return to a stop outside the initial view.
+      // Bring it into view and focus the always-reachable station control.
+      this.world.select(slug);
+      this.updateStation(slug);
+      this.pendingStationFocus = true;
+      this.focusStationControl();
     }
 
     private focusStationControl() {

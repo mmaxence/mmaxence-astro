@@ -1,6 +1,7 @@
 ---
 import WorkStoryLayout from '../../layouts/WorkStoryLayout.astro';
 import { workEntries } from '../../data/work';
+import { WORK_SLUGS } from '../../data/work-order';
 import ComposerCase from '../../components/work/ComposerCase.astro';
 import HanjiCase from '../../components/work/HanjiCase.astro';
 import OfferwallCase from '../../components/work/OfferwallCase.astro';
@@ -9,7 +10,15 @@ import GameUACase from '../../components/work/GameUACase.astro';
 import BuzzvilMediumsCase from '../../components/work/BuzzvilMediumsCase.astro';
 
 export function getStaticPaths() {
-  return workEntries.map((work, index) => ({ params: { slug: work.slug }, props: { work, next: workEntries[(index + 1) % workEntries.length] } }));
+  const orderedWork = WORK_SLUGS.map(slug => {
+    const work = workEntries.find(entry => entry.slug === slug);
+    if (!work) throw new Error(`Missing work entry: ${slug}`);
+    return work;
+  });
+  return orderedWork.map((work, index) => ({
+    params: { slug: work.slug },
+    props: { work, next: orderedWork[index + 1] },
+  }));
 }
 const { work, next } = Astro.props;
 const cases = {
