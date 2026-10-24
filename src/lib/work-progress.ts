@@ -1,12 +1,5 @@
-/** Reading progress belongs to this browser, not to the project's career timeline. */
-export const WORK_SLUGS = [
-  'lockscreen',
-  'offerwall',
-  'game-ua-multi-mission',
-  'interaction-composer',
-  'buzzvil-mediums',
-  'hanji',
-] as const;
+import { WORK_SLUGS } from '../data/work-order';
+export { WORK_SLUGS } from '../data/work-order';
 
 export const WORK_PROGRESS_KEY = 'mmaxence:work-progress:v1';
 export type WorkSlug = (typeof WORK_SLUGS)[number];

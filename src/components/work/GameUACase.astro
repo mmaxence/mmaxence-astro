@@ -6,7 +6,7 @@ interface Props { work: WorkEntry }
 const { work } = Astro.props;
 const productLink = work.links?.find(link => link.url.startsWith('https://www.buzzvil.com/'));
 const lessons = [
-  { title: 'Access is not commitment.', body: 'Removing an entry step helped more people reach the mission. Advertiser’s target actions stayed essentially flat in that comparison.' },
+  { title: 'Access is not commitment.', body: 'More people reached the mission after we removed an entry step. Advertiser’s target actions stayed essentially flat in that comparison.' },
   { title: 'More choice can add friction.', body: 'Mission Mode looked plausible, but all three campaign/platform slices recorded lower advertiser target actions per install.' },
   { title: 'Prove it, then give it room to grow.', body: 'My early design work helped establish the model. Mido took ownership of ongoing design as the product and its distribution strategy expanded.' }
 ];
@@ -40,11 +40,10 @@ const lessons = [
         <article><span>Brands</span><h3>From seeing a campaign<br/>to discovering a product.</h3><p>Give people an experience with the brand, beyond a view or a click.</p></article>
         <article><span>Shopping</span><h3>From browsing<br/>toward a purchase.</h3><p>Organize the experience around steps that bring someone closer to the advertiser’s goal.</p></article>
       </div>
-      <p class="model-boundary">These describe the design approach across experiences, not a claim that every journey led to a purchase.</p>
       <a class="pattern-link" href="/work/interaction-composer/">Explore the later research into personalized brand experiences</a>
       <div class="study-bridge"><h3>A larger idea.<br/>Specific problems to solve.</h3><p>A sequence can also create friction. Could people get into it easily? Did choosing their rewards help? Did they understand and trust their progress? The following studies examine those questions, across my early work and the team’s later experiments.</p></div>
     </StoryChapter>
-    <StoryChapter id="entry" scope="Zoom in · Getting into the mission" class="case-scene entry-scene" title={'Removing a screen\nmade the first step easier.'} intro="The explanation page repeated information already on the mission page. I proposed going straight to the experience, with a campaign switch to make the change reversible.">
+    <StoryChapter id="entry" scope="Zoom in · Getting into the mission" class="case-scene entry-scene" title={'A shorter path\ninto the mission.'} intro="The explanation page repeated information already on the mission page. I proposed going straight to the experience, with a campaign switch to make the change reversible.">
       <figure class="entry-board">
         <div class="board-top"><span>Web UA / entry journey</span><div class="view-switch" role="group" aria-label="Compare the Web UA entry path"><button type="button" data-entry="before" aria-pressed="true">Before</button><button type="button" data-entry="direct" aria-pressed="false">Remove the bridge</button></div></div>
         <div class="entry-journey" data-entry-state="before">
@@ -60,11 +59,11 @@ const lessons = [
           <div class="result-pair"><h3>Installed the game</h3><div><span><b>7.8%</b>Before</span><span><b>10.4%</b>After</span></div><p>People installing the game<br/>as a share of people clicking the ad</p></div>
           <div class="entry-finding"><span>Advertiser’s target actions</span><strong>Essentially flat.</strong><p>Easier entry left the harder question inside the experience.</p></div>
         </div>
-        <figcaption>A banking partner’s app, 2024. Before/after comparison; other campaign changes may have affected the result. Journey illustrated.</figcaption>
+        <figcaption>A banking partner’s app, 2024. Before/after comparison. Journey illustrated.</figcaption>
       </figure>
     </StoryChapter>
 
-    <StoryChapter id="choice" scope="Zoom in · Choosing a reward structure" class="case-scene" title={'Choosing a reward path\ndid not improve conversion.'} intro="Getting people into the mission did not guarantee meaningful play. In a separate experiment, a feature called Mission Mode tested whether choosing a reward structure would build commitment. The first option dominated; few people explored the alternatives.">
+    <StoryChapter id="choice" scope="Zoom in · Choosing a reward structure" class="case-scene" title={'Revisiting\nreward-path choice.'} intro="Getting people into the mission did not guarantee meaningful play. In a separate experiment, a feature called Mission Mode tested whether choosing a reward structure would build commitment. The first option dominated; few people explored the alternatives.">
       <div class="choice-study">
         <figure class="choice-phones">
           <a href="/work/game-ua/mission-mode-choice.webp" aria-label="Open the original Mission Mode choice design"><img src="/work/game-ua/mission-mode-choice.webp" width="383" height="820" alt="Original Mission Mode design asking the player to choose a reward style in a horizontal carousel" loading="lazy" decoding="async" /></a>
@@ -72,13 +71,13 @@ const lessons = [
           <figcaption>Original designs: choose a reward structure, then confirm it. Sample missions and rewards.</figcaption>
         </figure>
         <div class="choice-finding">
-          <h3>The test did not support<br/>adding that decision.</h3>
+          <h3>The comparison did not support<br/>adding that decision.</h3>
           <div class="comparison-chart" aria-label="One Android campaign: control 52.18 percent, Mission Mode 40.59 percent advertiser events per install">
             <div><span>Control <b>52.18%</b></span><i style="--bar:52.18%"></i><small>824 events / 1,579 installs</small></div>
             <div><span>Mission Mode <b>40.59%</b></span><i style="--bar:40.59%"></i><small>772 events / 1,902 installs</small></div>
           </div>
-          <p class="figure-note">One Android campaign, 2025: target actions per install. Results are directional; test assignment is unconfirmed.</p>
-          <p>All three campaign/platform slices declined on this measure. Some purchase counts moved the other way. The result called for investigation, not a success claim.</p>
+          <p class="figure-note">One Android campaign, 2025: target actions per install.</p>
+          <p>Target actions per install were lower across all three campaign/platform comparisons, prompting us to revisit the extra decision.</p>
         </div>
       </div>
     </StoryChapter>
@@ -96,8 +95,8 @@ const lessons = [
           <div class="ranking-findings">
             <div class="findings-heading"><h3>More visitors opened the game experience</h3><span>January–February 2026</span></div>
             <div class="ranking-results"><span><b>8%</b>Without the board</span><span><b>24%</b>With the board</span></div>
-            <p class="figure-note">Share of daily visitors opening the game-rewards experience. Team comparison, 2026; rounded figures. Group sizes and test assignment remain unconfirmed.</p>
-            <p>More people opened RewardMon. That finding does not establish longer sessions, repeat visits or revenue growth.</p>
+            <p class="figure-note">Share of daily visitors opening the game-rewards experience. Team comparison, 2026; rounded figures.</p>
+            <p>The comparison showed more visitors opening RewardMon.</p>
           </div>
         </div>
       </div>
@@ -132,7 +131,7 @@ const lessons = [
         </div>
         <figcaption>The team’s later test build: rewards and genre selection lead into game discovery.</figcaption>
       </figure>
-      <div class="handoff-close"><p>My focus shifted to Buzzvil’s AI-native organization and web readiness ahead of a planned stock-market listing. The next design problem was helping more people move from intent to implementation, with a clear way to review what ships.</p><a href="/work/buzzvil-mediums/">Continue with Buzzvil mediums</a></div>
+      <div class="handoff-close"><p>My focus shifted to Buzzvil’s AI-native organization and web readiness ahead of a planned stock-market listing. The next design problem was helping more people move from intent to implementation, with a clear way to review what ships.</p><a href="/work/buzzvil-mediums/">Explore Buzzvil mediums</a></div>
     </StoryChapter>
   </game-ua-case>
 </EditorialCase>
