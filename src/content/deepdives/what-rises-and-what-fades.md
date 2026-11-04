@@ -9,8 +9,6 @@ featured_image: "/images/what-rises-and-what-fades.png"
 tags: ["ai-design", "product-strategy", "agents", "future-of-work"]
 ---
 
-# What Rises and What Fades When Agents Reshape the Interface
-
 *Agents reduce the surface of the interface and reshape what's left. This essay identifies what survives the shift and what comes after.*
 
 ---

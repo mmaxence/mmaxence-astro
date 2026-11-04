@@ -13,6 +13,7 @@
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "@materia/text": "file:vendor/materia-text-0.1.0-alpha.1.tgz",
     "astro": "^5.16.4",
     "framer-motion": "^12.34.5",
     "react": "^19.2.3",

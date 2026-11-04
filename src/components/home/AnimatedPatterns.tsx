@@ -23,6 +23,7 @@ function Wrapper({ children }: React.PropsWithChildren<{}>) {
         viewBox="0 0 144 144"
       >
         {children}
+        <path className="orbit-pixel" d="M56 8h32v32h16v16h32v32h-32v16H88v32H56v-32H40V88H8V56h32V40h16Z" fill="var(--theme-text)" stroke="none" />
       </svg>
     </div>
   );
@@ -32,7 +33,7 @@ function Diamond() {
   return (
     <Wrapper>
       <g>
-        <path d={svgPaths.p8b33500} fill="var(--theme-text, currentColor)" />
+        <path className="orbit-smooth" d={svgPaths.p8b33500} fill="var(--theme-text, currentColor)" />
       </g>
     </Wrapper>
   );
@@ -41,7 +42,7 @@ function Diamond() {
 function Circle() {
   return (
     <Wrapper>
-      <circle cx="72" cy="72" r="64" fill="var(--theme-text, currentColor)" />
+      <circle className="orbit-smooth" cx="72" cy="72" r="64" fill="var(--theme-text, currentColor)" />
     </Wrapper>
   );
 }
@@ -50,7 +51,7 @@ function Hexagon() {
   return (
     <Wrapper>
       <g>
-        <path d={svgPaths.p9320100} fill="var(--theme-text, currentColor)" />
+        <path className="orbit-smooth" d={svgPaths.p9320100} fill="var(--theme-text, currentColor)" />
       </g>
     </Wrapper>
   );

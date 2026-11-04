@@ -18,6 +18,7 @@ const categoryOrder: Record<string, number> = {
   'systemic-design': 2,
   'strategic-operations': 3,
   'human-leadership': 4,
+  'personal-perspective': 5,
 };
 
 // Pinned first within their categories — the books the rest of the shelf builds on
@@ -28,6 +29,7 @@ const categoryTitles: Record<string, string> = {
   'strategic-operations': 'Strategic Operations & Scalability',
   'human-leadership': 'Human-Centric Leadership & Culture',
   'systemic-design': 'Systemic Design & Quality',
+  'personal-perspective': 'Perspective & Inspiration',
 };
 
 const allBooks = (await getCollection('library'))

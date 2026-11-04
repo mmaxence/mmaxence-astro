@@ -1061,16 +1061,16 @@ export const workEntries: WorkEntry[] = [
     "group": "independent",
     "context": "Independent lab · Product, interaction design & development",
     "call": "Hanji began with needs I had at Buzzvil. Agents were becoming part of how I made things, and I needed a better way to see their contributions, question them, and decide what should happen next.",
-    "foundation": "I started with Write to read and review shared documents, then built Work to see and direct agent-led execution. Think came next: a canvas for the ideas that precede both, with their context carried into pages and issues.",
-    "shipped": "I use Write and Work daily at Buzzvil. That gives me a close feedback loop: encounter friction, refine the interaction, and live with the change. Some of the most useful work has been small: preserving a reading position, keeping a shortcut out of a text field, putting an answer back beside its issue.",
+    "foundation": "I started with Document to read and review shared documents, then built Plan to see and direct agent-led execution. Think came next: a canvas for the ideas that precede both, with their context carried into pages and issues.",
+    "shipped": "I use Document and Plan daily at Buzzvil. That gives me a close feedback loop: encounter friction, refine the interaction, and live with the change. Some of the most useful work has been small: preserving a reading position, keeping a shortcut out of a text field, putting an answer back beside its issue.",
     "project": {
       "status": [
         {
-          "label": "Write",
+          "label": "Document",
           "value": "Closed beta"
         },
         {
-          "label": "Work",
+          "label": "Plan",
           "value": "Alpha"
         },
         {
@@ -1079,11 +1079,98 @@ export const workEntries: WorkEntry[] = [
         }
       ],
       "sections": [
+{
+  "title": "One workspace: Think, Plan and Document",
+  "paragraphs": [
+    "Write is now called Document, and Work is now Plan. The suite shares navigation, search, cool neutral surfaces and a workspace accent.",
+    "Think adds live rich-text editing, templates, shared voting and a timer. Plan connects objectives to key results and issues. Activity brings contributions across products into one workspace view.",
+    "The conductor uses locally bundled Solids shapes with state-specific motion. The desktop preview can be packaged for sharing; public app downloads are not yet available."
+  ],
+  "visuals": [
+    {
+      "afterParagraph": 1,
+      "media": [
+        {
+          "type": "image",
+          "src": "/work/hanji/suite-onboarding.webp",
+          "preview": "/work/hanji/suite-onboarding-1000.webp",
+          "width": 1280,
+          "height": 900,
+          "alt": "Hanji workspace setup with Think, Plan and Document selected",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/plan-objectives.webp",
+          "preview": "/work/hanji/plan-objectives-1000.webp",
+          "width": 1440,
+          "height": 1437,
+          "alt": "Plan objectives grouped with key results, progress and check-in status",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/plan-issue.webp",
+          "preview": "/work/hanji/plan-issue-1000.webp",
+          "width": 1440,
+          "height": 1000,
+          "alt": "Plan issue with its description, status and attributed discussion",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/think-connectors.webp",
+          "preview": "/work/hanji/think-connectors-1000.webp",
+          "width": 1440,
+          "height": 960,
+          "alt": "Think canvas with connected notes and connector routing controls",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/think-voting.webp",
+          "preview": "/work/hanji/think-voting-1000.webp",
+          "width": 1440,
+          "height": 1000,
+          "alt": "Think shared voting panel beside notes on a canvas",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/think-templates.webp",
+          "preview": "/work/hanji/think-templates-1000.webp",
+          "width": 1440,
+          "height": 1000,
+          "alt": "Think template picker offering a brainstorm, retrospective and decision flow",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/conductor-appearance.webp",
+          "preview": "/work/hanji/conductor-appearance-1000.webp",
+          "width": 680,
+          "height": 461,
+          "alt": "Conductor appearance settings with six Solids shapes and motion controls",
+          "caption": "Hanji development preview with demo content."
+        },
+        {
+          "type": "image",
+          "src": "/work/hanji/suite-activity.webp",
+          "preview": "/work/hanji/suite-activity-1000.webp",
+          "width": 1440,
+          "height": 1000,
+          "alt": "Workspace activity with contributions, people and agents across products",
+          "caption": "Hanji development preview with demo content."
+        }
+      ]
+    }
+  ]
+},
         {
           "title": "Three needs, one design practice",
           "paragraphs": [
             "Hanji began with needs I had at Buzzvil. Agents were becoming part of how I made things, and I needed a better way to see their contributions, question them, and decide what should happen next.",
-            "I started with documents I needed to read and judge. Write put a shared reading and editing surface over the material agents already worked with. Work followed when I needed a picture of execution: what was happening, how it connected, and where to give direction.",
+            "I started with documents I needed to read and judge. Document put a shared reading and editing surface over the material agents already worked with. Plan followed when I needed a picture of execution: what was happening, how it connected, and where to give direction.",
             "Think grew from the space before either: sketches, discussions and decisions that should not lose their context when they become work. These are successive responses to my own workflow, rather than three products planned together from the start."
           ],
           "visuals": [
@@ -1096,8 +1183,8 @@ export const workEntries: WorkEntry[] = [
                   "width": 1440,
                   "height": 960,
                   "displayWidth": 720,
-                  "alt": "Work canvas arranging six fictional issues into a dependency graph with an agent composer below",
-                  "caption": "Work · An earlier alpha capture, with fictional content. The dependency view makes the shape of the work visible; board and issue context give commands a scope."
+                  "alt": "Plan canvas arranging six fictional issues into a dependency graph with an agent composer below",
+                  "caption": "Plan · An earlier alpha capture, with fictional content. The dependency view makes the shape of the work visible; board and issue context give commands a scope."
                 }
               ]
             }
@@ -1106,11 +1193,11 @@ export const workEntries: WorkEntry[] = [
         {
           "title": "Keep review attached to the words",
           "paragraphs": [
-            "Write was the first response. People needed a calm place to read, edit and discuss material that agents could already work with through files, Git and MCP. I kept those paths connected: shared documents for people, proposed changes for agents, and a visible review decision.",
+            "Document was the first response. People needed a calm place to read, edit and discuss material that agents could already work with through files, Git and MCP. I kept those paths connected: shared documents for people, proposed changes for agents, and a visible review decision.",
             "An agent proposal arrives as a diff. Its author and the changed words sit beside Reject and Merge, so the decision concerns the actual edit. Human review can happen at a smaller scale: highlight a passage, question its meaning, and discuss it where the words live. If later edits break that connection, the discussion preserves the original quotation instead of silently pointing somewhere else.",
             "Multiplayer editing exposed a different problem. The first implementation announced another person's changes but only brought them into the editor at save time. The merge could be correct while the experience was still wrong: someone was continuing to write against an older version.",
             "The next iteration brings compatible changes in during a pause in typing and restores the caret. If typing resumes while the merge is being checked, that result is abandoned and checked again later. Overlapping changes still need a decision. Keeping a person in the judgment seat means preserving those decisions while letting compatible work move forward.",
-            "That proposal path now also supports local repositories without a GitHub pull request. A person can inspect, reject or merge a proposed edit through Write, while their checked-out branch and uncommitted work remain protected. Think write-ups can use the same review boundary. The earlier proposal recording illustrates the review gesture, not this new local-folder connection."
+            "That proposal path now also supports local repositories without a GitHub pull request. A person can inspect, reject or merge a proposed edit through Document, while their checked-out branch and uncommitted work remain protected. Think write-ups can use the same review boundary. The earlier proposal recording illustrates the review gesture, not this new local-folder connection."
           ],
           "visuals": [
             {
@@ -1123,8 +1210,8 @@ export const workEntries: WorkEntry[] = [
                   "width": 2660,
                   "height": 1840,
                   "displayWidth": 998,
-                  "alt": "Write document with a highlighted passage and an anchored discussion between two reviewers",
-                  "caption": "Write · Actual local-build interface with a seeded fictional review. A highlighted passage stays beside its quoted discussion, so people can question the same words and agree on a change."
+                  "alt": "Document document with a highlighted passage and an anchored discussion between two reviewers",
+                  "caption": "Document · Actual local-build interface with a seeded fictional review. A highlighted passage stays beside its quoted discussion, so people can question the same words and agree on a change."
                 }
               ]
             },
@@ -1138,8 +1225,8 @@ export const workEntries: WorkEntry[] = [
                   "width": 1080,
                   "height": 676,
                   "displayWidth": 540,
-                  "alt": "Reviewing and merging an agent proposal in Write",
-                  "caption": "Write · Review → inspect the diff → merge. Earlier build recording, fictional document; silent, 9 seconds.",
+                  "alt": "Reviewing and merging an agent proposal in Document",
+                  "caption": "Document · Review → inspect the diff → merge. Earlier build recording, fictional document; silent, 9 seconds.",
                   "description": "A pending agent proposal opens as a diff. The person inspects the added line, chooses Merge, and returns to the document with the accepted text."
                 }
               ]
@@ -1162,7 +1249,7 @@ export const workEntries: WorkEntry[] = [
         {
           "title": "Put direction where the work lives",
           "paragraphs": [
-            "Readable documents did not give me a clear picture of execution. I built Work around one person directing many agents: they create issues and views and carry work forward, while the interface makes that activity understandable enough to judge and redirect.",
+            "Readable documents did not give me a clear picture of execution. I built Plan around one person directing many agents: they create issues and views and carry work forward, while the interface makes that activity understandable enough to judge and redirect.",
             "Control follows the scale of the question. At workspace level, I can direct the broader effort. Inside an issue, I can give a specific instruction and follow the response alongside the task itself. The comment composer lets me address Claude or GPT. Their completed replies become attributed comments, keeping the reasoning beside the work.",
             "That location took several iterations. The first session plan put agents in terminal windows and reported progress back into the tracker. Moving to an in-app conversation reduced that distance, but still left another place to follow. Bringing the issue session into its comment thread made the instruction, response and next decision part of the same record.",
             "I also removed an earlier use of task labels to trigger agent requests. Organizing an issue should not quietly ask an agent to act. Giving a command deserves an explicit interaction.",
@@ -1179,8 +1266,8 @@ export const workEntries: WorkEntry[] = [
                   "width": 1736,
                   "height": 1640,
                   "displayWidth": 868,
-                  "alt": "Work issue thread with attributed Claude and GPT answers, human direction, and agent recipient controls",
-                  "caption": "Work · Actual local-build interface with a seeded fictional conversation showing successive Claude and GPT contributions. The person compares their reasoning and gives the next direction. These are demo replies, not a recorded agent run."
+                  "alt": "Plan issue thread with attributed Claude and GPT answers, human direction, and agent recipient controls",
+                  "caption": "Plan · Actual local-build interface with a seeded fictional conversation showing successive Claude and GPT contributions. The person compares their reasoning and gives the next direction. These are demo replies, not a recorded agent run."
                 }
               ]
             },
@@ -1207,14 +1294,14 @@ export const workEntries: WorkEntry[] = [
                   "width": 1440,
                   "height": 1000,
                   "displayWidth": 1100,
-                  "alt": "Work local preview with a workspace conductor at lower left and an issue discussion open on the right",
-                  "caption": "Work · The workspace conductor and an issue discussion share the same work surface. Actual local preview with a fictional workspace and seeded replies, not a recorded agent run."
+                  "alt": "Plan local preview with a workspace conductor at lower left and an issue discussion open on the right",
+                  "caption": "Plan · The workspace conductor and an issue discussion share the same work surface. Actual local preview with a fictional workspace and seeded replies, not a recorded agent run."
                 }
               ]
             }
           ],
           "details": [
-            "Shrinking every card equally makes a busy canvas harder to read. Work changes what it shows with the viewing distance: project territory at the widest scale, issue identifiers and relationships in the middle, and titles and metadata close up.",
+            "Shrinking every card equally makes a busy canvas harder to read. Plan changes what it shows with the viewing distance: project territory at the widest scale, issue identifiers and relationships in the middle, and titles and metadata close up.",
             "I rejected saved freeform positions for the work canvas: they become stale, and coordinates alone tell an agent little about the work. A stable computed layout and semantic zoom made relationships carry the meaning instead."
           ]
         },
@@ -1223,8 +1310,8 @@ export const workEntries: WorkEntry[] = [
           "paragraphs": [
             "Figma and FigJam were part of my design workflow. In the setup I was using, FigJam’s MCP support did not give agents the control I needed, and carrying ideas into product management meant plugins and workarounds. Think is my attempt to make that handoff native to the work surface.",
             "Not every thought is ready to be a document or a task. Think adds a spatial layer: notes, connectors and sections that let people arrange ideas and discuss what deserves to move forward.",
-            "The notes reuse Write’s editor. Comments and reactions stay with the object being discussed, so the conversation has a place on the canvas. Think uses the workspace’s people and access rules; agents work through its CLI and tools. The embedded agent conversation remains in Work.",
-            "Think is an unreleased local prototype. The board and the new connections exist in code, but the full path across the three surfaces is still being tested. A shared canvas here is not a claim of production character-by-character coediting."
+            "The notes reuse Document’s editor. Comments and reactions stay with the object being discussed, so the conversation has a place on the canvas. Think uses the workspace’s people and access rules; agents work through its CLI and tools. The embedded agent conversation remains in Plan.",
+            "Think is an unreleased local prototype. The board and the new connections exist in code, but the full path across the three surfaces is still being tested. Notes now support simultaneous rich-text editing in the single-server preview; remote synchronization is not available."
           ],
           "visuals": [
             {
@@ -1256,21 +1343,21 @@ export const workEntries: WorkEntry[] = [
         {
           "title": "The shape changes; the context stays",
           "paragraphs": [
-            "A sticky or selected group in Think can become Work issues. The original thought remains on the board, with an issue chip that reflects its status. A short Undo window lets the person cancel a newly filed issue.",
-            "A section or selection can also become a Write page. The person previews the content and destination first: create a new page, or propose that new page for review. The result retains a link to the board and section it came from.",
-            "The reverse direction matters too. Selecting a passage in Write can create a Work issue, carrying the quotation and its page and heading. In Work, the source is visible beside the task. Moving between forms should preserve the reason for doing the work.",
+            "A sticky or selected group in Think can become Plan issues. The original thought remains on the board, with an issue chip that reflects its status. A short Undo window lets the person cancel a newly filed issue.",
+            "A section or selection can also become a Document page. The person previews the content and destination first: create a new page, or propose that new page for review. The result retains a link to the board and section it came from.",
+            "The reverse direction matters too. Selecting a passage in Document can create a Plan issue, carrying the quotation and its page and heading. In Plan, the source is visible beside the task. Moving between forms should preserve the reason for doing the work.",
             "These connections are implemented in the current local builds. The interactive study on this page illustrates their behavior; it is not a recording of a live end-to-end session."
           ]
         },
         {
           "title": "A quiet identity, precise interactions",
           "paragraphs": [
-            "Hanji’s identity gives the work a quiet surface: the ㅎ mark, warm paper and editorial type. Think, Write and Work share that foundation. Write’s celadon and Work’s orchid distinguish controls and states, without requiring a different visual language for each.",
+            "Hanji’s identity gives the work a quiet surface: the ㅎ mark, warm paper and editorial type. Think, Document and Plan now share cool neutral surfaces and a workspace accent. The conductor uses a Solids shape to express its state.",
             "Color has to work at more than full strength. A passage highlight should leave the words readable. An agent tint should identify a contribution without competing with it. A focused control needs a clearer boundary. The palette is a set of relationships between paper, content, emphasis and action.",
-            "Write generates those relationships from three seeds: background, text and accent. Its dark theme retains the background hue while adapting lightness and chroma. Work uses curated light and dark orchid palettes. Both separate accent text, fills and labels so that one recognizable color can serve different roles.",
+            "Document generates those relationships from three seeds: background, text and accent. Its dark theme retains the background hue while adapting lightness and chroma. Plan now follows the shared workspace accent in light and dark modes. Both separate accent text, fills and labels so that one recognizable color can serve different roles.",
             "The same care applies to time. Switching from reading to editing initially navigated away, flashed a placeholder and could lose the reader's position. I rebuilt it as a change of mode within the page. An early fix preloaded the editor for everyone; loading on hover or focus offered a better balance between a light reading path and a responsive editing gesture.",
             "Daily use also made the repeated actions impossible to ignore. Find an issue, open it, reach the comment, send an instruction. Shortcuts make that path shorter, but they must yield when someone is typing. Visible focus, textual status and reduced-motion handling are part of that interaction design, not a separate finish applied afterward.",
-            "In Work, stepping between issues now updates the drawer without rebuilding the board underneath. Back and Forward replay already visited issues locally. Continuity is part of performance: the person keeps their place while inspecting individual pieces of work."
+            "In Plan, stepping between issues now updates the drawer without rebuilding the board underneath. Back and Forward replay already visited issues locally. Continuity is part of performance: the person keeps their place while inspecting individual pieces of work."
           ],
           "visuals": [
             {
@@ -1291,8 +1378,8 @@ export const workEntries: WorkEntry[] = [
                   "width": 800,
                   "height": 360,
                   "displayWidth": 600,
-                  "alt": "Markdown shortcuts becoming formatted text in Write",
-                  "caption": "Write · Input rules in an existing build. Silent, 13 seconds; shown at its original capture scale or smaller.",
+                  "alt": "Markdown shortcuts becoming formatted text in Document",
+                  "caption": "Document · Input rules in an existing build. Silent, 13 seconds; shown at its original capture scale or smaller.",
                   "description": "Typing a heading marker changes the line into a heading. Markdown markers also produce bold text and a list as the person continues typing."
                 }
               ]
@@ -1303,15 +1390,15 @@ export const workEntries: WorkEntry[] = [
             }
           ],
           "details": [
-            "Write’s generator uses OKLCH and checks contrast on its sRGB projection. It targets 7:1 for body text, 4.5:1 for accent text and labels, and 3:1 for accent fills. The dark background retains the original hue and a restrained share of its chroma. These are palette-generation targets, not a whole-product accessibility certification.",
+            "Document’s generator uses OKLCH and checks contrast on its sRGB projection. It targets 7:1 for body text, 4.5:1 for accent text and labels, and 3:1 for accent fills. The dark background retains the original hue and a restrained share of its chroma. These are palette-generation targets, not a whole-product accessibility certification.",
             "Visible focus, textual status, keyboard navigation and reduced-motion handling are implementation provisions to keep testing, not a claim of whole-product accessibility conformance."
           ]
         },
         {
           "title": "A lab in use, still being tested",
           "paragraphs": [
-            "I use Write and Work daily at Buzzvil. That gives me a close feedback loop: encounter friction, refine the interaction, and live with the change. Some of the most useful work has been small: preserving a reading position, keeping a shortcut out of a text field, putting an answer back beside its issue.",
-            "Write is in closed beta and Work is in alpha. The next step is to extend that same process to a small group of roughly five to ten people, whose ways of working can reveal what my own use misses. That is the intended scope of the feedback loop, not a measure of adoption. Think is a newer local prototype, with the connections across all three surfaces still being tested together.",
+            "I use Document and Plan daily at Buzzvil. That gives me a close feedback loop: encounter friction, refine the interaction, and live with the change. Some of the most useful work has been small: preserving a reading position, keeping a shortcut out of a text field, putting an answer back beside its issue.",
+            "Document is in closed beta and Plan is in alpha. The next step is to extend that same process to a small group of roughly five to ten people, whose ways of working can reveal what my own use misses. That is the intended scope of the feedback loop, not a measure of adoption. Think is a newer local prototype, with the connections across all three surfaces still being tested together.",
             "Both products are available by request. The lab website is live, and open source remains part of the direction. I am still refining how quickly someone can understand the situation, judge the contributions, and direct what happens next."
           ],
           "visuals": [
@@ -1332,11 +1419,11 @@ export const workEntries: WorkEntry[] = [
       "readingPath": [
         {
           "chapter": 1,
-          "label": "Write: make contributions readable"
+          "label": "Document: make contributions readable"
         },
         {
           "chapter": 2,
-          "label": "Work: make execution legible"
+          "label": "Plan: make execution legible"
         },
         {
           "chapter": 3,
@@ -1350,11 +1437,11 @@ export const workEntries: WorkEntry[] = [
         "url": "https://hanji.ink"
       },
       {
-        "label": "Write · Request access",
+        "label": "Document · Request access",
         "url": "https://hanji.ink/projects/write/#get-started"
       },
       {
-        "label": "Work · Request access",
+        "label": "Plan · Request access",
         "url": "https://hanji.ink/projects/work/#get-started"
       }
     ]

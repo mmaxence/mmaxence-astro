@@ -1,0 +1,36 @@
+---
+import assets from '../../data/hanji-media.json';
+const steps = [
+ {name:'Set up',title:'One workspace, three ways to work.',copy:'Choose the tools you need and give the work a home. Think holds the exploration, Plan organizes execution, and Document keeps the decisions readable.',src:'suite-onboarding'},
+ {name:'Think',title:'Start with the question, not the task list.',copy:'Here, the question is how a new team reaches its first shared board. Notes give the problem, possible answers and open questions room to sit together.',src:'flow-think-board'},
+ {name:'Plan',title:'Turn the direction into work you can follow.',copy:'The board makes the next actions and their progress visible. Different views let the same work answer different questions, without creating another task list.',src:'flow-plan-board'},
+ {name:'Direct',title:'Open a task without losing the reason for it.',copy:'The checklist proposal, related work and discussion live beside the issue. Direction belongs close to the thing being changed.',src:'flow-plan-issue'},
+ {name:'Document',title:'Keep the decision useful after the conversation.',copy:'A readable brief records what was learned, what was decided and what remains open. People and agents work from the same material.',src:'flow-document-read'},
+ {name:'Review',title:'Come back to the whole workspace.',copy:'Activity brings contributions across products into one view. It helps me see what moved before choosing where to look next.',src:'suite-activity'}
+].map(s=>({...s,asset:assets.find(a=>a.src===`/work/hanji/${s.src}.webp`)!}));
+---
+<hanji-walkthrough>
+  <div class="flow-tabs" role="tablist" aria-label="Walk through Hanji">
+    {steps.map((step,i)=><button id={`hanji-step-${i}`} type="button" role="tab" aria-controls={`hanji-panel-${i}`} aria-selected={i===0?'true':'false'} tabindex={i===0?0:-1} data-step={i}><span>{String(i+1).padStart(2,'0')}</span>{step.name}</button>)}
+  </div>
+  {steps.map((step,i)=><section id={`hanji-panel-${i}`} role="tabpanel" aria-labelledby={`hanji-step-${i}`} hidden={i!==0} tabindex="0">
+    <div class="flow-copy"><h3>{step.title}</h3><p>{step.copy}</p></div>
+    <a href={step.asset.src} aria-label={`${step.asset.alt}. Open full-size image.`}><img src={step.asset.src} width={step.asset.width} height={step.asset.height} alt={step.asset.alt} loading="lazy" /></a>
+  </section>)}
+  <div class="flow-controls"><button type="button" data-prev disabled>Previous</button><span data-count aria-live="polite">1 / {steps.length}</span><button type="button" data-next>Next step</button></div>
+  <p class="flow-note">Current local interfaces with fictional content. This is a guided walkthrough, not a recording of an automated handoff between products.</p>
+</hanji-walkthrough>
+<script>
+ class HanjiWalkthrough extends HTMLElement {
+  connectedCallback(){
+   const tabs=[...this.querySelectorAll<HTMLButtonElement>('[role=tab]')],panels=[...this.querySelectorAll<HTMLElement>('[role=tabpanel]')];let current=0;
+   const prev=this.querySelector<HTMLButtonElement>('[data-prev]')!,next=this.querySelector<HTMLButtonElement>('[data-next]')!;
+   const select=(i:number,focus=false)=>{current=i;tabs.forEach((t,j)=>{t.setAttribute('aria-selected',String(i===j));t.tabIndex=i===j?0:-1;panels[j].hidden=i!==j;});prev.disabled=i===0;next.disabled=i===tabs.length-1;this.querySelector('[data-count]')!.textContent=`${i+1} / ${tabs.length}`;if(focus)tabs[i].focus();};
+   tabs.forEach((tab,i)=>{tab.onclick=()=>select(i);tab.onkeydown=e=>{let n=i;if(e.key==='ArrowRight')n=(i+1)%tabs.length;else if(e.key==='ArrowLeft')n=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;else return;e.preventDefault();select(n,true);};});prev.onclick=()=>select(Math.max(0,current-1));next.onclick=()=>select(Math.min(tabs.length-1,current+1));
+  }
+ }
+ if(!customElements.get('hanji-walkthrough'))customElements.define('hanji-walkthrough',HanjiWalkthrough);
+</script>
+<style>
+hanji-walkthrough{display:block;margin-top:2.5rem}.flow-tabs{display:flex;gap:4px;border-bottom:1px solid var(--theme-border);overflow-x:auto;padding:0 0 12px}.flow-tabs button{flex:1;white-space:nowrap;text-align:left;border:0;background:transparent;color:var(--theme-text-muted);padding:12px;font:.85rem var(--story-body);cursor:pointer}.flow-tabs button span{display:block;font:.65rem var(--theme-font-heading);margin-bottom:8px}.flow-tabs [aria-selected=true]{background:var(--theme-text);color:var(--theme-bg);border-radius:3px}.flow-copy{display:grid;grid-template-columns:1fr 1fr;gap:3rem;padding:28px 0;align-items:start}.flow-copy h3{font:400 1.65rem/1.2 var(--story-display);margin:0}.flow-copy p{font:.9rem/1.75 var(--story-body);color:var(--theme-text-muted);margin:0}section[hidden]{display:none}section>a{display:block;background:#eef0f3;border:1px solid var(--theme-border);border-radius:5px;overflow:hidden}img{display:block;width:100%;aspect-ratio:1.44;object-fit:contain}.flow-controls{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font:.75rem var(--theme-font-heading)}.flow-controls button{padding:10px 16px;border:1px solid var(--theme-border);border-radius:3px;background:none;color:inherit;cursor:pointer}.flow-controls button:disabled{opacity:.3;cursor:default}.flow-note{font:.75rem/1.7 var(--story-body);color:var(--theme-text-muted);max-width:70ch;margin-top:20px}button:focus-visible,a:focus-visible,section:focus-visible{outline:2px solid currentColor;outline-offset:4px}@media(max-width:650px){.flow-copy{grid-template-columns:1fr;gap:12px}.flow-tabs button{padding:10px;font-size:.75rem}.flow-copy h3{font-size:1.4rem}}
+</style>

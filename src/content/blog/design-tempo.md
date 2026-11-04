@@ -65,7 +65,7 @@ Now we’ve defined the lines ruling our music we can move forward and start com
 *In this metaphor Designers are musicians, playing different instruments, reading different musical notations. Each notation being a design outcome of any sort.*
 
 Notations are not our focus, what we want to look closer at is the tempo, the pace that designers follow to play these notes.
-> # It's the space you put between the notes that make the music. Massimo Vignelli
+> It's the space you put between the notes that make the music. Massimo Vignelli
 
 ### The importance of *Rest*
 

@@ -15,7 +15,7 @@ const featuredImage = book.data.featured_image?.startsWith('/')
 const bookUrl = `/library/${book.slug.replace('-review', '')}/`;
 ---
 
-<a href={bookUrl} class="book-card-link block no-underline">
+<a href={bookUrl} class="book-card-link editorial-card block no-underline">
   <article class="book-card p-6 border border-theme bg-theme rounded-card">
     {book.data.featured_image && (
       <img
@@ -27,7 +27,7 @@ const bookUrl = `/library/${book.slug.replace('-review', '')}/`;
       />
     )}
     <h3 class="font-mono font-light text-xl md:text-2xl mb-2 text-theme">
-      {book.data.title}
+      <span class="editorial-title">{book.data.title}</span>
     </h3>
     {book.data.book_author && (
       <p class="font-body text-base text-theme-muted">
@@ -41,7 +41,6 @@ const bookUrl = `/library/${book.slug.replace('-review', '')}/`;
   .book-card {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
-
   .book-card-link:hover .book-card {
     border-color: var(--theme-accent);
     box-shadow: none;

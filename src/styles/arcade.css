@@ -1,0 +1,275 @@
+.arcade-actions{display:none}
+/* Arcade art direction. Theme tokens remain the source of color and type. */
+html[data-style=arcade] .header-nav .prefetch-link{font-family:var(--theme-font-heading);font-size:.95rem}
+html[data-style=arcade] .header-nav .prefetch-link::before{content:'[';margin-right:6px;opacity:.35}
+html[data-style=arcade] .header-nav .prefetch-link::after{content:']';margin-left:6px;opacity:.35;position:static;display:inline;background:none;border:0;transform:none}
+html[data-style=arcade] .header-nav .prefetch-link:hover{background:transparent;color:var(--theme-text)}
+html[data-style=arcade] .arcade-actions{display:flex;gap:20px;align-items:center;margin-top:28px;font:.8rem var(--theme-font-heading)}
+.arcade-actions a{color:var(--theme-text);text-decoration:none;padding:10px 15px;border:1px solid var(--theme-text);box-shadow:3px 3px 0 var(--theme-text);background:var(--theme-bg)}
+.arcade-actions a:hover{background:var(--theme-bg);transform:translate(1px,1px);box-shadow:2px 2px 0 var(--theme-text)}
+.arcade-actions a:active{transform:translate(3px,3px);box-shadow:none}.arcade-actions a:focus-visible{outline:2px solid var(--theme-text);outline-offset:6px}
+.arcade-actions span{font-size:.65rem;color:var(--theme-text-muted)}
+html[data-style=arcade] .home-hero{position:relative}
+html[data-style=arcade] .home-hero::before{content:'';position:absolute;right:max(24px,calc((100vw - 1024px)/2));top:22%;width:108px;height:108px;background-image:radial-gradient(var(--theme-text-muted) .7px,transparent .7px);background-size:12px 12px;opacity:.16;pointer-events:none;mask-image:linear-gradient(135deg,#000,transparent)}
+html[data-style=arcade] .section-kicker{font-family:var(--theme-font-heading);letter-spacing:.04em;display:flex;align-items:center;gap:12px}
+html[data-style=arcade] .section-kicker::before{content:'+';display:inline-grid;place-items:center;width:17px;height:17px;font:14px/1 var(--theme-font-heading);border:1px solid var(--theme-border);color:var(--theme-text-muted)}
+html[data-style=arcade] .project-mark{border-radius:2px;border:1px solid var(--theme-border);box-shadow:3px 3px 0 color-mix(in srgb,var(--theme-text) 12%,var(--theme-bg))}
+html[data-style=arcade] .project-link{font-family:var(--theme-font-heading)}
+@media(max-width:600px){html[data-style=arcade] .home-hero::before{top:18%;width:72px;height:72px}.arcade-actions{flex-wrap:wrap}.arcade-actions span{font-size:.6rem}}
+html[data-style=arcade] .classic-visual{display:none}
+html[data-style=arcade] .visual-frame{border-radius:2px;box-shadow:5px 5px 0 color-mix(in srgb,var(--theme-text) 7%,var(--theme-bg));padding:24px;background:var(--theme-bg)}
+html[data-style=arcade] .visual-frame-label{border-radius:0;font-family:var(--theme-font-heading);letter-spacing:0}
+html[data-style=arcade] .what-i-do-photo{border-radius:0;filter:grayscale(1);border:1px solid var(--theme-border);box-shadow:6px 6px 0 color-mix(in srgb,var(--theme-text) 10%,var(--theme-bg))}
+html[data-style=arcade] .profile-flip-inner{border-radius:0;clip-path:polygon(12% 0,88% 0,88% 6%,94% 6%,94% 12%,100% 12%,100% 88%,94% 88%,94% 94%,88% 94%,88% 100%,12% 100%,12% 94%,6% 94%,6% 88%,0 88%,0 12%,6% 12%,6% 6%,12% 6%)}
+html[data-style=arcade] .profile-face{border-radius:0;filter:grayscale(1)}
+html[data-style=arcade] .profile-flip-backing{opacity:0}
+html[data-style=arcade] .arcade-actions a{font-size:.9rem;padding:12px 18px}
+html[data-style=arcade] .section-kicker::before{content:'';width:7px;height:7px;background:var(--theme-text);border:0;box-shadow:3px 3px 0 var(--theme-border)}
+.orbit-pixel{display:none}
+html[data-style=arcade] .orbit-smooth{display:none}
+html[data-style=arcade] .orbit-pixel{display:block}
+html[data-style=arcade] .profile-flip{border-radius:0;overflow:visible}
+html[data-style=arcade] .quest-canvas{image-rendering:auto}
+html[data-style=arcade] .quest-marker,html[data-style=arcade] .workshop-label a{border-radius:0;border:1px solid var(--quest-rule);box-shadow:3px 3px 0 color-mix(in srgb,var(--theme-text) 15%,var(--theme-bg));font-family:var(--theme-font-heading)}
+html[data-style=arcade] .quest-marker:hover,html[data-style=arcade] .quest-marker[data-active]{border-color:var(--quest-ink);background:var(--quest-surface)}
+html[data-style=arcade] .route-controls,html[data-style=arcade] .world-controls{border-radius:2px;border-color:var(--quest-rule);box-shadow:4px 4px 0 var(--quest-rule);background:var(--quest-surface)}
+html[data-style=arcade] .route-controls>button,html[data-style=arcade] .station-control,html[data-style=arcade] .zoom-controls button,html[data-style=arcade] .motion-control{border-radius:0;font-family:var(--theme-font-heading)}
+html[data-style=arcade] .journey-readout,html[data-style=arcade] .stop-title,html[data-style=arcade] .stop-years{font-family:var(--theme-font-heading)}
+html[data-style=arcade] #open-source-dialog{border-radius:2px;border:1px solid var(--theme-text);box-shadow:7px 7px 0 #00000033}
+html[data-style=arcade] #open-source-dialog h2,html[data-style=arcade] .project-title{font-family:var(--theme-font-heading)}
+html[data-style=arcade] work-quest .workshop-label a{border-radius:0;border-style:solid;font-family:var(--theme-font-heading)}
+html[data-style=arcade] work-quest .route-controls>button,html[data-style=arcade] work-quest .route-controls .station-control,html[data-style=arcade] work-quest .world-controls .motion-control{border-radius:0;font-family:var(--theme-font-heading)}
+html[data-style=arcade] work-quest .journey-stats>summary{border-radius:0;box-shadow:3px 3px 0 var(--quest-rule);font-family:var(--theme-font-heading)}
+.arcade-only{display:none}
+html[data-style=arcade] .arcade-adapted .arcade-only{display:initial}
+html[data-style=arcade] .arcade-adapted .arcade-smooth{display:none}
+html[data-style=arcade] .arcade-adapted text{font-family:var(--theme-font-heading)!important;letter-spacing:.02em}
+html[data-style=arcade] .arcade-adapted line{stroke-linecap:square}
+html[data-style=arcade] .arcade-actions a{display:inline-flex;align-items:center;justify-content:center;line-height:1;min-height:44px;padding:12px 18px;box-sizing:border-box}
+html[data-style=arcade] .profile-flip{clip-path:polygon(8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),0 calc(100% - 4px),0 4px,8px 4px);background:var(--theme-bg)}
+html[data-style=arcade] .profile-flip::after{border-radius:0;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--theme-text) 20%,transparent)}
+html[data-style=arcade] .profile-flip-inner{clip-path:none}
+html[data-style=arcade] .profile-face{filter:grayscale(1) contrast(1.05)}
+html[data-style=arcade] .what-i-do-photo{transition:box-shadow .22s ease,transform .22s ease,border-color .22s ease}
+@media(hover:hover){html[data-style=arcade] .what-i-do-photo:hover{box-shadow:2px 2px 0 color-mix(in srgb,var(--theme-text) 8%,var(--theme-bg));transform:translate(2px,2px);border-color:color-mix(in srgb,var(--theme-text) 10%,var(--theme-bg))}}
+@media(prefers-reduced-motion:reduce){html[data-style=arcade] .what-i-do-photo{transition:none}html[data-style=arcade] .what-i-do-photo:hover{transform:none}}
+.experience-pixels{display:none}
+html[data-style=arcade] .experience-arcade .experience-pixels{display:initial}
+html[data-style=arcade] .experience-arcade .experience-smooth{display:none}
+html[data-style=arcade] .experience-arcade text{font-family:var(--theme-font-heading)!important}
+html[data-style=arcade] materia-headline{width:fit-content;max-width:100%}
+html[data-style=arcade] .experience-arcade .experience-stage-label{font-size:12px;letter-spacing:.04em!important}
+
+/* Simple navigation and solid, editorial button feedback. */
+html[data-style=arcade] :is(.header-nav .prefetch-link,.mobile-menu-list a,.arcade-actions a,.quest-controls button,.station-control,.journey-stats summary):not(:disabled):is(:hover,:focus-visible) {
+  animation:none !important;
+  text-shadow:none;
+}
+html[data-style=arcade] :is(.header-nav .prefetch-link,.mobile-menu-list a):is(:hover,:focus-visible) {
+  color:var(--theme-text);
+  background:transparent;
+}
+html[data-style=arcade] :is(.arcade-actions a,.quest-controls button,.station-control,.journey-stats summary):not(:disabled):is(:hover,:focus-visible) {
+  background:var(--theme-text);
+  color:var(--theme-bg);
+}
+html[data-style=arcade] .arcade-actions a {
+  transition:transform 150ms ease,box-shadow 150ms ease,background-color 150ms ease,color 150ms ease;
+}
+html[data-style=arcade] .arcade-actions a:is(:hover,:focus-visible) {
+  transform:translate(3px,3px);
+  box-shadow:none;
+}
+html[data-style=arcade] .arcade-actions a:active { transform:translate(3px,3px);box-shadow:none; }
+html[data-style=arcade] work-quest .route-controls .station-control:is(:hover,:focus-visible),
+html[data-style=arcade] work-quest .quest-controls button:not(:disabled):is(:hover,:focus-visible),
+html[data-style=arcade] work-quest .journey-stats>summary:is(:hover,:focus-visible) {
+  background:var(--theme-text);color:var(--theme-bg);
+}
+html[data-style=arcade] .journey-stats summary:is(:hover,:focus-visible) :is(.journey-rank,[data-next-level],.journey-level) { color:inherit; }
+
+html[data-style=arcade] work-quest .journey-stats>summary {
+  transition:transform 150ms ease,box-shadow 150ms ease,background-color 150ms ease,color 150ms ease;
+}
+html[data-style=arcade] work-quest .journey-stats>summary:is(:hover,:focus-visible) {
+  transform:translate(3px,3px);box-shadow:none;
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-style=arcade] .arcade-actions a,
+  html[data-style=arcade] work-quest .journey-stats>summary { transition:none; }
+}
+
+/* Site-wide foundations: the Arcade direction is now the default. */
+html[data-style=arcade] {
+  --radius-card:0px;--radius-card-image:0px;--radius-card-inner:0px;
+}
+html[data-style=arcade] :is(.prose h2,.prose h3,.book-title,.page-header h1) {
+  font-family:var(--font-mono,'Anonymous Pro',monospace);
+}
+html[data-style=arcade] :is(.book-meta,time,.deepdive-toc,.shelf-back) {
+  font-family:var(--font-mono,'Anonymous Pro',monospace);
+}
+html[data-style=arcade] :is(.book-card,.blog-card,.deepdive-toc) {
+  border-radius:0;border:1px solid var(--theme-border);
+  box-shadow:4px 4px 0 var(--theme-border);
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
+}
+html[data-style=arcade] :is(.book-card-link:hover .book-card,.book-card-link:focus-visible .book-card,.blog-card-link:hover .blog-card,.blog-card-link:focus-visible .blog-card) {
+  transform:translate(4px,4px);box-shadow:none;border-color:var(--theme-text);
+}
+html[data-style=arcade] .book-card .book-cover { border-radius:0; }
+html[data-style=arcade] .book-header .book-cover {
+  border-radius:0;object-fit:contain;height:auto;max-height:300px;
+  border:1px solid var(--theme-border);box-shadow:5px 5px 0 var(--theme-border);
+}
+html[data-style=arcade] .shelf-back {
+  display:inline-block;margin-bottom:2rem;font-size:.8rem;color:var(--theme-text-muted);
+}
+html[data-style=arcade] .shelf-back:hover { color:var(--theme-text); }
+html[data-style=arcade] .amazon-button {
+  border-radius:0;border:1px solid var(--theme-text);background:var(--theme-bg);color:var(--theme-text);
+  box-shadow:3px 3px 0 var(--theme-text);font-family:var(--font-mono,'Anonymous Pro',monospace);
+  transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease;
+}
+html[data-style=arcade] .amazon-button:is(:hover,:focus-visible) {
+  background:var(--theme-text);color:var(--theme-bg);opacity:1;transform:translate(3px,3px);box-shadow:none;
+}
+html[data-style=arcade] :is(.prose img,.prose video,.prose iframe) { border-radius:0; }
+html[data-style=arcade] .section-links a { text-decoration:none; }
+html[data-style=arcade] .section-links a[aria-current] { box-shadow:0 2px 0 currentColor; }
+html[data-style=arcade] .work-story[data-work-story] {
+  --story-display:'Anonymous Pro',monospace;--theme-font-heading:'Anonymous Pro',monospace;
+  --story-heading-weight:400;--theme-radius:0px;
+}
+html[data-style=arcade] .work-story :is(.story-exit,.story-controls,.story-ending a,.story-image-close) {
+  border-radius:0;font-family:'Anonymous Pro',monospace;
+}
+html[data-style=arcade] .work-story :is(.story-chapter h2,.story-learnings h2) { letter-spacing:-.025em; }
+@media(prefers-reduced-motion:reduce) {
+  html[data-style=arcade] :is(.book-card,.blog-card,.amazon-button) { transition:none; }
+}
+html[data-style=arcade] main :is(.rounded-lg,.rounded-xl,.rounded-2xl) { border-radius:0; }
+html[data-style=arcade] :is(.story-image-dialog,.viewer-close,.viewer-actions a,.flow-controls button,.flow-tabs [aria-selected=true],hanji-walkthrough section>a) { border-radius:0; }
+html[data-style=arcade] :is(.viewer-close,.viewer-actions a,.flow-controls button,.flow-tabs button) { font-family:'Anonymous Pro',monospace; }
+html[data-style=arcade] :is(.viewer-close,.viewer-actions a,.flow-controls button):not(:disabled) {
+  box-shadow:3px 3px 0 var(--theme-border);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+html[data-style=arcade] :is(.viewer-close,.viewer-actions a,.flow-controls button):not(:disabled):is(:hover,:focus-visible) {
+  transform:translate(3px,3px);box-shadow:none;background:var(--theme-text);color:var(--theme-bg);
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-style=arcade] :is(.viewer-close,.viewer-actions a,.flow-controls button) { transition:none; }
+}
+html[data-style=arcade] .work-story :is(.reading-pill,.opening-visual img,.hanji-journey img,.hanji-journey video,.story-project-links .primary) { border-radius:0; }
+html[data-style=arcade] .work-story .story-project-links .primary {
+  font-family:'Anonymous Pro',monospace;border-color:var(--theme-text);
+  background:var(--theme-bg);color:var(--theme-text);box-shadow:3px 3px 0 var(--theme-text);
+}
+html[data-style=arcade] .work-story .story-project-links .primary:is(:hover,:focus-visible) {
+  background:var(--theme-text);color:var(--theme-bg);transform:translate(3px,3px);box-shadow:none;
+}
+
+/* Second pass: stepped portrait, mobile navigation, and secondary views. */
+html[data-style=arcade] .profile-flip {
+  clip-path:polygon(31.25% 0,68.75% 0,68.75% 6.25%,81.25% 6.25%,81.25% 12.5%,87.5% 12.5%,87.5% 18.75%,93.75% 18.75%,93.75% 31.25%,100% 31.25%,100% 68.75%,93.75% 68.75%,93.75% 81.25%,87.5% 81.25%,87.5% 87.5%,81.25% 87.5%,81.25% 93.75%,68.75% 93.75%,68.75% 100%,31.25% 100%,31.25% 93.75%,18.75% 93.75%,18.75% 87.5%,12.5% 87.5%,12.5% 81.25%,6.25% 81.25%,6.25% 68.75%,0 68.75%,0 31.25%,6.25% 31.25%,6.25% 18.75%,12.5% 18.75%,12.5% 12.5%,18.75% 12.5%,18.75% 6.25%,31.25% 6.25%);
+}
+html[data-style=arcade] .profile-flip::after { box-shadow:none; }
+html[data-style=arcade] :is(.mobile-menu-fab,.mobile-menu-dialog,.mobile-menu-heading button,.menu-current,.toast-content,.toast-particles) { border-radius:0; }
+html[data-style=arcade] .mobile-menu-fab {
+  font-family:'Anonymous Pro',monospace;box-shadow:3px 3px 0 var(--theme-border);
+}
+html[data-style=arcade] .mobile-menu-fab:is(:hover,:focus-visible) { transform:translate(3px,3px);box-shadow:none; }
+html[data-style=arcade] .mobile-menu-dialog { box-shadow:5px 5px 0 var(--theme-border); }
+html[data-style=arcade] :is(.mobile-menu-list a,.mobile-menu-heading,.mobile-menu-secondary,.viewer-heading) { font-family:'Anonymous Pro',monospace; }
+html[data-style=arcade] .toast-particles::before,
+html[data-style=arcade] .toast-particles::after { border-radius:0; }
+html[data-style=arcade]::view-transition-image-pair(mobile-menu-trigger) { border-radius:0; }
+html[data-style=arcade] .craft-grid { border-radius:0;box-shadow:4px 4px 0 var(--theme-border); }
+
+/* Mobile spacing leaves room for the persistent navigation controls. */
+@media(max-width:767px) {
+  html[data-style=arcade] .site-footer { padding-bottom:calc(104px + env(safe-area-inset-bottom)); }
+  html[data-style=arcade] .site-footer .directory { grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem 1rem; }
+  html[data-style=arcade] .site-footer .directory h3 { margin-bottom:.5rem; }
+  html[data-style=arcade] .site-footer .directory a,
+  html[data-style=arcade] .site-footer .elsewhere a { min-height:44px;display:inline-flex;align-items:center; }
+  html[data-style=arcade] .site-footer .footer-bottom { gap:.5rem 1rem; }
+  html[data-style=arcade] .mobile-menu-secondary { flex-wrap:wrap;gap:4px 16px; }
+  html[data-style=arcade] .mobile-menu-dialog { padding:20px; }
+  html[data-style=arcade] work-quest .workshop-label { max-width:174px; }
+  html[data-style=arcade] work-quest .workshop-label a { font-size:.75rem; }
+  html[data-style=arcade] work-quest .workshop-label small { font-size:.65rem;line-height:1.35; }
+  html[data-style=arcade] work-quest .stop-years { font-size:.65rem; }
+}
+
+/* Compact project markers and a fully inverted Explorer control. */
+html[data-style=arcade] work-quest .quest-marker {
+  padding:8px 10px;min-height:44px;gap:8px;background:var(--quest-surface);
+}
+html[data-style=arcade] work-quest .quest-marker .stop-title {
+  font-family:'Anonymous Pro',monospace;font-size:.78rem;line-height:1.2;
+}
+html[data-style=arcade] work-quest .quest-marker .stop-ring { width:14px;height:14px;flex-shrink:0; }
+html[data-style=arcade] work-quest .quest-marker:is(:hover,[data-active]) :is(.stop-title,.stop-ring) { transform:none; }
+html[data-style=arcade] work-quest .journey-stats>summary:is(:hover,:focus-visible) {
+  --quest-ink:var(--theme-bg);--quest-muted:var(--theme-bg);
+  --quest-rule:color-mix(in srgb,var(--theme-bg) 35%,var(--theme-text));
+  background:var(--theme-text);color:var(--theme-bg);
+}
+html[data-style=arcade] work-quest .journey-stats>summary:is(:hover,:focus-visible) .journey-level>span { color:var(--theme-bg); }
+html[data-style=arcade] work-quest .quest-controls .journey-stats>summary:is(:hover,:focus-visible) {
+  background:var(--theme-text) !important;color:var(--theme-bg) !important;
+}
+
+/* Brackets close gently around the hovered destination. */
+html[data-style=arcade] .header-nav .prefetch-link {
+  transition:color .2s ease;
+}
+html[data-style=arcade] .header-nav .prefetch-link::before,
+html[data-style=arcade] .header-nav .prefetch-link::after {
+  display:inline-block;position:static;transform:translateX(0);
+  transition:transform .2s ease,color .2s ease,opacity .2s ease;
+}
+html[data-style=arcade] .header-nav .prefetch-link:is(:hover,:focus-visible)::before {
+  color:#d94461;opacity:1;transform:translateX(4px);
+}
+html[data-style=arcade] .header-nav .prefetch-link:is(:hover,:focus-visible)::after {
+  color:#2587c8;opacity:1;transform:translateX(-4px);
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-style=arcade] .header-nav .prefetch-link,
+  html[data-style=arcade] .header-nav .prefetch-link::before,
+  html[data-style=arcade] .header-nav .prefetch-link::after { transition:none; }
+}
+
+/* Visual studies share the photograph's light press response. */
+html[data-style=arcade] .home-hero~section .visual-frame,
+html[data-style=arcade] .index-content-section .visual-frame {
+  transition:box-shadow .22s ease,transform .22s ease,border-color .22s ease;
+}
+@media(hover:hover) {
+  html[data-style=arcade] .index-content-section .visual-frame:hover {
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 color-mix(in srgb,var(--theme-text) 8%,var(--theme-bg));
+    border-color:color-mix(in srgb,var(--theme-text) 10%,var(--theme-bg));
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-style=arcade] .index-content-section .visual-frame { transition:none; }
+  html[data-style=arcade] .index-content-section .visual-frame:hover { transform:none; }
+}
+
+/* Ten quiet pixels communicate reading progress without another text row. */
+html[data-style=arcade] work-quest .quest-marker { flex-direction:column;align-items:stretch;gap:6px; }
+html[data-style=arcade] work-quest .stop-meter {
+  display:block;height:3px;background:var(--quest-rule);
+  mask-image:repeating-linear-gradient(to right,#000 0 calc(10% - 2px),transparent calc(10% - 2px) 10%);
+}
+html[data-style=arcade] work-quest .stop-meter>span {
+  display:block;height:100%;width:calc(var(--stop-progress,0) * 1%);background:var(--quest-ink);
+  transition:width .3s ease;
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-style=arcade] work-quest .stop-meter>span { transition:none; }
+}

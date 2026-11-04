@@ -1,0 +1,98 @@
+[
+  {
+    "type": "image",
+    "src": "/work/hanji/suite-onboarding.webp",
+    "preview": "/work/hanji/suite-onboarding-1000.webp",
+    "width": 1280,
+    "height": 900,
+    "alt": "Hanji workspace setup with Think, Plan and Document selected"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/plan-objectives.webp",
+    "preview": "/work/hanji/plan-objectives-1000.webp",
+    "width": 1440,
+    "height": 1437,
+    "alt": "Plan objectives grouped with key results, progress and check-in status"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/plan-issue.webp",
+    "preview": "/work/hanji/plan-issue-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Plan issue with its description, status and attributed discussion"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/think-connectors.webp",
+    "preview": "/work/hanji/think-connectors-1000.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": "Think canvas with connected notes and connector routing controls"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/think-voting.webp",
+    "preview": "/work/hanji/think-voting-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Think shared voting panel beside notes on a canvas"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/think-templates.webp",
+    "preview": "/work/hanji/think-templates-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Think template picker offering a brainstorm, retrospective and decision flow"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/conductor-appearance.webp",
+    "preview": "/work/hanji/conductor-appearance-1000.webp",
+    "width": 680,
+    "height": 461,
+    "alt": "Conductor appearance settings with six Solids shapes and motion controls"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/suite-activity.webp",
+    "preview": "/work/hanji/suite-activity-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Workspace activity with contributions, people and agents across products"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/flow-document-read.webp",
+    "preview": "/work/hanji/flow-document-read-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Document reading view with a decision brief about a simpler first week"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/flow-think-board.webp",
+    "preview": "/work/hanji/flow-think-board-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Think canvas with six notes exploring a simpler onboarding experience"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/flow-plan-board.webp",
+    "preview": "/work/hanji/flow-plan-board-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Plan board showing tasks grouped by progress"
+  },
+  {
+    "type": "image",
+    "src": "/work/hanji/flow-plan-issue.webp",
+    "preview": "/work/hanji/flow-plan-issue-1000.webp",
+    "width": 1440,
+    "height": 1000,
+    "alt": "Plan issue with the onboarding checklist, related work and discussion"
+  }
+]

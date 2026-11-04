@@ -3,7 +3,32 @@ import { contributionProjects, contributionsChecked } from '../../data/contribut
 ---
 <work-contributions>
       <section id="open-source" class="work-group" aria-labelledby="open-source-title">
-        <header class="group-heading"><div><span>The workshop</span><h2 id="open-source-title">Open-source contributions</h2></div><button type="button" data-close-contributions hidden aria-label="Close contributions">Close <kbd>Esc</kbd></button></header>
+        <header class="group-heading"><div><span>Independent &amp; shared</span><h2 id="open-source-title">The workshop</h2></div><button type="button" data-close-contributions hidden aria-label="Close contributions">Close <kbd>Esc</kbd></button></header>
+        <section class="own-projects" aria-labelledby="own-projects-title">
+          <h3 id="own-projects-title">Things I’m building</h3>
+          <p class="contribution-intro">Independent tools for making things, with people and agents.</p>
+          <div class="own-project-grid">
+            <a class="own-project" href="/work/hanji/">
+              <span class="project-mark project-preview"><img src="/work/hanji/flow-think-board-1000.webp" width="1000" height="694" alt="Hanji Think canvas with notes exploring a simpler onboarding experience" loading="lazy" /></span>
+              <span class="project-title">Hanji <small>Available by request</small></span>
+              <p>A workspace for thinking, writing and directing work with AI agents.</p>
+              <span class="project-link">Explore the project</span>
+            </a>
+            <a class="own-project" href="https://mmaxence.github.io/solids/">
+              <span class="project-mark project-preview solids-preview"><img src="/work/solids/library-preview.webp" width="1450" height="921" alt="Solids library with colorful interactive 3D shapes on a dark background" loading="lazy" /></span>
+              <span class="project-title">Solids <small>Open source</small></span>
+              <p>Lightweight, interactive 3D objects for the web. Built for coding agents to extend.</p>
+              <span class="project-link">Explore the library</span>
+            </a>
+            <a class="own-project" href="https://mmaxence.github.io/materia/">
+              <span class="project-mark project-preview materia-preview"><img src="/work/materia/library-preview.webp" width="1440" height="915" alt="Materia with dimensional typography reading Beyond static" loading="lazy" /></span>
+              <span class="project-title">Materia <small>Live</small></span>
+              <p>A text effects library that turns typography into a responsive, interactive material.</p>
+              <span class="project-link">Explore the library</span>
+            </a>
+          </div>
+        </section>
+        <h3 class="community-title">Contributions to open source</h3>
         <p class="contribution-intro">Contributions focused on accessibility, interaction details and documentation.</p>
         {contributionProjects.map(project => (
           <div class="contribution-project">
@@ -11,7 +36,7 @@ import { contributionProjects, contributionsChecked } from '../../data/contribut
             <ul>
               {project.contributions.map(pr => (
                 <li>
-                  <a href={`https://github.com/${project.repository}/pull/${pr.number}`}>{pr.title}</a>
+                  <a class="editorial-title no-underline" href={`https://github.com/${project.repository}/pull/${pr.number}`}>{pr.title}</a>
                   <span class="pr-meta">#{pr.number} · {pr.status}</span>
                 </li>
               ))}
@@ -67,6 +92,17 @@ import { contributionProjects, contributionsChecked } from '../../data/contribut
   if(!customElements.get('work-contributions'))customElements.define('work-contributions',WorkContributions);
 </script>
 <style>
+.own-projects{margin-top:28px;padding-bottom:28px;border-bottom:1px solid var(--theme-border)}
+.own-projects h3,.community-title{font:400 1rem/1.4 var(--font-body);margin:0}.community-title{margin-top:28px}
+.own-project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:22px}
+.own-project{display:flex;flex-direction:column;align-items:start;color:inherit;text-decoration:none;border:0;background:none;padding:0!important}
+a.own-project:hover{background:none}.own-project::after{display:none!important}.own-project:focus-visible{outline:2px solid currentColor;outline-offset:5px}.own-project:hover .project-link{text-decoration:underline;text-underline-offset:4px}
+.project-mark{width:100%;height:100px;display:grid;place-items:center;margin-bottom:18px;background:#f2f0eb;border-radius:8px;color:#383c38;font:48px/1 var(--theme-font-heading)}
+.solids-mark{background:#ededf3}.solids-mark i{width:55px;height:55px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#f9f6ff,#b4a3d3 45%,#514665);box-shadow:8px 12px 16px #51466525}.materia-mark{background:#eef0eb;letter-spacing:-6px;font-style:italic}
+.project-title{font:400 1.05rem var(--font-body)}.project-title small{display:block;font:.6rem/1.5 var(--font-mono,monospace);color:var(--theme-text-muted);margin-top:6px}
+.own-project p{font:.8rem/1.6 var(--font-body);margin:12px 0 18px}.project-link{margin-top:auto;font:.65rem var(--font-mono,monospace)}
+@media(max-width:550px){.own-project-grid{grid-template-columns:1fr;gap:28px}.project-mark{height:90px}.own-project p{max-width:35ch}}
+
 #open-source { width:calc(100% - 40px); max-width:64rem; margin:4rem auto 0; }
 .group-heading>span { display:block; font:.7rem/1.5 var(--font-mono); color:var(--theme-text-muted); margin-bottom:.6rem; }
 
@@ -78,7 +114,7 @@ import { contributionProjects, contributionsChecked } from '../../data/contribut
 .contribution-project ul { list-style:none; padding:0; margin:0; }
 .contribution-project li { display:flex; align-items:baseline; gap:1rem; padding:.35rem 0; margin:0; font-size:.85rem; line-height:1.6; }
 .contribution-project a { color:var(--theme-text); border:0; background:none; text-decoration:none; }
-.contribution-project a:hover { background:none; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.22em; }
+
 .contribution-project a::after { display:none; }
 .contribution-project a:focus-visible { outline:2px solid var(--theme-text); outline-offset:4px; }
 .pr-meta { margin-left:auto; flex-shrink:0; font-family:var(--font-mono, monospace); font-size:.7rem; color:var(--theme-text-muted); }
@@ -101,4 +137,5 @@ import { contributionProjects, contributionsChecked } from '../../data/contribut
   @keyframes workshop-arrival { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none} }
   @media(max-width:600px){:global(#open-source-dialog){width:calc(100vw - 24px);max-height:calc(100svh - 32px);border-radius:14px}:global(#open-source-dialog) #open-source{padding:22px 20px}.group-heading h2{font-size:1.3rem}[data-close-contributions] kbd{display:none}}
   @media(prefers-reduced-motion:reduce){:global(#open-source-dialog[open]){animation:none}}
+.project-mark.project-preview{height:auto;aspect-ratio:1450 / 921;overflow:hidden;background:#eef0f3}.project-preview img{display:block;width:100%;height:100%;object-fit:contain}.project-mark.solids-preview{background:#090a0b}.project-mark.materia-preview{background:#080d13}
 </style>

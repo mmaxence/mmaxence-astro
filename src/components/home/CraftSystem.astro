@@ -1,0 +1,99 @@
+---
+const heart = ['.##...##.', '####.####', '#########', '.#######.', '..#####..', '...###...', '....#....'];
+---
+<craft-heart>
+  <button type="button" aria-label="Rotate the pixel heart" class="heart-control">
+    <span class="heart-stage">
+      <svg class="heart-fallback" viewBox="0 0 320 240" aria-hidden="true" shape-rendering="crispEdges">{heart.flatMap((row,y)=>[...row].map((cell,x)=>cell==='#'?<rect x={88+x*16} y={64+y*16} width="16" height="16" fill="currentColor" />:null))}</svg>
+      <span class="heart-mount" aria-hidden="true"></span>
+    </span>
+  </button>
+</craft-heart>
+<script>
+  class CraftHeart extends HTMLElement {
+    private cleanup?: () => void;
+    connectedCallback() {
+      let disposed = false;
+      let cleanup = () => {};
+      this.cleanup = () => { disposed = true; cleanup(); };
+      const observer = new IntersectionObserver(async ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        // Bundled from the local Solids library; custom shapes use its public registration API.
+        const { defineObject, registry } = await import('../../vendor/solids/solids.js');
+        if (disposed) return;
+        if (!registry.effects.has('heart-rgb')) registry.effects.set('heart-rgb', {
+          manifest: {name:'heart-rgb',description:'Chromatic fringes around a preserved ink silhouette.',params:[{name:'amount',type:'float',default:12,min:0,max:24,label:'Offset'}]},
+          frag: `uniform float amount;
+            vec4 sdEffect(){
+              vec4 base=texture(uScene,vUv);vec2 d=vec2(amount/uResolution.x,0.);
+              float r=texture(uScene,vUv+d).a,b=texture(uScene,vUv-d).a;
+              float a=max(r,b);vec3 fringe=vec3(r*.95,b*.65,b*.95);
+              return vec4(base.rgb+fringe*(1.-base.a),base.a+a*(1.-base.a));
+            }`
+        });
+        if (!customElements.get('sd-pixel-heart')) defineObject({name:'pixel-heart',tag:'sd-pixel-heart',description:'An extruded pixel heart.',uniforms:[
+          {name:'turn',type:'float',default:0,min:-10000,max:10000,label:'Turn'},
+          {name:'tilt',type:'float',default:0,min:-1,max:1,label:'Tilt'}
+        ]}, `
+          uniform float turn; uniform float tilt;
+          float pixelBox(vec3 p,vec3 b){vec3 q=abs(p)-b;return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.);}
+          float row(vec3 p,float y,float halfWidth){return pixelBox(p-vec3(0.,y,0.),vec3(halfWidth,.08,.105));}
+          float map(vec3 p){
+            p.xz=mat2(cos(turn),-sin(turn),sin(turn),cos(turn))*p.xz;
+            p.yz=mat2(cos(tilt),-sin(tilt),sin(tilt),cos(tilt))*p.yz;
+            float d=min(pixelBox(p-vec3(-.4,.48,0.),vec3(.16,.08,.105)),pixelBox(p-vec3(.4,.48,0.),vec3(.16,.08,.105)));
+            d=min(d,min(pixelBox(p-vec3(-.4,.32,0.),vec3(.32,.08,.105)),pixelBox(p-vec3(.4,.32,0.),vec3(.32,.08,.105))));
+            d=min(d,row(p,.16,.72));d=min(d,row(p,0.,.56));d=min(d,row(p,-.16,.4));d=min(d,row(p,-.32,.24));return min(d,row(p,-.48,.08));
+          }
+          void main(){
+            vec4 silhouette=sdRender(0.,0.);
+            fragColor=vec4(uColor*silhouette.a,silhouette.a);
+          }
+        `);
+        const mount=this.querySelector('.heart-mount')!;
+        const object=document.createElement('sd-pixel-heart');
+        object.setAttribute('size','100%');object.setAttribute('shading','cel');object.setAttribute('cel-outline','0');object.setAttribute('theme','light');
+        mount.append(object);
+        const button=this.querySelector('button')!;
+        const motion=matchMedia('(prefers-reduced-motion: reduce)');
+        let angle=0, target=0, tilt=0, tiltTarget=0, frame=0, hover=0;
+        let spinStart=0, spinFrom=0, spinning=false;
+        const spinDuration=2400;
+        let glitchTimer: ReturnType<typeof setTimeout>;
+        const color=()=>object.setAttribute('color',getComputedStyle(this).color);
+        color(); const theme=new MutationObserver(color);theme.observe(document.documentElement,{attributes:true,attributeFilter:['style','data-theme']});
+        const render=(now:number)=>{
+          if(spinning&&!motion.matches){
+            const t=Math.min(1,(now-spinStart)/spinDuration);
+            // Integral of t * (1-t)^4: a short acceleration, then a long coast.
+            const progress=1-Math.pow(1-t,5)*(1+5*t);
+            angle=spinFrom+(target-spinFrom)*progress;
+            if(t===1)spinning=false;
+          }else{
+            angle += (target+hover-angle)*.11;
+          }
+          tilt+=(tiltTarget-tilt)*.11;
+          if(motion.matches){spinning=false;angle=target+hover;tilt=tiltTarget;}
+          object.setAttribute('turn',String(angle));object.setAttribute('tilt',String(tilt));
+          if(spinning||Math.abs(target+hover-angle)>.001||Math.abs(tiltTarget-tilt)>.001)frame=requestAnimationFrame(render);else frame=0;
+        };
+        const wake=()=>{if(!frame)frame=requestAnimationFrame(render);};
+        const move=(e:PointerEvent)=>{if(e.pointerType==='touch')return;const r=button.getBoundingClientRect();hover=((e.clientX-r.left)/r.width-.5)*1.1;tiltTarget=((e.clientY-r.top)/r.height-.5)*.5;wake();};
+        const leave=()=>{hover=0;tiltTarget=0;wake();};
+        const click=()=>{spinFrom=angle;target=angle+(motion.matches?Math.PI/4:Math.PI*6);spinStart=performance.now();spinning=!motion.matches;clearTimeout(glitchTimer);if(!motion.matches){object.setAttribute('effect','heart-rgb');object.setAttribute('heart-rgb-amount','12');this.classList.remove('glitching');void this.offsetWidth;this.classList.add('glitching');glitchTimer=setTimeout(()=>{object.removeAttribute('effect');color();this.classList.remove('glitching');},420);}wake();};
+        button.addEventListener('pointermove',move);button.addEventListener('pointerleave',leave);button.addEventListener('click',click);
+        const reveal=requestAnimationFrame(()=>{const scene=object.shadowRoot?.querySelector('sd-scene') as any;if(scene?.gl && !(object as any).broken)this.classList.add('heart-ready');});
+        cleanup=()=>{clearTimeout(glitchTimer);cancelAnimationFrame(frame);cancelAnimationFrame(reveal);theme.disconnect();button.removeEventListener('pointermove',move);button.removeEventListener('pointerleave',leave);button.removeEventListener('click',click);object.remove();};
+      });
+      observer.observe(this);
+      const old=this.cleanup;this.cleanup=()=>{observer.disconnect();old?.();};
+    }
+    disconnectedCallback(){this.cleanup?.();}
+  }
+  if(!customElements.get('craft-heart'))customElements.define('craft-heart',CraftHeart);
+</script>
+<style>
+craft-heart{display:block;max-width:400px;color:var(--theme-text)}.heart-control{display:block;width:100%;border:0;padding:0;background:none;color:inherit;cursor:pointer;text-align:left;touch-action:pan-y}.heart-stage{height:280px;display:block;position:relative}.heart-fallback{width:100%;height:100%;position:absolute;inset:0}.heart-mount{display:block;position:absolute;width:280px;height:280px;left:50%;transform:translateX(-50%);opacity:0}.heart-ready .heart-mount{opacity:1}.heart-ready .heart-fallback{visibility:hidden}.heart-control:focus-visible{outline:2px solid currentColor;outline-offset:6px}
+.glitching .heart-mount{animation:heart-glitch .42s steps(1,end)}@keyframes heart-glitch{0%,100%{translate:0}12%{translate:-5px 0;filter:contrast(1.8)}24%{translate:6px 2px}38%{translate:-3px -1px;filter:contrast(1)}54%{translate:4px 0}72%{translate:-2px 0}88%{translate:1px 0}}@media(prefers-reduced-motion:reduce){.glitching .heart-mount{animation:none}}
+</style>

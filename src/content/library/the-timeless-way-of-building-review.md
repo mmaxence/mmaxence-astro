@@ -35,3 +35,9 @@ We build loading states and transitions first. These are the "living patterns" A
 ## How It Shaped My Work
 
 It is the philosophical reason why I advocate for a "Lego Box" of components rather than static mockups. This approach is central to our [design system philosophy](/blog/design-system-at-buzzvil) and the [interaction primitives](/blog/design-system-at-buzzvil) we build.
+
+## A foundation for designing with AI
+
+Alexander’s pattern language is a theoretical foundation for our [AI-Native Design Playbook](/deepdives/ai-native-design-workflow-playbook/). If agents are becoming builders, the patterns, constraints and judgment we give them become a central part of the design work. The aim is to make quality repeatable while leaving room for the particular needs of each situation.
+
+It also underpins my view of how AI will shape our future: as more execution moves to agents, deciding what matters and shaping the systems they work within become more important. I explore that shift in [What Rises and What Fades When Agents Reshape the Interface](/deepdives/what-rises-and-what-fades/).

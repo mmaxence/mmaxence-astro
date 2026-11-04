@@ -1013,3 +1013,34 @@ a:not(nav a):not(.no-underline):not(.credential):not(.blog-card-link):not(
 
 /* Shadows stay off even when an older saved theme is restored. */
 :root { --theme-shadow: none !important; --shadow-subtle: none !important; --shadow-hover: none !important; --toast-shadow: none !important; }
+
+/* Shared editorial title treatment, including titles inside linked cards. */
+a.editorial-title.editorial-title,.editorial-card .editorial-title {
+  color:var(--theme-text);text-decoration:none;border:0;box-shadow:none;
+  padding:.05em .15em;margin:-.05em -.15em;border-radius:.125em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:background-color .15s ease,color .15s ease;
+}
+a.editorial-title.editorial-title:hover,a.editorial-title.editorial-title:focus-visible,
+.editorial-card:hover .editorial-title,.editorial-card:focus-visible .editorial-title {
+  background:var(--theme-accent);color:var(--theme-bg);text-decoration:none;
+  text-shadow:-.65px 0 #ff4269,.65px 0 #38d9ed;
+  animation:editorial-rgb-split 360ms steps(1,end) both;
+}
+a.editorial-title::before,a.editorial-title::after{display:none}
+a.editorial-title:focus-visible,.editorial-card:focus-visible{outline:2px solid var(--theme-accent);outline-offset:5px}
+@media(prefers-reduced-motion:reduce){a.editorial-title.editorial-title,.editorial-card .editorial-title{transition:none}}
+
+/* Chromatic edges flicker into place without moving the text or its hit area. */
+@keyframes editorial-rgb-split {
+  0% { text-shadow:-3px 0 #ff4269,3px 0 #38d9ed; }
+  18% { text-shadow:2px 0 #ff4269,-2px 0 #38d9ed; }
+  34% { text-shadow:-1px 0 #ff4269,1px 0 #38d9ed; }
+  48% { text-shadow:-2px 0 #ff4269,2px 0 #38d9ed; }
+  65%,100% { text-shadow:-.65px 0 #ff4269,.65px 0 #38d9ed; }
+}
+@media(prefers-reduced-motion:reduce) {
+  a.editorial-title.editorial-title,.editorial-card .editorial-title {
+    animation:none !important;text-shadow:none !important;
+  }
+}

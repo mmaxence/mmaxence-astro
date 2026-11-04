@@ -6,9 +6,10 @@ import PageContent from '../components/ui/PageContent.astro';
 import AnimatedContent from '../components/ui/AnimatedContent.astro';
 import TitleListItem from '../components/ui/TitleListItem.astro';
 import ThemeToast from '../components/ui/ThemeToast.astro';
+import CraftSystem from '../components/home/CraftSystem.astro';
+import MateriaHeadline from '../components/home/MateriaHeadline.astro';
 import HeroShapes from '../components/home/HeroShapes.astro';
 import {
-  TheCraftVisual,
   HowIWorkVisual,
   BeyondTheRoleVisual,
   ExperienceSnapshotVisual
@@ -56,12 +57,13 @@ const featuredDeepdive = (await getCollection('deepdives'))
       <div class="hero-copy">
       <AnimatedContent delay={100}>
         <h1 id="hero-title" class="hero-title">
-          <span>Crafting delight,</span>
+          <MateriaHeadline />
           <span>shipping systems.</span>
         </h1>
       </AnimatedContent>
       <AnimatedContent delay={200}>
         <p class="hero-description">15 years in, and a new project still feels like a Lego box. I shape products, build the systems behind them, and lead a team that ships. Still hands-on, still delivering in code, more than ever with AI.</p>
+        <div class="arcade-actions"><a class="no-underline" href="/work/">Explore my work</a></div>
       </AnimatedContent>
       </div>
     </div>
@@ -86,16 +88,19 @@ const featuredDeepdive = (await getCollection('deepdives'))
         loading="lazy"
         decoding="async"
       />
-      <ReadingNote slot="reading-note" label="Background" links={[{"title": "Resume (PDF)", "href": "/images/Maxence-Mauduit_Resume-2026.pdf"}]} />
+      <div slot="reading-note" class="resume-row">
+        <span class="resume-context">Experience &amp; background</span>
+        <a class="editorial-title no-underline" href="/images/Maxence-Mauduit_Resume-2026.pdf">Read my résumé <span class="resume-format">PDF</span></a>
+      </div>
     </HomeSection>
     
     {/* THE CRAFT */}
-    <HomeSection title="The craft" flip openVisual>
+    <HomeSection title="The craft" flip openVisual wideVisual>
       <p slot="pre-visual" class="section-lede text-balance">The work that matters most now is not drawing screens. It is encoding judgment into systems.</p>
       <div slot="aside">
         <p class="mt-6 text-balance">When judgment lives in the system, good things get made without anyone standing over the work. People design with them, agents design within them.</p>
       </div>
-      <TheCraftVisual slot="visual" client:visible />
+      <CraftSystem slot="visual" />
       <div slot="post-visual">
         <p class="max-w-3xl text-balance">From my first job in Paris, hand-coding interfaces in the early days of Bootstrap, to now, when design increasingly lives in code, I have always shaped products in their natural environment: the codebase. Building shared systems, prototyping interactions too complex for Figma, closing the gap between intent and implementation. AI agents turned it into something bigger: a design system built for an agent to use (@buzzvil/design-library), the interaction recipes and composer that sit on top, and a first ad campaign assembled by an agent and shipped to a live advertiser.</p>
 
@@ -241,6 +246,11 @@ const featuredDeepdive = (await getCollection('deepdives'))
     </BaseLayout>
 
 <style>
+  .resume-row { display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;max-width:42rem;margin-top:2rem;padding-top:1.1rem;border-top:1px solid var(--theme-border); }
+  .resume-context { font: .75rem/1.5 var(--font-mono,monospace);color:var(--theme-text-muted); }
+  .resume-row a { font-size:.9rem;line-height:1.6; }
+  .resume-format { margin-left:.5rem;font: .65rem/1 var(--font-mono,monospace);opacity:.65; }
+
   .what-i-do-photo { display: block; width: 100%; height: auto; border-radius: var(--theme-radius); }
   .home-hero {
     display: grid;

@@ -2,6 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 // Shared visual constants
 const STROKE_WIDTH = 1.5;
+const PIXEL_RING = Array.from({ length: 23 * 23 }, (_, i) => ({
+  x: (i % 23 - 11) * 8,
+  y: (Math.floor(i / 23) - 11) * 8,
+})).filter(({ x, y }) => { const radius = Math.hypot(x, y); return radius >= 72 && radius < 88; });
 
 // All five visuals share a ~480-unit-wide viewBox: they render inside the
 // half-width .visual-frame panels, so squarer compositions fill the frame and
@@ -265,6 +269,7 @@ export function HowIWorkVisual() {
         // Phase 5: pause (defaults above)
 
         dot.setAttribute('r', String(currentRadius));
+        svgRef.current.querySelector('.discovery-player')?.setAttribute('transform', `scale(${currentRadius / 6})`);
         dotGroup.setAttribute('transform', `translate(${dotX}, ${dotY})`);
 
         if (discoveryLine) {
@@ -283,7 +288,7 @@ export function HowIWorkVisual() {
   }, [isVisible]);
 
   return (
-    <div className="section-visual">
+    <div className="section-visual arcade-adapted">
       <svg
         ref={svgRef}
         viewBox="0 18 480 268"
@@ -292,8 +297,11 @@ export function HowIWorkVisual() {
         aria-hidden="true"
         style={{ overflow: 'visible' }}
       >
+        <g className="arcade-only" fill={circleStrokeColor}>
+          {PIXEL_RING.map(({x,y},i)=><rect key={i} x={CX+x-4} y={CY+y-4} width="8" height="8" />)}
+        </g>
         {/* Delivery ring */}
-        <circle
+        <circle className="arcade-smooth"
           cx={CX}
           cy={CY}
           r={R}
@@ -351,7 +359,8 @@ export function HowIWorkVisual() {
 
         {/* Discovery dot */}
         <g className="discovery-dot-group" transform={`translate(${CX}, ${CY - R})`}>
-          <circle className="discovery-dot" cx="0" cy="0" r="6" fill={accentColor} stroke="none" />
+          <circle className="discovery-dot arcade-smooth" cx="0" cy="0" r="6" fill={accentColor} stroke="none" />
+          <g className="discovery-player arcade-only"><path d="M-4-6H4V-4H6V4H4V6H-4V4H-6V-4H-4Z" fill={accentColor}/><rect x="-2" y="-2" width="4" height="4" fill="var(--theme-bg)" /></g>
         </g>
       </svg>
     </div>
@@ -444,6 +453,7 @@ export function BeyondTheRoleVisual() {
             string.setAttribute('y2', String(bobY));
           }
 
+          svgRef.current.querySelector(`.cradle-pixel-${i}`)?.setAttribute('transform', `translate(${bobX},${bobY})`);
           const ball = svgRef.current.querySelector(`.cradle-ball-${i}`) as SVGCircleElement;
           if (ball) {
             ball.setAttribute('cx', String(bobX));
@@ -480,7 +490,7 @@ export function BeyondTheRoleVisual() {
   }, [isVisible, pivotPositions, textColor]);
 
   return (
-    <div className="section-visual">
+    <div className="section-visual arcade-adapted">
       <svg
         ref={svgRef}
         viewBox="0 26 480 190"
@@ -515,13 +525,17 @@ export function BeyondTheRoleVisual() {
                 strokeWidth={STROKE_WIDTH}
               />
               <circle
-                className={`cradle-ball-${i}`}
+                className={`cradle-ball-${i} arcade-smooth`}
                 cx={pivotX}
                 cy={restY}
                 r={BALL_R}
                 fill={accentColor}
                 stroke="none"
               />
+              <g className={`cradle-pixel-${i} arcade-only`} transform={`translate(${pivotX},${restY})`}>
+                <path d="M-8-12H8V-8H12V8H8V12H-8V8H-12V-8H-8Z" fill={accentColor}/>
+                <path d="M-6-6H-2V-2H-6Z" fill="var(--theme-bg)" opacity=".65" />
+              </g>
             </g>
           );
         })}
@@ -688,7 +702,7 @@ export function ExperienceSnapshotVisual() {
   let kwIndex = 0;
 
   return (
-    <div ref={containerRef} className="section-visual">
+    <div ref={containerRef} className="section-visual experience-arcade">
       <svg
         ref={svgRef}
         viewBox="0 -18 480 386"
@@ -708,8 +722,11 @@ export function ExperienceSnapshotVisual() {
           />
         ))}
 
+        <g className="experience-pixels" fill={mutedColor} opacity=".22">
+          {PIXEL_RING.map(({x,y},i)=><rect key={i} x={cx+x-4} y={cy+y-4} width="8" height="8" />)}
+        </g>
         {/* Main ring */}
-        <circle
+        <circle className="experience-smooth"
           cx={cx}
           cy={cy}
           r={ringRadius}
@@ -731,7 +748,8 @@ export function ExperienceSnapshotVisual() {
                 const kwPos = getKeywordPos(currentKwIndex);
                 return (
                   <g key={ii}>
-                    <line
+                    <path className="experience-pixels" d={`M${stagePos.x} ${stagePos.y}H${kwPos.x}V${kwPos.y}`} fill="none" stroke={isHovered ? accentColor : mutedColor} strokeWidth=".75" opacity={isHovered ? .65 : .2} />
+                    <line className="experience-smooth"
                       x1={stagePos.x}
                       y1={stagePos.y}
                       x2={kwPos.x}
@@ -742,7 +760,8 @@ export function ExperienceSnapshotVisual() {
                       opacity={isHovered ? 0.5 : 0.25}
                       style={{ transition: 'stroke 0.3s ease, opacity 0.3s ease' }}
                     />
-                    <circle
+                    <rect className="experience-pixels" x={kwPos.x-3} y={kwPos.y-3} width="6" height="6" fill={isHovered ? accentColor : mutedColor} />
+                    <circle className="experience-smooth"
                       cx={kwPos.x}
                       cy={kwPos.y}
                       r={isHovered ? 3.5 : 2.5}
@@ -751,7 +770,7 @@ export function ExperienceSnapshotVisual() {
                     />
                     <text
                       x={kwPos.x}
-                      y={kwPos.y - 10}
+                      y={kwPos.y + (item === 'Team Building' || item === 'Platform Architecture' ? 20 : -10)}
                       textAnchor="middle"
                       fill={isHovered ? textColor : mutedColor}
                       fontSize={kwFs}
@@ -789,14 +808,15 @@ export function ExperienceSnapshotVisual() {
               onMouseLeave={() => setHoveredStage(null)}
               style={{ cursor: 'default', pointerEvents: 'auto' }}
             >
-              <circle
+              <g className="experience-pixels"><rect x={pos.x-10} y={pos.y-10} width="20" height="20" fill={isHovered ? accentColor : textColor}/><text x={pos.x} y={pos.y+.5} textAnchor="middle" dominantBaseline="central" fill="var(--theme-bg)" fontSize="11" fontFamily="var(--theme-font-heading)">{si+1}</text></g>
+              <circle className="experience-smooth"
                 cx={pos.x}
                 cy={pos.y}
                 r={isHovered ? 9 : 7}
                 fill={isHovered ? accentColor : textColor}
                 style={{ transition: 'fill 0.2s ease' }}
               />
-              <text
+              <text className="experience-stage-label"
                 x={labelPos.x}
                 y={labelPos.y}
                 textAnchor="middle"
@@ -826,17 +846,18 @@ export function ExperienceSnapshotVisual() {
           const size = Math.max(0.5, 5 * (1 - t * t));
           const alpha = Math.max(0.02, 0.7 * (1 - t));
           return (
-            <circle
+            <g key={`trail-${i}`}><rect className="experience-pixels" x={tx-size} y={ty-size} width={size*2} height={size*2} fill={accentColor} opacity={alpha} /><circle className="experience-smooth"
               key={`trail-${i}`}
               cx={tx}
               cy={ty}
               r={size}
               fill={accentColor}
               opacity={alpha}
-            />
+            /></g>
           );
         })}
-        <circle
+        <rect className="experience-pixels" x={cx + Math.cos(orbitAngle)*ringRadius-5} y={cy+Math.sin(orbitAngle)*ringRadius-5} width="10" height="10" fill={accentColor} />
+        <circle className="experience-smooth"
           cx={cx + Math.cos(orbitAngle) * ringRadius}
           cy={cy + Math.sin(orbitAngle) * ringRadius}
           r={5.5}

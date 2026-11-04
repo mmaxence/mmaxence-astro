@@ -1,0 +1,61 @@
+<materia-headline><span>Crafting delight,</span></materia-headline>
+<script>
+  import { createTextEffect } from '@materia/text';
+  import { arcadeTitle } from '../../vendor/materia/arcade-title.js';
+  class MateriaHeadline extends HTMLElement {
+    private dispose?: () => void;
+    connectedCallback() {
+      this.dispose?.();
+      const text = this.querySelector('span');
+      if (!text) return;
+      const motion = matchMedia('(prefers-reduced-motion: reduce)');
+      let inView = true;
+      const syncVisibility = () => effect?.setFrozen(!inView || document.hidden);
+      let effect: ReturnType<typeof createTextEffect> | undefined;
+      const mount = () => {
+        effect?.destroy(); effect = undefined;
+        if (motion.matches) return;
+        try { effect = createTextEffect(text, { host: this, effect: arcadeTitle, auto: true }); syncVisibility(); }
+        catch { /* Native text remains the fallback. */ }
+      };
+      const visible = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; syncVisibility(); });
+      visible.observe(this);
+      const observer = new MutationObserver(mount);
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme', 'style', 'data-style'] });
+      motion.addEventListener('change', mount);
+      document.addEventListener('visibilitychange', syncVisibility);
+      const respond = () => effect?.pulse();
+      this.addEventListener('pointerenter', respond);
+      mount();
+      this.dispose = () => { this.removeEventListener('pointerenter', respond); observer.disconnect(); visible.disconnect(); motion.removeEventListener('change', mount); document.removeEventListener('visibilitychange', syncVisibility); effect?.destroy(); };
+    }
+    disconnectedCallback() { this.dispose?.(); }
+  }
+  if (!customElements.get('materia-headline')) customElements.define('materia-headline', MateriaHeadline);
+</script>
+<style>
+  materia-headline { display:block;position:relative;width:fit-content;max-width:100%; }
+  span { display:block;letter-spacing:0; }
+  materia-headline :global(.arcade-title-signal) { position:absolute;inset:0;pointer-events:none; }
+  materia-headline :global(.arcade-title-signal>span) { position:absolute;inset:0;letter-spacing:0;opacity:0;animation-duration:6.5s;animation-timing-function:steps(1,end);animation-iteration-count:infinite; }
+  materia-headline :global(.signal-red) { color:#f13c61;mix-blend-mode:multiply;animation-name:signal-red; }
+  materia-headline :global(.signal-cyan) { color:#00bcd4;mix-blend-mode:multiply;animation-name:signal-cyan; }
+  materia-headline :global(.signal-mirror) { color:var(--theme-text);background:var(--theme-bg);animation-name:signal-mirror; }
+  @keyframes signal-red {
+    0%,8%,100% { opacity:0;transform:none; }
+    1%,5% { opacity:.8;transform:translateX(-3px);clip-path:inset(12% 0 15%); }
+    3% { opacity:.7;transform:translateX(2px);clip-path:inset(48% 0 22%); }
+    6% { opacity:.6;transform:translateX(-1px);clip-path:inset(0); }
+  }
+  @keyframes signal-cyan {
+    0%,8%,100% { opacity:0;transform:none; }
+    1%,5% { opacity:.8;transform:translateX(3px);clip-path:inset(12% 0 15%); }
+    3% { opacity:.7;transform:translateX(-2px);clip-path:inset(48% 0 22%); }
+    6% { opacity:.6;transform:translateX(1px);clip-path:inset(0); }
+  }
+  @keyframes signal-mirror {
+    0%,3%,5%,100% { opacity:0; }
+    2% { opacity:1;transform:scaleX(-1);clip-path:inset(44% 0 43%); }
+    4% { opacity:1;transform:translateX(4px);clip-path:inset(65% 0 25%); }
+  }
+</style>
