@@ -1,0 +1,18 @@
+<aside class="fieldnotes-choice" aria-label="Optional Fieldnotes analytics">
+  <details>
+    <summary>Optional analytics: your choice</summary>
+    <p>I’m trying Fieldnotes to learn which pages people read and how they find my work. It stays off unless you allow it. Declining does not change your access.</p>
+    <p>If allowed, it records visits to the home, work, blog index and Hanji pages, the page path, time, and a limited source category. It may record an approved search or GitHub referrer domain. It does not store query strings, full referrer URLs, visitor IDs, precise location or cross-site journeys. Each event has a random deduplication key, not a visitor identifier.</p>
+    <p>Active raw events are scheduled for deletion after 30 days, checked every five minutes. Cloudflare D1 recovery can retain deleted records for up to seven additional days. Service outages may delay deletion; Fieldnotes pauses collection when the retention check becomes stale. Cloudflare processes network information to deliver this service, but Fieldnotes does not save raw IP addresses in events.</p>
+    <p>Your allow or decline preference is saved in this browser. You can withdraw below at any time to stop future collection. Events already sent remain until scheduled deletion. Browser privacy signals override permission. This choice controls Fieldnotes only; the existing <a href="https://www.goatcounter.com/privacy">GoatCounter analytics</a> stays unchanged.</p>
+    <p>Questions or requests: <a href="mailto:contact@mmaxence.me">contact@mmaxence.me</a>.</p>
+    <p id="fn-consent-status" role="status">Fieldnotes is off. Your choice does not affect access to this site.</p>
+    <div class="choices"><button id="fn-allow" type="button">Allow Fieldnotes</button><button id="fn-decline" type="button">Decline</button><button id="fn-withdraw" type="button">Withdraw permission</button></div>
+    <noscript>Fieldnotes is off because JavaScript is unavailable.</noscript>
+  </details>
+</aside>
+<script is:inline defer src="/js/fieldnotes-consent.js"></script>
+<style>
+.fieldnotes-choice{max-width:72rem;margin:2rem auto;padding:1rem 1.5rem;font-size:.875rem;line-height:1.6;color:var(--theme-text,inherit)}
+summary{cursor:pointer;text-decoration:underline;text-underline-offset:.2em}p{max-width:75ch;margin:.8rem 0}.choices{display:flex;flex-wrap:wrap;gap:.6rem}button{font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:.4rem;padding:.6rem .9rem;cursor:pointer}button:disabled{opacity:.5;cursor:default}a{text-decoration:underline}button:focus-visible,summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+</style>

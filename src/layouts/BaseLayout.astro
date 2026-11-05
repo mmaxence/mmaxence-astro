@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import FieldnotesConsent from '../components/ui/FieldnotesConsent.astro';
 import JsonLd from '../components/ui/JsonLd.astro';
 import '../styles/global.css';
 import '../styles/arcade.css';
@@ -266,6 +267,7 @@ const jsonLdSchemas = [personSchema, websiteSchema, ...(articleSchema ? [article
   </head>
       <body style="background-color: var(--theme-bg); transition: background-color 0.3s ease;">
         <slot />
+        <FieldnotesConsent />
       </body>
 </html>
 

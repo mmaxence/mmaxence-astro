@@ -1,0 +1,34 @@
+(() => {
+ if(window.fieldnotesConsentUI)return;window.fieldnotesConsentUI=true;
+ const key='fieldnotes-consent-v1';
+ let choice=null,loaded=false;
+ try{choice=localStorage.getItem(key)}catch{}
+ const suppressed=()=>navigator.globalPrivacyControl||navigator.doNotTrack==='1';
+ window.fieldnotesConsent=choice==='allow'&&!suppressed();
+ const paint=()=>{
+  const status=document.getElementById('fn-consent-status');
+  if(status)status.textContent=suppressed()?'Fieldnotes is off because your browser sends a privacy signal.':window.fieldnotesConsent?'Fieldnotes is on. You can withdraw at any time.':'Fieldnotes is off. Your choice does not affect access to this site.';
+  const allow=document.getElementById('fn-allow');if(allow)allow.disabled=!!suppressed();
+ };
+ const start=()=>{
+  if(!window.fieldnotesConsent||loaded)return;
+  loaded=true;
+  const script=document.createElement('script');script.src='https://fieldnotes-pilot.holy-waterfall-a8d6.workers.dev/tracker.js';script.defer=true;script.referrerPolicy='no-referrer';script.dataset.project='mmaxence';script.dataset.navigationEvent='astro:page-load';
+  script.onerror=()=>{loaded=false;const status=document.getElementById('fn-consent-status');if(status)status.textContent='Fieldnotes could not load. The site still works normally.'};
+  document.head.append(script);
+ };
+ const choose=value=>{
+  choice=value;window.fieldnotesConsent=value==='allow'&&!suppressed();
+  try{localStorage.setItem(key,value)}catch{}
+  paint();start();
+ };
+ const bind=()=>{
+  const allow=document.getElementById('fn-allow');if(allow)allow.onclick=()=>choose('allow');
+  const decline=document.getElementById('fn-decline');if(decline)decline.onclick=()=>choose('deny');
+  const withdraw=document.getElementById('fn-withdraw');if(withdraw)withdraw.onclick=()=>choose('deny');
+  paint();start();
+ };
+ window.addEventListener('storage',event=>{if(event.key===key){choice=event.newValue;window.fieldnotesConsent=choice==='allow'&&!suppressed();paint();start()}});
+ document.addEventListener('astro:page-load',bind);
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
