@@ -303,6 +303,8 @@ const featuredDeepdive = (await getCollection('deepdives'))
     }
     .hero-art { display: grid; justify-items: center; }
     .hero-copy { width: 100%; }
+    .hero-title :global(materia-headline) { margin-inline: auto; }
+    .hero-copy .arcade-actions { justify-content: center; }
     .hero-description { max-width: 34ch; margin: 24px auto 0; }
     .hero-art .hero-profile-wrapper { margin-inline: auto; }
   }
