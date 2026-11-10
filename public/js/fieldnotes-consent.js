@@ -1,20 +1,22 @@
 (() => {
  if(window.fieldnotesConsentUI)return;window.fieldnotesConsentUI=true;
- const key='fieldnotes-consent-v1';
+ const key='facet-pages-v2';
+ // Earlier permission named only four routes. Broader page coverage needs a fresh choice.
+ window.facetRouteConsent='pages-v2';
  let choice=null,loaded=false;
  try{choice=localStorage.getItem(key)}catch{}
  const suppressed=()=>navigator.globalPrivacyControl||navigator.doNotTrack==='1';
  window.fieldnotesConsent=choice==='allow'&&!suppressed();
  const paint=()=>{
   const status=document.getElementById('fn-consent-status');
-  if(status)status.textContent=suppressed()?'Fieldnotes is off because your browser sends a privacy signal.':window.fieldnotesConsent?'Fieldnotes is on. You can withdraw at any time.':'Fieldnotes is off. Your choice does not affect access to this site.';
+  if(status)status.textContent=suppressed()?'Facet is off because your browser sends a privacy signal.':window.fieldnotesConsent?'Facet is on. You can withdraw at any time.':'Facet is off. Your choice does not affect access to this site.';
   const allow=document.getElementById('fn-allow');if(allow)allow.disabled=!!suppressed();
  };
  const start=()=>{
   if(!window.fieldnotesConsent||loaded)return;
   loaded=true;
-  const script=document.createElement('script');script.src='https://fieldnotes-pilot.holy-waterfall-a8d6.workers.dev/tracker.js';script.defer=true;script.referrerPolicy='no-referrer';script.dataset.project='mmaxence';script.dataset.navigationEvent='astro:page-load';
-  script.onerror=()=>{loaded=false;const status=document.getElementById('fn-consent-status');if(status)status.textContent='Fieldnotes could not load. The site still works normally.'};
+  const script=document.createElement('script');script.src='https://fieldnotes-pilot.holy-waterfall-a8d6.workers.dev/tracker.js?v=pages-v2';script.defer=true;script.referrerPolicy='no-referrer';script.dataset.project='mmaxence';script.dataset.routeConsent='pages-v2';script.dataset.navigationEvent='astro:page-load';
+  script.onerror=()=>{loaded=false;const status=document.getElementById('fn-consent-status');if(status)status.textContent='Facet could not load. The site still works normally.'};
   document.head.append(script);
  };
  const choose=value=>{
