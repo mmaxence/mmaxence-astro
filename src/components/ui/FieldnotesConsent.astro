@@ -1,18 +1,41 @@
-<aside class="fieldnotes-choice" aria-label="Optional Facet analytics">
-  <details>
-    <summary>Optional analytics: your choice</summary>
-    <p>I’m trying Facet to learn which pages people read and how they find my work. It stays off unless you allow it. Declining does not change your access.</p>
-    <p>If allowed, it records page views across this website’s published pages, the page path, time, and a limited source category. It may record an approved search or GitHub referrer domain. It does not store query strings, full referrer URLs, visitor IDs, precise location or cross-site journeys. Each event has a random deduplication key, not a visitor identifier.</p>
-    <p>Active raw events are scheduled for deletion after 30 days, checked every five minutes. Cloudflare D1 recovery can retain deleted records for up to seven additional days. Service outages may delay deletion; Facet pauses collection when the retention check becomes stale. Cloudflare processes network information to deliver this service, but Facet does not save raw IP addresses in events.</p>
-    <p>Your allow or decline preference is saved in this browser. You can withdraw below at any time to stop future collection. Events already sent remain until scheduled deletion. Browser privacy signals override permission. This choice controls Facet only; the existing <a href="https://www.goatcounter.com/privacy">GoatCounter analytics</a> stays unchanged.</p>
-    <p>Questions or requests: <a href="mailto:contact@mmaxence.me">contact@mmaxence.me</a>.</p>
-    <p id="fn-consent-status" role="status">Facet is off. Your choice does not affect access to this site.</p>
-    <div class="choices"><button id="fn-allow" type="button">Allow Facet</button><button id="fn-decline" type="button">Decline</button><button id="fn-withdraw" type="button">Withdraw permission</button></div>
-    <noscript>Facet is off because JavaScript is unavailable.</noscript>
+<aside class="privacy-footer max-w-5xl mx-auto px-4 md:px-8 lg:px-12" aria-label="Privacy and analytics">
+  <details class="privacy-control">
+    <summary>Privacy &amp; analytics</summary>
+    <div class="privacy-panel">
+      <h2>Optional analytics</h2>
+      <p>I use Facet to understand which pages are read and how people find my work. It stays off unless you allow it. Your choice does not affect access to this site.</p>
+      <p>If allowed, Facet records page views, page paths, times and limited source information across this website. It does not use visitor IDs or link your visits across websites. Events are kept for 30 days, with up to seven additional days in recovery copies.</p>
+      <p id="fn-consent-status" role="status">Facet is off. Your choice does not affect access to this site.</p>
+      <div class="choices">
+        <button id="fn-allow" type="button">Allow Facet</button>
+        <button id="fn-decline" type="button">Decline</button>
+        <button id="fn-withdraw" type="button">Withdraw permission</button>
+      </div>
+      <p>Your choice is saved in this browser. Withdrawal stops future collection; previously sent events remain until scheduled deletion. Browser privacy signals override permission.</p>
+      <details class="privacy-detail">
+        <summary>What is collected and retained?</summary>
+        <p>Source information includes a limited category and may include an approved search or GitHub referrer domain. Facet does not store query strings, full referrer URLs, precise location or cross-site journeys. Each event has a random key to prevent duplicate delivery, not a visitor identifier.</p>
+        <p>Deletion is checked every five minutes. Service outages can delay it; Facet pauses collection when the retention check becomes stale. Cloudflare D1 recovery may retain deleted events for up to seven additional days. Cloudflare processes network information to deliver the service, but Facet does not save raw IP addresses in events.</p>
+      </details>
+      <p>This choice controls Facet only. The existing <a href="https://www.goatcounter.com/privacy">GoatCounter analytics</a> stays unchanged. Questions or requests: <a href="mailto:contact@mmaxence.me">contact@mmaxence.me</a>.</p>
+      <noscript>Facet is off because JavaScript is unavailable.</noscript>
+    </div>
   </details>
 </aside>
 <script is:inline defer src="/js/fieldnotes-consent.js?v=pages-v2"></script>
 <style>
-.fieldnotes-choice{max-width:72rem;margin:2rem auto;padding:1rem 1.5rem;font-size:.875rem;line-height:1.6;color:var(--theme-text,inherit)}
-summary{cursor:pointer;text-decoration:underline;text-underline-offset:.2em}p{max-width:75ch;margin:.8rem 0}.choices{display:flex;flex-wrap:wrap;gap:.6rem}button{font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:.4rem;padding:.6rem .9rem;cursor:pointer}button:disabled{opacity:.5;cursor:default}a{text-decoration:underline}button:focus-visible,summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.privacy-footer{width:100%;padding-bottom:2rem;color:var(--theme-text,inherit)}
+.privacy-control>summary{width:fit-content;font:.75rem/1.6 var(--font-mono,monospace);color:var(--theme-text-muted,inherit);padding:.35rem 0}
+summary{cursor:pointer;text-decoration:underline;text-underline-offset:.25em}
+summary:hover{color:var(--theme-text,inherit)}
+.privacy-panel{max-width:44rem;margin-top:.8rem;padding:1.25rem;border:1px solid var(--theme-border,currentColor);background:var(--theme-bg,transparent);font-size:.875rem;line-height:1.65;overflow-wrap:anywhere}
+h2{font:500 1rem/1.4 var(--font-mono,monospace);margin:0 0 .8rem}
+p{margin:.8rem 0}
+.choices{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+button{font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:.25rem;padding:.6rem .9rem;min-height:44px;cursor:pointer}
+button:hover{background:var(--theme-text);color:var(--theme-bg)}
+button:disabled{opacity:.5;cursor:default}
+a{text-decoration:underline;text-underline-offset:.2em}
+button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.privacy-detail{border-top:1px solid var(--theme-border,currentColor);padding-top:.8rem}
 </style>
