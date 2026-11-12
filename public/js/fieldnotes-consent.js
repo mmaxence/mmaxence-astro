@@ -7,6 +7,7 @@
  try{choice=localStorage.getItem(key)}catch{}
  const suppressed=()=>navigator.globalPrivacyControl||navigator.doNotTrack==='1';
  window.fieldnotesConsent=choice==='allow'&&!suppressed();
+ window.facetConsentCheck=()=>{try{choice=localStorage.getItem(key);}catch{choice=null;}window.fieldnotesConsent=choice==='allow'&&!suppressed();return window.fieldnotesConsent;};
  const paint=()=>{
   const status=document.getElementById('fn-consent-status');
   if(status)status.textContent=suppressed()?'Facet is off because your browser sends a privacy signal.':window.fieldnotesConsent?'Facet is on. You can withdraw at any time.':'Facet is off. Your choice does not affect access to this site.';
